@@ -1,0 +1,17 @@
+Package: reuseme
+Title: Collections of Utility Functions to Work Across Projects
+Version: 0.0.0.9000
+Authors@R: 
+    person("Olivier", "Roy", , "olivierroy71@hotmail.com", role = c("aut", "cre"))
+Description: Allows you to browse current projects, rename files safely,
+  add screenshots to project on Windows.
+  It is also my personal library and contains wrapper around common functions, 
+  from dplyr and readxl. It takes advantage of cli hyperlinks.
+  Finally, it provides a custom print method for tibbles, inspired by janitor, and readr.
+License: MIT + file LICENSE
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
