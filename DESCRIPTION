@@ -4,16 +4,28 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Olivier", "Roy", , "olivierroy71@hotmail.com", role = c("aut", "cre"))
 Description: Allows you to browse current projects, rename files safely,
-  add screenshots to project on Windows.
-  It is also my personal library and contains wrapper around common functions, 
-  from dplyr and readxl. It takes advantage of cli hyperlinks.
-  Finally, it provides a custom print method for tibbles, inspired by janitor, and readr.
+    add screenshots to project on Windows.  It is also my personal library
+    and contains wrapper around common functions, from dplyr and readxl.
+    It takes advantage of cli hyperlinks.  Finally, it provides a custom
+    print method for tibbles, inspired by janitor, and readr.
 License: MIT + file LICENSE
+URL: https://github.com/olivroy/reuseme,
+    https://olivroy.github.io/reuseme/
+BugReports: https://github.com/olivroy/reuseme/issues
+Imports: 
+    cli,
+    fs,
+    glue,
+    purrr,
+    rlang (>= 1.1.0),
+    rprojroot,
+    stringr,
+    usethis
 Suggests: 
-    testthat (>= 3.0.0)
+    magick,
+    testthat (>= 3.0.0),
+    withr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-URL: https://github.com/olivroy/reuseme
-BugReports: https://github.com/olivroy/reuseme/issues

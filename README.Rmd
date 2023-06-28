@@ -18,16 +18,18 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/reuseme)](https://CRAN.R-project.org/package=reuseme)
+[![R-CMD-check](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme?branch=main)
 <!-- badges: end -->
 
-The goal of reuseme is to ...
+The goal of reuseme is to provide utility functions for project management in RStudio projects.
 
 ## Installation
 
 You can install the development version of reuseme like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+pak::pak("olivroy/reuseme")
 ```
 
 ## Example
@@ -39,18 +41,13 @@ library(reuseme)
 ## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Most of these functions are meant to be used in RStudio, and in RStudio Projects, as they have not been widely tested outside this context.
 
-```{r cars}
-summary(cars)
-```
+In interactive sessions, you can use the `screenshot()` function to access an image in the clipboard and save it as .png in a `figures/` directory in your RStudio project.
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+reuseme helps you work across projects, with the `proj_switch()` function. 
+`proj_switch()` works a lot like `usethis::proj_activate()` with the advantage of only typing the project name, instead of the full path.
+By default, reuseme looks at `options(reuseme.reposdir)`, that is a vector of paths where repositories are located.
+Personally, I use `~/rrr` (for my own projects) and `~/rrr-forks` (for projects I contribute to),
 
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+When not supplying anything, many functions will just offer you to choose, with cli hyperlinks.
