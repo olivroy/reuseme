@@ -20,8 +20,7 @@ After using the shortcut Win + Shift + S, you can call this function
 Still have to validate if it works on MacOS, as it is not clear whether the image goes to the clipboard by default
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Saving to new image
+\dontrun{
 screenshot(file = "my-new-image")
-\dontshow{\}) # examplesIf}
+}
 }

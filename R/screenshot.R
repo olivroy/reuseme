@@ -8,11 +8,10 @@
 #'
 #' @return invisibly returns the full image path
 #' @export
-#'
-#' @examplesIf interactive()
-#' # Saving to new image
+#' @examples
+#' \dontrun{
 #' screenshot(file = "my-new-image")
-#'
+#' }
 screenshot <- function(file = NULL) {
   # https://z3tt.github.io/graphic-design-ggplot2/tips-to-improve-your-ggplot-workflow.html#save-ggplot-output-with-the-correct-dimensions
   # Could wrap ggsave also

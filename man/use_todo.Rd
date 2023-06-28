@@ -22,9 +22,9 @@ Wrapper around \code{\link[usethis:write-this]{usethis::write_union()}} to add T
 Project, By default it will write in the current RStudio project.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontrun{
 use_todo("I need to do that")
 use_todo(c("I need to do that again", "youppi"))
 use_todo("c(x, y)", code = TRUE)
-\dontshow{\}) # examplesIf}
+}
 }
