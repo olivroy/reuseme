@@ -4,16 +4,13 @@ template:
 
 reference:
 
-    - title: Worflow helpers
+- title: Worflow helpers
+  desc: >
+    With these usethis-inspired functions, you can speed-up your workflow.
+  contents:
+  - starts_with("proj_")
 
-      desc: >
-        With these usethis-inspired functions, you can speed-up your workflow.
-
-      contents:
-      starts_with("proj_")
-
-    - title: Rest
-
-      contents:
-      - screenshot
-      - use_todo
+- title: Rest
+  contents:
+  - screenshot
+  - use_todo
