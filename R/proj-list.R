@@ -30,8 +30,8 @@ proj_switch <- function(proj = NULL) {
 #' @export
 proj_list <- function(dirs = getOption("reuseme.reposdir")) {
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
-  fs::dir_ls(proj_location, type = "directory", recurse = FALSE) |>
-    as.character() |>
+  fs::dir_ls(proj_location, type = "directory", recurse = FALSE) %>%
+    as.character() %>%
     purrr::set_names(fs::path_file)
 }
 

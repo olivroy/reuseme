@@ -30,14 +30,14 @@ screenshot <- function(file = NULL) {
     ))
   }
   is_generic <- is.null(file)
-  file <- file %||% "image" |> fs::path_ext_remove()
+  file <- file %||% "image" %>% fs::path_ext_remove()
   if (file == "image") {
     files_named_image <- fs::dir_ls(proj_dir, type = "file", regexp = "image.+png")
     increment <- if (rlang::has_length(files_named_image, 0)) {
       0
     } else {
-      stringr::str_extract(files_named_image, "\\d+") |>
-        as.numeric() |>
+      stringr::str_extract(files_named_image, "\\d+") %>%
+        as.numeric() %>%
         max()
     }
     file <- glue::glue("image-{stringr::str_pad(increment + 1, width = 2, pad = '0')}")
