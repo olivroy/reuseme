@@ -65,12 +65,32 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Allows you to browse current projects, rename files safely,
-    add screenshots to project on Windows.  It is also my personal library
-    and contains wrapper around common functions, from dplyr and readxl.
-    It takes advantage of cli hyperlinks.  Finally, it provides a custom
-    print method for tibbles, inspired by janitor, and readr.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="reuseme">reuseme<a class="anchor" aria-label="anchor" href="#reuseme"></a>
+</h1></div>
+<!-- badges: start -->
+
+<p>The goal of reuseme is to provide utility functions for project management in RStudio projects.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the development version of reuseme like so:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"olivroy/reuseme"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Since the package is meant for interactive use, there may not be a lot of code. It takes advantage of <a href="https://cli.r-lib.org/reference/links.html" class="external-link">cli hyperlinks</a> to improve productivity.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/olivroy/reuseme" class="external-link">reuseme</a></span><span class="op">)</span></span>
+<span><span class="co">## basic example code</span></span></code></pre></div>
+<p>Most of these functions are meant to be used in RStudio, and in RStudio Projects, as they have not been widely tested outside this context.</p>
+<p>In interactive sessions, you can use the <code><a href="reference/screenshot.html">screenshot()</a></code> function to access an image in the clipboard and save it as .png in a <code>figures/</code> directory in your RStudio project.</p>
+<p>reuseme helps you work across projects, with the <code><a href="reference/proj_switch.html">proj_switch()</a></code> function. <code><a href="reference/proj_switch.html">proj_switch()</a></code> works a lot like <code><a href="https://usethis.r-lib.org/reference/proj_activate.html" class="external-link">usethis::proj_activate()</a></code> with the advantage of only typing the project name, instead of the full path. By default, reuseme looks at <code>options(reuseme.reposdir)</code>, that is a vector of paths where repositories are located. Personally, I use <code>~/rrr</code> (for my own projects) and <code>~/rrr-forks</code> (for projects I contribute to).</p>
+<p>When not supplying the <code>proj</code> argument, many functions will just offer you to choose, with a UI built on <a href="https://cli.r-lib.org/reference/links.html" class="external-link">cli hyperlinks</a>.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -102,7 +122,15 @@ Allows you to browse current projects, rename files safely,
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://CRAN.R-project.org/package=reuseme" class="external-link"><img src="https://www.r-pkg.org/badges/version/reuseme" alt="CRAN status"></a></li>
+<li><a href="https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/olivroy/reuseme?branch=main" class="external-link"><img src="https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
