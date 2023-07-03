@@ -89,7 +89,8 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
   fs::path_dir(relative_path)
 }
 proj_get <- function() {
-  rprojroot::find_root(criterion = rprojroot::is_rstudio_project)
+  path <- rprojroot::find_root(criterion = rprojroot::is_rstudio_project)
+  fs::path(path)
 }
 
 # OS utils ---------------------------------------------------------
