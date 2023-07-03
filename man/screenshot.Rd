@@ -4,20 +4,33 @@
 \alias{screenshot}
 \title{Save the image in your clipboard to png  in a \verb{figures/} dir}
 \usage{
-screenshot(file = NULL)
+screenshot(file = NULL, dir = NULL)
 }
 \arguments{
-\item{file}{A file name, ideally \code{-} (kebab-case). (extension ignored)}
+\item{file}{A file name, ideally \code{-} (kebab-case). (extension ignored) (optional, default is \code{image.png})}
+
+\item{dir}{A directory (optional), to override the directory rules mentioned in the description.}
 }
 \value{
 invisibly returns the full image path
 }
 \description{
-Creates a \verb{figures/} directory if in RStudio Project. Will create a \code{man/figures} in a package.
-After using the shortcut Win + Shift + S, you can call this function
+The screenshot will be saved as \code{.png} to a directory following these rules
+\enumerate{
+\item In a regular RStudio project (or a Quarto book), it will be saved to a \verb{figures/} directory
+\item In a package project, it will be saved in a \code{man/figures} directory
+\item In a Quarto Blog project, it will save in the current post's folder.
+\item You can always override these defaults by setting \code{dir}
+}
+
+After using the shortcut Win + Shift + S, you can call this function!
 }
 \details{
-Still have to validate if it works on MacOS, as it is not clear whether the image goes to the clipboard by default
+If no file name is supplied, a file named \code{image0*.png} will be created.
+The function then prompts you to rename the file with a more expressive name.
+It will continue the numbering if a file named image exists.
+
+Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
 }
 \examples{
 \dontrun{

@@ -4,5 +4,5 @@
       screenshot()
     Condition
       Warning:
-      This function is only meant to be used interactively.
+      Remove `screenshot()` from scripts. It is only meant to be used interactively.
 
