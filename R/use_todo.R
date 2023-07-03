@@ -1,13 +1,12 @@
 #' Add a TODO list by project to a TODO.R file in the base directory
 #'
-#' Wrapper around [usethis::write_union()] to add TODO items in a specific R
 #' Project, By default it will write in the current RStudio project.
 #'
 #' @param todo A character vector of lines to add to the TODO file
 #' @param proj By default, the active project, an arbitrary directory, or a RStudio project name in the
 #'   following directories `options(reuseme.destdir)`, uses [proj_list()] in this case.
 #' @param code If `TRUE`, will render code output
-#'
+#' @seealso [usethis::write_union()]
 #' @return A `TODO.R` file appended with the `todo` string.
 #' @export
 #'
@@ -27,14 +26,17 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
     todo_lines <- todo
   }
   path_todo <- "TODO.R"
-  if (!fs::dir_exists(proj)) {
+  if (!fs::dir_exists(proj)) { # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
-    proj <- all_projects[proj]
+    proj_path <- all_projects[proj]
   } else {
-    full_path_todo <- if (is_active_proj) path_todo else fs::path(proj, path_todo)
+    proj_path <- proj
   }
-  # nice to have, but would need to extract duplicates (ideally changes in usethis)
+
+  full_path_todo <- if (is_active_proj) path_todo else fs::path(proj_path, path_todo)
+
+  # TODO nice to have, but would need to extract duplicates (ideally changes in usethis)
   # Change the default write_union message.
-  usethis::write_union(full_path_todo, lines = todo_lines, quiet = FALSE)
+  write_union2(full_path_todo, lines = todo_lines, quiet = FALSE)
 }

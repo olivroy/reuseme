@@ -36,7 +36,7 @@ screenshot <- function(file = NULL, dir = NULL) {
       cli::cli_abort(c(x = "{.arg dir} must be `NULL` or a valid directory."))
     }
     dir
-  } else if(is_pkg()) {
+  } else if (is_pkg()) {
     "man/figures/"
   } else if (is_quarto_blog()) {
     check_active_qmd_post()
