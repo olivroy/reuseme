@@ -87,16 +87,17 @@ screenshot <- function(file = NULL, dir = NULL) {
     format = "png",
     comment = "screenshot"
   )
+  img_path_chr <- as.character(img_path)
 
   bullets <- c(
     "Use with quarto, Rmd (source mode) with",
-    '![]({img_path}){{fig-alt="" width="70%"}}'
+    '![]({img_path_chr}){{fig-alt="" width="70%"}}'
   )
   if (is_generic) {
     bullets <- c(
       bullets,
       "i" = "Consider using a more precise name",
-      "rename_file('{img_path}', '{img_dir}/better-name.png')",
+      "rename_file('{img_path_chr}', '{img_dir}/better-name.png')",
       "i" = "See {.help reuseme::rename_file} for details."
     )
   }
