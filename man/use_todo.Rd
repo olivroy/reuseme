@@ -18,7 +18,6 @@ following directories \code{options(reuseme.destdir)}, uses \code{\link[=proj_li
 A \code{TODO.R} file appended with the \code{todo} string.
 }
 \description{
-Wrapper around \code{\link[usethis:write-this]{usethis::write_union()}} to add TODO items in a specific R
 Project, By default it will write in the current RStudio project.
 }
 \examples{
@@ -27,4 +26,7 @@ use_todo("I need to do that")
 use_todo(c("I need to do that again", "youppi"))
 use_todo("c(x, y)", code = TRUE)
 }
+}
+\seealso{
+\code{\link[usethis:write-this]{usethis::write_union()}}
 }

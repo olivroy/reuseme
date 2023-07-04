@@ -17,7 +17,7 @@ invisibly returns the full image path
 \description{
 The screenshot will be saved as \code{.png} to a directory following these rules
 \enumerate{
-\item In a regular RStudio project (or a Quarto book), it will be saved to a \verb{figures/} directory
+\item In a regular RStudio project (or a Quarto book), it will be saved to a \verb{images/} directory
 \item In a package project, it will be saved in a \code{man/figures} directory
 \item In a Quarto Blog project, it will save in the current post's folder.
 \item You can always override these defaults by setting \code{dir}

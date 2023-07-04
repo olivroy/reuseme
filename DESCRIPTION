@@ -9,8 +9,7 @@ Description: Allows you to browse current projects, rename files safely,
     It takes advantage of cli hyperlinks.  Finally, it provides a custom
     print method for tibbles, inspired by janitor, and readr.
 License: MIT + file LICENSE
-URL: https://github.com/olivroy/reuseme,
-    https://olivroy.github.io/reuseme/
+URL: https://olivroy.github.io/reuseme/, https://github.com/olivroy/reuseme
 BugReports: https://github.com/olivroy/reuseme/issues
 Imports: 
     cli,

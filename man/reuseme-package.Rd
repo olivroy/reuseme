@@ -11,8 +11,8 @@ Allows you to browse current projects, rename files safely, add screenshots to p
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/olivroy/reuseme}
   \item \url{https://olivroy.github.io/reuseme/}
+  \item \url{https://github.com/olivroy/reuseme}
   \item Report bugs at \url{https://github.com/olivroy/reuseme/issues}
 }
 

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' The screenshot will be saved as `.png` to a directory following these rules
-#' 1. In a regular RStudio project (or a Quarto book), it will be saved to a `figures/` directory
+#' 1. In a regular RStudio project (or a Quarto book), it will be saved to a `images/` directory
 #' 2. In a package project, it will be saved in a `man/figures` directory
 #' 3. In a Quarto Blog project, it will save in the current post's folder.
 #' 4. You can always override these defaults by setting `dir`
@@ -41,7 +41,7 @@ screenshot <- function(file = NULL, dir = NULL) {
   } else if (is_quarto_blog()) {
     check_active_qmd_post()
   } else {
-    "figures/"
+    "images/"
   }
   if (!fs::dir_exists(img_dir)) {
     cli::cli_abort(c(
