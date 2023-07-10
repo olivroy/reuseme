@@ -12,6 +12,9 @@ open_rs_doc(path, line = -1L, col = -1L, move_cursor = TRUE)
 \item{line}{The line in the document to navigate to.}
 
 \item{col}{The column in the document to navigate to.}
+
+\item{move_cursor}{Boolean; move the cursor to the requested location after
+opening the document?}
 }
 \value{
 Invisibly returns the document id
