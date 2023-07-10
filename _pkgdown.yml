@@ -10,7 +10,8 @@ reference:
   contents:
   - starts_with("proj_")
 
-- title: Rest
+- title: Interact with documents
   contents:
-  - screenshot
   - use_todo
+  - open_rs_doc
+  - screenshot
