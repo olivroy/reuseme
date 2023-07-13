@@ -3,10 +3,13 @@
 \name{named-base}
 \alias{named-base}
 \alias{max_named}
+\alias{min_named}
 \alias{unique_named}
 \title{Helpers that can return a named vector}
 \usage{
 max_named(x, na.rm = FALSE)
+
+min_named(x, na.rm = FALSE)
 
 unique_named(x)
 }

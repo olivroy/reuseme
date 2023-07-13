@@ -11,8 +11,8 @@
 #' # Use cases / advantages
 #'
 #' * Like many other reuseme functions, they are most useful in interactive sessions
-#' * print the result in interactive sessions
-#' * Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks)
+#' * print the result in interactive sessions (quiet in non-interactive.)
+#' * Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have `::`))
 #' * Use in pipelines to explore the data
 #' * Use [rlang::is_interactive()] over [base::interactive()] as it's easier to
 #' control and test with `options(rlang_interactive)`
@@ -31,16 +31,17 @@
 #' @param x The main object (a data.frame, but some functions accept a vector.) (aka `.data` in some `dplyr` functions, but naming it `x` throughout.)
 #' @param extra_msg A character vector of observations, notes taken related to the transformation.
 #' @param nrows Number of rows to print
-#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm Check original functions.
+#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace Check original functions.
 #'
 #' @returns x (invisibly)   will print to the console in interactive sessions.
 #' @seealso
-#' * [dplyr::count()]
 #' * [dplyr::distinct()]
 #' * [dplyr::filter()]
 #' * [dplyr::slice()]
+#' * [dplyr::mutate()]
 #' * [count_pct()]
 #' * [slice_min_max()]
+#' * [slice_group_sample()]
 #' @name identity
 #' @examples
 #' withr::local_options(rlang_interactive = TRUE)
@@ -141,6 +142,25 @@ slice_min_identity <- function(x,
     na_rm = na_rm
   )
   res <- dplyr::relocate(res, {{ order_by }})
+  print(res, n = nrows)
+  cli::cli_alert_info(extra_msg)
+  invisible(x)
+}
+#' @rdname identity
+#' @export
+slice_sample_identity <- function(x, ..., n, prop, by = NULL, weight_by = NULL, replace = FALSE, nrows = NULL, extra_msg = NULL) {
+  if (!rlang::is_interactive()) {
+    return(invisible(x))
+  }
+  res <- dplyr::slice_sample(
+    .data = x,
+    ...,
+    n = n,
+    prop = prop,
+    by = {{ by }},
+    weight_by =  {{ weight_by }},
+    replace = replace
+  )
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
   invisible(x)

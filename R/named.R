@@ -24,6 +24,15 @@ max_named <- function(x, na.rm = FALSE) {
 }
 #' @rdname named-base
 #' @export
+min_named <- function(x, na.rm = FALSE) {
+  min_res <- min(x, na.rm = na.rm)
+  if (rlang::is_named(x)) {
+    names(min_res) <- names(x[which.min(x)])
+  }
+  min_res
+}
+#' @rdname named-base
+#' @export
 unique_named <- function(x) {
   # Duplicate names
   # purrr::map vs list_c, SO question (this is in canadr, when querying possible geographies.)

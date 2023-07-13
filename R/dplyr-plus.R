@@ -29,7 +29,7 @@
 #'   dplyr::group_by(vs) %>%
 #'   count_pct(cyl, label = TRUE, accuracy = 0.1)
 count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, sort = FALSE) {
-  check_installed(c("dplyr", "scales"))
+  check_installed("scales")
   counted_data <- dplyr::count(.data, ..., name = name, sort = sort)
   res_counted <- dplyr::mutate(counted_data, percent = prop.table(.data[[name %||% "n"]]))
 

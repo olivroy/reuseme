@@ -7,6 +7,7 @@
 \alias{distinct_identity}
 \alias{filter_identity}
 \alias{slice_min_identity}
+\alias{slice_sample_identity}
 \alias{mutate_identity}
 \alias{slice_min_max_identity}
 \alias{slice_group_sample_identity}
@@ -36,6 +37,18 @@ slice_min_identity(
   by = NULL,
   with_ties = TRUE,
   na_rm = TRUE,
+  nrows = NULL,
+  extra_msg = NULL
+)
+
+slice_sample_identity(
+  x,
+  ...,
+  n,
+  prop,
+  by = NULL,
+  weight_by = NULL,
+  replace = FALSE,
   nrows = NULL,
   extra_msg = NULL
 )
@@ -78,7 +91,7 @@ slice_group_sample_identity(
 
 \item{extra_msg}{A character vector of observations, notes taken related to the transformation.}
 
-\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm}{Check original functions.}
+\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace}{Check original functions.}
 }
 \value{
 x (invisibly)   will print to the console in interactive sessions.
@@ -94,8 +107,8 @@ Look at the original functions for the other parameters.
 \section{Use cases / advantages}{
 \itemize{
 \item Like many other reuseme functions, they are most useful in interactive sessions
-\item print the result in interactive sessions
-\item Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks)
+\item print the result in interactive sessions (quiet in non-interactive.)
+\item Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have \code{::}))
 \item Use in pipelines to explore the data
 \item Use \code{\link[rlang:is_interactive]{rlang::is_interactive()}} over \code{\link[base:interactive]{base::interactive()}} as it's easier to
 control and test with \code{options(rlang_interactive)}
@@ -132,11 +145,12 @@ mtcars \%>\%
 }
 \seealso{
 \itemize{
-\item \code{\link[dplyr:count]{dplyr::count()}}
 \item \code{\link[dplyr:distinct]{dplyr::distinct()}}
 \item \code{\link[dplyr:filter]{dplyr::filter()}}
 \item \code{\link[dplyr:slice]{dplyr::slice()}}
+\item \code{\link[dplyr:mutate]{dplyr::mutate()}}
 \item \code{\link[=count_pct]{count_pct()}}
 \item \code{\link[=slice_min_max]{slice_min_max()}}
+\item \code{\link[=slice_group_sample]{slice_group_sample()}}
 }
 }

@@ -1,6 +1,7 @@
 test_that("Returns named output with max, unique", {
   vec <- c("x" = 1, "y" = 2, "x" = 1)
   expect_named(max_named(vec))
+  expect_named(min_named(vec))
   expect_named(unique_named(vec))
 })
 

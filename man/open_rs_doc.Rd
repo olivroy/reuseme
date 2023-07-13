@@ -20,5 +20,5 @@ opening the document?}
 Invisibly returns the document id
 }
 \description{
-Wrapper around \link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen}
+Wrapper around \link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen}, but with \verb{fs paths}, for consistency.
 }
