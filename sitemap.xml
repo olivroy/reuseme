@@ -19,10 +19,25 @@
     <loc>https://olivroy.github.io/reuseme/news/index.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/count_pct.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/extract_cell_value.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/filter_or.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/identity.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/index.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/mark_todo_as_complete.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/named-base.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/open_rs_doc.html</loc>
@@ -38,6 +53,12 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/screenshot.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/slice_group_sample.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/slice_min_max.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/use_todo.html</loc>

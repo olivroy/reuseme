@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,12 @@
       <p class="section-desc"></p><p>With these usethis-inspired functions, you can speed-up your workflow.</p>
 
       
+    </div><div class="section level2">
+      
+      <h3 id="project-management">Project Management<a class="anchor" aria-label="anchor" href="#project-management"></a></h3>
+      
+
+      
     </div><div id="" class="section level2">
       
       
@@ -65,8 +71,8 @@
         </dt>
         <dd>Opens a RStudio project in a new session</dd>
       </dl></div><div class="section level2">
-      <h2 id="interact-with-documents">Interact with documents<a class="anchor" aria-label="anchor" href="#interact-with-documents"></a></h2>
       
+      <h3 id="interact-with-documents">Interact with documents<a class="anchor" aria-label="anchor" href="#interact-with-documents"></a></h3>
       
 
       
@@ -90,6 +96,64 @@
           <code><a href="screenshot.html">screenshot()</a></code> 
         </dt>
         <dd>Save the image in your clipboard to png  in a <code>figures/</code> dir</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-analysis-helpers-eda">Data analysis helpers / EDA<a class="anchor" aria-label="anchor" href="#data-analysis-helpers-eda"></a></h2>
+      
+      <p class="section-desc"></p><p>These functions are to be used when analysing new data</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="extra-goodies-to-work-with-vectors-or-data">Extra goodies to work with vectors or data<a class="anchor" aria-label="anchor" href="#extra-goodies-to-work-with-vectors-or-data"></a></h3>
+      <p class="section-desc"></p><p>Some are wrappers around dplyr functions, some fix base R inconsistencies.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="named-base.html">max_named()</a></code> <code><a href="named-base.html">unique_named()</a></code> 
+        </dt>
+        <dd>Helpers that can return a named vector</dd>
+      </dl><dl><dt>
+          
+          <code><a href="slice_min_max.html">slice_min_max()</a></code> 
+        </dt>
+        <dd>Subset rows using their positions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="count_pct.html">count_pct()</a></code> 
+        </dt>
+        <dd>Count observations by group and compute percentage</dd>
+      </dl><dl><dt>
+          
+          <code><a href="extract_cell_value.html">extract_cell_value()</a></code> 
+        </dt>
+        <dd>Elegant wrapper around filter and pull</dd>
+      </dl><dl><dt>
+          
+          <code><a href="slice_group_sample.html">slice_group_sample()</a></code> 
+        </dt>
+        <dd>Explore all rows in a random group</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="dplyr-and-base-identity">dplyr and base identity<a class="anchor" aria-label="anchor" href="#dplyr-and-base-identity"></a></h3>
+      <p class="section-desc"></p><p>These wrappers can improve interactive data analysis, always return themselves, but are really useful as you can make your data analysis as chatty as you want interactively.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="identity.html">names_identity()</a></code> <code><a href="identity.html">count_identity()</a></code> <code><a href="identity.html">distinct_identity()</a></code> <code><a href="identity.html">filter_identity()</a></code> <code><a href="identity.html">slice_min_identity()</a></code> <code><a href="identity.html">mutate_identity()</a></code> <code><a href="identity.html">slice_min_max_identity()</a></code> <code><a href="identity.html">slice_group_sample_identity()</a></code> 
+        </dt>
+        <dd>Helpers that return the same value</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
