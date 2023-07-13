@@ -14,7 +14,7 @@ proj_switch <- function(proj = NULL) {
   if (!is.null(proj)) {
     rlang::arg_match0(proj, values = names(all_projects))
     usethis::proj_activate(all_projects[proj])
-    return(invisible(proj))
+    return(invisible(all_projects[proj]))
   }
   bullets <- paste0("Open {.run [", names(all_projects), "](usethis::proj_activate('", unname(all_projects), "'))}")
   cli::cli_bullets(bullets)

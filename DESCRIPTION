@@ -13,6 +13,7 @@ URL: https://olivroy.github.io/reuseme/, https://github.com/olivroy/reuseme
 BugReports: https://github.com/olivroy/reuseme/issues
 Imports: 
     cli,
+    dplyr (>= 1.1.1),
     fs,
     glue,
     magrittr,
@@ -20,8 +21,11 @@ Imports:
     rlang (>= 1.1.0),
     rprojroot,
     rstudioapi,
+    scales,
     stringr,
-    usethis
+    tibble,
+    usethis,
+    vctrs
 Suggests: 
     magick,
     testthat (>= 3.0.0),

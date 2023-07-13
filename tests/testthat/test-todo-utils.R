@@ -23,6 +23,7 @@ test_that("Marking a TODO item as done works", {
     "# I Want this done",
     "# TODO item to delete",
     "# WORK Explain what the next code does.",
+    "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
     "print('R code')"
   )
@@ -63,6 +64,7 @@ test_that("Marking a TODO item as done works", {
     c(
       "# I Want this done",
       "# Explain what the next code does.",
+      "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
       "print('R code')"
     )

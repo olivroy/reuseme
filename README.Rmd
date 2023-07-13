@@ -97,3 +97,11 @@ reuseme allows you to work across projects by just using the project name!
 +--------------------------------------------------------------------------------+----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
 
 : usethis vs reuseme
+
+## Proposing a data analysis workflow
+
+<!--# Write about dplyr-plus functions! -->
+
+<!--# Write about *_identity functions -->
+
+<!--# Write about _named functions -->

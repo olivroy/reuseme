@@ -7,11 +7,34 @@ reference:
 - title: Worflow helpers
   desc: >
     With these usethis-inspired functions, you can speed-up your workflow.
+- subtitle: Project Management
   contents:
   - starts_with("proj_")
 
-- title: Interact with documents
+- subtitle: Interact with documents
   contents:
   - use_todo
   - open_rs_doc
   - screenshot
+
+
+- title: Data analysis helpers / EDA
+  desc: >
+   These functions are to be used when analysing new data
+
+- subtitle: Extra goodies to work with vectors or data
+  desc: >
+    Some are wrappers around dplyr functions, some fix base R inconsistencies.
+  contents:
+  - named-base
+  - slice_min_max
+  - count_pct
+  - extract_cell_value
+  - slice_group_sample
+
+- subtitle: dplyr and base identity
+  desc: >
+      These wrappers can improve interactive data analysis, always return themselves,
+      but are really useful as you can make your data analysis as chatty as you want interactively.
+  contents:
+  - identity
