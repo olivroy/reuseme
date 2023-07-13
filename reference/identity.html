@@ -16,7 +16,7 @@ Look at the original functions for the other parameters."><!-- mathjax --><scrip
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +88,18 @@ They are very handy to create runnable hyperlinks that do not modify the current
 <span>  extra_msg <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">slice_sample_identity</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  <span class="va">n</span>,</span>
+<span>  <span class="va">prop</span>,</span>
+<span>  by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weight_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  replace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  extra_msg <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">mutate_identity</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -134,7 +146,7 @@ They are very handy to create runnable hyperlinks that do not modify the current
 <dd><p>A character vector of observations, notes taken related to the transformation.</p></dd>
 
 
-<dt>name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm</dt>
+<dt>name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace</dt>
 <dd><p>Check original functions.</p></dd>
 
 </dl></div>
@@ -148,8 +160,8 @@ They are very handy to create runnable hyperlinks that do not modify the current
     <h2 id="use-cases-advantages">Use cases / advantages<a class="anchor" aria-label="anchor" href="#use-cases-advantages"></a></h2>
     
 <ul><li><p>Like many other reuseme functions, they are most useful in interactive sessions</p></li>
-<li><p>print the result in interactive sessions</p></li>
-<li><p>Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks)</p></li>
+<li><p>print the result in interactive sessions (quiet in non-interactive.)</p></li>
+<li><p>Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have <code>::</code>))</p></li>
 <li><p>Use in pipelines to explore the data</p></li>
 <li><p>Use <code><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">rlang::is_interactive()</a></code> over <code><a href="https://rdrr.io/r/base/interactive.html" class="external-link">base::interactive()</a></code> as it's easier to
 control and test with <code>options(rlang_interactive)</code></p></li>
@@ -169,12 +181,13 @@ may fail if there is already a variable named <code>n</code>.</p></li>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">dplyr::count()</a></code></p></li>
-<li><p><code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">dplyr::distinct()</a></code></p></li>
+<ul><li><p><code><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">dplyr::distinct()</a></code></p></li>
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code></p></li>
 <li><p><code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice()</a></code></p></li>
+<li><p><code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code></p></li>
 <li><p><code><a href="count_pct.html">count_pct()</a></code></p></li>
 <li><p><code><a href="slice_min_max.html">slice_min_max()</a></code></p></li>
+<li><p><code><a href="slice_group_sample.html">slice_group_sample()</a></code></p></li>
 </ul></div>
     </div>
 
