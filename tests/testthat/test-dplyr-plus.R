@@ -41,6 +41,13 @@ test_that("`filter_if_any()` gives the correct error when specifying by instead 
   )
 })
 
+test_that("`filter_if_any()` doesn't work with `across()`", {
+  # TODO improve this error
+  expect_snapshot(error = TRUE,
+    dplyr::starwars %>% filter_if_any(dplyr::across(ends_with("color"), function(x) stringr::str_detect(x, "brown"))))
+})
+
+
 test_that("adds rows in front, but warns the user", {
   sw <- dplyr::starwars
   expect_snapshot(filter_if_any(sw, is.na(hair_color), hair_color == "brown"))

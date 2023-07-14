@@ -2,8 +2,16 @@
 
     Code
       f_identity(dplyr::starwars)
+    Output
+      # A tibble: 1 x 14
+        name  height  mass hair_color skin_color eye_color birth_year sex   gender   
+        <chr>  <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr>    
+      1 C-3PO    167    75 <NA>       gold       yellow           112 none  masculine
+      # i 5 more variables: homeworld <chr>, species <chr>, films <list>, ...
     Message
-      `reuseme::filter_identity()` returned no row.
+      i Looking at C3P-0 characteristics
+      `reuseme::filter_if_any()` returned no row.
+      No one is named Non-existent.
     Output
       # A tibble: 5 x 14
         name      height  mass hair_color skin_color eye_color birth_year sex   gender
@@ -34,6 +42,18 @@
     Message
       i Looking at all individuals of a sex.
     Output
+      # A tibble: 19 x 14
+        name      height  mass hair_color skin_color eye_color birth_year sex   gender
+        <chr>      <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
+      1 C-3PO        167    75 <NA>       gold       yellow           112 none  mascu~
+      2 Leia Org~    150    49 brown      light      brown             19 fema~ femin~
+      3 Beru Whi~    165    75 brown      light      blue              47 fema~ femin~
+      4 Chewbacca    228   112 brown      unknown    blue             200 male  mascu~
+      5 Han Solo     180    80 brown      fair       brown             29 male  mascu~
+      # i 14 more rows
+    Message
+      i Looking at everyone that is C3P-0 or has brown hair.
+    Output
       # A tibble: 8 x 15
         height minmax name       mass hair_color skin_color eye_color birth_year sex  
          <int> <chr>  <chr>     <dbl> <chr>      <chr>      <chr>          <dbl> <chr>
@@ -50,24 +70,13 @@
       i Looking at people with min and max height (4 each) total = 8 rows.
     Output
       # A tibble: 23 x 2
-         hair_color    sex           
-         <chr>         <chr>         
-       1 blond         male          
-       2 <NA>          none          
-       3 none          male          
-       4 brown         female        
-       5 brown, grey   male          
-       6 black         male          
-       7 auburn, white male          
-       8 auburn, grey  male          
-       9 brown         male          
-      10 <NA>          male          
-      11 <NA>          hermaphroditic
-      12 white         male          
-      13 grey          male          
-      14 none          none          
-      15 auburn        female        
-      # i 8 more rows
+        hair_color sex   
+        <chr>      <chr> 
+      1 blond      male  
+      2 <NA>       none  
+      3 none       male  
+      4 brown      female
+      # i 19 more rows
     Message
       i Looking if there is association between `hair_color` and `sex`. Printing 15 rows.
 

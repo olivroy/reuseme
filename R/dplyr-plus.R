@@ -189,7 +189,9 @@ slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
 #' dat %>% filter_if_any(vs == 1, is.na(vs))
 #' ```
 #' Basically, this is just a shortcut to `mutate(.data, new_lgl_vars)` + `filter(if_any(new_lgl_vars))` + `select(-new_lgl_vars)`
-#' It allows mutate_like syntax in `filter(if_any(...))``
+#' It allows mutate_like syntax in `filter(if_any(...))`
+#'
+#' Caution: still doesn't work with [dplyr::across()], use the regular `filter(if_any())` syntax.
 #' @param .data A data frame
 #' @param ... <[`data-masking`][rlang::args_data_masking]> Name-value pairs.
 #'   The name gives the name of the column in the output.

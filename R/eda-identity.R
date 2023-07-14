@@ -34,7 +34,7 @@
 #' @param x The main object (a data.frame, but some functions accept a vector.) (aka `.data` in some `dplyr` functions, but naming it `x` throughout.)
 #' @param extra_msg A character vector of observations, notes taken related to the transformation.
 #' @param nrows Number of rows to print
-#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group Check original functions.
+#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var Check original functions.
 #'
 #' @returns `x` original `x` is (invisibly) returned. (allowing the `*_identity()`
 #'   functions to be used in a pipeline) will print `extra_msg` to the console in interactive sessions.
@@ -218,7 +218,7 @@ filter_identity <- function(x,
     print(filtered, n = nrows)
     cli::cli_alert_info(extra_msg)
   } else {
-    cli::cli_inform("{.fn reuseme::filter_identity} returned no row.")
+    cli::cli_inform(c("{.fn reuseme::filter_identity} returned no row.", extra_msg))
   }
   invisible(x)
 }
@@ -255,18 +255,19 @@ slice_sample_identity <- function(x,
 #' @export
 filter_if_any_identity <- function(x,
                             ...,
-                            .keep = NULL,
+                            .by = NULL,
+                            .keep_new_var = FALSE,
                             nrows = NULL,
                             extra_msg = NULL) {
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
-  filtered <- filter_if_any(.data = x, ..., .keep = .keep)
+  filtered <- filter_if_any(.data = x, ..., .by = {{.by}}, .keep_new_var = .keep_new_var)
   if (nrow(filtered) > 0) {
     print(filtered, n = nrows)
     cli::cli_alert_info(extra_msg)
   } else {
-    cli::cli_inform("{.fn reuseme::filter_if_any} returned no row.")
+    cli::cli_inform(c("{.fn reuseme::filter_if_any} returned no row.", extra_msg))
   }
   invisible(x)
 }

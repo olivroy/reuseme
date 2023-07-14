@@ -80,7 +80,14 @@ slice_sample_identity(
   extra_msg = NULL
 )
 
-filter_if_any_identity(x, ..., .keep = NULL, nrows = NULL, extra_msg = NULL)
+filter_if_any_identity(
+  x,
+  ...,
+  .by = NULL,
+  .keep_new_var = FALSE,
+  nrows = NULL,
+  extra_msg = NULL
+)
 
 slice_min_max_identity(
   x,
@@ -111,7 +118,7 @@ slice_group_sample_identity(
 
 \item{extra_msg}{A character vector of observations, notes taken related to the transformation.}
 
-\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group}{Check original functions.}
+\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var}{Check original functions.}
 }
 \value{
 \code{x} original \code{x} is (invisibly) returned. (allowing the \verb{*_identity()}

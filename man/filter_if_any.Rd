@@ -45,7 +45,9 @@ dat \%>\% filter_if_any(vs == 1, is.na(vs))
 }\if{html}{\out{</div>}}
 
 Basically, this is just a shortcut to \code{mutate(.data, new_lgl_vars)} + \code{filter(if_any(new_lgl_vars))} + \code{select(-new_lgl_vars)}
-It allows mutate_like syntax in `filter(if_any(...))``
+It allows mutate_like syntax in \code{filter(if_any(...))}
+
+Caution: still doesn't work with \code{\link[dplyr:across]{dplyr::across()}}, use the regular \code{filter(if_any())} syntax.
 }
 \examples{
 library(magrittr)
