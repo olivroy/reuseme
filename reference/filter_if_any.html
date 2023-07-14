@@ -16,7 +16,7 @@ Note that when a condition evaluates to NA the row will be dropped, (hence this 
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,7 +103,8 @@ kept.</p></dd>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">if_any</a></span><span class="op">(</span><span class="fu">starts_with</span><span class="op">(</span><span class="st">"cond"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/filter_if_any.html">filter_if_any</a></span><span class="op">(</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>Basically, this is just a shortcut to <code>mutate(.data, new_lgl_vars)</code> + <code>filter(if_any(new_lgl_vars))</code> + <code>select(-new_lgl_vars)</code>
-It allows mutate_like syntax in `filter(if_any(...))``</p>
+It allows mutate_like syntax in <code>filter(if_any(...))</code></p>
+<p>Caution: still doesn't work with <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">dplyr::across()</a></code>, use the regular <code>filter(if_any())</code> syntax.</p>
     </div>
 
     <div class="section level2">

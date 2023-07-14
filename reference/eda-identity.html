@@ -16,7 +16,7 @@ Look at the original functions for the other parameters."><!-- mathjax --><scrip
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,7 +124,14 @@ They are very handy to create runnable hyperlinks that do not modify the current
 <span>  extra_msg <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">filter_if_any_identity</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, .keep <span class="op">=</span> <span class="cn">NULL</span>, nrows <span class="op">=</span> <span class="cn">NULL</span>, extra_msg <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">filter_if_any_identity</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .keep_new_var <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  extra_msg <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">slice_min_max_identity</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -163,7 +170,7 @@ They are very handy to create runnable hyperlinks that do not modify the current
 <dd><p>A character vector of observations, notes taken related to the transformation.</p></dd>
 
 
-<dt>name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group</dt>
+<dt>name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var</dt>
 <dd><p>Check original functions.</p></dd>
 
 </dl></div>
