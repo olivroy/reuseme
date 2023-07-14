@@ -64,7 +64,7 @@ count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, s
 #' # Use each = FALSE to have n divided in each place
 #' mtcars %>% slice_min_max(cyl, n = 2)
 #' # Using each = TRUE (to retun n = 2, for min, n = 2 for max)
-#' mtcars %>% slice_min_max(cyl, each =  TRUE,  n = 2)
+#' mtcars %>% slice_min_max(cyl, each = TRUE, n = 2)
 slice_min_max <- function(.data,
                           order_by,
                           each = FALSE,
@@ -121,21 +121,28 @@ slice_min_max <- function(.data,
 #' set.seed(10)
 #' library(magrittr)
 #' slice_group_sample(mtcars, group_var = vs)
-#' mtcars %>% dplyr::group_by(vs) %>% slice_group_sample()
+#' mtcars %>%
+#'   dplyr::group_by(vs) %>%
+#'   slice_group_sample()
 slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
-
   is_grouped <- dplyr::is_grouped_df(data)
 
   single_group_var <- dplyr::n_groups(data) == 1
+  if (!is_grouped && rlang::quo_is_null(enquo(group_var))) {
+    cli::cli_abort(c(
+      "Either `data` must be grouped by 1 variable, or {.arg group_var} is provided."
+    ))
+  }
+
   if (is_grouped) {
     group_var_name <- dplyr::group_vars(data)
     if (length(group_var_name) != 1) {
       cli::cli_abort("Currently only works with a single group.")
     }
     # FIXME Doesn't work, problem with symbols here
-    # if (!rlang::is_null({{group_var}})) {
-    #   cli::cli_inform("Ignoring `group_var`, using current groups")
-    # }
+    if (!rlang::quo_is_null(enquo(group_var))) {
+      cli::cli_inform("Ignoring `group_var`, using current groups")
+    }
   }
 
   if (!is_grouped) {
@@ -143,10 +150,11 @@ slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
     data <- dplyr::group_by(data, {{ group_var }})
   }
   if (!dplyr::is_grouped_df(data)) {
-    cli::cli_abort(c(
-      "Not supposed to happen"
-    ),
-    .internal = TRUE
+    cli::cli_abort(
+      c(
+        "Not supposed to happen"
+      ),
+      .internal = TRUE
     )
   }
   # Assuming the data is grouped now.
@@ -158,11 +166,15 @@ slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
   sample <- data[data$id %in% which_ids, ]
 
   sample$id <- NULL
+  if (!is_grouped) {
+    # return ungrouped if x was ungrouped
+    sample <- dplyr::ungroup(sample)
+  }
   sample
 }
 #' Keep rows that match one of the conditions
 #'
-#' The `filter_or()` function is used to subset a data frame, retaining all rows
+#' The `filter_if_any()` function is used to subset a data frame, retaining all rows
 #' that satisfy **at least one of** your conditions.
 #' To be retained, the row must produce a value of `TRUE` for **one of the conditions**
 #' Note that when a condition evaluates to `NA` the row will be dropped, (hence this function) unlike base subsetting with `[`.
@@ -171,50 +183,59 @@ slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
 #' ```r
 #' # with dplyr::filter
 #' dat %>% dplyr::filter(vs == 1 | is.na(vs))
-#' dat %>% filter_or(vs == 1, is.na(vs))
+#' data %>%
+#'   dplyr::mutate(cond1 = vs == 1, cond2 = is.na(vs)) %>%
+#'   dplyr::filter(dplyr::if_any(starts_with("cond")))
+#' dat %>% filter_if_any(vs == 1, is.na(vs))
 #' ```
 #' Basically, this is just a shortcut to `mutate(.data, new_lgl_vars)` + `filter(if_any(new_lgl_vars))` + `select(-new_lgl_vars)`
-#'
+#' It allows mutate_like syntax in `filter(if_any(...))``
 #' @param .data A data frame
+#' @param ... <[`data-masking`][rlang::args_data_masking]> Name-value pairs.
+#'   The name gives the name of the column in the output.
+#'
+#'   The value can be:
+#'
+#'   * A logical vector of length 1, which will be recycled to the correct length.
+#'   * A logical vector the same length as the current group (or the whole data frame
+#'     if ungrouped).
+#'
 #' @param ... <[`data-masking`][rlang::args_data_masking]> Expressions that
 #'   return a logical value, and are defined in terms of the variables in
 #'   `.data`. If multiple expressions are included, they are combined with the
 #'   `|` operator. Only rows for which **one of the conditions** evaluate to `TRUE` are
 #'   kept.
-#' @param .keep If `NULL`, will keep variables if they are named, drop otherwise.
-#'   if `TRUE`, will drop, if `FALSE`, will keep (still don't know how to implement.)
-#'
+#' @param .by Like in dplyr.
+#' @param .keep_new_var If `FALSE`,
 #' @returns
 #'   An object of the same type as `.data`. The output has the following properties:
 #'
 #'  * Rows are a subset of the input, but appear in the same order.
-#'  * Columns are not modified (if `.keep = FALSE`.
-#'  * The number of groups may be reduced (if `.preserve` is not `TRUE`).
+#'  * Columns are not modified (if `.keep_new_var = FALSE`.
 #'  * Data frame attributes are preserved.
-#' @keywords internal
 #' @export
 #' @examples
 #' library(magrittr)
 #' mtcars %>% dplyr::filter(cyl > 5 | mpg == 2)
 #' mtcars %>% dplyr::filter(!(!cyl > 5 & !mpg == 2))
-#' mtcars %>% filter_or(cyl > 5, vs == 0)
-filter_or <- function(.data, ..., .keep = NULL) {
-  if (!is.null(.keep) || isTRUE(.keep)) {
-    cli::cli_abort("Still don't know how to keep named variables only. Defaults to `FALSE`/ `NULL` for now.")
-  }
+#' mtcars %>% filter_if_any(cyl > 5, vs == 0)
+filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
+  check_by_typo()
   n_var <- rlang::dots_n(...)
   variables <- .data %>%
-    dplyr::mutate(..., .before = 0)
+    dplyr::mutate(..., .before = 0, .by = {{ .by }})
   if (all(purrr::map_lgl(variables[, 1:n_var], is.logical))) {
-    res <-  variables %>%
-      dplyr::filter(dplyr::if_any(1:n_var)) %>%
-      dplyr::select(!1:n_var)
+    res <- variables %>%
+      dplyr::filter(dplyr::if_any(.cols = seq_len(n_var)), .by = {{.by }})
+    if (!.keep_new_var) {
+      res <-res[-seq_len(n_var)]
+    } else {
+      cli::cli_warn("You have modified the original data")
+    }
     return(res)
   }
   cli::cli_abort("You didn't provide logical expressions. See {.help dplyr::filter}")
 }
-
-
 #' Elegant wrapper around filter and pull
 #'
 #' It can be very useful when trying to extract a value from somewhere,
@@ -233,23 +254,23 @@ filter_or <- function(.data, ..., .keep = NULL) {
 #' # extract the skin_color for C-3PO
 #' library(magrittr)
 #' extract_cell_value(
-#' data = dplyr::starwars,
-#'  var = skin_color,
-#'  filter = name == "C-3PO",
-#'  length = 1 # ensure the length will be 1.
+#'   data = dplyr::starwars,
+#'   var = skin_color,
+#'   filter = name == "C-3PO",
+#'   length = 1 # ensure the length will be 1.
 #' )
 #' # will return a named vector of mpg (as mtcars has rownames.)
 #' mtcars %>%
-#'  extract_cell_value(
-#'  var = mpg,
-#'  filter = vs == 0
-#'  )
+#'   extract_cell_value(
+#'     var = mpg,
+#'     filter = vs == 0
+#'   )
 #' # Extract hair color for all people
 #' extract_cell_value(
-#'  data = dplyr::starwars,
-#'  var = skin_color,
-#'  filter = TRUE,
-#'  name = "name" # ensure it is a named vector that corresponds to their unique ID
+#'   data = dplyr::starwars,
+#'   var = skin_color,
+#'   filter = TRUE,
+#'   name = "name" # ensure it is a named vector that corresponds to their unique ID
 #' )
 extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, unique = FALSE) {
   if (missing(var) || missing(filter)) {
@@ -258,7 +279,7 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
     ))
   }
   # rlang:::check_arg(var)
-  #rlang:::check_arg(filter)
+  # rlang:::check_arg(filter)
   if (is.null(name)) {
     if (tibble::has_rownames(data)) {
       data <- tibble::rownames_to_column(data)
@@ -268,22 +289,21 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
     }
   }
 
-    res <- dplyr::filter(data, {{ filter }})
-    res2 <- dplyr::pull(res, var = {{ var }}, name = {{ name }})
+  res <- dplyr::filter(data, {{ filter }})
+  res2 <- dplyr::pull(res, var = {{ var }}, name = {{ name }})
 
-    if (unique) {
-      res2 <- unique_named(res2)
+  if (unique) {
+    res2 <- unique_named(res2)
+  }
+  if (!is.null(length)) {
+    # TODO use `check_length()` when implemented.
+    if (!rlang::has_length(res2, length)) {
+      cli::cli_abort(c(
+        "Expected an output of {length}",
+        "Got an output of {length(res2)}"
+      ))
     }
-    if (!is.null(length)) {
-      # TODO use `check_length()` when implemented.
-      if (!rlang::has_length(res2, length)) {
-        cli::cli_abort(c(
-          "Expected an output of {length}",
-          "Got an output of {length(res2)}"
-        )
-        )
-      }
-    }
+  }
 
-    res2
+  res2
 }

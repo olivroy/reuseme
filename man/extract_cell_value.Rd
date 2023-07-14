@@ -49,22 +49,22 @@ and you have one col that represents the unique id.
 # extract the skin_color for C-3PO
 library(magrittr)
 extract_cell_value(
-data = dplyr::starwars,
- var = skin_color,
- filter = name == "C-3PO",
- length = 1 # ensure the length will be 1.
+  data = dplyr::starwars,
+  var = skin_color,
+  filter = name == "C-3PO",
+  length = 1 # ensure the length will be 1.
 )
 # will return a named vector of mpg (as mtcars has rownames.)
 mtcars \%>\%
- extract_cell_value(
- var = mpg,
- filter = vs == 0
- )
+  extract_cell_value(
+    var = mpg,
+    filter = vs == 0
+  )
 # Extract hair color for all people
 extract_cell_value(
- data = dplyr::starwars,
- var = skin_color,
- filter = TRUE,
- name = "name" # ensure it is a named vector that corresponds to their unique ID
+  data = dplyr::starwars,
+  var = skin_color,
+  filter = TRUE,
+  name = "name" # ensure it is a named vector that corresponds to their unique ID
 )
 }

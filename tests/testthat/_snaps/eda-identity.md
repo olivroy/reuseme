@@ -18,7 +18,6 @@
       i Check random rows here
     Output
       # A tibble: 22 x 14
-      # Groups:   sex [2]
          name     height  mass hair_color skin_color eye_color birth_year sex   gender
          <chr>     <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
        1 C-3PO       167    75 <NA>       gold       yellow           112 none  mascu~

@@ -23,6 +23,8 @@ Compared to \code{slice_sample()} \code{slice_group_sample} will return all rows
 set.seed(10)
 library(magrittr)
 slice_group_sample(mtcars, group_var = vs)
-mtcars \%>\% dplyr::group_by(vs) \%>\% slice_group_sample()
+mtcars \%>\%
+  dplyr::group_by(vs) \%>\%
+  slice_group_sample()
 }
 \concept{family dplyr extensions}

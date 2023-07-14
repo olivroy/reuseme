@@ -29,9 +29,8 @@ test_that("Marking a TODO item as done works", {
   )
   writeLines(text = content, con = tmp)
   expect_mark_as_done <- function(object) {
-    expect_message(object, regexp = "Marking" ) %>%
+    expect_message(object, regexp = "Marking") %>%
       expect_message(regexp = "Writing")
-
   }
 
   # Can't delete the first line as it doesn't contain a TODO item (tmp still has 5 lines)
@@ -54,9 +53,9 @@ test_that("Marking a TODO item as done works", {
     mark_todo_as_complete(line_id = 3, file = tmp, regexp = "Explain what the next code does")
   )
   # Deleting the WORK tag (on new line 2), but keeping the comment.
-  expect_mark_as_done(out <-  mark_todo_as_complete(line_id = 2, file = tmp, regexp = "Explain what the next code does") )
+  expect_mark_as_done(out <- mark_todo_as_complete(line_id = 2, file = tmp, regexp = "Explain what the next code does"))
   expect_equal(
-   out,
+    out,
     "# Explain what the next code does."
   )
   expect_equal(
@@ -70,5 +69,4 @@ test_that("Marking a TODO item as done works", {
     )
   )
   unlink(tmp)
-
 })

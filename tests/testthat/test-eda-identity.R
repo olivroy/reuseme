@@ -11,7 +11,8 @@ test_that("Side effects are what's intended in interactive sessions", {
   withr::local_seed(100)
   withr::local_options(pillar.advice = FALSE, pillar.max_footer_lines = 1)
   f_identity <- function(data) {
-    data %>%     filter_identity(name == "C3P-O", extra_msg = c("Looking at C3P-0 characteristics")) %>%
+    data %>%
+      filter_identity(name == "C3P-O", extra_msg = c("Looking at C3P-0 characteristics")) %>%
       slice_sample_identity(
         n = 5,
         extra_msg = "Check random rows here"
@@ -34,5 +35,5 @@ test_that("Side effects are what's intended in interactive sessions", {
         nrows = 15
       )
   }
-  expect_snapshot(f_identity( dplyr::starwars))
+  expect_snapshot(f_identity(dplyr::starwars))
 })

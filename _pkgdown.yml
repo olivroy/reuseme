@@ -29,6 +29,7 @@ reference:
   - named-base
   - slice_min_max
   - count_pct
+  - filter_if_any
   - extract_cell_value
   - slice_group_sample
 
@@ -37,4 +38,4 @@ reference:
       These wrappers can improve interactive data analysis, always return themselves,
       but are really useful as you can make your data analysis as chatty as you want interactively.
   contents:
-  - identity
+  - eda-identity

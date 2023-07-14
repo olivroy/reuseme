@@ -2,24 +2,30 @@
 % Please edit documentation in R/named.R
 \name{named-base}
 \alias{named-base}
-\alias{max_named}
 \alias{min_named}
+\alias{max_named}
 \alias{unique_named}
 \title{Helpers that can return a named vector}
 \usage{
-max_named(x, na.rm = FALSE)
+min_named(x, na.rm = FALSE, all_matches = FALSE)
 
-min_named(x, na.rm = FALSE)
+max_named(x, na.rm = FALSE, all_matches = FALSE)
 
 unique_named(x)
 }
 \arguments{
 \item{x}{A vector}
 
-\item{na.rm}{Should remove \code{NA}}
+\item{na.rm}{Should remove \code{NA}?}
+
+\item{all_matches}{If \code{FALSE} (default), will only return the first match,
+similar to \code{\link[=which.min]{which.min()}} / \code{\link[=which.max]{which.max()}}
+If \code{TRUE}, will return a named vector of all values
+corresponding to the max value.}
 }
 \value{
-A vector (preserves names)
+A vector (preserves names).
+\code{min_named()}, \code{max_named()} will return a vector of length 1, if \code{all_matches = FALSE}
 }
 \description{
 Base R keeps names in various places, but drops them elsewhere
@@ -31,4 +37,8 @@ max_named(c("this guy" = 2, "that guy" = 3))
 unique_named(c("this guy" = 2, "that guy" = 3, "this guy" = 2))
 # returns the same as base R for unnamed input
 unique_named(c(1, 2, 3, 3))
+# returns all values
+min_named(c("x" = 1, "y" = 1, "ww" = 2), all_matches = FALSE)
+# TODO is usable with `extract_cell_value()`
+
 }
