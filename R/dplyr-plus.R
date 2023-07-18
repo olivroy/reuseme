@@ -228,9 +228,9 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
     dplyr::mutate(..., .before = 0, .by = {{ .by }})
   if (all(purrr::map_lgl(variables[, 1:n_var], is.logical))) {
     res <- variables %>%
-      dplyr::filter(dplyr::if_any(.cols = seq_len(n_var)), .by = {{.by }})
+      dplyr::filter(dplyr::if_any(.cols = seq_len(n_var)), .by = {{ .by }})
     if (!.keep_new_var) {
-      res <-res[-seq_len(n_var)]
+      res <- res[-seq_len(n_var)]
     } else {
       cli::cli_warn("You have modified the original data")
     }

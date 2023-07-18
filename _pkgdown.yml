@@ -29,6 +29,7 @@ reference:
   - named-base
   - slice_min_max
   - count_pct
+  - case_if_any
   - filter_if_any
   - extract_cell_value
   - slice_group_sample

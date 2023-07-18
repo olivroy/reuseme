@@ -254,15 +254,15 @@ slice_sample_identity <- function(x,
 #' @rdname eda-identity
 #' @export
 filter_if_any_identity <- function(x,
-                            ...,
-                            .by = NULL,
-                            .keep_new_var = FALSE,
-                            nrows = NULL,
-                            extra_msg = NULL) {
+                                   ...,
+                                   .by = NULL,
+                                   .keep_new_var = FALSE,
+                                   nrows = NULL,
+                                   extra_msg = NULL) {
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
-  filtered <- filter_if_any(.data = x, ..., .by = {{.by}}, .keep_new_var = .keep_new_var)
+  filtered <- filter_if_any(.data = x, ..., .by = {{ .by }}, .keep_new_var = .keep_new_var)
   if (nrow(filtered) > 0) {
     print(filtered, n = nrows)
     cli::cli_alert_info(extra_msg)
