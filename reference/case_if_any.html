@@ -120,14 +120,20 @@ in <code>...</code>.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">case_if_any</span><span class="op">(</span></span></span>
-<span class="r-in"><span><span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span><span class="fl">1</span> <span class="op">~</span> <span class="st">"vs = 1"</span>,</span></span>
-<span class="r-in"><span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">150</span> <span class="op">~</span> <span class="st">"I have mpg &gt; 150"</span></span></span>
+<span class="r-in"><span>  <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"vs = 1"</span>,</span></span>
+<span class="r-in"><span>  <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">150</span> <span class="op">~</span> <span class="st">"I have mpg &gt; 150"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] ""       ""       "vs = 1" "vs = 1" ""       "vs = 1" ""       "vs = 1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "vs = 1" "vs = 1" "vs = 1" ""       ""       ""       ""       ""      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] ""       "vs = 1" "vs = 1" "vs = 1" "vs = 1" ""       ""       ""      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] ""       "vs = 1" ""       "vs = 1" ""       ""       ""       "vs = 1"</span>
-<span class="r-in"><span><span class="fu">case_if_any</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Woww"</span> ,<span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">15</span> <span class="op">~</span> <span class="st">"QW"</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">qsec</span><span class="op">&gt;</span> <span class="fl">18</span> <span class="op">~</span> <span class="st">"ooh lalal"</span>, .sep <span class="op">=</span> <span class="st">";"</span>, .default <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">case_if_any</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="st">"Woww"</span>,</span></span>
+<span class="r-in"><span>  <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">15</span> <span class="op">~</span> <span class="st">"QW"</span>,</span></span>
+<span class="r-in"><span>  <span class="va">mtcars</span><span class="op">$</span><span class="va">qsec</span> <span class="op">&gt;</span> <span class="fl">18</span> <span class="op">~</span> <span class="st">"ooh lalal"</span>,</span></span>
+<span class="r-in"><span>  .sep <span class="op">=</span> <span class="st">";"</span>,</span></span>
+<span class="r-in"><span>  .default <span class="op">=</span> <span class="cn">NA</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "QW"                "QW"                "Woww;QW;ooh lalal"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "Woww;QW;ooh lalal" "QW"                "Woww;QW;ooh lalal"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] NA                  "Woww;QW;ooh lalal" "Woww;QW;ooh lalal"</span>

@@ -73,25 +73,137 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of reuseme is to provide utility functions for project management in RStudio projects.</p>
+<!-- badges: end -->
+<p>The goal of reuseme is to provide utility functions for project management across RStudio projects. Sometimes, you have to manage multiple things at once, but don’t have the time to do edits. You may need to switch quickly to a project, add things or browse a certain file if you have some replications across projects. Sometimes, it is hard to do that. reuseme also aims to help me overcome things I don’t like on Windows.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of reuseme like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"olivroy/reuseme"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># R-universe</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'reuseme'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://olivroy.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># From GitHub</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"olivroy/reuseme"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>reuseme is adapted for a standard workflow, recommended in (find resources)</p>
+<ul>
+<li>Anyone working in RStudio (recent version for hyperlink support)</li>
+<li>Work with RStudio projects</li>
+<li>Your RStudio projects are organized in a centralized location on your computer</li>
+<li>Your RStudio projects are Version controlled with git (optional, but recommended to avoid surprises! No need to be hosted on repositories like GitLab or GitHub)</li>
+<li>You are working on Windows (macOS is supported, but some things were designed on Windows)</li>
+<li>You use machine and human readable paths (i.e. no spaces, special characters) (Tip: don’t hesitate to rename your files, it can take away the pain in the long run!</li>
+</ul>
+<p>To take advantage of reuseme, it is highly recommended to set the following option in your <code>.Rprofile</code></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>reuseme.reposdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"~/rrr"</span>, <span class="st">"any-other-directories-that-contain-rstudio-projects"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>This will enable functions like <code><a href="reference/proj_switch.html">proj_switch()</a></code>, <code><a href="reference/proj_list.html">proj_list()</a></code>, <code><a href="reference/use_todo.html">use_todo()</a></code> to be optimized.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>Since the package is meant for interactive use, there may not be a lot of code. It takes advantage of <a href="https://cli.r-lib.org/reference/links.html" class="external-link">cli hyperlinks</a> to improve productivity.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://olivroy.github.io/reuseme/">reuseme</a></span><span class="op">)</span></span>
 <span><span class="co">## basic example code</span></span></code></pre></div>
 <p>Most of these functions are meant to be used in RStudio, and in RStudio Projects, as they have not been widely tested outside this context.</p>
 <p>In interactive sessions, you can use the <code><a href="reference/screenshot.html">screenshot()</a></code> function to access an image in the clipboard and save it as .png in a <code>figures/</code> directory in your RStudio project.</p>
 <p>reuseme helps you work across projects, with the <code><a href="reference/proj_switch.html">proj_switch()</a></code> function. <code><a href="reference/proj_switch.html">proj_switch()</a></code> works a lot like <code><a href="https://usethis.r-lib.org/reference/proj_activate.html" class="external-link">usethis::proj_activate()</a></code> with the advantage of only typing the project name, instead of the full path. By default, reuseme looks at <code>options(reuseme.reposdir)</code>, that is a vector of paths where repositories are located. Personally, I use <code>~/rrr</code> (for my own projects) and <code>~/rrr-forks</code> (for projects I contribute to).</p>
-<p>When not supplying the <code>proj</code> argument, many functions will just offer you to choose, with a UI built on <a href="https://cli.r-lib.org/reference/links.html" class="external-link">cli hyperlinks</a>.</p>
+<p>When not supplying the <code>proj</code> argument, many functions will just offer you to choose, with a user interface built on <a href="https://cli.r-lib.org/reference/links.html" class="external-link">cli hyperlinks</a>.</p>
+<div class="section level3">
+<h3 id="extend-usethis-functionality">Extend usethis functionality<a class="anchor" aria-label="anchor" href="#extend-usethis-functionality"></a>
+</h3>
+<p>usethis is fantastic to manage workflow within a project, but is harder across projects.</p>
+<p>If you want to work across projects with <a href="usethis.r-lib.org">usethis</a>, you need to provide the full path to a project. With reuseme, just use the project name!</p>
+<table style="width:100%;" class="table">
+<caption>
+usethis vs reuseme
+</caption>
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead><tr class="header">
+<th>
+Workflow
+</th>
+<th>
+reuseme
+</th>
+<th>
+usethis
+</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>
+Switch to project “cool-project”
+</td>
+<td>
+<code>proj_switch(proj = “cool-project”)</code>
+</td>
+<td>
+<code>proj_activate(path = “C:/users/long/path/to/cool-project”)</code>
+</td>
+</tr>
+<tr class="even">
+<td>
+Write a TODO item in project “cooler-project”, while working in “cool-project”
+</td>
+<td>
+<code>use_todo(todo = “I need to do this ASAP as possible”, proj = “cooler-project”)</code>
+</td>
+<td>
+<code>usethis::write_union(path = “C:/Users/I/do/not/want/to/type/cooler-project/TODO.R”, lines = “I need to do this ASAP as possible.”)</code>
+</td>
+</tr>
+<tr class="odd">
+<td>
+Open pkgdown site link and see vignettes
+</td>
+<td>
+<ol type="1">
+<li>
+`browse_pkg(“usethis”)
+</li>
+<li>
+Click on the hyperlinks that correspond to your query
+</li>
+</ol>
+</td>
+<td>
+<ol type="1">
+<li>
+<code>browse_package(“usethis”)</code>
+</li>
+<li>
+Type the correct number that corresponds
+</li>
+<li>
+<code>browseVignettes(“usethis”)</code>
+</li>
+<li>
+Open it
+</li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>usethis vs reuseme</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="proposing-a-data-analysis-workflow">Proposing a data analysis workflow<a class="anchor" aria-label="anchor" href="#proposing-a-data-analysis-workflow"></a>
+</h2>
+<!--# Write about dplyr-plus functions! -->
+<!--# Write about *_identity functions -->
+<!--# Write about _named functions -->
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
