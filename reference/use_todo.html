@@ -80,6 +80,12 @@ RStudio project name in the following directories
 <p>A <code>TODO.R</code> file appended with the <code>todo</code> string.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>If you use <code>use_todo()</code> with a version-control repository, you may want to use
+<code>usethis::use_git_ignore("TODO.R")</code> if you don't want your <code>TODO.R</code> file to be included.
+If using in a package directory, use <code>usethis::use_build_ignore("TODO.R")</code> to prevent a note in <code>R CMD CHECK</code></p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://usethis.r-lib.org/reference/write-this.html" class="external-link">usethis::write_union()</a></code></p></div>
     </div>
