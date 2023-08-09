@@ -3,6 +3,10 @@
 #' Creates or edits a `TODO.R` file to store your TODOs.
 #' By default it will write in the current RStudio project.
 #'
+#' If you use `use_todo()` with a version-control repository, you may want to use
+#'  `usethis::use_git_ignore("TODO.R")` if you don't want your `TODO.R` file to be included.
+#' If using in a package directory, use `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`
+#'
 #' @param todo A character vector of lines to add to the TODO file
 #' @param proj By default, the active project, an arbitrary directory, or a
 #'   RStudio project name in the following directories
