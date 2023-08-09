@@ -72,6 +72,7 @@ names_identity <- function(x, nrows = NULL, extra_msg = NULL) {
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   print(names(x))
   invisible(x)
 }
@@ -83,11 +84,14 @@ count_identity <- function(x, ..., sort = TRUE, name = NULL, nrows = NULL, extra
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   count <- count_pct(.data = x, ..., sort = sort, name = name, label = TRUE)
+
   if (nrow(count) > 0) {
     print(count, n = nrows)
     cli::cli_alert_info(extra_msg)
   }
+
   invisible(x)
 }
 #' @rdname eda-identity
@@ -101,16 +105,15 @@ mutate_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   new_var <- dplyr::mutate(
     .data = x,
     ...,
     .keep = .keep %||% "used",
     .before = .before %||% 0
   )
-  print(
-    dplyr::distinct(new_var),
-    n = nrows
-  )
+
+  print(dplyr::distinct(new_var), n = nrows)
   cli::cli_alert_info(extra_msg)
   invisible(x)
 }
@@ -129,6 +132,7 @@ slice_min_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   res <- dplyr::slice_min(
     .data = x,
     order_by = {{ order_by }},
@@ -139,6 +143,7 @@ slice_min_identity <- function(x,
     with_ties = with_ties,
     na_rm = na_rm
   )
+
   res <- dplyr::relocate(res, {{ order_by }})
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
@@ -159,6 +164,7 @@ slice_max_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   res <- dplyr::slice_max(
     .data = x,
     order_by = {{ order_by }},
@@ -169,6 +175,7 @@ slice_max_identity <- function(x,
     with_ties = with_ties,
     na_rm = na_rm
   )
+
   res <- dplyr::relocate(res, {{ order_by }})
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
@@ -236,6 +243,7 @@ slice_sample_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   res <- dplyr::slice_sample(
     .data = x,
     ...,
@@ -245,6 +253,7 @@ slice_sample_identity <- function(x,
     weight_by = {{ weight_by }},
     replace = replace
   )
+
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
   invisible(x)
@@ -262,13 +271,16 @@ filter_if_any_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   filtered <- filter_if_any(.data = x, ..., .by = {{ .by }}, .keep_new_var = .keep_new_var)
+
   if (nrow(filtered) > 0) {
     print(filtered, n = nrows)
     cli::cli_alert_info(extra_msg)
   } else {
     cli::cli_inform(c("{.fn reuseme::filter_if_any} returned no row.", extra_msg))
   }
+
   invisible(x)
 }
 #' @export
@@ -287,6 +299,7 @@ slice_min_max_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   res <- slice_min_max(
     .data = x,
     order_by = {{ order_by }},
@@ -298,6 +311,7 @@ slice_min_max_identity <- function(x,
     with_ties = with_ties,
     na_rm = na_rm
   )
+
   res <- dplyr::relocate(res, {{ order_by }})
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
@@ -313,11 +327,13 @@ slice_group_sample_identity <- function(x,
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
+
   res <- slice_group_sample(
     data = x,
     n_groups = n_groups,
     group_var = {{ group_var }}
   )
+
   print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
   invisible(x)
@@ -334,5 +350,6 @@ divide_ceiling_null <- function(x, div) {
   if (is.null(x)) {
     return(x)
   }
+
   ceiling(x / div)
 }

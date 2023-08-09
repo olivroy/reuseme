@@ -54,3 +54,35 @@ test_that("adds rows in front, but warns the user", {
   sw <- dplyr::starwars
   expect_snapshot(filter_if_any(sw, is.na(hair_color), hair_color == "brown"))
 })
+
+test_that("summarise_with_total() works", {
+  expect_snapshot({
+    # group_by
+    mtcars %>%
+      dplyr::group_by(vs = as.character(vs)) %>%
+      summarise_with_total(
+        x = sum(mpg),
+        .label = "All vs",
+        .first = TRUE
+      )
+    # .by
+    mtcars %>%
+      tibble::as_tibble() %>%
+      summarise_with_total(
+        x = sum(mpg),
+        .by = vs,
+        .label = "All vs",
+        .first = TRUE
+      )
+    mtcars %>%
+      tibble::as_tibble() %>%
+      dplyr::mutate(vs = as.character(vs)) %>%
+      summarise_with_total(
+        x = sum(mpg),
+        y = mean(mpg),
+        .by = vs,
+        .label = "All vs",
+        .first = F
+      )
+  })
+})

@@ -13,7 +13,8 @@ mark_todo_as_complete(line_id, file, regexp, rm_line = NULL)
 
 \item{regexp}{A regexp to assess that file content has not changed}
 
-\item{rm_line}{A logical If \code{NULL} will remove the full line in the file (for TODO, or FIXME items), else for WORK, will only remove the WORK tag
+\item{rm_line}{A logical If \code{NULL} will remove the full line in the file
+(for TODO, or FIXME items), else for WORK, will only remove the WORK tag
 will remove only the tag (i.e. TODO, WORK, FIXME)}
 }
 \value{

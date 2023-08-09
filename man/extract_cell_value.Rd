@@ -14,7 +14,7 @@ extract_cell_value(
 )
 }
 \arguments{
-\item{data}{The data}
+\item{data}{A data.frame}
 
 \item{var}{A variable specified as:
 \itemize{
@@ -60,6 +60,7 @@ mtcars \%>\%
     var = mpg,
     filter = vs == 0
   )
+
 # Extract hair color for all people
 extract_cell_value(
   data = dplyr::starwars,

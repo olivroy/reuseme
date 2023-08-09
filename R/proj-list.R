@@ -11,11 +11,13 @@ proj_switch <- function(proj = NULL) {
   # This is my default places (reuseme.reposdir possibly)
   # See fs::path_home
   all_projects <- proj_list()
+
   if (!is.null(proj)) {
     rlang::arg_match0(proj, values = names(all_projects))
     usethis::proj_activate(all_projects[proj])
     return(invisible(all_projects[proj]))
   }
+
   bullets <- paste0("Open {.run [", names(all_projects), "](usethis::proj_activate('", unname(all_projects), "'))}")
   cli::cli_bullets(bullets)
 }
@@ -30,15 +32,15 @@ proj_switch <- function(proj = NULL) {
 #' @export
 proj_list <- function(dirs = getOption("reuseme.reposdir")) {
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
-  fs::dir_ls(
+  directories <- fs::dir_ls(
     proj_location,
     type = "directory",
     recurse = FALSE,
     regexp = ".Rcheck",
     invert = TRUE
-  ) %>%
-    as.character() %>%
-    purrr::set_names(fs::path_file)
+  )
+
+  purrr::set_names(x = as.character(directories), nm = fs::path_file)
 }
 
 default_dirs <- function() {

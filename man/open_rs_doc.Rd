@@ -20,5 +20,12 @@ opening the document?}
 Invisibly returns the document id
 }
 \description{
-Wrapper around \link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen}, but with \verb{fs paths}, for consistency.
+Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
+}
+\examples{
+if (FALSE) {
+  # open the fictious file.R at line 5
+  open_rs_doc("file.R", line = 5)
+}
+
 }

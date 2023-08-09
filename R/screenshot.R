@@ -1,4 +1,4 @@
-#' Save the image in your clipboard to png  in a `figures/` dir
+#' Save the current image in clipboard to png in your active directory
 #'
 #' @description
 #' The screenshot will be saved as `.png` to a directory following these rules
@@ -15,26 +15,33 @@
 #' It will continue the numbering if a file named image exists.
 #'
 #' Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
+#'
 #' @param file A file name, ideally `-` (kebab-case). (extension ignored) (optional, default is `image.png`)
 #' @param dir A directory (optional), to override the directory rules mentioned in the description.
-#' @return invisibly returns the full image path
+#' @return The full image path, invisibly.
 #' @export
 #' @examples
-#' \dontrun{
-#' screenshot(file = "my-new-image")
+#' if (FALSE) {
+#'   # Add an image to the clipboard
+#'   # Run the following
+#'   screenshot(file = "my-new-image")
 #' }
+#'
 screenshot <- function(file = NULL, dir = NULL) {
   # https://z3tt.github.io/graphic-design-ggplot2/tips-to-improve-your-ggplot-workflow.html#save-ggplot-output-with-the-correct-dimensions
   # Could wrap ggsave also
   check_string(file, allow_null = TRUE)
+
   if (!rlang::is_interactive()) {
     cli::cli_warn("Remove {.fn screenshot} from scripts. It is only meant to be used interactively.")
     return(invisible(NULL))
   }
+
   img_dir <- if (!is.null(dir)) {
     if (!fs::is_dir(dir) || !fs::dir_exists(dir)) {
       cli::cli_abort(c(x = "{.arg dir} must be `NULL` or a valid directory."))
     }
+
     dir
   } else if (is_pkg()) {
     "man/figures/"
@@ -43,6 +50,7 @@ screenshot <- function(file = NULL, dir = NULL) {
   } else {
     "images/"
   }
+
   if (!fs::dir_exists(img_dir)) {
     cli::cli_abort(c(
       x = "The directory where we want to save the image, {img_dir} doesn't exist.",
@@ -50,11 +58,13 @@ screenshot <- function(file = NULL, dir = NULL) {
       "Then, rerun {.fun screenshot} to save the screenshot"
     ))
   }
+
   rlang::check_installed("magick")
 
-  is_generic <- is.null(file)
+  is_generic_file_name <- is.null(file)
   file <- file %||% "image"
   file <- fs::path_ext_remove(file)
+
   if (file == "image") {
     files_named_image <- fs::dir_ls(
       path = img_dir,
@@ -69,9 +79,12 @@ screenshot <- function(file = NULL, dir = NULL) {
       increment_val <- stringr::str_extract(files_named_image, "\\d+")
       max(as.numeric(increment_val))
     }
+
     file <- glue::glue("image-{stringr::str_pad(increment + 1, width = 2, pad = '0')}")
   }
+
   img_path <- fs::path(img_dir, file, ext = "png")
+
   screen_shot <- tryCatch(
     magick::image_read("clipboard:"),
     error = function(e) {
@@ -81,19 +94,22 @@ screenshot <- function(file = NULL, dir = NULL) {
       )
     }
   )
+
   magick::image_write(
     image = screen_shot,
     path = img_path,
     format = "png",
     comment = "screenshot"
   )
+
   img_path_chr <- as.character(img_path)
 
   bullets <- c(
     "Use with quarto, Rmd (source mode) with",
     '![]({img_path_chr}){{fig-alt="" width="70%"}}'
   )
-  if (is_generic) {
+
+  if (is_generic_file_name) {
     bullets <- c(
       bullets,
       "i" = "Consider using a more precise name",

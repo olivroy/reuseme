@@ -1,20 +1,23 @@
 #' Add a TODO list by project to a TODO.R file in the base directory
 #'
-#' Project, By default it will write in the current RStudio project.
+#' Creates or edits a `TODO.R` file to store your TODOs.
+#' By default it will write in the current RStudio project.
 #'
 #' @param todo A character vector of lines to add to the TODO file
-#' @param proj By default, the active project, an arbitrary directory, or a RStudio project name in the
-#'   following directories `options(reuseme.destdir)`, uses [proj_list()] in this case.
-#' @param code If `TRUE`, will render code output
+#' @param proj By default, the active project, an arbitrary directory, or a
+#'   RStudio project name in the following directories
+#'   `options(reuseme.destdir)`, uses [proj_list()] in this case.
+#' @param code If `TRUE`, will render code output (default is text.)
 #' @seealso [usethis::write_union()]
+#'
 #' @return A `TODO.R` file appended with the `todo` string.
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' use_todo("I need to do that")
-#' use_todo(c("I need to do that again", "youppi"))
-#' use_todo("c(x, y)", code = TRUE)
+#' if (FALSE) {
+#'   use_todo("I need to do that")
+#'   use_todo(c("I need to do that again", "youppi"))
+#'   use_todo("c(x, y)", code = TRUE)
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   is_active_proj <- identical(proj, proj_get())
@@ -25,7 +28,9 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   } else {
     todo_lines <- todo
   }
+
   path_todo <- "TODO.R"
+
   if (!fs::dir_exists(proj)) { # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
@@ -49,9 +54,11 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 #'
 #' @param line_id The line number (a single integer)
 #' @param file Path to a file
-#' @param rm_line A logical If `NULL` will remove the full line in the file (for TODO, or FIXME items), else for WORK, will only remove the WORK tag
+#' @param rm_line A logical If `NULL` will remove the full line in the file
+#'   (for TODO, or FIXME items), else for WORK, will only remove the WORK tag
 #'   will remove only the tag (i.e. TODO, WORK, FIXME)
 #' @param regexp A regexp to assess that file content has not changed
+#'
 #' @return Writes a file with corrections, and returns the new line content invisibly.
 #' @export
 #' @keywords internal
@@ -61,6 +68,7 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   file_content <- readLines(file, encoding = "UTF-8")
   line_content <- file_content[line_id]
   detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
+
   if (!detect_regexp_in_line) {
     cli::cli_abort(c(
       "Did not detect the following text as expected {regexp}",
@@ -75,6 +83,7 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   if (is.null(rm_line)) {
     rm_line <- tag_type %in% c("TODO", "FIXME")
   }
+
   if (rm_line) {
     cli::cli_alert_success("Marking `{line_content}` as done! ")
     file_content_new <- file_content[-line_id]

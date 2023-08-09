@@ -7,9 +7,11 @@
 #' @noRd
 #' @keywords internal
 is_pkg <- function(base_path = proj_get()) {
-  res <- tryCatch(rprojroot::find_package_root_file(path = base_path),
+  res <- tryCatch(
+    rprojroot::find_package_root_file(path = base_path),
     error = function(e) NULL
   )
+
   !is.null(res)
 }
 
@@ -25,24 +27,30 @@ write_union2 <- function(path, lines, quiet = FALSE) {
   check_character(lines)
   check_bool(quiet)
   path <- fs::path_expand(path)
+
   if (fs::file_exists(path)) {
     existing_lines <- read_utf8(path)
     new_flag <- FALSE
   } else {
     existing_lines <- character()
     new_flag <- TRUE
+
     if (!quiet) {
       cli::cli_alert_success("Creating {.file {path}}")
     }
   }
+
   new <- setdiff(lines, existing_lines)
+
   if (length(new) == 0) {
     return(invisible(FALSE))
   }
+
   if (!quiet) {
     msg <- paste0("Adding {.val {new}}", if (!new_flag) " to {.file {path}}")
     cli::cli_alert_success(msg)
   }
+
   all <- c(existing_lines, new)
   usethis::write_over(path = path, lines = all, quiet = TRUE, overwrite = TRUE)
 }
@@ -51,9 +59,11 @@ write_union2 <- function(path, lines, quiet = FALSE) {
 # Quarto blog utils -------------------------------------------------
 is_quarto_blog <- function(base_path = proj_get()) {
   is_quarto <- fs::file_exists(fs::path(base_path, "_quarto.yml"))
+
   if (!is_quarto) {
     return(FALSE)
   }
+
   fs::dir_exists("posts")
 }
 
@@ -64,6 +74,7 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
     mustWork = TRUE,
     winslash = "/"
   )
+
   # very similar to usethis:::in_active_proj (possibly could have a helper.)
   if (!identical(fs::path_common(c(full_doc_path, base_path)), base_path)) {
     cli::cli_abort(
@@ -76,7 +87,9 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
       call = call
     )
   }
+
   relative_path <- fs::path_rel(full_doc_path)
+
   if (!fs::path_ext(relative_path) %in% c("qmd", "md", "Rmd", "Rmarkdown")) {
     cli::cli_abort(
       c(
@@ -86,6 +99,7 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
       call = call
     )
   }
+
   fs::path_dir(relative_path)
 }
 proj_get <- function() {

@@ -24,8 +24,10 @@ If \code{TRUE}, will return a named vector of all values
 corresponding to the max value.}
 }
 \value{
-A vector (preserves names).
-\code{min_named()}, \code{max_named()} will return a vector of length 1, if \code{all_matches = FALSE}
+\itemize{
+\item \code{min/max_named(all_matches = FALSE)}, a named vector of length 1.
+\item Otherwise, a named vector.
+}
 }
 \description{
 Base R keeps names in various places, but drops them elsewhere
@@ -39,6 +41,7 @@ unique_named(c("this guy" = 2, "that guy" = 3, "this guy" = 2))
 unique_named(c(1, 2, 3, 3))
 # returns all values
 min_named(c("x" = 1, "y" = 1, "ww" = 2), all_matches = FALSE)
+
 # TODO is usable with `extract_cell_value()`
 
 }

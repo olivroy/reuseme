@@ -29,3 +29,37 @@
       # i 5 more variables: homeworld <chr>, species <chr>, films <list>,
       #   vehicles <list>, starships <list>
 
+# summarise_with_total() works
+
+    Code
+      mtcars %>% dplyr::group_by(vs = as.character(vs)) %>% summarise_with_total(x = sum(
+        mpg), .label = "All vs", .first = TRUE)
+    Output
+      # A tibble: 3 x 2
+        vs         x
+        <chr>  <dbl>
+      1 All vs  643.
+      2 0       299.
+      3 1       344.
+    Code
+      mtcars %>% tibble::as_tibble() %>% summarise_with_total(x = sum(mpg), .by = vs,
+      .label = "All vs", .first = TRUE)
+    Output
+      # A tibble: 3 x 2
+        vs         x
+        <chr>  <dbl>
+      1 All vs  643.
+      2 0       299.
+      3 1       344.
+    Code
+      mtcars %>% tibble::as_tibble() %>% dplyr::mutate(vs = as.character(vs)) %>%
+        summarise_with_total(x = sum(mpg), y = mean(mpg), .by = vs, .label = "All vs",
+        .first = F)
+    Output
+      # A tibble: 3 x 3
+        vs         x     y
+        <chr>  <dbl> <dbl>
+      1 0       299.  16.6
+      2 1       344.  24.6
+      3 All vs  643.  20.1
+

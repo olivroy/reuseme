@@ -1,4 +1,5 @@
 url: https://olivroy.github.io/reuseme/
+
 template:
   bootstrap: 5
 
@@ -7,6 +8,7 @@ reference:
 - title: Worflow helpers
   desc: >
     With these usethis-inspired functions, you can speed-up your workflow.
+
 - subtitle: Project Management
   contents:
   - starts_with("proj_")
@@ -33,6 +35,7 @@ reference:
   - filter_if_any
   - extract_cell_value
   - slice_group_sample
+  - summarise_with_total
 
 - subtitle: dplyr and base identity
   desc: >

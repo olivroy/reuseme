@@ -224,18 +224,20 @@ slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
 filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
   check_by_typo()
   n_var <- rlang::dots_n(...)
-  variables <- .data %>%
-    dplyr::mutate(..., .before = 0, .by = {{ .by }})
+  variables <- dplyr::mutate(.data, ..., .before = 0, .by = {{ .by }})
+
   if (all(purrr::map_lgl(variables[, 1:n_var], is.logical))) {
-    res <- variables %>%
-      dplyr::filter(dplyr::if_any(.cols = seq_len(n_var)), .by = {{ .by }})
+    res <- dplyr::filter(variables, dplyr::if_any(.cols = seq_len(n_var)), .by = {{ .by }})
+
     if (!.keep_new_var) {
       res <- res[-seq_len(n_var)]
     } else {
       cli::cli_warn("You have modified the original data")
     }
+
     return(res)
   }
+
   cli::cli_abort("You didn't provide logical expressions. See {.help dplyr::filter}")
 }
 #' Elegant wrapper around filter and pull
@@ -243,7 +245,7 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
 #' It can be very useful when trying to extract a value from somewhere,
 #' and you have one col that represents the unique id.
 #'
-#' @param data The data
+#' @param data A data.frame
 #' @param filter the filter
 #' @param name The variable for the name (by default, will look for `rownames`), can be quoted (safer).
 #' @inheritParams dplyr::pull
@@ -267,6 +269,7 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
 #'     var = mpg,
 #'     filter = vs == 0
 #'   )
+#'
 #' # Extract hair color for all people
 #' extract_cell_value(
 #'   data = dplyr::starwars,
@@ -275,13 +278,9 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
 #'   name = "name" # ensure it is a named vector that corresponds to their unique ID
 #' )
 extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, unique = FALSE) {
-  if (missing(var) || missing(filter)) {
-    cli::cli_abort(c(
-      "Must provide the `var` and `filter` you want to extract. "
-    ))
-  }
-  # rlang:::check_arg(var)
-  # rlang:::check_arg(filter)
+  check_required(data)
+  check_required(var)
+
   if (is.null(name)) {
     if (tibble::has_rownames(data)) {
       data <- tibble::rownames_to_column(data)
@@ -298,7 +297,7 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
     res2 <- unique_named(res2)
   }
   if (!is.null(length)) {
-    # TODO use `check_length()` when implemented.
+    # TODO use `check_length()` when implemented. r-lib/rlang#1618
     if (!rlang::has_length(res2, length)) {
       cli::cli_abort(c(
         "Expected an output of {length}",
@@ -308,4 +307,96 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
   }
 
   res2
+}
+
+# summarise with total ---------------------------------------------------------
+#' Compute a summary for one group with the total included.
+#'
+#' This function is useful to create end tables, apply the same formula to a group and to its overall.
+#' You can specify a personalized `Total` value with the `.label` argument. You
+#' You should only use the output from `summarise_with_total()` with `tidyr::pivot_wider()`,
+#' write data to a spreadsheet, `gt::gt()` after that. Don't try to do more computing afterwards.
+#' It can also be used for plotting
+#' Changes the `.by` variable to a factor.
+#'
+#'
+#' @inheritParams dplyr::summarise
+#' @param .label Label of the total value
+#' @param .first Should the total be on top
+#' @return An ungrouped data frame with the total included in the first or last row.
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#'
+#' # works with `.by`
+#'
+#' mtcars %>%
+#'   summarise_with_total(
+#'     x = mean(mpg),
+#'     .by = vs,
+#'     .label = "All vs"
+#'   )
+#'
+#' # works with `group_by()`
+#' mtcars %>%
+#'   dplyr::group_by(vs) %>%
+#'   summarise_with_total(
+#'     x = mean(mpg),
+#'     .label = "All vs"
+#'   )
+summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .first = TRUE) {
+  check_string(.label)
+  # check_dots_used()
+
+  # Computing summary (depending if .data is grouped or uses `.by`)
+  if (dplyr::is_grouped_df(.data)) {
+    group_var <- dplyr::group_vars(.data)
+
+    if (length(group_var) != 1) {
+      cli::cli_abort(c(
+        "Must supply a single group"
+      ))
+    }
+
+    by_summary <- dplyr::summarise(.data, ...)
+
+    summary <- dplyr::summarise(
+      .data = dplyr::ungroup(.data),
+      "{group_var}" := .label,
+      ...
+    )
+  } else {
+    # compute summary by variable
+    by_summary <- dplyr::summarise(.data, ..., .by = {{ .by }})
+
+    # Compute the summary for total
+    summary <- dplyr::summarise(.data, "{{ .by }}" := .label, ...)
+  }
+
+  # Decide how to arrange the data.
+  summary_levels <- if (.first) {
+    c(.label, as.character(levels(by_summary[[1]]) %||% unique(by_summary[[1]])))
+  } else {
+    c(as.character(levels(by_summary[[1]]) %||% unique(by_summary[[1]])), .label)
+  }
+
+  if (is.factor(by_summary[[1]])) {
+    by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
+  } else if (!is.character(by_summary[[1]])) {
+    by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
+  }
+
+
+  # .first decides which ones to bind
+  if (.first) {
+    res <- dplyr::bind_rows(
+      summary, by_summary
+    )
+  } else {
+    res <- dplyr::bind_rows(
+      by_summary, summary
+    )
+  }
+  res
 }

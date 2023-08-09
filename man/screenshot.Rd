@@ -2,7 +2,7 @@
 % Please edit documentation in R/screenshot.R
 \name{screenshot}
 \alias{screenshot}
-\title{Save the image in your clipboard to png  in a \verb{figures/} dir}
+\title{Save the current image in clipboard to png in your active directory}
 \usage{
 screenshot(file = NULL, dir = NULL)
 }
@@ -12,7 +12,7 @@ screenshot(file = NULL, dir = NULL)
 \item{dir}{A directory (optional), to override the directory rules mentioned in the description.}
 }
 \value{
-invisibly returns the full image path
+The full image path, invisibly.
 }
 \description{
 The screenshot will be saved as \code{.png} to a directory following these rules
@@ -33,7 +33,10 @@ It will continue the numbering if a file named image exists.
 Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
 }
 \examples{
-\dontrun{
-screenshot(file = "my-new-image")
+if (FALSE) {
+  # Add an image to the clipboard
+  # Run the following
+  screenshot(file = "my-new-image")
 }
+
 }

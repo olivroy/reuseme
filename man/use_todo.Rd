@@ -9,22 +9,24 @@ use_todo(todo, proj = proj_get(), code = FALSE)
 \arguments{
 \item{todo}{A character vector of lines to add to the TODO file}
 
-\item{proj}{By default, the active project, an arbitrary directory, or a RStudio project name in the
-following directories \code{options(reuseme.destdir)}, uses \code{\link[=proj_list]{proj_list()}} in this case.}
+\item{proj}{By default, the active project, an arbitrary directory, or a
+RStudio project name in the following directories
+\code{options(reuseme.destdir)}, uses \code{\link[=proj_list]{proj_list()}} in this case.}
 
-\item{code}{If \code{TRUE}, will render code output}
+\item{code}{If \code{TRUE}, will render code output (default is text.)}
 }
 \value{
 A \code{TODO.R} file appended with the \code{todo} string.
 }
 \description{
-Project, By default it will write in the current RStudio project.
+Creates or edits a \code{TODO.R} file to store your TODOs.
+By default it will write in the current RStudio project.
 }
 \examples{
-\dontrun{
-use_todo("I need to do that")
-use_todo(c("I need to do that again", "youppi"))
-use_todo("c(x, y)", code = TRUE)
+if (FALSE) {
+  use_todo("I need to do that")
+  use_todo(c("I need to do that again", "youppi"))
+  use_todo("c(x, y)", code = TRUE)
 }
 }
 \seealso{

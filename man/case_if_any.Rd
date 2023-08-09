@@ -61,8 +61,14 @@ can be very handy for EDA.
 \examples{
 
 case_if_any(
-mtcars$vs ==1 ~ "vs = 1",
-mtcars$mpg > 150 ~ "I have mpg > 150"
+  mtcars$vs == 1 ~ "vs = 1",
+  mtcars$mpg > 150 ~ "I have mpg > 150"
 )
-case_if_any(mtcars$vs == 1 ~ "Woww" ,mtcars$mpg > 15 ~ "QW", mtcars$qsec> 18 ~ "ooh lalal", .sep = ";", .default = NA)
+case_if_any(
+  mtcars$vs == 1 ~ "Woww",
+  mtcars$mpg > 15 ~ "QW",
+  mtcars$qsec > 18 ~ "ooh lalal",
+  .sep = ";",
+  .default = NA
+)
 }

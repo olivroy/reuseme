@@ -32,6 +32,10 @@ reuseme also aims to help me overcome things I don't like on Windows.
 You can install the development version of reuseme like so:
 
 ``` r
+# R-universe
+install.packages('reuseme', repos = c('https://olivroy.r-universe.dev', 'https://cloud.r-project.org'))
+
+# From GitHub
 pak::pak("olivroy/reuseme")
 ```
 
@@ -73,14 +77,14 @@ reuseme helps you work across projects, with the `proj_switch()` function.
 By default, reuseme looks at `options(reuseme.reposdir)`, that is a vector of paths where repositories are located.
 Personally, I use `~/rrr` (for my own projects) and `~/rrr-forks` (for projects I contribute to).
 
-When not supplying the `proj` argument, many functions will just offer you to choose, with a UI built on [cli hyperlinks](https://cli.r-lib.org/reference/links.html).
+When not supplying the `proj` argument, many functions will just offer you to choose, with a user interface built on [cli hyperlinks](https://cli.r-lib.org/reference/links.html).
 
 ### Extend usethis functionality
 
 usethis is fantastic to manage workflow within a project, but is harder across projects.
 
-If you want to work across projects with usethis, you need to provide the full path to a project.
-reuseme allows you to work across projects by just using the project name!
+If you want to work across projects with [usethis](usethis.r-lib.org), you need to provide the full path to a project.
+With reuseme, just use the project name!
 
 +--------------------------------------------------------------------------------+----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
 | Workflow                                                                       | reuseme                                                                          | usethis                                                                                                                              |

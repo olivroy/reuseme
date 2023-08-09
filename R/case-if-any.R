@@ -18,7 +18,13 @@
 #'   mtcars$vs == 1 ~ "vs = 1",
 #'   mtcars$mpg > 150 ~ "I have mpg > 150"
 #' )
-#' case_if_any(mtcars$vs == 1 ~ "Woww", mtcars$mpg > 15 ~ "QW", mtcars$qsec > 18 ~ "ooh lalal", .sep = ";", .default = NA)
+#' case_if_any(
+#'   mtcars$vs == 1 ~ "Woww",
+#'   mtcars$mpg > 15 ~ "QW",
+#'   mtcars$qsec > 18 ~ "ooh lalal",
+#'   .sep = ";",
+#'   .default = NA
+#' )
 case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
   check_string(.sep, allow_empty = FALSE)
   check_string(.default, allow_na = TRUE)
@@ -31,38 +37,46 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
   condition <- purrr::map(expr_list, 1)
   text_condition <- purrr::map(expr_list, 2)
 
-
   result_out1 <- eval(parse(text = condition[1]))
   length_out <- length(result_out1)
   res <- list()
+
   for (i in seq_len(n_expr)) {
     res[[i]] <- eval(parse(text = condition[i]))
   }
+
   names(res) <- names(expr_list)
 
-  result <- dplyr::bind_cols(res) %>%
+  result_raw1 <-
     dplyr::mutate(
+      .data = dplyr::bind_cols(res),
       dplyr::across(dplyr::everything(), function(x) ifelse(x, text_condition[dplyr::cur_column()], .default))
-    ) %>%
-    dplyr::rowwise() %>%
+    )
+
+  result_raw2 <-
     dplyr::mutate(
+      .data = dplyr::rowwise(result_raw1),
       text = paste0(dplyr::c_across(dplyr::everything()), collapse = .sep)
-    ) %>%
-    dplyr::pull()
+    )
+
+  result <- result_raw2$text
 
   if (any(grepl(.sep, text_condition))) {
     cli::cli_abort("`.sep` cannot be contained in the `condition`. Change the replacement text, or `sep`")
   }
+
   if (.drop_empty) {
     if (nzchar(.default)) {
       result <- gsub(pattern = paste0("(", .default, ")", .sep, "(", .default, ")?"), replacement = "", x = result)
       result <- gsub(pattern = paste0(.sep, .default, "$"), replacement = "", x = result)
       result <- gsub(pattern = paste0("^(", .default, ")?", .sep, "(", .default, ")?$"), replacement = .default, x = result)
     }
+
     result <- gsub(pattern = paste0("^", .sep, "|", .sep, "$"), replacement = "", x = result)
     result <- dplyr::na_if(result, "")
   } else {
     cli::cli_abort("Not supported yet.")
   }
+
   dplyr::coalesce(result, .default)
 }
