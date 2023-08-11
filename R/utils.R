@@ -102,8 +102,21 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
 
   fs::path_dir(relative_path)
 }
+
 proj_get <- function() {
   path <- rprojroot::find_root(criterion = rprojroot::is_rstudio_project)
+  fs::path(path)
+}
+
+# If not in a project, warn and return working directory
+proj_get2 <- function() {
+  path <- tryCatch(
+    rprojroot::find_root(criterion = rprojroot::is_rstudio_project),
+    error = function(e) {
+      cli::cli_warn("Not in a Project, returning the current working directory")
+      getwd()
+    }
+  )
   fs::path(path)
 }
 

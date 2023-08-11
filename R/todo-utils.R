@@ -24,7 +24,7 @@
 #'   use_todo("c(x, y)", code = TRUE)
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
-  is_active_proj <- identical(proj, proj_get())
+  is_active_proj <- identical(proj, proj_get2())
   check_character(todo)
 
   if (!code) {
