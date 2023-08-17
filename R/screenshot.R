@@ -31,6 +31,12 @@
 screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   # https://z3tt.github.io/graphic-design-ggplot2/tips-to-improve-your-ggplot-workflow.html#save-ggplot-output-with-the-correct-dimensions
   # Could wrap ggsave also
+
+  if (!rlang::is_interactive()) {
+    cli::cli_warn("Remove {.fn screenshot} from scripts. It is only meant to be used interactively.")
+    return(invisible(NULL))
+  }
+
   check_string(file, allow_null = TRUE)
   is_active_proj <- identical(proj, proj_get2())
 
@@ -42,10 +48,6 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     proj_path <- proj
   }
 
-  if (!rlang::is_interactive()) {
-    cli::cli_warn("Remove {.fn screenshot} from scripts. It is only meant to be used interactively.")
-    return(invisible(NULL))
-  }
 
   img_dir <- if (!is.null(dir)) {
     if (!fs::is_dir(dir) || !fs::dir_exists(dir)) {
