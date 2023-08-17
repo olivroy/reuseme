@@ -11,7 +11,7 @@
 #' @param proj By default, the active project, an arbitrary directory, or a
 #'   RStudio project name in the following directories
 #'   `options(reuseme.destdir)`, uses [proj_list()] in this case.
-#' @param code If `TRUE`, will render code output (default is text.)
+#' @param code If `TRUE`, will render code output (default is text).
 #' @seealso [usethis::write_union()]
 #'
 #' @return A `TODO.R` file appended with the `todo` string.
@@ -22,6 +22,7 @@
 #'   use_todo("I need to do that")
 #'   use_todo(c("I need to do that again", "youppi"))
 #'   use_todo("c(x, y)", code = TRUE)
+#'   use_todo("Here",  proj = "my-analysis")
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   is_active_proj <- identical(proj, proj_get2())

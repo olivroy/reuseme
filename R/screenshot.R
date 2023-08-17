@@ -17,6 +17,7 @@
 #' Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
 #'
 #' @param file A file name, ideally `-` (kebab-case). (extension ignored) (optional, default is `image.png`)
+#' @param proj A project name
 #' @param dir A directory (optional), to override the directory rules mentioned in the description.
 #' @return The full image path, invisibly.
 #' @export
@@ -27,10 +28,19 @@
 #'   screenshot(file = "my-new-image")
 #' }
 #'
-screenshot <- function(file = NULL, dir = NULL) {
+screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   # https://z3tt.github.io/graphic-design-ggplot2/tips-to-improve-your-ggplot-workflow.html#save-ggplot-output-with-the-correct-dimensions
   # Could wrap ggsave also
   check_string(file, allow_null = TRUE)
+  is_active_proj <- identical(proj, proj_get2())
+
+  if (!fs::dir_exists(proj)) { # when referring to a project by name.
+    all_projects <- proj_list()
+    rlang::arg_match0(proj, values = names(all_projects))
+    proj_path <- all_projects[proj]
+  } else {
+    proj_path <- proj
+  }
 
   if (!rlang::is_interactive()) {
     cli::cli_warn("Remove {.fn screenshot} from scripts. It is only meant to be used interactively.")
@@ -39,16 +49,21 @@ screenshot <- function(file = NULL, dir = NULL) {
 
   img_dir <- if (!is.null(dir)) {
     if (!fs::is_dir(dir) || !fs::dir_exists(dir)) {
-      cli::cli_abort(c(x = "{.arg dir} must be `NULL` or a valid directory."))
+      cli::cli_abort(c(x = "{.arg dir} must be `NULL` or a valid directory within proj."))
     }
 
     dir
-  } else if (is_pkg()) {
+  } else if (is_pkg(proj_path)) {
     "man/figures/"
-  } else if (is_quarto_blog()) {
+  } else if (is_active_proj && is_quarto_blog(proj_path)) {
     check_active_qmd_post()
   } else {
     "images/"
+  }
+  img_dir_rel <- img_dir
+
+  if (!is_active_proj) {
+    img_dir <- fs::path(proj_path, img_dir)
   }
 
   if (!fs::dir_exists(img_dir)) {
@@ -103,17 +118,27 @@ screenshot <- function(file = NULL, dir = NULL) {
   )
 
   img_path_chr <- as.character(img_path)
+  img_dir_rel_chr <- as.character(img_dir_rel)
+  img_dir_chr <- as.character(img_dir)
+  proj_chr <- as.character(proj)
+  change_project_command <- "[{proj_chr}](reuseme::proj_switch('{proj_chr}'))"
+
+  bullets <- if (is_active_proj) {
+    "Use with quarto, Rmd (source mode) with"
+  } else {
+    "Use with quarto, Rmd (source mode) in {.run [{proj_chr}](reuseme::proj_switch('{proj_chr}'))}"
+  }
 
   bullets <- c(
-    "Use with quarto, Rmd (source mode) with",
-    '![]({img_path_chr}){{fig-alt="" width="70%"}}'
+    bullets,
+    '![]({img_dir_rel_chr}){{fig-alt="" width="70%"}}'
   )
 
   if (is_generic_file_name) {
     bullets <- c(
       bullets,
       "i" = "Consider using a more precise name",
-      "rename_file('{img_path_chr}', '{img_dir}/better-name.png')",
+      "rename_file('{img_path_chr}', '{img_dir_chr}/better-name.png')",
       "i" = "See {.help reuseme::rename_file} for details."
     )
   }

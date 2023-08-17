@@ -70,7 +70,7 @@ library(reuseme)
 
 Most of these functions are meant to be used in RStudio, and in RStudio Projects, as they have not been widely tested outside this context.
 
-In interactive sessions, you can use the `screenshot()` function to access an image in the clipboard and save it as .png in a `figures/` directory in your RStudio project.
+In interactive sessions, you can use the `screenshot()` function to access an image in the clipboard and save it as .png in a `figures/` or `images/`directory in your RStudio project.
 
 reuseme helps you work across projects, with the `proj_switch()` function.
 `proj_switch()` works a lot like `usethis::proj_activate()` with the advantage of only typing the project name, instead of the full path.

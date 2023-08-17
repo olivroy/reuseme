@@ -4,10 +4,12 @@
 \alias{screenshot}
 \title{Save the current image in clipboard to png in your active directory}
 \usage{
-screenshot(file = NULL, dir = NULL)
+screenshot(file = NULL, proj = proj_get(), dir = NULL)
 }
 \arguments{
 \item{file}{A file name, ideally \code{-} (kebab-case). (extension ignored) (optional, default is \code{image.png})}
+
+\item{proj}{A project name}
 
 \item{dir}{A directory (optional), to override the directory rules mentioned in the description.}
 }
