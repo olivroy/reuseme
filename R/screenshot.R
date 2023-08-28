@@ -14,11 +14,16 @@
 #' The function then prompts you to rename the file with a more expressive name.
 #' It will continue the numbering if a file named image exists.
 #'
-#' Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
+#' Still have to validate if it works on macOS, as it is not clear whether the
+#' image goes to the clipboard by default
 #'
+#' The maximal number of images in a folder is 99. (only padding 2), should be enough.
+#'
+#' You should not be able to overwrite a screenshot with a generic name, only a
+#' named one as it is possible you may require to retake your screenshot.
 #' @param file A file name, ideally `-` (kebab-case). (extension ignored) (optional, default is `image.png`)
 #' @param proj A project name
-#' @param dir A directory (optional), to override the directory rules mentioned in the description.
+#' @param dir A directory (optional), to override the directory rules mentioned in the description. inside `proj`.
 #' @return The full image path, invisibly.
 #' @export
 #' @examples
@@ -43,29 +48,42 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   if (!fs::dir_exists(proj)) { # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
-    proj_path <- all_projects[proj]
+    proj_path <- unname(all_projects[proj])
   } else {
     proj_path <- proj
   }
 
+  is_quarto_blog_ind <- is_quarto_blog(proj_path)
 
-  img_dir <- if (!is.null(dir)) {
+  if (!is_active_proj && !is.null(dir)) {
+    dir <- fs::path(proj_path, dir)
+    contains_index_qmd <- fs::file_exists(fs::path(dir, "index.qmd"))
+  } else {
+    contains_index_qmd <- FALSE
+  }
+
+  if (!is.null(dir)) {
     if (!fs::is_dir(dir) || !fs::dir_exists(dir)) {
-      cli::cli_abort(c(x = "{.arg dir} must be `NULL` or a valid directory within proj."))
+      cli::cli_abort(c(x = "{.arg dir} must be {.code NULL} or a valid directory within {.arg proj}."))
     }
+  }
 
+
+  img_dir <- if (is_active_proj && !is.null(dir)) {
     dir
   } else if (is_pkg(proj_path)) {
-    "man/figures/"
-  } else if (is_active_proj && is_quarto_blog(proj_path)) {
-    check_active_qmd_post()
+    "man/figures"
+  } else if (is_quarto_blog_ind && (is_active_proj || (!is_active_proj && !is.null(dir) && contains_index_qmd))) {
+    get_active_qmd_post(base_path = proj_path, dir = dir)
   } else {
-    "images/"
+    "images"
   }
+
   img_dir_rel <- img_dir
 
   if (!is_active_proj) {
     img_dir <- fs::path(proj_path, img_dir)
+    img_dir <- as.character(img_dir)
   }
 
   if (!fs::dir_exists(img_dir)) {
@@ -75,8 +93,6 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
       "Then, rerun {.fun reuseme::screenshot} to save the screenshot"
     ))
   }
-
-  rlang::check_installed("magick")
 
   is_generic_file_name <- is.null(file)
   file <- file %||% "image"
@@ -93,15 +109,21 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     increment <- if (!rlang::has_length(files_named_image)) {
       0
     } else {
-      increment_val <- stringr::str_extract(files_named_image, "\\d+")
+      increment_val <- stringr::str_extract(files_named_image, "image-(\\d{2})", group = 1)
       max(as.numeric(increment_val))
     }
 
     file <- glue::glue("image-{stringr::str_pad(increment + 1, width = 2, pad = '0')}")
   }
+  img_file <- fs::path(file, ext = "png")
 
-  img_path <- fs::path(img_dir, file, ext = "png")
+  img_path <- fs::path(img_dir, img_file)
 
+  if (fs::file_exists(img_path) && is_generic_file_name) {
+    cli::cli_abort("You cannot overrite a screenshot. Please change `file`")
+  }
+
+  rlang::check_installed("magick")
   screen_shot <- tryCatch(
     magick::image_read("clipboard:"),
     error = function(e) {
@@ -120,6 +142,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   )
 
   img_path_chr <- as.character(img_path)
+  img_file_chr <- as.character(img_file)
   img_dir_rel_chr <- as.character(img_dir_rel)
   img_dir_chr <- as.character(img_dir)
   proj_chr <- as.character(proj)
@@ -131,10 +154,19 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     "Use with quarto, Rmd (source mode) in {.run [{proj_chr}](reuseme::proj_switch('{proj_chr}'))}"
   }
 
-  bullets <- c(
-    bullets,
-    '![]({img_dir_rel_chr}){{fig-alt="" width="70%"}}'
-  )
+  if (is_quarto_blog_ind) {
+    bullets <- c(
+      bullets,
+      '![]({fs::path_file(img_path_chr)}){{fig-alt="" width="70%"}}'
+    )
+  } else {
+    bullets <- c(
+      bullets,
+      '![]({img_file_chr}){{fig-alt="" width="70%"}}'
+    )
+  }
+
+
 
   if (is_generic_file_name) {
     bullets <- c(

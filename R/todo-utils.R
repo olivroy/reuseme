@@ -22,7 +22,7 @@
 #'   use_todo("I need to do that")
 #'   use_todo(c("I need to do that again", "youppi"))
 #'   use_todo("c(x, y)", code = TRUE)
-#'   use_todo("Here",  proj = "my-analysis")
+#'   use_todo("Here", proj = "my-analysis")
 #'   use_todo(c("my-analysis::Here", "I am"))
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
@@ -50,7 +50,7 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   if (!fs::dir_exists(proj)) { # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
-    proj_path <- all_projects[proj]
+    proj_path <- unname(all_projects[proj])
   } else {
     proj_path <- proj
   }

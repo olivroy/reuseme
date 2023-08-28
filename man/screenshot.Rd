@@ -11,7 +11,7 @@ screenshot(file = NULL, proj = proj_get(), dir = NULL)
 
 \item{proj}{A project name}
 
-\item{dir}{A directory (optional), to override the directory rules mentioned in the description.}
+\item{dir}{A directory (optional), to override the directory rules mentioned in the description. inside \code{proj}.}
 }
 \value{
 The full image path, invisibly.
@@ -32,7 +32,13 @@ If no file name is supplied, a file named \code{image0*.png} will be created.
 The function then prompts you to rename the file with a more expressive name.
 It will continue the numbering if a file named image exists.
 
-Still have to validate if it works on macOS, as it is not clear whether the image goes to the clipboard by default
+Still have to validate if it works on macOS, as it is not clear whether the
+image goes to the clipboard by default
+
+The maximal number of images in a folder is 99. (only padding 2), should be enough.
+
+You should not be able to overwrite a screenshot with a generic name, only a
+named one as it is possible you may require to retake your screenshot.
 }
 \examples{
 if (FALSE) {

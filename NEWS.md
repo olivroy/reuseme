@@ -1,5 +1,9 @@
 # reuseme (development version)
 
+* `screenshot()` works with generic file paths that contain numbers.
+
+* `screenshot()`
+
 * `use_todo()` provides the handy <proj>::<todo items> as a shortcut for `use_todo("todo items", "proj") to write TODO items to other projects.
 
 * `screenshot()` has better support for Quarto blogs, and gains a `proj` argument.

@@ -64,16 +64,26 @@ is_quarto_blog <- function(base_path = proj_get()) {
     return(FALSE)
   }
 
-  fs::dir_exists("posts")
+  unname(fs::dir_exists(fs::path(base_path, "posts")))
 }
 
-check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
+get_active_qmd_post <- function(base_path = proj_get(), dir = NULL, call = caller_env()) {
   # as long as rstudioapi is not consistent with fs on file paths, this may cause issues.
-  full_doc_path <- normalizePath(
-    path = rstudioapi::documentPath(),
-    mustWork = TRUE,
-    winslash = "/"
-  )
+  is_active_proj <- identical(proj, proj_get2())
+  base_path <- fs::path(unname(base_path))
+
+
+  # For finding active project
+  full_doc_path <-
+    if (!is_active_proj) {
+      fs::path_real(fs::path(dir, "index.qmd"))
+    } else {
+      normalizePath(
+        path = rstudioapi::documentPath(),
+        mustWork = TRUE,
+        winslash = "/"
+      )
+    }
 
   # very similar to usethis:::in_active_proj (possibly could have a helper.)
   if (!identical(fs::path_common(c(full_doc_path, base_path)), base_path)) {
@@ -88,7 +98,7 @@ check_active_qmd_post <- function(base_path = proj_get(), call = caller_env()) {
     )
   }
 
-  relative_path <- fs::path_rel(full_doc_path)
+  relative_path <- fs::path_rel(full_doc_path, start = base_path)
 
   if (!fs::path_ext(relative_path) %in% c("qmd", "md", "Rmd", "Rmarkdown")) {
     cli::cli_abort(
