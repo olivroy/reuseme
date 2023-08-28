@@ -33,8 +33,8 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   # Could wrap ggsave also
 
   if (!rlang::is_interactive()) {
-    cli::cli_warn("Remove {.fn screenshot} from scripts. It is only meant to be used interactively.")
-    return(invisible(NULL))
+    cli::cli_warn("Remove {.fn reuseme::screenshot} from scripts. It is only meant to be used interactively.")
+    return(invisible())
   }
 
   check_string(file, allow_null = TRUE)
@@ -72,7 +72,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     cli::cli_abort(c(
       x = "The directory where we want to save the image, {img_dir} doesn't exist.",
       i = "Run {.run fs::dir_create(\"{img_dir}\")} to create it.",
-      "Then, rerun {.fun screenshot} to save the screenshot"
+      "Then, rerun {.fun reuseme::screenshot} to save the screenshot"
     ))
   }
 

@@ -5,6 +5,7 @@
 \alias{names_identity}
 \alias{count_identity}
 \alias{mutate_identity}
+\alias{slice_identity}
 \alias{slice_min_identity}
 \alias{slice_max_identity}
 \alias{arrange_identity}
@@ -32,6 +33,15 @@ mutate_identity(
   ...,
   .keep = NULL,
   .before = NULL,
+  nrows = NULL,
+  extra_msg = NULL
+)
+
+slice_identity(
+  x,
+  ...,
+  .by = NULL,
+  .preserve = FALSE,
   nrows = NULL,
   extra_msg = NULL
 )
@@ -105,8 +115,8 @@ slice_min_max_identity(
 
 slice_group_sample_identity(
   x,
-  n_groups = 1,
   group_var = NULL,
+  n_groups = 1,
   nrows = NULL,
   extra_msg = NULL
 )
@@ -114,11 +124,11 @@ slice_group_sample_identity(
 \arguments{
 \item{x}{The main object (a data.frame, but some functions accept a vector.) (aka \code{.data} in some \code{dplyr} functions, but naming it \code{x} throughout.)}
 
-\item{nrows}{Number of rows to print}
+\item{nrows}{Number of rows to print.}
 
 \item{extra_msg}{A character vector of observations, notes taken related to the transformation.}
 
-\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var}{Check original functions.}
+\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve}{Check original functions.}
 }
 \value{
 \code{x} original \code{x} is (invisibly) returned. (allowing the \verb{*_identity()}
@@ -136,12 +146,13 @@ Look at the original functions for the other parameters.
 \itemize{
 \item Like many other reuseme functions, they are most useful in interactive sessions
 \item print the result in interactive sessions (quiet in non-interactive.)
-\item Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have \code{::}))
+\item Create runnable hyperlinks (In August 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have \code{::}))
 \item Use in pipelines to explore the data
 \item Use \code{\link[rlang:is_interactive]{rlang::is_interactive()}} over \code{\link[base:interactive]{base::interactive()}} as it's easier to
 control and test with \code{options(rlang_interactive)}
 \item Use the original functions for your final results.
 \item \code{count_identity()} also prints percentages.
+\item \code{slice_identity()} can be useful to resolve many-to-many warnings from dplyr join functions.
 }
 }
 

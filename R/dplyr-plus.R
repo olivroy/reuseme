@@ -124,7 +124,7 @@ slice_min_max <- function(.data,
 #' mtcars %>%
 #'   dplyr::group_by(vs) %>%
 #'   slice_group_sample()
-slice_group_sample <- function(data, n_groups = 1, group_var = NULL) {
+slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
   is_grouped <- dplyr::is_grouped_df(data)
 
   single_group_var <- dplyr::n_groups(data) == 1

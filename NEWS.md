@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `use_todo()` provides the handy <proj>::<todo items> as a shortcut for `use_todo("todo items", "proj") to write TODO items to other projects.
+
 * `screenshot()` has better support for Quarto blogs, and gains a `proj` argument.
 
   - The image will be saved in the active `posts/` folder, queried using `rstudioapi::documentPath()`.

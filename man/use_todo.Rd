@@ -33,6 +33,7 @@ if (FALSE) {
   use_todo(c("I need to do that again", "youppi"))
   use_todo("c(x, y)", code = TRUE)
   use_todo("Here",  proj = "my-analysis")
+  use_todo(c("my-analysis::Here", "I am"))
 }
 }
 \seealso{

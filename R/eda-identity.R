@@ -12,13 +12,13 @@
 #'
 #' * Like many other reuseme functions, they are most useful in interactive sessions
 #' * print the result in interactive sessions (quiet in non-interactive.)
-#' * Create runnable hyperlinks (In July 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have `::`))
+#' * Create runnable hyperlinks (In August 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have `::`))
 #' * Use in pipelines to explore the data
 #' * Use [rlang::is_interactive()] over [base::interactive()] as it's easier to
 #' control and test with `options(rlang_interactive)`
 #' * Use the original functions for your final results.
 #' * `count_identity()` also prints percentages.
-#'
+#' * `slice_identity()` can be useful to resolve many-to-many warnings from dplyr join functions.
 #' # Caution
 #'
 #' * Don't put those at the end of a pipeline
@@ -33,8 +33,8 @@
 #'
 #' @param x The main object (a data.frame, but some functions accept a vector.) (aka `.data` in some `dplyr` functions, but naming it `x` throughout.)
 #' @param extra_msg A character vector of observations, notes taken related to the transformation.
-#' @param nrows Number of rows to print
-#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var Check original functions.
+#' @param nrows Number of rows to print.
+#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var,.preserve Check original functions.
 #'
 #' @returns `x` original `x` is (invisibly) returned. (allowing the `*_identity()`
 #'   functions to be used in a pipeline) will print `extra_msg` to the console in interactive sessions.
@@ -114,6 +114,28 @@ mutate_identity <- function(x,
   )
 
   print(dplyr::distinct(new_var), n = nrows)
+  cli::cli_alert_info(extra_msg)
+  invisible(x)
+}
+#' @rdname eda-identity
+#' @export
+slice_identity <- function(x,
+                           ...,
+                           .by = NULL,
+                           .preserve = FALSE,
+                           nrows = NULL,
+                           extra_msg = NULL) {
+  if (!rlang::is_interactive()) {
+    return(invisible(x))
+  }
+
+  res <- dplyr::slice(
+    .data = x,
+    ...,
+    .by = {{ .by }},
+    .preserve = .preserve
+  )
+  print(res, n = nrows)
   cli::cli_alert_info(extra_msg)
   invisible(x)
 }
@@ -320,8 +342,8 @@ slice_min_max_identity <- function(x,
 #' @rdname eda-identity
 #' @export
 slice_group_sample_identity <- function(x,
-                                        n_groups = 1,
                                         group_var = NULL,
+                                        n_groups = 1,
                                         nrows = NULL,
                                         extra_msg = NULL) {
   if (!rlang::is_interactive()) {

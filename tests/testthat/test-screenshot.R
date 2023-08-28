@@ -1,6 +1,6 @@
 test_that("`screenshot()` does nothing in non-interactive sessions", {
   withr::local_options(rlang_interactive = FALSE)
-  expect_snapshot(screenshot())
+  expect_snapshot(screenshot(proj = NULL))
 })
 
 test_that("Writing ggplot to clipboard works", {

@@ -4,14 +4,14 @@
 \alias{slice_group_sample}
 \title{Explore all rows in a random group}
 \usage{
-slice_group_sample(data, n_groups = 1, group_var = NULL)
+slice_group_sample(data, group_var = NULL, n_groups = 1)
 }
 \arguments{
 \item{data}{A \code{data.frame}}
 
-\item{n_groups}{Number of groups to sample. (passed to \code{sample(size = n_groups)})}
-
 \item{group_var}{if the data is grouped, will be ignored.}
+
+\item{n_groups}{Number of groups to sample. (passed to \code{sample(size = n_groups)})}
 }
 \value{
 A data frame with a sample group.

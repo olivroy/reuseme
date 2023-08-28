@@ -23,10 +23,21 @@
 #'   use_todo(c("I need to do that again", "youppi"))
 #'   use_todo("c(x, y)", code = TRUE)
 #'   use_todo("Here",  proj = "my-analysis")
+#'   use_todo(c("my-analysis::Here", "I am"))
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
-  is_active_proj <- identical(proj, proj_get2())
   check_character(todo)
+  # TODO think about maybe using todo = clipr::read_clip()
+  # Check how reprex do it.
+  # if clipr::read_clip(), should put code = TRUE.
+  proj_in_todo <- stringr::str_extract(todo[1], "^(.{4,20})\\:{2}", group = 1)
+
+  if (!is.na(proj_in_todo)) {
+    proj <- proj_in_todo
+    todo[1] <- stringr::str_remove(todo[1], paste0(proj_in_todo, "\\:\\:", "\\s?"))
+  }
+
+  is_active_proj <- identical(proj, proj_get2())
 
   if (!code) {
     todo_lines <- paste("# TODO", todo)
