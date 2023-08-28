@@ -51,7 +51,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">slice_group_sample</span><span class="op">(</span><span class="va">data</span>, n_groups <span class="op">=</span> <span class="fl">1</span>, group_var <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">slice_group_sample</span><span class="op">(</span><span class="va">data</span>, group_var <span class="op">=</span> <span class="cn">NULL</span>, n_groups <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,12 +60,12 @@
 <dd><p>A <code>data.frame</code></p></dd>
 
 
-<dt>n_groups</dt>
-<dd><p>Number of groups to sample. (passed to <code>sample(size = n_groups)</code>)</p></dd>
-
-
 <dt>group_var</dt>
 <dd><p>if the data is grouped, will be ignored.</p></dd>
+
+
+<dt>n_groups</dt>
+<dd><p>Number of groups to sample. (passed to <code>sample(size = n_groups)</code>)</p></dd>
 
 </dl></div>
     <div class="section level2">
