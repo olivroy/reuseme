@@ -69,7 +69,7 @@ is_quarto_blog <- function(base_path = proj_get()) {
 
 get_active_qmd_post <- function(base_path = proj_get(), dir = NULL, call = caller_env()) {
   # as long as rstudioapi is not consistent with fs on file paths, this may cause issues.
-  is_active_proj <- identical(proj, proj_get2())
+  is_active_proj <- identical(base_path, proj_get2())
   base_path <- fs::path(unname(base_path))
 
 
@@ -110,8 +110,8 @@ get_active_qmd_post <- function(base_path = proj_get(), dir = NULL, call = calle
   if (!fs::path_ext(relative_path) %in% c("qmd", "md", "Rmd", "Rmarkdown")) {
     cli::cli_abort(
       c(
-        x = "You must be calling the screenshot function when editing a Quarto document.",
-        i = "Open a document then retry. or set `dir` to manually override the location of the screenshot."
+        x = "{.fn screenshot} must be used when editing a qmd file.",
+        i = "Open a qmd file or set `dir` to override the location of the screenshot."
       ),
       call = call
     )

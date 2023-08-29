@@ -2,42 +2,52 @@
 #' Helpers that return the same value
 #'
 #' @description
-#' They all share the `*_identity` suffix, they are silent in non-interactive sessions
-#' They are very handy to create runnable hyperlinks that do not modify the current state of the analysis
+#' They all share the `*_identity` suffix, they are silent in non-interactive
+#' sessions. They are very handy to create clickable hyperlinks that do not
+#' modify the current state of the analysis.
 #'
-#' They are inspired by [pillar::glimpse], [tibble::view],
+#' They are inspired by [pillar::glimpse], [tibble::view].
 #'
 #' Look at the original functions for the other parameters.
+#'
 #' # Use cases / advantages
 #'
 #' * Like many other reuseme functions, they are most useful in interactive sessions
 #' * print the result in interactive sessions (quiet in non-interactive.)
-#' * Create runnable hyperlinks (In August 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have `::`))
+#' * Create runnable hyperlinks (In August 2023, RStudio forbids runnable
+#'   hyperlinks of base functions, or non-package functions. (i.e. that don't have `::`))
 #' * Use in pipelines to explore the data
 #' * Use [rlang::is_interactive()] over [base::interactive()] as it's easier to
 #' control and test with `options(rlang_interactive)`
 #' * Use the original functions for your final results.
 #' * `count_identity()` also prints percentages.
-#' * `slice_identity()` can be useful to resolve many-to-many warnings from dplyr join functions.
+#' * `slice_identity()` can be useful to resolve many-to-many warnings from
+#'   dplyr join functions.
+#'
 #' # Caution
 #'
 #' * Don't put those at the end of a pipeline
-#' * Don't name the first argument, to avoid conflicts in case a variable is named `x`.
+#' * Don't name the first argument, to avoid conflicts in case a column in the
+#'   data is named `x`.
 #' * Some functions have small tweaks
-#'   * `mutate_identity()` only prints the distinct values, and uses `.keep = "used"`, `.before = 0`,
-#'     unless specified to improve the display.
-#'   * `count_identity()` is a wrapper of `count_pct()` (wrapper of `dplyr::count()`),
-#'      may fail if there is already a variable named `n`.
+#'   * `mutate_identity()` only prints the distinct values, and uses
+#'     `.keep = "used"`, `.before = 0`, unless specified to improve the display.
+#'   * `count_identity()` is a wrapper of [count_pct()]
+#'     (itself a wrapper of `dplyr::count()`),
+#'   * `count_identity()` may fail if there is already a variable named `n`.
 #'   * `slice_min/max_identity()` relocates the target column at the beginning.
 #'   * `filter_identity()` prints a short message if no rows are returned.
 #'
-#' @param x The main object (a data.frame, but some functions accept a vector.) (aka `.data` in some `dplyr` functions, but naming it `x` throughout.)
-#' @param extra_msg A character vector of observations, notes taken related to the transformation.
+#' @param x The main object (a data.frame, but some functions accept a vector.)
+#'   (aka `.data` in some `dplyr` functions, but naming it `x` throughout.)
+#' @param extra_msg A character vector of observations that will print to
+#'   console, notes taken related to the transformation.
 #' @param nrows Number of rows to print.
 #' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var,.preserve Check original functions.
 #'
-#' @returns `x` original `x` is (invisibly) returned. (allowing the `*_identity()`
-#'   functions to be used in a pipeline) will print `extra_msg` to the console in interactive sessions.
+#' @returns `x`, the original input is (invisibly) returned.
+#'   (allowing the `*_identity()` functions to be used in a pipeline) will print
+#'    `extra_msg` to the console in interactive sessions.
 #' @seealso
 #' * [dplyr::distinct()]
 #' * [dplyr::filter()]

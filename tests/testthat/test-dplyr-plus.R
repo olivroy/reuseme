@@ -32,7 +32,7 @@ test_that("`filter_if_any()` works as expected", {
 })
 
 
-test_that("`filter_if_any()` gives the correct error when specifying by instead of .by", {
+test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {
   skip("Not ready")
   expect_error(
     dplyr::starwars %>%
@@ -45,7 +45,13 @@ test_that("`filter_if_any()` doesn't work with `across()`", {
   # TODO improve this error
   expect_snapshot(
     error = TRUE,
-    dplyr::starwars %>% filter_if_any(dplyr::across(ends_with("color"), function(x) stringr::str_detect(x, "brown")))
+    filter_if_any(
+      dplyr::starwars,
+      dplyr::across(
+        ends_with("color"),
+        function(x) stringr::str_detect(x, "brown")
+      )
+    )
   )
 })
 

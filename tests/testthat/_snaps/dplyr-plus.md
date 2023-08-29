@@ -1,11 +1,12 @@
 # `filter_if_any()` doesn't work with `across()`
 
     Code
-      dplyr::starwars %>% filter_if_any(dplyr::across(ends_with("color"), function(x)
+      filter_if_any(dplyr::starwars, dplyr::across(ends_with("color"), function(x)
         stringr::str_detect(x, "brown")))
     Condition
       Error in `filter_if_any()`:
-      ! You didn't provide logical expressions. See `?dplyr::filter()`
+      x You must provide logical expressions to `...`
+      i See `?dplyr::filter()` for more information on how it works.
 
 # adds rows in front, but warns the user
 

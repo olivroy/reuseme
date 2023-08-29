@@ -34,7 +34,8 @@ min_named <- function(x, na.rm = FALSE, all_matches = FALSE) {
   }
 
   if (all_matches) {
-    # wouldn't make sense if there were duplicated names that return a different value
+    # wouldn't make sense if there were duplicated names
+    # that return a different value
     # min_named(c("x" = 1, "y" = 1, "ww" = 2, "y" = 2))
     cli::cli_abort("Still not done.")
   }
@@ -60,7 +61,7 @@ max_named <- function(x, na.rm = FALSE, all_matches = FALSE) {
 #' @export
 unique_named <- function(x) {
   # Duplicate names
-  # purrr::map vs list_c, SO question (this is in canadr, when querying possible geographies.)
+  # purrr::map vs list_c, SO question
   if (!rlang::is_named(x)) {
     return(unique(x))
   }

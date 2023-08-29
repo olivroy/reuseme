@@ -174,12 +174,14 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
 }
 #' Keep rows that match one of the conditions
 #'
-#' The `filter_if_any()` function is used to subset a data frame, retaining all rows
-#' that satisfy **at least one of** your conditions.
-#' To be retained, the row must produce a value of `TRUE` for **one of the conditions**
-#' Note that when a condition evaluates to `NA` the row will be dropped, (hence this function) unlike base subsetting with `[`.
+#' The `filter_if_any()` function is used to subset a data frame, retaining all
+#' rows that satisfy **at least one of** your conditions.
+#' To be retained, the row must produce a value of `TRUE` for
+#' **one of the conditions**. Note that when a condition evaluates to `NA` the
+#' row will be dropped, (hence this function) unlike base subsetting with `[`.
 #'
 #' The reason to be of this function is to simplify a call like
+#'
 #' ```r
 #' # with dplyr::filter
 #' dat %>% dplyr::filter(vs == 1 | is.na(vs))
@@ -188,29 +190,33 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
 #'   dplyr::filter(dplyr::if_any(starts_with("cond")))
 #' dat %>% filter_if_any(vs == 1, is.na(vs))
 #' ```
-#' Basically, this is just a shortcut to `mutate(.data, new_lgl_vars)` + `filter(if_any(new_lgl_vars))` + `select(-new_lgl_vars)`
-#' It allows mutate_like syntax in `filter(if_any(...))`
 #'
-#' Caution: still doesn't work with [dplyr::across()], use the regular `filter(if_any())` syntax.
+#' Basically, this is just a shortcut to
+#' `mutate(.data, new_lgl_vars)` + `filter(if_any(new_lgl_vars))` + `select(-new_lgl_vars)`.
+#' It allows mutate_like syntax in `filter(if_any(...))`.
+#'
+#' Caution: still doesn't work with [dplyr::across()], use the regular
+#' `filter(if_any())` syntax.
+#'
 #' @param .data A data frame
 #' @param ... <[`data-masking`][rlang::args_data_masking]> Name-value pairs.
 #'   The name gives the name of the column in the output.
 #'
 #'   The value can be:
 #'
-#'   * A logical vector of length 1, which will be recycled to the correct length.
+#'   * A logical vector, which will be recycled to the correct length.
 #'   * A logical vector the same length as the current group (or the whole data frame
 #'     if ungrouped).
 #'
 #' @param ... <[`data-masking`][rlang::args_data_masking]> Expressions that
 #'   return a logical value, and are defined in terms of the variables in
 #'   `.data`. If multiple expressions are included, they are combined with the
-#'   `|` operator. Only rows for which **one of the conditions** evaluate to `TRUE` are
-#'   kept.
-#' @param .by Like in dplyr.
-#' @param .keep_new_var If `FALSE`,
-#' @returns
-#'   An object of the same type as `.data`. The output has the following properties:
+#'   `|` operator. Only rows for which **one of the conditions** evaluate to
+#'   `TRUE` are kept.
+#' @param .by See [dplyr::dplyr_by].
+#' @param .keep_new_var If `TRUE`, will remove newly created variables.
+#' @returns An object of the same type as `.data`.
+#'   The output has the following properties:
 #'
 #'  * Rows are a subset of the input, but appear in the same order.
 #'  * Columns are not modified (if `.keep_new_var = FALSE`.
@@ -238,16 +244,20 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
     return(res)
   }
 
-  cli::cli_abort("You didn't provide logical expressions. See {.help dplyr::filter}")
+  cli::cli_abort(c(
+    x = "You must provide logical expressions to {.arg {cli::symbol$ellipsis}}",
+    i = "See {.help dplyr::filter} for more information on how it works."
+  ))
 }
 #' Elegant wrapper around filter and pull
 #'
-#' It can be very useful when trying to extract a value from somewhere,
-#' and you have one col that represents the unique id.
+#' It can be very useful when trying to extract a value from somewhere, and you
+#' have one col that represents the unique id.
 #'
 #' @param data A data.frame
 #' @param filter the filter
-#' @param name The variable for the name (by default, will look for `rownames`), can be quoted (safer).
+#' @param name The variable for the name (by default, will look for `rownames`),
+#'   can be quoted (safer).
 #' @inheritParams dplyr::pull
 #' @param length A fixed length to check for the output
 #' @param unique A logical. Should return unique values?

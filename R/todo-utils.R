@@ -3,9 +3,11 @@
 #' Creates or edits a `TODO.R` file to store your TODOs.
 #' By default it will write in the current RStudio project.
 #'
-#' If you use `use_todo()` with a version-control repository, you may want to use
-#'  `usethis::use_git_ignore("TODO.R")` if you don't want your `TODO.R` file to be included.
-#' If using in a package directory, use `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`
+#' If you use `use_todo()` with a version-control repository, you may want to
+#' use `usethis::use_git_ignore("TODO.R")` if you don't want your `TODO.R` file
+#'
+#' to be included in git. If using in a package directory, use
+#' `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`
 #'
 #' @param todo A character vector of lines to add to the TODO file
 #' @param proj By default, the active project, an arbitrary directory, or a
@@ -34,7 +36,8 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 
   if (!is.na(proj_in_todo)) {
     proj <- proj_in_todo
-    todo[1] <- stringr::str_remove(todo[1], paste0(proj_in_todo, "\\:\\:", "\\s?"))
+    regex_proj_in_todo <- paste0(proj_in_todo, "\\:\\:", "\\s?")
+    todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
   }
 
   is_active_proj <- identical(proj, proj_get2())
@@ -55,9 +58,13 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
     proj_path <- proj
   }
 
-  full_path_todo <- if (is_active_proj) path_todo else fs::path(proj_path, path_todo)
-
-  # TODO nice to have, but would need to extract duplicates (ideally changes in usethis)
+  full_path_todo <- if (is_active_proj) {
+    path_todo
+  } else {
+    fs::path(proj_path, path_todo)
+  }
+  # TODO nice to have, but would need to extract duplicates
+  # (ideally changes in usethis)
   # Change the default write_union message.
   write_union2(full_path_todo, lines = todo_lines, quiet = FALSE)
 }
@@ -65,8 +72,8 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 #' Remove a TODO/WORK/FIXME item from a file
 #'
 #' Function meant to be wrapped as `{.run}` hyperlinks with `file_outline()`.
-#' It basically removes a line from a file.
-#' Eventually, it may use regexp to look around and regexp could be used instead of line_id.
+#' It basically removes a line from a file. Eventually, it may use `regexp` to
+#' look around and regexp could be used instead of line_id.
 #'
 #' @param line_id The line number (a single integer)
 #' @param file Path to a file
@@ -75,7 +82,8 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 #'   will remove only the tag (i.e. TODO, WORK, FIXME)
 #' @param regexp A regexp to assess that file content has not changed
 #'
-#' @return Writes a file with corrections, and returns the new line content invisibly.
+#' @return Writes a file with corrections, and returns the new line
+#'   content invisibly.
 #' @export
 #' @keywords internal
 mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
@@ -90,7 +98,7 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
       "Did not detect the following text as expected {regexp}",
       "This function expects regexp to be detected on line {line_id} in {file}",
       "Possibly the file content has changed since you ran this code",
-      "This function is still not robust to marking multiple items as done in a single call."
+      "You still cannot mark multiple items as done in a single call."
     ))
   }
 
@@ -105,8 +113,15 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {
-    cli::cli_alert_success("Marking `{line_content}` as done! (Removing the {tag_type})")
-    line_content_new <- sub(pattern = paste0(tag_type, "\\s+"), replacement = "", line_content)
+    cli::cli_alert_success(
+      "Marking `{line_content}` as done! (Removing the {tag_type})"
+    )
+    line_content_new <- sub(
+      pattern = paste0(tag_type, "\\s+"),
+      replacement = "",
+      line_content
+    )
+
     file_content[line_id] <- line_content_new
     file_content_new <- file_content
   }

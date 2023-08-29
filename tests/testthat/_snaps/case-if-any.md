@@ -23,7 +23,8 @@
         "ooh lalal", .sep = " ")
     Condition
       Error in `case_if_any()`:
-      ! `.sep` cannot be contained in the `condition`. Change the replacement text, or `sep`
+      x `.sep` cannot be contained in the condition.
+      i Change either the replacement text, or `.sep`
     Code
       case_if_any(mtcars$vs == 1 ~ "Woww", mtcars$mpg > 15 ~ "QW", .sep = "")
     Condition

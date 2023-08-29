@@ -6,7 +6,8 @@
 #' The function allows you to assign multiple values to a character value, which
 #' can be very handy for EDA.
 #' @inheritParams dplyr::case_when
-#' @param .sep, the separator between answers. (default is `;`), can't be a substring of any of the text
+#' @param .sep, the separator between answers. (default is `;`), can't be a
+#'   substring of any of the text
 #' @inherit dplyr::case_when return
 #' @param .drop_empty drop if no match is returned.
 #'   (Defaults to `TRUE` for legibility), but if `FALSE`,
@@ -50,7 +51,12 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
   result_raw1 <-
     dplyr::mutate(
       .data = dplyr::bind_cols(res),
-      dplyr::across(dplyr::everything(), function(x) ifelse(x, text_condition[dplyr::cur_column()], .default))
+      dplyr::across(
+        .cols = dplyr::everything(),
+        .fns = function(x) {
+          ifelse(x, text_condition[dplyr::cur_column()], .default)
+        }
+      )
     )
 
   result_raw2 <-
@@ -62,9 +68,13 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
   result <- result_raw2$text
 
   if (any(grepl(.sep, text_condition))) {
-    cli::cli_abort("`.sep` cannot be contained in the `condition`. Change the replacement text, or `sep`")
+    cli::cli_abort(c(
+      x = "{.arg .sep} cannot be contained in the condition.",
+      i = "Change either the replacement text, or {.arg .sep}"
+    ))
   }
 
+  # I ended up importing stringr...
   if (.drop_empty) {
     if (nzchar(.default)) {
       result <- gsub(pattern = paste0("(", .default, ")", .sep, "(", .default, ")?"), replacement = "", x = result)
