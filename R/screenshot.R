@@ -42,6 +42,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     return(invisible())
   }
 
+
   check_string(file, allow_null = TRUE)
   is_active_proj <- identical(proj, proj_get2())
 
@@ -54,6 +55,10 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   }
 
   is_quarto_blog_ind <- is_quarto_blog(proj_path)
+
+  if (!rstudioapi::isAvailable()) {
+    cli::cli_warn("This feature may not work as excepted outside RStudio.")
+  }
 
   if (!is_active_proj && !is.null(dir)) {
     dir <- fs::path(proj_path, dir)
