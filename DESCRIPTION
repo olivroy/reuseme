@@ -24,7 +24,7 @@ Imports:
     scales,
     stringr,
     tibble,
-    usethis,
+    usethis (>= 2.2.0),
     vctrs
 Suggests: 
     magick,

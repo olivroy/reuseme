@@ -23,17 +23,21 @@ Creates or edits a \code{TODO.R} file to store your TODOs.
 By default it will write in the current RStudio project.
 }
 \details{
-If you use \code{use_todo()} with a version-control repository, you may want to use
-\code{usethis::use_git_ignore("TODO.R")} if you don't want your \code{TODO.R} file to be included.
-If using in a package directory, use \code{usethis::use_build_ignore("TODO.R")} to prevent a note in \verb{R CMD CHECK}
+If you use \code{use_todo()} with a version-control repository, you may want to
+use \code{usethis::use_git_ignore("TODO.R")} if you don't want your \code{TODO.R} file
+
+to be included in git. If using in a package directory, use
+\code{usethis::use_build_ignore("TODO.R")} to prevent a note in \verb{R CMD CHECK}
 }
 \examples{
 if (FALSE) {
   use_todo("I need to do that")
   use_todo(c("I need to do that again", "youppi"))
   use_todo("c(x, y)", code = TRUE)
-  use_todo("Here",  proj = "my-analysis")
+  use_todo("Here", proj = "my-analysis")
   use_todo(c("my-analysis::Here", "I am"))
+  # add to a global todo.
+  use_todo(c("all::Here", "I am"))
 }
 }
 \seealso{

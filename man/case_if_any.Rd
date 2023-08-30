@@ -40,7 +40,8 @@ tailored to your usage of \code{case_when()}.
 
 If \code{NULL}, the default, a missing value will be used.}
 
-\item{.sep, }{the separator between answers. (default is \verb{;}), can't be a substring of any of the text}
+\item{.sep, }{the separator between answers. (default is \verb{;}), can't be a
+substring of any of the text}
 
 \item{.drop_empty}{drop if no match is returned.
 (Defaults to \code{TRUE} for legibility), but if \code{FALSE},

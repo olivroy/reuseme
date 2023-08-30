@@ -26,18 +26,26 @@
 #'   use_todo("c(x, y)", code = TRUE)
 #'   use_todo("Here", proj = "my-analysis")
 #'   use_todo(c("my-analysis::Here", "I am"))
+#'   # add to a global todo.
+#'   use_todo(c("all::Here", "I am"))
 #' }
 use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   check_character(todo)
   # TODO think about maybe using todo = clipr::read_clip()
   # Check how reprex do it.
-  # if clipr::read_clip(), should put code = TRUE.
-  proj_in_todo <- stringr::str_extract(todo[1], "^(.{4,20})\\:{2}", group = 1)
 
-  if (!is.na(proj_in_todo)) {
-    proj <- proj_in_todo
-    regex_proj_in_todo <- paste0(proj_in_todo, "\\:\\:", "\\s?")
+  # if clipr::read_clip(), should put code = TRUE.
+  proj_name_in_todo <- stringr::str_extract(todo[1], "^([^\\s\\:]{2,20})\\:{2}", group = 1)
+
+  if (!is.na(proj_name_in_todo)) {
+    proj <- proj_name_in_todo
+    regex_proj_in_todo <- paste0(proj_name_in_todo, "\\:\\:", "\\s?")
     todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
+  }
+
+  # Handle special global and all syntax for todo items.
+  if (proj %in% c("global", "all")) {
+    proj <- Sys.getenv("R_USER") # ?base::path.expand
   }
 
   is_active_proj <- identical(proj, proj_get2())

@@ -1,8 +1,10 @@
 # reuseme (development version)
 
+* `use_todo()` allows to write to no project with use_todo("all::")
+
 * `screenshot()` works with generic file paths that contain numbers.
 
-* `screenshot()`
+* `screenshot()` had internal cleanup
 
 * `use_todo()` provides the handy <proj>::<todo items> as a shortcut for `use_todo("todo items", "proj") to write TODO items to other projects.
 

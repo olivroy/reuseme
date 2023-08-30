@@ -12,15 +12,16 @@ filter_if_any(.data, ..., .by = NULL, .keep_new_var = FALSE)
 \item{...}{<\code{\link[rlang:args_data_masking]{data-masking}}> Expressions that
 return a logical value, and are defined in terms of the variables in
 \code{.data}. If multiple expressions are included, they are combined with the
-\code{|} operator. Only rows for which \strong{one of the conditions} evaluate to \code{TRUE} are
-kept.}
+\code{|} operator. Only rows for which \strong{one of the conditions} evaluate to
+\code{TRUE} are kept.}
 
-\item{.by}{Like in dplyr.}
+\item{.by}{See \link[dplyr:dplyr_by]{dplyr::dplyr_by}.}
 
-\item{.keep_new_var}{If \code{FALSE},}
+\item{.keep_new_var}{If \code{TRUE}, will remove newly created variables.}
 }
 \value{
-An object of the same type as \code{.data}. The output has the following properties:
+An object of the same type as \code{.data}.
+The output has the following properties:
 \itemize{
 \item Rows are a subset of the input, but appear in the same order.
 \item Columns are not modified (if \code{.keep_new_var = FALSE}.
@@ -28,10 +29,11 @@ An object of the same type as \code{.data}. The output has the following propert
 }
 }
 \description{
-The \code{filter_if_any()} function is used to subset a data frame, retaining all rows
-that satisfy \strong{at least one of} your conditions.
-To be retained, the row must produce a value of \code{TRUE} for \strong{one of the conditions}
-Note that when a condition evaluates to \code{NA} the row will be dropped, (hence this function) unlike base subsetting with \code{[}.
+The \code{filter_if_any()} function is used to subset a data frame, retaining all
+rows that satisfy \strong{at least one of} your conditions.
+To be retained, the row must produce a value of \code{TRUE} for
+\strong{one of the conditions}. Note that when a condition evaluates to \code{NA} the
+row will be dropped, (hence this function) unlike base subsetting with \code{[}.
 }
 \details{
 The reason to be of this function is to simplify a call like
@@ -44,10 +46,12 @@ data \%>\%
 dat \%>\% filter_if_any(vs == 1, is.na(vs))
 }\if{html}{\out{</div>}}
 
-Basically, this is just a shortcut to \code{mutate(.data, new_lgl_vars)} + \code{filter(if_any(new_lgl_vars))} + \code{select(-new_lgl_vars)}
-It allows mutate_like syntax in \code{filter(if_any(...))}
+Basically, this is just a shortcut to
+\code{mutate(.data, new_lgl_vars)} + \code{filter(if_any(new_lgl_vars))} + \code{select(-new_lgl_vars)}.
+It allows mutate_like syntax in \code{filter(if_any(...))}.
 
-Caution: still doesn't work with \code{\link[dplyr:across]{dplyr::across()}}, use the regular \code{filter(if_any())} syntax.
+Caution: still doesn't work with \code{\link[dplyr:across]{dplyr::across()}}, use the regular
+\code{filter(if_any())} syntax.
 }
 \examples{
 library(magrittr)

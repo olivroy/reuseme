@@ -32,7 +32,8 @@ names and column locations).}
 
 \item{filter}{the filter}
 
-\item{name}{The variable for the name (by default, will look for \code{rownames}), can be quoted (safer).}
+\item{name}{The variable for the name (by default, will look for \code{rownames}),
+can be quoted (safer).}
 
 \item{length}{A fixed length to check for the output}
 
@@ -42,8 +43,8 @@ names and column locations).}
 A (named) character vector (if name is specified)
 }
 \description{
-It can be very useful when trying to extract a value from somewhere,
-and you have one col that represents the unique id.
+It can be very useful when trying to extract a value from somewhere, and you
+have one col that represents the unique id.
 }
 \examples{
 # extract the skin_color for C-3PO

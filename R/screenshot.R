@@ -54,41 +54,48 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     proj_path <- proj
   }
 
-  is_quarto_blog_ind <- is_quarto_blog(proj_path)
 
   if (!rstudioapi::isAvailable()) {
     cli::cli_warn("This feature may not work as excepted outside RStudio.")
   }
 
-  if (!is_active_proj && !is.null(dir)) {
-    dir <- fs::path(proj_path, dir)
-    contains_index_qmd <- fs::file_exists(fs::path(dir, "index.qmd"))
-  } else {
-    contains_index_qmd <- FALSE
-  }
-
+  # Making dir a full path if not in active project.
   if (!is.null(dir)) {
+    dir_rel <- dir
+    if (!is_active_proj) {
+      dir <- fs::path(proj_path, dir_rel)
+    }
+
     if (!fs::is_dir(dir) || !fs::dir_exists(dir)) {
       cli::cli_abort(c(x = "{.arg dir} must be {.code NULL} or a valid directory within {.arg proj}."))
     }
   }
 
-
-  img_dir <- if (is_active_proj && !is.null(dir)) {
-    dir
+  img_dir <- if (!is.null(dir)) {
+    if (is_active_proj) {
+      dir
+    } else {
+      fs::path(proj_path, dir_rel)
+    }
   } else if (is_pkg(proj_path)) {
     "man/figures"
-  } else if (is_quarto_blog_ind && (is_active_proj || (!is_active_proj && !is.null(dir) && contains_index_qmd))) {
-    get_active_qmd_post(base_path = proj_path, dir = dir)
+  } else if (is_quarto_blog(proj_path)) {
+    if (is_active_proj) {
+      get_active_qmd_post(base_path = proj_path)
+    } else {
+      cli::cli_abort(c("You are trying to add a screenshot to a Quarto blog.","Either open the RStudio project or supply {.arg dir} to write a screenshot in the directory."))
+    }
   } else {
     "images"
   }
 
-  img_dir_rel <- img_dir
+  img_dir_rel <- fs::path_rel(img_dir, start = proj_path)
 
-  if (!is_active_proj) {
-    img_dir <- fs::path(proj_path, img_dir)
-    img_dir <- as.character(img_dir)
+  if (is_quarto_blog(proj_path)) {
+    file_index_qmd <- fs::path(img_dir, "index.qmd")
+    if (!fs::file_exists(file_index_qmd)) {
+      cli::cli_abort("In a Quarto blog, {.arg dir} must be a relative path to a Quarto Post. i.e. index.qmd.")
+    }
   }
 
   if (!fs::dir_exists(img_dir)) {
@@ -159,7 +166,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     "Use with quarto, Rmd (source mode) in {.run [{proj_chr}](reuseme::proj_switch('{proj_chr}'))}"
   }
 
-  if (is_quarto_blog_ind) {
+  if (is_quarto_blog(proj_path)) {
     bullets <- c(
       bullets,
       '![]({fs::path_file(img_path_chr)}){{fig-alt="" width="70%"}}'

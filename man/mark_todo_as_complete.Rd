@@ -18,11 +18,12 @@ mark_todo_as_complete(line_id, file, regexp, rm_line = NULL)
 will remove only the tag (i.e. TODO, WORK, FIXME)}
 }
 \value{
-Writes a file with corrections, and returns the new line content invisibly.
+Writes a file with corrections, and returns the new line
+content invisibly.
 }
 \description{
 Function meant to be wrapped as \code{{.run}} hyperlinks with \code{file_outline()}.
-It basically removes a line from a file.
-Eventually, it may use regexp to look around and regexp could be used instead of line_id.
+It basically removes a line from a file. Eventually, it may use \code{regexp} to
+look around and regexp could be used instead of line_id.
 }
 \keyword{internal}

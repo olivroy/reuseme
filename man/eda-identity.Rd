@@ -122,23 +122,27 @@ slice_group_sample_identity(
 )
 }
 \arguments{
-\item{x}{The main object (a data.frame, but some functions accept a vector.) (aka \code{.data} in some \code{dplyr} functions, but naming it \code{x} throughout.)}
+\item{x}{The main object (a data.frame, but some functions accept a vector.)
+(aka \code{.data} in some \code{dplyr} functions, but naming it \code{x} throughout.)}
 
 \item{nrows}{Number of rows to print.}
 
-\item{extra_msg}{A character vector of observations, notes taken related to the transformation.}
+\item{extra_msg}{A character vector of observations that will print to
+console, notes taken related to the transformation.}
 
 \item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve}{Check original functions.}
 }
 \value{
-\code{x} original \code{x} is (invisibly) returned. (allowing the \verb{*_identity()}
-functions to be used in a pipeline) will print \code{extra_msg} to the console in interactive sessions.
+\code{x}, the original input is (invisibly) returned.
+(allowing the \verb{*_identity()} functions to be used in a pipeline) will print
+\code{extra_msg} to the console in interactive sessions.
 }
 \description{
-They all share the \verb{*_identity} suffix, they are silent in non-interactive sessions
-They are very handy to create runnable hyperlinks that do not modify the current state of the analysis
+They all share the \verb{*_identity} suffix, they are silent in non-interactive
+sessions. They are very handy to create clickable hyperlinks that do not
+modify the current state of the analysis.
 
-They are inspired by \link[pillar:glimpse]{pillar::glimpse}, \link[tibble:view]{tibble::view},
+They are inspired by \link[pillar:glimpse]{pillar::glimpse}, \link[tibble:view]{tibble::view}.
 
 Look at the original functions for the other parameters.
 }
@@ -146,26 +150,30 @@ Look at the original functions for the other parameters.
 \itemize{
 \item Like many other reuseme functions, they are most useful in interactive sessions
 \item print the result in interactive sessions (quiet in non-interactive.)
-\item Create runnable hyperlinks (In August 2023, RStudio forbids runnable hyperlinks of base functions, or non-package functions. (i.e. that don't have \code{::}))
+\item Create runnable hyperlinks (In August 2023, RStudio forbids runnable
+hyperlinks of base functions, or non-package functions. (i.e. that don't have \code{::}))
 \item Use in pipelines to explore the data
 \item Use \code{\link[rlang:is_interactive]{rlang::is_interactive()}} over \code{\link[base:interactive]{base::interactive()}} as it's easier to
 control and test with \code{options(rlang_interactive)}
 \item Use the original functions for your final results.
 \item \code{count_identity()} also prints percentages.
-\item \code{slice_identity()} can be useful to resolve many-to-many warnings from dplyr join functions.
+\item \code{slice_identity()} can be useful to resolve many-to-many warnings from
+dplyr join functions.
 }
 }
 
 \section{Caution}{
 \itemize{
 \item Don't put those at the end of a pipeline
-\item Don't name the first argument, to avoid conflicts in case a variable is named \code{x}.
+\item Don't name the first argument, to avoid conflicts in case a column in the
+data is named \code{x}.
 \item Some functions have small tweaks
 \itemize{
-\item \code{mutate_identity()} only prints the distinct values, and uses \code{.keep = "used"}, \code{.before = 0},
-unless specified to improve the display.
-\item \code{count_identity()} is a wrapper of \code{count_pct()} (wrapper of \code{dplyr::count()}),
-may fail if there is already a variable named \code{n}.
+\item \code{mutate_identity()} only prints the distinct values, and uses
+\code{.keep = "used"}, \code{.before = 0}, unless specified to improve the display.
+\item \code{count_identity()} is a wrapper of \code{\link[=count_pct]{count_pct()}}
+(itself a wrapper of \code{dplyr::count()}),
+\item \code{count_identity()} may fail if there is already a variable named \code{n}.
 \item \code{slice_min/max_identity()} relocates the target column at the beginning.
 \item \code{filter_identity()} prints a short message if no rows are returned.
 }
