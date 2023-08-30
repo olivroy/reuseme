@@ -81,9 +81,10 @@ RStudio project name in the following directories
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If you use <code>use_todo()</code> with a version-control repository, you may want to use
-<code>usethis::use_git_ignore("TODO.R")</code> if you don't want your <code>TODO.R</code> file to be included.
-If using in a package directory, use <code>usethis::use_build_ignore("TODO.R")</code> to prevent a note in <code>R CMD CHECK</code></p>
+    <p>If you use <code>use_todo()</code> with a version-control repository, you may want to
+use <code>usethis::use_git_ignore("TODO.R")</code> if you don't want your <code>TODO.R</code> file</p>
+<p>to be included in git. If using in a package directory, use
+<code>usethis::use_build_ignore("TODO.R")</code> to prevent a note in <code>R CMD CHECK</code></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -96,8 +97,10 @@ If using in a package directory, use <code>usethis::use_build_ignore("TODO.R")</
 <span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="st">"I need to do that"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I need to do that again"</span>, <span class="st">"youppi"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="st">"c(x, y)"</span>, code <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="st">"Here"</span>,  proj <span class="op">=</span> <span class="st">"my-analysis"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="st">"Here"</span>, proj <span class="op">=</span> <span class="st">"my-analysis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"my-analysis::Here"</span>, <span class="st">"I am"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># add to a global todo.</span></span></span>
+<span class="r-in"><span>  <span class="fu">use_todo</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all::Here"</span>, <span class="st">"I am"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
