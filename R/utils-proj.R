@@ -49,11 +49,11 @@ get_active_qmd_post <- function(base_path = proj_get(), error_call = caller_env(
 
   # For finding active project
   full_doc_path <-
-      normalizePath(
-        path = rstudioapi::getSourceEditorContext()$path,
-        mustWork = TRUE,
-        winslash = "/"
-      )
+    normalizePath(
+      path = rstudioapi::getSourceEditorContext()$path,
+      mustWork = TRUE,
+      winslash = "/"
+    )
 
   if (full_doc_path == "") {
     cli::cli_abort("problematic, did not get the document path.", .internal = TRUE, call = error_call)

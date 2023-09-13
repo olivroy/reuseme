@@ -97,8 +97,7 @@ test_that("slice_min_max() works", {
   expect_snapshot({
     slice_min_max(mtcars, mpg, n = 3)
     slice_min_max(mtcars, mpg, n = 3, ascending = FALSE)
-  }
-  )
+  })
   expect_equal(
     nrow(slice_min_max(mtcars, mpg, with_ties = FALSE, n = 2, each = FALSE)),
     2

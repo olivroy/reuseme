@@ -83,7 +83,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     if (is_active_proj) {
       get_active_qmd_post(base_path = proj_path)
     } else {
-      cli::cli_abort(c("You are trying to add a screenshot to a Quarto blog.","Either open the RStudio project or supply {.arg dir} to write a screenshot in the directory."))
+      cli::cli_abort(c("You are trying to add a screenshot to a Quarto blog.", "Either open the RStudio project or supply {.arg dir} to write a screenshot in the directory."))
     }
   } else if (is_active_proj) {
     "images"
@@ -160,7 +160,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   )
 
   img_path_chr <- as.character(img_path)
-  img_path_rel_chr = as.character(fs::path_rel(img_path, proj_path))
+  img_path_rel_chr <- as.character(fs::path_rel(img_path, proj_path))
   img_file_chr <- as.character(img_file)
   img_dir_rel_chr <- as.character(img_dir_rel)
   img_dir_chr <- as.character(img_dir)

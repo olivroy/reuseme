@@ -43,7 +43,7 @@
 #' @param extra_msg A character vector of observations that will print to
 #'   console, notes taken related to the transformation.
 #' @param nrows Number of rows to print.
-#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var,.preserve Check original functions.
+#' @param name,sort,.keep_all,.by,by,n_groups,group_var,...,n,prop,with_ties,order_by,.keep,.before,each,na_rm,weight_by,replace,.by_group,.keep_new_var,.preserve,ascending Check original functions.
 #'
 #' @returns `x`, the original input is (invisibly) returned.
 #'   (allowing the `*_identity()` functions to be used in a pipeline) will print

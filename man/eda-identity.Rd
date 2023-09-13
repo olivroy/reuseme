@@ -131,7 +131,7 @@ slice_group_sample_identity(
 \item{extra_msg}{A character vector of observations that will print to
 console, notes taken related to the transformation.}
 
-\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve}{Check original functions.}
+\item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve, ascending}{Check original functions.}
 }
 \value{
 \code{x}, the original input is (invisibly) returned.
