@@ -85,11 +85,17 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     } else {
       cli::cli_abort(c("You are trying to add a screenshot to a Quarto blog.","Either open the RStudio project or supply {.arg dir} to write a screenshot in the directory."))
     }
-  } else {
+  } else if (is_active_proj) {
     "images"
+  } else if (!is_active_proj && !is_pkg(proj_path)) {
+    fs::path(proj_path, "images")
+  } else {
+    cli::cli_abort("Not a supported case.")
   }
 
   img_dir_rel <- fs::path_rel(img_dir, start = proj_path)
+
+
 
   if (is_quarto_blog(proj_path)) {
     file_index_qmd <- fs::path(img_dir, "index.qmd")
@@ -154,6 +160,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   )
 
   img_path_chr <- as.character(img_path)
+  img_path_rel_chr = as.character(fs::path_rel(img_path, proj_path))
   img_file_chr <- as.character(img_file)
   img_dir_rel_chr <- as.character(img_dir_rel)
   img_dir_chr <- as.character(img_dir)
@@ -174,7 +181,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   } else {
     bullets <- c(
       bullets,
-      '![]({img_file_chr}){{fig-alt="" width="70%"}}'
+      '![]({img_path_rel_chr}){{fig-alt="" width="70%"}}'
     )
   }
 
@@ -190,5 +197,5 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   }
 
   cli::cli_inform(bullets)
-  invisible(file)
+  invisible(img_path_rel_chr)
 }

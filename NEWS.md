@@ -2,7 +2,7 @@
 
 * `use_todo()` allows to write to no project with use_todo("all::")
 
-* `screenshot()` works with generic file paths that contain numbers.
+* `screenshot()` works with generic file paths that contain numbers and returns the correct message.
 
 * `screenshot()` had internal cleanup.
 
