@@ -42,8 +42,9 @@ count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, s
 #' Subset rows using their positions
 #'
 #' A wrapper around `dplyr::bind_rows()`, `dplyr::slice_min()`, `dplyr::slice_max()`
-#' @param each If `FALSE` (default), `n` and `prop` passed to `dplyr::slice_min()` and
+#' @param each If `FALSE`, `n` and `prop` passed to `dplyr::slice_min()` and
 #' `dplyr::slice_max()` will be divided by 2. (will use `ceiling()` if n is)
+#' @param ascending Return the output in ascending order. (min on top)
 #' @inheritParams dplyr::slice_min
 #' @family dplyr extensions
 #' @param ... Arguments are passed on to methods.
@@ -67,13 +68,14 @@ count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, s
 #' mtcars %>% slice_min_max(cyl, each = TRUE, n = 2)
 slice_min_max <- function(.data,
                           order_by,
-                          each = FALSE,
                           ...,
                           n,
                           prop,
                           by = NULL,
                           with_ties = TRUE,
-                          na_rm = FALSE) {
+                          na_rm = FALSE,
+                          each = TRUE,
+                          ascending = TRUE) {
   rlang::check_installed("dplyr")
   if (!each) {
     if (!missing(n)) {
@@ -103,7 +105,14 @@ slice_min_max <- function(.data,
     with_ties = with_ties,
     na_rm = na_rm
   )
-  dplyr::bind_rows(list(min = min, max = max), .id = "minmax")
+  # So values are displayed in order.
+  max <- dplyr::arrange(max, {{ order_by }})
+  res <- dplyr::bind_rows(list(min = min, max = max), .id = "minmax")
+
+  if (!ascending) {
+    res <- dplyr::arrange(res, dplyr::desc({{ order_by }}))
+  }
+  res
 }
 
 #' Explore all rows in a random group

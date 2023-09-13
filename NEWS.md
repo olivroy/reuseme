@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `slice_min_max()` has new defaults (`each = TRUE`)and argument positions (tidy design principles) (optional arguments after `...`). Gains an ascending parameter to display max before min.
+
 * `use_todo()` allows to write to no project with use_todo("all::")
 
 * `screenshot()` works with generic file paths that contain numbers and returns the correct message.

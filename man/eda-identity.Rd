@@ -102,13 +102,14 @@ filter_if_any_identity(
 slice_min_max_identity(
   x,
   order_by,
-  each = FALSE,
   ...,
   n,
   prop,
   by = NULL,
   with_ties = TRUE,
   na_rm = FALSE,
+  each = TRUE,
+  ascending = TRUE,
   nrows = NULL,
   extra_msg = NULL
 )

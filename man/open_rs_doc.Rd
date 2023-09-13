@@ -21,6 +21,7 @@ Invisibly returns the document id
 }
 \description{
 Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
+If the file could not be opened, a clickable hyperlink is displayed.
 }
 \examples{
 if (FALSE) {

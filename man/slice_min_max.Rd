@@ -7,13 +7,14 @@
 slice_min_max(
   .data,
   order_by,
-  each = FALSE,
   ...,
   n,
   prop,
   by = NULL,
   with_ties = TRUE,
-  na_rm = FALSE
+  na_rm = FALSE,
+  each = TRUE,
+  ascending = TRUE
 )
 }
 \arguments{
@@ -24,9 +25,6 @@ more details.}
 \item{order_by}{<\code{\link[rlang:args_data_masking]{data-masking}}> Variable or
 function of variables to order by. To order by multiple variables, wrap
 them in a data frame or tibble.}
-
-\item{each}{If \code{FALSE} (default), \code{n} and \code{prop} passed to \code{dplyr::slice_min()} and
-\code{dplyr::slice_max()} will be divided by 2. (will use \code{ceiling()} if n is)}
 
 \item{...}{Arguments are passed on to methods.}
 
@@ -55,6 +53,11 @@ and return the first \code{n} rows.}
 If \code{FALSE}, \code{NA} values are sorted to the end (like in \code{\link[dplyr:arrange]{arrange()}}), so
 they will only be included if there are insufficient non-missing values to
 reach \code{n}/\code{prop}.}
+
+\item{each}{If \code{FALSE}, \code{n} and \code{prop} passed to \code{dplyr::slice_min()} and
+\code{dplyr::slice_max()} will be divided by 2. (will use \code{ceiling()} if n is)}
+
+\item{ascending}{Return the output in ascending order. (min on top)}
 }
 \value{
 An object of the same type as \code{.data.}

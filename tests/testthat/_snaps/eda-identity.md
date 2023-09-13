@@ -61,10 +61,10 @@
       2     79 min    Ratts Ty~    15 none       grey, blue unknown           NA male 
       3     88 min    Wicket S~    20 brown      brown      brown              8 male 
       4     94 min    Dud Bolt     45 none       blue, grey yellow            NA male 
-      5    264 max    Yarael P~    NA none       white      yellow            NA male 
-      6    234 max    Tarfful     136 brown      brown      blue              NA male 
-      7    229 max    Lama Su      88 none       grey       black             NA male 
-      8    228 max    Chewbacca   112 brown      unknown    blue             200 male 
+      5    228 max    Chewbacca   112 brown      unknown    blue             200 male 
+      6    229 max    Lama Su      88 none       grey       black             NA male 
+      7    234 max    Tarfful     136 brown      brown      blue              NA male 
+      8    264 max    Yarael P~    NA none       white      yellow            NA male 
       # i 6 more variables: gender <chr>, homeworld <chr>, species <chr>, ...
     Message
       i Looking at people with min and max height (4 each) total = 8 rows.

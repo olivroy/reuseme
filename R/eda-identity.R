@@ -319,13 +319,14 @@ filter_if_any_identity <- function(x,
 #' @rdname eda-identity
 slice_min_max_identity <- function(x,
                                    order_by,
-                                   each = FALSE,
                                    ...,
                                    n,
                                    prop,
                                    by = NULL,
                                    with_ties = TRUE,
                                    na_rm = FALSE,
+                                   each = TRUE,
+                                   ascending = TRUE,
                                    nrows = NULL,
                                    extra_msg = NULL) {
   if (!rlang::is_interactive()) {
@@ -335,12 +336,13 @@ slice_min_max_identity <- function(x,
   res <- slice_min_max(
     .data = x,
     order_by = {{ order_by }},
-    each = each,
     ...,
     n = n,
     prop = prop,
     by = {{ by }},
     with_ties = with_ties,
+    each = each,
+    ascending = ascending,
     na_rm = na_rm
   )
 

@@ -64,3 +64,28 @@
       2 1       344.  24.6
       3 All vs  643.  20.1
 
+# slice_min_max() works
+
+    Code
+      slice_min_max(mtcars, mpg, n = 3)
+    Output
+                          minmax  mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+      Cadillac Fleetwood     min 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+      Lincoln Continental    min 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+      Camaro Z28             min 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+      Honda Civic            max 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+      Lotus Europa           max 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+      Fiat 128               max 32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+      Toyota Corolla         max 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+    Code
+      slice_min_max(mtcars, mpg, n = 3, ascending = FALSE)
+    Output
+                          minmax  mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+      Toyota Corolla         max 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+      Fiat 128               max 32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+      Honda Civic            max 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+      Lotus Europa           max 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+      Camaro Z28             min 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+      Cadillac Fleetwood     min 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+      Lincoln Continental    min 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+
