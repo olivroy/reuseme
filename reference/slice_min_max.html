@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,13 +54,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">slice_min_max</span><span class="op">(</span></span>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">order_by</span>,</span>
-<span>  each <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  <span class="va">n</span>,</span>
 <span>  <span class="va">prop</span>,</span>
 <span>  by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  with_ties <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  na_rm <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  na_rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  each <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ascending <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -76,11 +77,6 @@ more details.</p></dd>
 <dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/args_data_masking.html" class="external-link">data-masking</a></code>&gt; Variable or
 function of variables to order by. To order by multiple variables, wrap
 them in a data frame or tibble.</p></dd>
-
-
-<dt>each</dt>
-<dd><p>If <code>FALSE</code> (default), <code>n</code> and <code>prop</code> passed to <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice_min()</a></code> and
-<code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice_max()</a></code> will be divided by 2. (will use <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling()</a></code> if n is)</p></dd>
 
 
 <dt>...</dt>
@@ -117,6 +113,15 @@ and return the first <code>n</code> rows.</p></dd>
 If <code>FALSE</code>, <code>NA</code> values are sorted to the end (like in <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange()</a></code>), so
 they will only be included if there are insufficient non-missing values to
 reach <code>n</code>/<code>prop</code>.</p></dd>
+
+
+<dt>each</dt>
+<dd><p>If <code>FALSE</code>, <code>n</code> and <code>prop</code> passed to <code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice_min()</a></code> and
+<code><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">dplyr::slice_max()</a></code> will be divided by 2. (will use <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling()</a></code> if n is)</p></dd>
+
+
+<dt>ascending</dt>
+<dd><p>Return the output in ascending order. (min on top)</p></dd>
 
 </dl></div>
     <div class="section level2">
