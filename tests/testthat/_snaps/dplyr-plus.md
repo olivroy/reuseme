@@ -48,14 +48,14 @@
     Output
       # A tibble: 3 x 2
         vs         x
-        <chr>  <dbl>
+        <fct>  <dbl>
       1 All vs  643.
       2 0       299.
       3 1       344.
     Code
       mtcars %>% tibble::as_tibble() %>% dplyr::mutate(vs = as.character(vs)) %>%
         summarise_with_total(x = sum(mpg), y = mean(mpg), .by = vs, .label = "All vs",
-        .first = F)
+        .first = FALSE)
     Output
       # A tibble: 3 x 3
         vs         x     y
@@ -88,4 +88,17 @@
       Camaro Z28             min 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
       Cadillac Fleetwood     min 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
       Lincoln Continental    min 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+
+# na_if2() works with expr and values
+
+    Code
+      na_if2(vec)
+    Condition
+      Error in `na_if2()`:
+      ! One of `expr` or `values` must be supplied.
+    Code
+      na_if2(vec, expr = c(0, 2))
+    Condition
+      Error in `na_if2()`:
+      ! `expr` must be a logical vector the same size as x, not a double vector
 

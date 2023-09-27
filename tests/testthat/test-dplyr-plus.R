@@ -88,9 +88,18 @@ test_that("summarise_with_total() works", {
         y = mean(mpg),
         .by = vs,
         .label = "All vs",
-        .first = F
+        .first = FALSE
       )
   })
+})
+
+test_that("summarise_with_total() keeps factors", {
+  fac <- mtcars %>%
+    dplyr::mutate(vs = factor(vs), mpg, .keep = "none")
+  res <- summarise_with_total(fac, m = mean(mpg), .by = vs) %>% tibble::as_tibble()
+  expect_s3_class(res$vs, "factor")
+  expect_equal(levels(res$vs), c("Total", "0", "1"))
+
 })
 
 test_that("slice_min_max() works", {
@@ -102,4 +111,29 @@ test_that("slice_min_max() works", {
     nrow(slice_min_max(mtcars, mpg, with_ties = FALSE, n = 2, each = FALSE)),
     2
   )
+})
+
+test_that("na_if2() works with expr and values", {
+
+  vec <- c(0, 1, 1, 2)
+  vec2 <- c("Here", "not", NA, "Here")
+  # NA all 2s
+  # You can actually use dplyr::na_if() in this case
+  expect_snapshot(error = TRUE, {
+    # No entry
+    na_if2(vec)
+    # Both entries
+    #
+    na_if2(vec, expr = c(0, 2))
+  })
+
+
+  expect_equal(na_if2(vec, expr = TRUE), rep(NA_real_, 4))
+  expect_equal(
+    na_if2(vec, 2),
+    dplyr::na_if(vec, 2)
+  )
+  # NA all 1 and 2
+  expect_equal(na_if2(vec, c(1, 2)), c(0, rep(NA_real_, 3)))
+  expect_equal(na_if2(vec, expr = vec2 == "Here"), c(NA_real_, 1, 1, NA))
 })

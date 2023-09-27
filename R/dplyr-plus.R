@@ -402,8 +402,10 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
 
   if (is.factor(by_summary[[1]])) {
     by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
+    summary[[1]] <- factor(summary[[1]], levels = summary_levels)
   } else if (!is.character(by_summary[[1]])) {
     by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
+    summary[[1]] <- factor(summary[[1]], levels = summary_levels)
   }
 
 
@@ -418,4 +420,40 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
     )
   }
   res
+}
+
+#' Transform to NA any of the condition
+#'
+#' This function is similar to `dplyr::na_if()`, but it has 2 differences. the
+#' values of `y` are never recycled. There are two ways to provide the condition.
+#' As values or as a logical vector.
+#' @param x A vector.
+#' @param values A vector of values. If the length of values = 1, it is actually
+#'   the preferable to use `dplyr::na_if()` for clarity.
+#' @param expr A logical vector same length as x
+#' @return `x` with `NA` values when required.
+#' @export
+#'
+#' @examples
+#' vec <- c(0, 1, 1, 2)
+#' vec2 <- c("Here", "not", NA, "Here")
+#' # NA all 2s
+#' # You can actually use dplyr::na_if() in this case
+#' dplyr::na_if(vec, 2)
+#' # NA all 1 and 2
+#' na_if2(vec, c(1, 2))
+#' na_if2(vec, expr = vec2 == "Here")
+na_if2 <- function(x, values, expr) {
+  switch(
+    rlang::check_exclusive(expr, values),
+    expr = {
+      if (!is.logical(expr)) {
+        cli::cli_abort("{.arg expr} must be a logical vector the same size as x, not {.obj_type_friendly {expr}}")
+      }
+      x[expr] <- NA
+      x
+      },
+    values = {
+      x[x %in% values] <- NA; x}
+  )
 }
