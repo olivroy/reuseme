@@ -11,7 +11,7 @@ mark_todo_as_complete(line_id, file, regexp, rm_line = NULL)
 
 \item{file}{Path to a file}
 
-\item{regexp}{A regexp to assess that file content has not changed}
+\item{regexp}{A regexp to assess that the file content has not changed.}
 
 \item{rm_line}{A logical If \code{NULL} will remove the full line in the file
 (for TODO, or FIXME items), else for WORK, will only remove the WORK tag
@@ -23,7 +23,6 @@ content invisibly.
 }
 \description{
 Function meant to be wrapped as \code{{.run}} hyperlinks with \code{file_outline()}.
-It basically removes a line from a file. Eventually, it may use \code{regexp} to
-look around and regexp could be used instead of line_id.
+It basically removes a line from a file.
 }
 \keyword{internal}

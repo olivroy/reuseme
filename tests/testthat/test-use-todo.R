@@ -28,45 +28,34 @@ test_that("Marking a TODO item as done works", {
     "print('R code')"
   )
   writeLines(text = content, con = tmp)
-  expect_mark_as_done <- function(object) {
-    expect_message(object, regexp = "Marking") %>%
-      expect_message(regexp = "Writing")
-  }
 
-  # Can't delete the first line as it doesn't contain a TODO item
   # tmp still has 5 lines
-  expect_error(
-    mark_todo_as_complete(line_id = 1, file = tmp, regexp = "I want this done")
-  )
-  # Try to delete TODO item at line 2 without providing the regexp for safeguard
-  expect_error(
-    mark_todo_as_complete(line_id = 2, file = tmp),
-    regexp = "`regexp` is absent"
-  )
+  expect_snapshot(error = TRUE, {
+    # Can't delete the first line as it doesn't contain a TODO item
+    mark_todo_as_complete(line_id = 1, file = tmp, regexp = "I Want this done")
+    # Try to delete TODO item at line 2 without providing the regexp for safeguard
+    mark_todo_as_complete(line_id = 2, file = tmp)
+  })
   # Deleting the TODO item line completely (tmp now has 4 lines)
-  expect_mark_as_done(out <- mark_todo_as_complete(line_id = 2, file = tmp, regexp = "item to delete"))
-  expect_equal(
-    out,
-    ""
-  )
-  # trying to delete the original 3rd line (that is now the second line after deletion)
-  expect_error(
-    mark_todo_as_complete(line_id = 3, file = tmp, regexp = "Explain what the next code does")
+  expect_mark_as_done(
+    mark_todo_as_complete(line_id = 2, file = tmp, regexp = "item to delete")
   )
   # Deleting the WORK tag (on new line 2), but keeping the comment.
+  # Will throw a warning for now.
   expect_mark_as_done(
     out <- mark_todo_as_complete(
-      line_id = 2,
+      line_id = 3,
       file = tmp,
       regexp = "Explain what the next code does"
-    )
+    ),
+    warn = TRUE
   )
   expect_equal(
     out,
     "# Explain what the next code does."
   )
   expect_equal(
-    readLines(tmp),
+    readLines(tmp, encoding = "UTF-8"),
     c(
       "# I Want this done",
       "# Explain what the next code does.",
@@ -76,4 +65,6 @@ test_that("Marking a TODO item as done works", {
     )
   )
   unlink(tmp)
+  skip("mark_todo_as_complete fails if changing lines + regexp match in many places. Many add a condition like closest")
+
 })

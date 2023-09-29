@@ -444,16 +444,17 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
 #' na_if2(vec, c(1, 2))
 #' na_if2(vec, expr = vec2 == "Here")
 na_if2 <- function(x, values, expr) {
-  switch(
-    rlang::check_exclusive(expr, values),
+  switch(rlang::check_exclusive(expr, values),
     expr = {
       if (!is.logical(expr)) {
         cli::cli_abort("{.arg expr} must be a logical vector the same size as x, not {.obj_type_friendly {expr}}")
       }
       x[expr] <- NA
       x
-      },
+    },
     values = {
-      x[x %in% values] <- NA; x}
+      x[x %in% values] <- NA
+      x
+    }
   )
 }

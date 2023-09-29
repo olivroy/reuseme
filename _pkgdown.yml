@@ -35,6 +35,7 @@ reference:
   - filter_if_any
   - extract_cell_value
   - slice_group_sample
+  - na_if2
   - summarise_with_total
 
 - subtitle: dplyr and base identity

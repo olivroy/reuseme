@@ -8,6 +8,8 @@
 
 * `use_todo()` no longer fails when not in a RStudio project
 
+* `mark_todo_as_complete()` can be used multiple times sequentially and will only throw a warning (for now).
+
 * `screenshot()` works with generic file paths that contain numbers and returns the correct message.
 
 * `screenshot()` had internal cleanup.

@@ -80,37 +80,56 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 #' Remove a TODO/WORK/FIXME item from a file
 #'
 #' Function meant to be wrapped as `{.run}` hyperlinks with `file_outline()`.
-#' It basically removes a line from a file. Eventually, it may use `regexp` to
-#' look around and regexp could be used instead of line_id.
+#' It basically removes a line from a file.
 #'
 #' @param line_id The line number (a single integer)
 #' @param file Path to a file
+#' @param regexp A regexp to assess that the file content has not changed.
 #' @param rm_line A logical If `NULL` will remove the full line in the file
 #'   (for TODO, or FIXME items), else for WORK, will only remove the WORK tag
 #'   will remove only the tag (i.e. TODO, WORK, FIXME)
-#' @param regexp A regexp to assess that file content has not changed
 #'
 #' @return Writes a file with corrections, and returns the new line
 #'   content invisibly.
 #' @export
 #' @keywords internal
 mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
-  rlang::check_required(x = regexp)
+  check_string(regexp)
+  check_number_whole(line_id)
+
+  # to defer warning.
+  warn_change_of_line <- FALSE
 
   file_content <- readLines(file, encoding = "UTF-8")
   line_content <- file_content[line_id]
   detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
 
   if (!detect_regexp_in_line) {
-    cli::cli_abort(c(
-      "Did not detect the following text as expected {regexp}",
-      "This function expects regexp to be detected on line {line_id} in {file}",
-      "Possibly the file content has changed since you ran this code",
-      "You still cannot mark multiple items as done in a single call."
-    ))
+    regexp_detection <- grep(pattern = regexp, x = file_content)
+    warn_change_of_line <- TRUE
+
+    if (length(regexp_detection) == 1) {
+      line_id <- regexp_detection
+      line_content <- line_content <- file_content[line_id]
+      detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
+    } else {
+      cli::cli_abort(c(
+        "{.arg rexpexp} was detected in more than 1 line.",
+        "Not marking TODO as complete."
+      ))
+    }
   }
 
   tag_type <- extract_tag_in_text(text = line_content)
+
+  if (warn_change_of_line) {
+    cli::cli_warn(c(
+      x = "Could not detect {.arg regexp} as expected",
+      "Could not find {.val {regexp}} at line {line_id}.",
+      i = "Has the file content changed since you ran this code?",
+      "`regexp` was detected in lines {regexp_detection}."
+    ))
+  }
 
   if (is.null(rm_line)) {
     rm_line <- tag_type %in% c("TODO", "FIXME")
@@ -138,10 +157,17 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   invisible(line_content_new)
 }
 
-extract_tag_in_text <- function(text, call = caller_env()) {
+extract_tag_in_text <- function(text, error_call = caller_env()) {
   check_string(text, call = call, arg = "line_content")
   match_tag <- regexpr(pattern = "WORK|FIXME|TODO", text = text)
   tag_type <- regmatches(x = text, m = match_tag)
+  if (length(tag_type) == 0) {
+    choices <- c("WORK", "FIXME", "TODO")
+    cli::cli_abort(c(
+      x = "Cannot mark a TODO item as complete if it doesn't contain the tags.",
+      i = "Did not detect any {.val {choices}} tags in the specified line."
+    ), call = error_call)
+  }
   # Fails if no WORK, FIXME or TODO tags are found.
-  arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = call)
+  arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = error_call, arg_nm = "line_content")
 }

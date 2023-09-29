@@ -99,7 +99,6 @@ test_that("summarise_with_total() keeps factors", {
   res <- summarise_with_total(fac, m = mean(mpg), .by = vs) %>% tibble::as_tibble()
   expect_s3_class(res$vs, "factor")
   expect_equal(levels(res$vs), c("Total", "0", "1"))
-
 })
 
 test_that("slice_min_max() works", {
@@ -114,7 +113,6 @@ test_that("slice_min_max() works", {
 })
 
 test_that("na_if2() works with expr and values", {
-
   vec <- c(0, 1, 1, 2)
   vec2 <- c("Here", "not", NA, "Here")
   # NA all 2s
