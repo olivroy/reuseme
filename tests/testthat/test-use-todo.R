@@ -55,7 +55,7 @@ test_that("Marking a TODO item as done works", {
     "# Explain what the next code does."
   )
   expect_equal(
-    readLines(tmp, encoding = "UTF-8"),
+    read_utf8(tmp),
     c(
       "# I Want this done",
       "# Explain what the next code does.",

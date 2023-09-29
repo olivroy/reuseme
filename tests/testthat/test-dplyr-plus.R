@@ -1,3 +1,14 @@
+test_that("count_pct works as expected.", {
+  res <- count_pct(dplyr::group_by(mtcars, vs), cyl)
+  expect_s3_class(res, "tbl_df")
+  expect_named(res, c("vs", "cyl", "n", "percent"))
+  expect_type(res$percent, "double")
+
+  skip_if_not_installed("scales")
+  res2 <- count_pct(dplyr::group_by(mtcars, vs), cyl, label = TRUE)
+  expect_type(res2$percent, "character")
+})
+
 test_that("slice_group_sample() works as expected", {
   withr::local_seed(100)
   mtcars_grouped_vs <- dplyr::group_by(mtcars, vs)

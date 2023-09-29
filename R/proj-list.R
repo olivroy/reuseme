@@ -44,5 +44,5 @@ proj_list <- function(dirs = getOption("reuseme.reposdir")) {
 }
 
 default_dirs <- function() {
-  fs::path_home_r(c("rrr", "rrr-forks"))
+  fs::path_home("Documents", c("rrr", "rrr-forks"))
 }
