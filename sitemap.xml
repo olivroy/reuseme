@@ -19,6 +19,9 @@
     <loc>https://olivroy.github.io/reuseme/news/index.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/browse_pkg.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/case_if_any.html</loc>
   </url>
   <url>
@@ -47,6 +50,9 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/open_rs_doc.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/outdated_pkgs.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/proj_list.html</loc>

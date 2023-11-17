@@ -46,7 +46,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="reuseme-development-version">reuseme (development version)<a class="anchor" aria-label="anchor" href="#reuseme-development-version"></a></h2>
-<ul><li><p><code><a href="../reference/slice_min_max.html">slice_min_max()</a></code> has new defaults (<code>each = TRUE</code>)and argument positions (tidy design principles) (optional arguments after <code>...</code>). Gains an ascending parameter to display max before min.</p></li>
+<ul><li><p><code><a href="../reference/browse_pkg.html">browse_pkg()</a></code> is a new function to access the pkgdown site directly. It also prints links to vignettes and different parts of the website to the console.</p></li>
+<li><p><code><a href="../reference/slice_min_max.html">slice_min_max()</a></code> has new defaults (<code>each = TRUE</code>)and argument positions (tidy design principles) (optional arguments after <code>...</code>). Gains an ascending parameter to display max before min.</p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> allows to write to no project with use_todo(“all::”)</p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> provides the handy <proj>::<todo items> as a shortcut for `use_todo(“todo items”, “proj”) to write TODO items to other projects.</todo></proj></p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> no longer fails when not in a RStudio project</p></li>
@@ -58,7 +59,7 @@
 <ul><li>The image will be saved in the active <code>posts/</code> folder, queried using <code><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">rstudioapi::documentPath()</a></code>.</li>
 </ul></li>
 <li><p><code><a href="../reference/summarise_with_total.html">summarise_with_total()</a></code> returns more factors.</p></li>
-<li><p>New <code>na_if_cond()</code> to test for missing.</p></li>
+<li><p>New <code><a href="../reference/na_if2.html">na_if2()</a></code> as an alternative to <code><a href="https://dplyr.tidyverse.org/reference/na_if.html" class="external-link">dplyr::na_if()</a></code> where it transforms <code>x</code> to <code>NA</code> if 1. <code>x</code> is in certain values, or 2. if a certain logical condition is <code>TRUE</code>.</p></li>
 </ul></div>
   </main></div>
 
