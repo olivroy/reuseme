@@ -1,5 +1,8 @@
 # reuseme (development version)
 
+* `browse_pkg()` is a new function to access the pkgdown site directly. It also prints
+  links to vignettes and different parts of the website to the console.
+
 * `slice_min_max()` has new defaults (`each = TRUE`)and argument positions (tidy design principles) (optional arguments after `...`). Gains an ascending parameter to display max before min.
 
 * `use_todo()` allows to write to no project with use_todo("all::")
@@ -20,4 +23,4 @@
 
 * `summarise_with_total()` returns more factors.
 
-* New `na_if_cond()` to test for missing.
+* New `na_if2()` as an alternative to `dplyr::na_if()` where it transforms `x` to `NA` if 1. `x` is in certain values, or 2. if a certain logical condition is `TRUE`.

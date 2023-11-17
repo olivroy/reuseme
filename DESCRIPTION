@@ -27,6 +27,7 @@ Imports:
     usethis (>= 2.2.0),
     vctrs
 Suggests: 
+    curl,
     magick,
     testthat (>= 3.0.0),
     withr

@@ -66,5 +66,4 @@ test_that("Marking a TODO item as done works", {
   )
   unlink(tmp)
   skip("mark_todo_as_complete fails if changing lines + regexp match in many places. Many add a condition like closest")
-
 })

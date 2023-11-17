@@ -35,7 +35,7 @@ It will continue the numbering if a file named image exists.
 Still have to validate if it works on macOS, as it is not clear whether the
 image goes to the clipboard by default
 
-The maximal number of images in a folder is 99. (only padding 2), should be enough.
+The maximum number of images in a folder is 99. (only padding 2), should be enough.
 
 You should not be able to overwrite a screenshot with a generic name, only a
 named one as it is possible you may require to retake your screenshot.
