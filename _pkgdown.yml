@@ -13,6 +13,11 @@ reference:
   contents:
   - starts_with("proj_")
 
+- subtitle: Package browsing / management
+  contents:
+  - browse_pkg
+  - outdated_pkgs
+
 - subtitle: Interact with documents
   contents:
   - use_todo
