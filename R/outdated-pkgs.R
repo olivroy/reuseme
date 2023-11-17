@@ -48,9 +48,9 @@ outdated_pkgs <- function() {
     return(invisible())
   }
 
-  outdated_pkg <- outdated_pkg_mat |>
-    as.data.frame() |>
-    purrr::list_transpose(.names = rownames(outdated_pkg_mat)) |>
+  outdated_pkg <-
+    as.data.frame(outdated_pkg_mat) %>%
+    purrr::list_transpose(.names = rownames(outdated_pkg_mat)) %>%
     purrr::imap(\(x, pkg_name) {
       withr::local_options(usethis.quiet = TRUE)
       url <- browse_pkg(pkg_name, open = FALSE, news_only = TRUE)
