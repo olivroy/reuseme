@@ -51,7 +51,7 @@ outdated_pkgs <- function() {
   outdated_pkg <-
     as.data.frame(outdated_pkg_mat) %>%
     purrr::list_transpose(.names = rownames(outdated_pkg_mat)) %>%
-    purrr::imap(\(x, pkg_name) {
+    purrr::imap(function(x, pkg_name) {
       withr::local_options(usethis.quiet = TRUE)
       url <- browse_pkg(pkg_name, open = FALSE, news_only = TRUE)
       list(url = url, ReposVer = x$ReposVer, Installed = x$Installed)
@@ -67,7 +67,7 @@ outdated_pkgs <- function() {
   # Nice to have use column output
   pkgs <- purrr::iwalk(
     outdated_pkg,
-    .f = \(x, pkg) cli::cli_bullets("{.pkg {pkg}} ({x$Installed} -> {x$ReposVer}), {x$url}, {.run [install](pak::pak('{pkg}'))}, {.run [cran](usethis::browse_cran('{pkg}'))}.")
+    .f = function(x, pkg) cli::cli_bullets("{.pkg {pkg}} ({x$Installed} -> {x$ReposVer}), {x$url}, {.run [install](pak::pak('{pkg}'))}, {.run [cran](usethis::browse_cran('{pkg}'))}.")
   )
 
   pkgs <- names(pkgs)
