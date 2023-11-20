@@ -48,31 +48,62 @@ outdated_pkgs <- function() {
     return(invisible())
   }
 
-  outdated_pkg <-
-    as.data.frame(outdated_pkg_mat) %>%
-    purrr::list_transpose(.names = rownames(outdated_pkg_mat)) %>%
-    purrr::imap(function(x, pkg_name) {
-      withr::local_options(usethis.quiet = TRUE)
-      url <- browse_pkg(pkg_name, open = FALSE, news_only = TRUE)
-      list(url = url, ReposVer = x$ReposVer, Installed = x$Installed)
-    })
+  fields_names <- colnames(outdated_pkg_mat)
 
+  # Each element is a vector that contains installed version, package name
+  # new version
+  outdated_pkg <-
+    t(outdated_pkg_mat) %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    as.list() %>%
+    purrr::map(\(x) purrr::set_names(x, fields_names))
+
+  # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {
     cli::cli_alert_success("There is a new version of pak.")
     cli::cli_alert_info("Update pak with {.run pak::pak_update()}")
     cli::cli_alert_info("Restart R session then run `outdated_pkgs()` again.")
     return(invisible())
   }
+
+  # Create the bullets of outdated packages, with version number
+  # clickable hyperlinks to install or view news.
+  outdated_pkg <-
+    purrr::map(outdated_pkg, function(x) {
+      withr::local_options(usethis.quiet = TRUE)
+      url <- browse_pkg(x[["Package"]], open = FALSE, news_only = TRUE)
+
+      # To use for padding
+      n_char <- nchar(paste0(x[["Package"]], x[["Installed"]], x[["ReposVer"]]))
+
+      list(
+        url       = url,
+        ReposVer  = x[["ReposVer"]],
+        Installed = x[["Installed"]],
+        n_char    = n_char
+      )
+
+    })
+
   withr::local_options(list(usethis.quiet = TRUE))
+
+  # TODO figure out pad :)
+  # pad <- max(purrr::map_int(outdated_pkg, "n_char"))
   # Nice to have use column output
   pkgs <- purrr::iwalk(
     outdated_pkg,
-    .f = function(x, pkg) cli::cli_bullets("{.pkg {pkg}} ({x$Installed} -> {x$ReposVer}), {x$url}, {.run [install](pak::pak('{pkg}'))}, {.run [cran](usethis::browse_cran('{pkg}'))}.")
+    .f = function(x, pkg) {
+      cli::cli_bullets("{.pkg {pkg}} ({x$Installed} {cli::symbol$arrow_right} \\
+                       {x$ReposVer}) {x$url}, \\
+                       {.run [install](pak::pak('{pkg}'))}, \\
+                       {.run [cran](usethis::browse_cran('{pkg}'))}")
+    }
   )
 
   pkgs <- names(pkgs)
   pkgs <- deparse(pkgs)
   pkgs <- paste0(pkgs, collapse = "\n")
 
-  cli::cli_bullets(c("Update all with", "pak::pak({pkgs})}"))
+  cli::cli_bullets(c("Update all with", "pak::pak({pkgs})"))
+  invisible(names(outdated_pkg))
 }
