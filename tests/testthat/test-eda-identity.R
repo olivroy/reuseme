@@ -10,6 +10,7 @@ test_that("Side effects are what's intended in interactive sessions", {
   withr::local_options(rlang_interactive = TRUE)
   withr::local_seed(100)
   withr::local_options(pillar.advice = FALSE, pillar.max_footer_lines = 1)
+  skip_if_not_installed("dplyr", "1.1.4")
   f_identity <- function(data) {
     data %>%
       filter_identity(name == "C-3PO", extra_msg = c("Looking at C3P-0 characteristics")) %>%

@@ -16,10 +16,10 @@
       # A tibble: 5 x 14
         name      height  mass hair_color skin_color eye_color birth_year sex   gender
         <chr>      <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
-      1 Wat Tamb~    193    48 none       green, gr~ unknown         NA   male  mascu~
-      2 Tarfful      234   136 brown      brown      blue            NA   male  mascu~
+      1 R4-P17        96    NA none       silver, r~ red, blue       NA   none  femin~
+      2 Grievous     216   159 none       brown, wh~ green, y~       NA   male  mascu~
       3 Bossk        190   113 none       green      red             53   male  mascu~
-      4 Taun We      213    NA none       grey       black           NA   fema~ femin~
+      4 Dexter J~    198   102 none       brown      yellow          NA   male  mascu~
       5 Darth Va~    202   136 none       white      yellow          41.9 male  mascu~
       # i 5 more variables: homeworld <chr>, species <chr>, films <list>, ...
     Message
@@ -35,9 +35,9 @@
        5 R5-D4        97    32 <NA>       white, red red               NA none  mascu~
        6 IG-88       200   140 none       metal      red               15 none  mascu~
        7 Mon Mot~    150    NA auburn     fair       blue              48 fema~ femin~
-       8 Shmi Sk~    163    NA black      fair       brown             72 fema~ femin~
-       9 Ayla Se~    178    55 none       blue       hazel             48 fema~ femin~
-      10 Adi Gal~    184    50 none       dark       blue              NA fema~ femin~
+       8 Padmé A~    185    45 brown      light      brown             46 fema~ femin~
+       9 Shmi Sk~    163    NA black      fair       brown             72 fema~ femin~
+      10 Ayla Se~    178    55 none       blue       hazel             48 fema~ femin~
       # i 12 more rows
     Message
       i Looking at all individuals of a sex.
@@ -69,14 +69,14 @@
     Message
       i Looking at people with min and max height (4 each) total = 8 rows.
     Output
-      # A tibble: 23 x 2
+      # A tibble: 22 x 2
         hair_color sex   
         <chr>      <chr> 
       1 blond      male  
       2 <NA>       none  
       3 none       male  
       4 brown      female
-      # i 19 more rows
+      # i 18 more rows
     Message
       i Looking if there is association between `hair_color` and `sex`. Printing 15 rows.
 

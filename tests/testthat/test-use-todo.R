@@ -25,11 +25,13 @@ test_that("Marking a TODO item as done works", {
     "# WORK Explain what the next code does.",
     "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
+    "# TODO Check r-lib/usethis#1890",
+    "# TODO Check https://github.com/r-lib/usethis/issues/1890",
     "print('R code')"
   )
   writeLines(text = content, con = tmp)
 
-  # tmp still has 5 lines
+  # tmp still has 6 lines
   expect_snapshot(error = TRUE, {
     # Can't delete the first line as it doesn't contain a TODO item
     mark_todo_as_complete(line_id = 1, file = tmp, regexp = "I Want this done")
@@ -37,12 +39,13 @@ test_that("Marking a TODO item as done works", {
     mark_todo_as_complete(line_id = 2, file = tmp)
   })
   # Deleting the TODO item line completely (tmp now has 4 lines)
-  expect_mark_as_done(
+  expect_mark_as_complete(
     mark_todo_as_complete(line_id = 2, file = tmp, regexp = "item to delete")
   )
   # Deleting the WORK tag (on new line 2), but keeping the comment.
   # Will throw a warning for now.
-  expect_mark_as_done(
+
+  expect_mark_as_complete(
     out <- mark_todo_as_complete(
       line_id = 3,
       file = tmp,
@@ -54,6 +57,14 @@ test_that("Marking a TODO item as done works", {
     out,
     "# Explain what the next code does."
   )
+  expect_mark_as_complete(
+    out <- mark_todo_as_complete(
+      line_id = 4,
+      file = tmp,
+      regexp = 'ethisissues1890'
+      ),
+    warn = TRUE
+  )
   expect_equal(
     read_utf8(tmp),
     c(
@@ -61,6 +72,7 @@ test_that("Marking a TODO item as done works", {
       "# Explain what the next code does.",
       "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
+      "# TODO Check https://github.com/r-lib/usethis/issues/1890",
       "print('R code')"
     )
   )

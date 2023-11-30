@@ -96,12 +96,21 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   check_string(regexp)
   check_number_whole(line_id)
-
+  line_id_original <- line_id
   # to defer warning.
   warn_change_of_line <- FALSE
 
   file_content <- readLines(file, encoding = "UTF-8")
   line_content <- file_content[line_id]
+
+  # Special case for issues (probably need to opt out at some point)
+  # patch that will likely not work for many cases.
+  if (grepl(pattern = "issues", x = regexp)) {
+    regexp <- stringr::str_replace(regexp, "issues", "#")
+    # regexp <- stringr::str_replace(regexp, "([^\\d]+)(\\d+)", "\\1#\\2")
+  }
+
+
   detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
 
   if (!detect_regexp_in_line) {
@@ -125,9 +134,10 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   if (warn_change_of_line) {
     cli::cli_warn(c(
       x = "Could not detect {.arg regexp} as expected",
-      "Could not find {.val {regexp}} at line {line_id}.",
+      "Could not find {.val {regexp}} at line {line_id_original}.",
       i = "Has the file content changed since you ran this code?",
-      "`regexp` was detected in lines {regexp_detection}."
+      # needs qty for cli pluralization, but no printing
+      "`regexp` was detected in {cli::qty(length(regexp_detection))} line{?s} {regexp_detection}."
     ))
   }
 
