@@ -30,7 +30,7 @@ browse_pkg <- function(package = NULL,
   pkgdown <-
     stringr::str_subset(
       urls,
-      "github.com/.*/|cran\\.",
+      "github.com/.*/|cran\\.|contact.html",
       negate = TRUE
     )
 
@@ -45,7 +45,14 @@ browse_pkg <- function(package = NULL,
   }
 
   cran_home <- suppressMessages(usethis::browse_cran(package))
-  github_home <- suppressMessages(usethis::browse_github(package))
+  withCallingHandlers(
+    github_home <- suppressMessages(usethis::browse_github(package)),
+    warning = function(cnd) {
+      cli::cli_warn("Package {.pkg {package}} has no gh URLs, using CRAN mirror.")
+      # https://stackoverflow.com/questions/77647149/how-to-overwrite-a-warning-in-r#77647281
+      tryInvokeRestart("muffleWarning")
+
+    })
 
   # identified pkgdown situation
   if (rlang::has_length(pkgdown, 1)) {
