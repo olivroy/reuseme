@@ -37,7 +37,7 @@ browse_pkg <- function(package = NULL,
   # If there are more than one link.
   if (length(pkgdown) > 1) {
     # using common URLs
-    pkgdown <- stringr::str_subset(urls, "github.io|docs.ropensci")
+    pkgdown <- stringr::str_subset(urls, "github.io|docs.ropensci|r.igraph")
 
     if (length(pkgdown) > 1) {
       pkgdown <- stringr::str_subset(pkgdown, package)
