@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `rename_files2()` is an experimental function to rename data files, file names.
+
 * `browse_pkg()` is a new function to access the pkgdown site directly. It also prints
   links to vignettes and different parts of the website to the console.
 

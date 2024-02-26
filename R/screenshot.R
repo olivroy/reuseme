@@ -191,8 +191,8 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     bullets <- c(
       bullets,
       "i" = "Consider using a more precise name",
-      "rename_file('{img_path_chr}', '{img_dir_chr}/better-name.png')",
-      "i" = "See {.help reuseme::rename_file} for details."
+      "reuseme::rename_files2('{img_path_chr}', '{img_dir_chr}/better-name.png')",
+      "i" = "See {.help reuseme::rename_files2} for details."
     )
   }
 

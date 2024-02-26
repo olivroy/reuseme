@@ -23,6 +23,7 @@ reference:
   - use_todo
   - open_rs_doc
   - screenshot
+  - rename_files2
 
 
 - title: Data analysis helpers / EDA
