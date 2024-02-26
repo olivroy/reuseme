@@ -162,8 +162,15 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
     file_content[line_id] <- line_content_new
     file_content_new <- file_content
   }
-
-  usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE)
+  if (length(file_content_new) > 0) {
+    usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE)
+  } else {
+    cli::cli_inform(c(
+      "x" = "No more TODOs.",
+      "v" = "Deleting {.file {file}}."
+    ))
+    fs::file_delete(file)
+  }
   invisible(line_content_new)
 }
 
