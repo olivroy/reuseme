@@ -25,6 +25,9 @@
     <loc>https://olivroy.github.io/reuseme/reference/case_if_any.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/check_files_exist_in_dir.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/count_pct.html</loc>
   </url>
   <url>
@@ -61,6 +64,9 @@
     <loc>https://olivroy.github.io/reuseme/reference/proj_switch.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/rename_files2.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/reuseme-package.html</loc>
   </url>
   <url>
@@ -71,6 +77,9 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/slice_min_max.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/solve_file_name_conflict.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/summarise_with_total.html</loc>
