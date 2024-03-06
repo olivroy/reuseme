@@ -224,8 +224,8 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     bullets <-
       dplyr::mutate(
         bullets_df,
-        col_number = stringr::str_locate(content, regex)[, "start"] - 1,
-        col_number = dplyr::coalesce(col_number, 0L),
+        col_number = stringr::str_locate(.data$content, regex)[, "start"] - 1,
+        col_number = dplyr::coalesce(.data$col_number, 0L),
         hyperlink = stringr::str_glue(
           "{{.file {file}:{line_number}:{col_number}}}",
         )
