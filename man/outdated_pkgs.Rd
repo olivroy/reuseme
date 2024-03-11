@@ -4,7 +4,10 @@
 \alias{outdated_pkgs}
 \title{Looks for outdated packages}
 \usage{
-outdated_pkgs()
+outdated_pkgs(type = c("binary", "source"))
+}
+\arguments{
+\item{type}{Type of package to look for (\code{"binary"} or \code{"source"})}
 }
 \value{
 A list of packages that can be updated, with links to news, the pkgdown site.

@@ -8,6 +8,7 @@
 #'
 #' It takes advantage of pak's capacities to allow you to install packages on
 #' Windows without restarting session.
+#' @param type Type of package to look for (`"binary"` or `"source"`)
 #' @return A list of packages that can be updated, with links to news, the pkgdown site.
 #' @export
 #'
@@ -15,7 +16,8 @@
 #' \donttest{
 #' outdated_pkgs()
 #' }
-outdated_pkgs <- function() {
+outdated_pkgs <- function(type = c("binary", "source")) {
+  type <- rlang::arg_match(type)
   if (rlang::is_installed("curl")) {
     default_repo <- getOption("repos")[[1]]
     default_repo <- stringr::str_remove(default_repo, "/$")
@@ -41,7 +43,7 @@ outdated_pkgs <- function() {
   }
 
   # similar to install.packages default
-  outdated_pkg_mat <- utils::old.packages(type = "binary", lib.loc = .libPaths()[1])
+  outdated_pkg_mat <- utils::old.packages(type = type, lib.loc = .libPaths()[1])
 
   if (rlang::has_length(outdated_pkg_mat, 0)) {
     cli::cli_alert_success("All packages are up to date.")
@@ -103,7 +105,11 @@ outdated_pkgs <- function() {
   pkgs <- names(pkgs)
   pkgs <- deparse(pkgs)
   pkgs <- paste0(pkgs, collapse = "\n")
-
-  cli::cli_bullets(c("Update all with", "pak::pak({pkgs})"))
+  if (rlang::is_installed("pak")) {
+    fn_install <- "pak::pak"
+  } else {
+    fn_install <- "utils::install.packages"
+  }
+  cli::cli_bullets(c("Update all with", "{fn_install}({pkgs})"))
   invisible(names(outdated_pkg))
 }

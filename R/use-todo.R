@@ -121,10 +121,15 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
       line_id <- regexp_detection
       line_content <- line_content <- file_content[line_id]
       detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
-    } else {
+    } else if (length(regexp_detection) > 1) {
       cli::cli_abort(c(
         "{.arg rexpexp} was detected in more than 1 line.",
         "Not marking TODO as complete."
+      ))
+    } else {
+      cli::cli_abort(c(
+        "{.arg rexpexp} was not detected.",
+        i = "Did you delete the line already?"
       ))
     }
   }

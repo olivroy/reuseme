@@ -24,7 +24,15 @@ browse_pkg <- function(package = NULL,
   # Using default package
   package <- package %||% fs::path_file(proj_get2())
   open <- open
-  withr::local_options(rlang_interactive = FALSE)
+
+  withr::local_options(
+    list(
+      # make sure usethis doesn't open links
+      rlang_interactive = FALSE,
+      # faster rendering https://github.com/r-lib/cli/issues/607
+      cli.num_colors = cli::num_ansi_colors()
+    )
+  )
   urls <- usethis::browse_package(package)
 
   pkgdown <-
@@ -51,8 +59,11 @@ browse_pkg <- function(package = NULL,
       cli::cli_warn("Package {.pkg {package}} has no gh URLs, using CRAN mirror.")
       # https://stackoverflow.com/questions/77647149/how-to-overwrite-a-warning-in-r#77647281
       tryInvokeRestart("muffleWarning")
-
-    })
+    },
+    error = function(cnd) {
+      cli::cli_abort("Can't do it", parent = cnd)
+    }
+  )
 
   # identified pkgdown situation
   if (rlang::has_length(pkgdown, 1)) {
