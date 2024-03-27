@@ -24,7 +24,7 @@
 rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test")) {
   action <- rlang::arg_match(action)
 
-  if (!interactive()) {
+  if (!rlang::is_interactive()) {
     return()
   }
 
@@ -62,10 +62,10 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   }
   if (!force) {
     extra_msg_if_file_conflict <- c(
-      "did not rename files!",
+      "Did not rename files!",
       i = "Make sure you change the file path to",
       new,
-      "in these locations (`new_name` copied to clipboard) or see Find in Files Replace All if confident.",
+      "in these locations (`new_name` copied to clipboard) or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident.",
       i = "Consider changing name snake_case objects that follow the file names",
       i = "Use {.kbd Ctrl + C}, then {.kbd Ctrl + Shift + Up} for replacing"
     )
@@ -94,7 +94,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
       cli::cli_inform(
         c(
           "Use in markdown/quarto docs (source mode) with",
-          '![]({new_name}){{fig-alt="" width="70%"}}'
+          '![]({new}){{fig-alt="" width="70%"}}'
         )
       )
     }
@@ -107,9 +107,9 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
     fs::file_move(old, new)
 
     if (force) {
-      cli::cli_alert_success("Renamed file to {.file {new_name}} without issue.")
+      cli::cli_alert_success("Renamed file to {.file {new}} without issue.")
     } else {
-      cli::cli_alert_danger("Renamed file to {.file {new_name}} by force. Be careful.")
+      cli::cli_alert_danger("Renamed file to {.file {new}} by force. Be careful.")
     }
 
     check_files_exist_in_dir(path = ".", quiet = !verbose)
