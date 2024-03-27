@@ -108,7 +108,6 @@ can be quoted (safer).</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># extract the skin_color for C-3PO</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">extract_cell_value</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/starwars.html" class="external-link">starwars</a></span>,</span></span>
 <span class="r-in"><span>  var <span class="op">=</span> <span class="va">skin_color</span>,</span></span>
@@ -117,7 +116,7 @@ can be quoted (safer).</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gold"</span>
 <span class="r-in"><span><span class="co"># will return a named vector of mpg (as mtcars has rownames.)</span></span></span>
-<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">extract_cell_value</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    var <span class="op">=</span> <span class="va">mpg</span>,</span></span>
 <span class="r-in"><span>    filter <span class="op">=</span> <span class="va">vs</span> <span class="op">==</span> <span class="fl">0</span></span></span>
