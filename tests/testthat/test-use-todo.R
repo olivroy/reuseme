@@ -61,8 +61,8 @@ test_that("Marking a TODO item as done works", {
     out <- mark_todo_as_complete(
       line_id = 4,
       file = tmp,
-      regexp = 'ethisissues1890'
-      ),
+      regexp = "ethisissues1890"
+    ),
     warn = TRUE
   )
   expect_equal(

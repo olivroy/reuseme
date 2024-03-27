@@ -20,7 +20,6 @@ Imports:
     fs,
     glue,
     lifecycle,
-    magrittr,
     purrr,
     rlang (>= 1.1.0),
     rprojroot,

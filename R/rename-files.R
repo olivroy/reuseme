@@ -211,10 +211,10 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     purrr::set_names() |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::map(\(x) tibble::enframe(x, name = "line_number", value = "content")) |>
-    dplyr::bind_rows(.id = "file") |>
-    dplyr::filter(
-      stringr::str_detect(content, regex)
-    )
+    dplyr::bind_rows(.id = "file")
+
+  bullets_df <- bullets_df[grepl(regex, bullets_df$content), ]
+
   if (nrow(bullets_df) == 0) {
     return(FALSE)
   }

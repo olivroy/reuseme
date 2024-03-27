@@ -84,7 +84,6 @@ outdated_pkgs <- function(type = c("binary", "source")) {
         Installed = x[["Installed"]],
         n_char    = n_char
       )
-
     })
 
   withr::local_options(list(usethis.quiet = TRUE))

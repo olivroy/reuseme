@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* Require R 4.1 and use base pipe
+
 * `rename_files2()` is an experimental function to rename data files, file names.
 
 * `browse_pkg()` is a new function to access the pkgdown site directly. It also prints

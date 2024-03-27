@@ -16,7 +16,6 @@ describe("rename_files2()", {
     # No change
     expect_false(fs::file_exists("data/my-roads.csv"))
     expect_true(fs::file_exists("data/my-streets.csv"))
-
   })
   it("is easier to test messages with no action", {
     rlang::local_interactive(TRUE)
@@ -36,9 +35,7 @@ describe("rename_files2()", {
     # changed
     expect_true(fs::file_exists("data/my-roads.csv"))
     expect_false(fs::file_exists("data/my-streets.csv"))
-
   })
-
 })
 test_that("A fake test", {
   expect_true(TRUE)
