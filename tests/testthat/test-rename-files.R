@@ -13,6 +13,7 @@ describe("rename_files2()", {
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv")
     })
+    # No change
     expect_false(fs::file_exists("data/my-roads.csv"))
     expect_true(fs::file_exists("data/my-streets.csv"))
 
@@ -22,6 +23,7 @@ describe("rename_files2()", {
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE, action = "test")
     })
+    # No change
     expect_false(fs::file_exists("data/my-roads.csv"))
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
@@ -31,6 +33,7 @@ describe("rename_files2()", {
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE)
     })
+    # changed
     expect_true(fs::file_exists("data/my-roads.csv"))
     expect_false(fs::file_exists("data/my-streets.csv"))
 
