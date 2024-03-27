@@ -30,14 +30,14 @@ test_that("slice_group_sample() works as expected", {
 
 test_that("`filter_if_any()` works as expected", {
   expect_equal(
-    dplyr::starwars %>%
-      dplyr::mutate(v1 = birth_year > 10, .by = gender) %>%
+    dplyr::starwars |>
+      dplyr::mutate(v1 = birth_year > 10, .by = gender) |>
       dplyr::filter(
         dplyr::if_any(matches("v\\d")),
         .by = gender
-      ) %>%
+      ) |>
       dplyr::select(-matches("v\\d")),
-    dplyr::starwars %>%
+    dplyr::starwars |>
       filter_if_any(birth_year > 10, .by = gender)
   )
 })
@@ -46,7 +46,7 @@ test_that("`filter_if_any()` works as expected", {
 test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {
   skip("Not ready")
   expect_error(
-    dplyr::starwars %>%
+    dplyr::starwars |>
       filter_if_any(birth_year > 10, .by = gender),
     regexp = "by"
   )
@@ -75,25 +75,25 @@ test_that("adds rows in front, but warns the user", {
 test_that("summarise_with_total() works", {
   expect_snapshot({
     # group_by
-    mtcars %>%
-      dplyr::group_by(vs = as.character(vs)) %>%
+    mtcars |>
+      dplyr::group_by(vs = as.character(vs)) |>
       summarise_with_total(
         x = sum(mpg),
         .label = "All vs",
         .first = TRUE
       )
     # .by
-    mtcars %>%
-      tibble::as_tibble() %>%
+    mtcars |>
+      tibble::as_tibble() |>
       summarise_with_total(
         x = sum(mpg),
         .by = vs,
         .label = "All vs",
         .first = TRUE
       )
-    mtcars %>%
-      tibble::as_tibble() %>%
-      dplyr::mutate(vs = as.character(vs)) %>%
+    mtcars |>
+      tibble::as_tibble() |>
+      dplyr::mutate(vs = as.character(vs)) |>
       summarise_with_total(
         x = sum(mpg),
         y = mean(mpg),
@@ -105,9 +105,9 @@ test_that("summarise_with_total() works", {
 })
 
 test_that("summarise_with_total() keeps factors", {
-  fac <- mtcars %>%
+  fac <- mtcars |>
     dplyr::mutate(vs = factor(vs), mpg, .keep = "none")
-  res <- summarise_with_total(fac, m = mean(mpg), .by = vs) %>% tibble::as_tibble()
+  res <- summarise_with_total(fac, m = mean(mpg), .by = vs) |> tibble::as_tibble()
   expect_s3_class(res$vs, "factor")
   expect_equal(levels(res$vs), c("Total", "0", "1"))
 })

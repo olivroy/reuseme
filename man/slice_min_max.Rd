@@ -74,14 +74,13 @@ A wrapper around \code{dplyr::bind_rows()}, \code{dplyr::slice_min()}, \code{dpl
 }
 \examples{
 # in the presence of ties.
-library(magrittr)
-mtcars \%>\% dplyr::slice_min(cyl, n = 1)
+mtcars |> dplyr::slice_min(cyl, n = 1)
 # Use with_ties = FALSE to return exactly n matches
-mtcars \%>\% dplyr::slice_min(cyl, n = 1, with_ties = FALSE)
+mtcars |> dplyr::slice_min(cyl, n = 1, with_ties = FALSE)
 # Use each = FALSE to have n divided in each place
-mtcars \%>\% slice_min_max(cyl, n = 2)
+mtcars |> slice_min_max(cyl, n = 2)
 # Using each = TRUE (to retun n = 2, for min, n = 2 for max)
-mtcars \%>\% slice_min_max(cyl, each = TRUE, n = 2)
+mtcars |> slice_min_max(cyl, each = TRUE, n = 2)
 }
 \seealso{
 Other dplyr extensions: 

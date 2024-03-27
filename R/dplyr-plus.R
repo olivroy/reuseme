@@ -2,7 +2,7 @@
 #' Count observations by group and compute percentage
 #'
 #' `count_pct()` lets you quickly count the unique values of one or more
-#' variables: `df %>% count_pct(a, b)` It calculates the percentage by group
+#' variables: `df |> count_pct(a, b)` It calculates the percentage by group
 #' afterwards
 #'
 #' Wrapper function around [dplyr::count()]
@@ -16,17 +16,16 @@
 #' @export
 #' @examples
 #' count_pct(mtcars, cyl)
-#' library(magrittr)
-#' mtcars %>%
-#'   dplyr::group_by(vs) %>%
+#' mtcars |>
+#'   dplyr::group_by(vs) |>
 #'   count_pct(cyl)
 #'
-#' mtcars %>%
-#'   dplyr::group_by(vs) %>%
+#' mtcars |>
+#'   dplyr::group_by(vs) |>
 #'   count_pct(cyl, label = TRUE)
 #'
-#' mtcars %>%
-#'   dplyr::group_by(vs) %>%
+#' mtcars |>
+#'   dplyr::group_by(vs) |>
 #'   count_pct(cyl, label = TRUE, accuracy = 0.1)
 count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, sort = FALSE) {
   counted_data <- dplyr::count(.data, ..., name = name, sort = sort)
@@ -58,14 +57,13 @@ count_pct <- function(.data, ..., label = FALSE, accuracy = NULL, name = NULL, s
 #'
 #' @examples
 #' # in the presence of ties.
-#' library(magrittr)
-#' mtcars %>% dplyr::slice_min(cyl, n = 1)
+#' mtcars |> dplyr::slice_min(cyl, n = 1)
 #' # Use with_ties = FALSE to return exactly n matches
-#' mtcars %>% dplyr::slice_min(cyl, n = 1, with_ties = FALSE)
+#' mtcars |> dplyr::slice_min(cyl, n = 1, with_ties = FALSE)
 #' # Use each = FALSE to have n divided in each place
-#' mtcars %>% slice_min_max(cyl, n = 2)
+#' mtcars |> slice_min_max(cyl, n = 2)
 #' # Using each = TRUE (to retun n = 2, for min, n = 2 for max)
-#' mtcars %>% slice_min_max(cyl, each = TRUE, n = 2)
+#' mtcars |> slice_min_max(cyl, each = TRUE, n = 2)
 slice_min_max <- function(.data,
                           order_by,
                           ...,
@@ -128,10 +126,9 @@ slice_min_max <- function(.data,
 #'
 #' @examples
 #' set.seed(10)
-#' library(magrittr)
 #' slice_group_sample(mtcars, group_var = vs)
-#' mtcars %>%
-#'   dplyr::group_by(vs) %>%
+#' mtcars |>
+#'   dplyr::group_by(vs) |>
 #'   slice_group_sample()
 slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
   is_grouped <- dplyr::is_grouped_df(data)
@@ -193,11 +190,11 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
 #'
 #' ```r
 #' # with dplyr::filter
-#' dat %>% dplyr::filter(vs == 1 | is.na(vs))
-#' data %>%
-#'   dplyr::mutate(cond1 = vs == 1, cond2 = is.na(vs)) %>%
+#' dat |> dplyr::filter(vs == 1 | is.na(vs))
+#' data |>
+#'   dplyr::mutate(cond1 = vs == 1, cond2 = is.na(vs)) |>
 #'   dplyr::filter(dplyr::if_any(starts_with("cond")))
-#' dat %>% filter_if_any(vs == 1, is.na(vs))
+#' dat |> filter_if_any(vs == 1, is.na(vs))
 #' ```
 #'
 #' Basically, this is just a shortcut to
@@ -232,10 +229,9 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
 #'  * Data frame attributes are preserved.
 #' @export
 #' @examples
-#' library(magrittr)
-#' mtcars %>% dplyr::filter(cyl > 5 | mpg == 2)
-#' mtcars %>% dplyr::filter(!(!cyl > 5 & !mpg == 2))
-#' mtcars %>% filter_if_any(cyl > 5, vs == 0)
+#' mtcars |> dplyr::filter(cyl > 5 | mpg == 2)
+#' mtcars |> dplyr::filter(!(!cyl > 5 & !mpg == 2))
+#' mtcars |> filter_if_any(cyl > 5, vs == 0)
 filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
   check_by_typo()
   n_var <- rlang::dots_n(...)
@@ -275,7 +271,6 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
 #'
 #' @examples
 #' # extract the skin_color for C-3PO
-#' library(magrittr)
 #' extract_cell_value(
 #'   data = dplyr::starwars,
 #'   var = skin_color,
@@ -283,7 +278,7 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
 #'   length = 1 # ensure the length will be 1.
 #' )
 #' # will return a named vector of mpg (as mtcars has rownames.)
-#' mtcars %>%
+#' mtcars |>
 #'   extract_cell_value(
 #'     var = mpg,
 #'     filter = vs == 0
@@ -346,11 +341,9 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
 #' @export
 #'
 #' @examples
-#' library(magrittr)
-#'
 #' # works with `.by`
 #'
-#' mtcars %>%
+#' mtcars |>
 #'   summarise_with_total(
 #'     x = mean(mpg),
 #'     .by = vs,
@@ -358,8 +351,8 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
 #'   )
 #'
 #' # works with `group_by()`
-#' mtcars %>%
-#'   dplyr::group_by(vs) %>%
+#' mtcars |>
+#'   dplyr::group_by(vs) |>
 #'   summarise_with_total(
 #'     x = mean(mpg),
 #'     .label = "All vs"

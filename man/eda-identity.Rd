@@ -184,16 +184,15 @@ data is named \code{x}.
 \examples{
 withr::local_options(rlang_interactive = TRUE)
 # Workflow to explore mtcars
-library(magrittr)
-mtcars \%>\%
-  filter_identity(mpg > 21, extra_msg = c("Wow, these rows are very interesting.")) \%>\%
+mtcars |>
+  filter_identity(mpg > 21, extra_msg = c("Wow, these rows are very interesting.")) |>
   count_identity(
     vs,
     extra_msg = c(
       "Woo, there are 14 obs with vs = 1, 18 obs with vs = 0",
       "The split is 56\%-43\%"
     )
-  ) \%>\%
+  ) |>
   dplyr::filter(disp > 150) # after all, I need only disp > 150
 
 }

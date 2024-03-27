@@ -45,11 +45,9 @@ It can also be used for plotting
 Changes the \code{.by} variable to a factor.
 }
 \examples{
-library(magrittr)
-
 # works with `.by`
 
-mtcars \%>\%
+mtcars |>
   summarise_with_total(
     x = mean(mpg),
     .by = vs,
@@ -57,8 +55,8 @@ mtcars \%>\%
   )
 
 # works with `group_by()`
-mtcars \%>\%
-  dplyr::group_by(vs) \%>\%
+mtcars |>
+  dplyr::group_by(vs) |>
   summarise_with_total(
     x = mean(mpg),
     .label = "All vs"

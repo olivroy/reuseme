@@ -39,11 +39,11 @@ row will be dropped, (hence this function) unlike base subsetting with \code{[}.
 The reason to be of this function is to simplify a call like
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{# with dplyr::filter
-dat \%>\% dplyr::filter(vs == 1 | is.na(vs))
-data \%>\%
-  dplyr::mutate(cond1 = vs == 1, cond2 = is.na(vs)) \%>\%
+dat |> dplyr::filter(vs == 1 | is.na(vs))
+data |>
+  dplyr::mutate(cond1 = vs == 1, cond2 = is.na(vs)) |>
   dplyr::filter(dplyr::if_any(starts_with("cond")))
-dat \%>\% filter_if_any(vs == 1, is.na(vs))
+dat |> filter_if_any(vs == 1, is.na(vs))
 }\if{html}{\out{</div>}}
 
 Basically, this is just a shortcut to
@@ -54,8 +54,7 @@ Caution: still doesn't work with \code{\link[dplyr:across]{dplyr::across()}}, us
 \code{filter(if_any())} syntax.
 }
 \examples{
-library(magrittr)
-mtcars \%>\% dplyr::filter(cyl > 5 | mpg == 2)
-mtcars \%>\% dplyr::filter(!(!cyl > 5 & !mpg == 2))
-mtcars \%>\% filter_if_any(cyl > 5, vs == 0)
+mtcars |> dplyr::filter(cyl > 5 | mpg == 2)
+mtcars |> dplyr::filter(!(!cyl > 5 & !mpg == 2))
+mtcars |> filter_if_any(cyl > 5, vs == 0)
 }

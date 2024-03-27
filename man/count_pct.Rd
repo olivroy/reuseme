@@ -43,7 +43,7 @@ group transiently, so the output has the same groups as the input.
 }
 \description{
 \code{count_pct()} lets you quickly count the unique values of one or more
-variables: \code{df \%>\% count_pct(a, b)} It calculates the percentage by group
+variables: \code{df |> count_pct(a, b)} It calculates the percentage by group
 afterwards
 }
 \details{
@@ -51,17 +51,16 @@ Wrapper function around \code{\link[dplyr:count]{dplyr::count()}}
 }
 \examples{
 count_pct(mtcars, cyl)
-library(magrittr)
-mtcars \%>\%
-  dplyr::group_by(vs) \%>\%
+mtcars |>
+  dplyr::group_by(vs) |>
   count_pct(cyl)
 
-mtcars \%>\%
-  dplyr::group_by(vs) \%>\%
+mtcars |>
+  dplyr::group_by(vs) |>
   count_pct(cyl, label = TRUE)
 
-mtcars \%>\%
-  dplyr::group_by(vs) \%>\%
+mtcars |>
+  dplyr::group_by(vs) |>
   count_pct(cyl, label = TRUE, accuracy = 0.1)
 }
 \seealso{

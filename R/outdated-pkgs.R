@@ -55,9 +55,9 @@ outdated_pkgs <- function(type = c("binary", "source")) {
   # Each element is a vector that contains installed version, package name
   # new version
   outdated_pkg <-
-    t(outdated_pkg_mat) %>%
-    as.data.frame(stringsAsFactors = FALSE) %>%
-    as.list() %>%
+    t(outdated_pkg_mat) |>
+    as.data.frame(stringsAsFactors = FALSE) |>
+    as.list() |>
     purrr::map(function(x) purrr::set_names(x, fields_names))
 
   # Stop early for pak update before

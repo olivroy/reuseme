@@ -24,8 +24,8 @@ test_that("wrong cases error", {
 test_that("case_if_any can use a newly created variable (#8)", {
   skip("Not ready")
   expect_snapshot({
-    mtcars %>%
-      group_by(vs) %>%
+    mtcars |>
+      group_by(vs) |>
       summarise(
         avg_mpg = mean(mpg),
         error = case_if_any(avg_mpg > 20 ~ "Youppi")

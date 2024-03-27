@@ -48,7 +48,6 @@ have one col that represents the unique id.
 }
 \examples{
 # extract the skin_color for C-3PO
-library(magrittr)
 extract_cell_value(
   data = dplyr::starwars,
   var = skin_color,
@@ -56,7 +55,7 @@ extract_cell_value(
   length = 1 # ensure the length will be 1.
 )
 # will return a named vector of mpg (as mtcars has rownames.)
-mtcars \%>\%
+mtcars |>
   extract_cell_value(
     var = mpg,
     filter = vs == 0
