@@ -119,9 +119,9 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   # readr::write_lines(new_name, file = readr::clipboard())
   if (.Platform$OS.type == "windows") {
     utils::write.table(new, file = "clipboard", eol = "", row.names = FALSE, col.names = FALSE)
-  } else {
+  } else if (interactive()) {
     rlang::check_installed("clipr")
-    clipr::write_clip(new)
+    if (clipr::clipr_available()) clipr::write_clip(new)
   }
   new
 }
