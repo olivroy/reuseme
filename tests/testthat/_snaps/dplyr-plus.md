@@ -33,7 +33,7 @@
 # summarise_with_total() works
 
     Code
-      mtcars |> dplyr::group_by(vs = as.character(vs)) |> summarise_with_total(x = sum(
+      summarise_with_total(dplyr::group_by(mtcars, vs = as.character(vs)), x = sum(
         mpg), .label = "All vs", .first = TRUE)
     Output
       # A tibble: 3 x 2
@@ -43,8 +43,8 @@
       2 0       299.
       3 1       344.
     Code
-      mtcars |> tibble::as_tibble() |> summarise_with_total(x = sum(mpg), .by = vs,
-      .label = "All vs", .first = TRUE)
+      summarise_with_total(tibble::as_tibble(mtcars), x = sum(mpg), .by = vs, .label = "All vs",
+      .first = TRUE)
     Output
       # A tibble: 3 x 2
         vs         x
@@ -53,9 +53,8 @@
       2 0       299.
       3 1       344.
     Code
-      mtcars |> tibble::as_tibble() |> dplyr::mutate(vs = as.character(vs)) |>
-        summarise_with_total(x = sum(mpg), y = mean(mpg), .by = vs, .label = "All vs",
-        .first = FALSE)
+      summarise_with_total(dplyr::mutate(tibble::as_tibble(mtcars), vs = as.character(
+        vs)), x = sum(mpg), y = mean(mpg), .by = vs, .label = "All vs", .first = FALSE)
     Output
       # A tibble: 3 x 3
         vs         x     y
