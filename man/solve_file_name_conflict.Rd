@@ -9,7 +9,8 @@ solve_file_name_conflict(
   regex,
   dir = ".",
   extra_msg = NULL,
-  quiet = FALSE
+  quiet = FALSE,
+  what = NULL
 )
 }
 \arguments{
@@ -17,7 +18,13 @@ solve_file_name_conflict(
 
 \item{regex}{a regex related to the file name to search for}
 
+\item{dir}{A directory where to operate}
+
+\item{extra_msg}{Extra message to pass}
+
 \item{quiet}{A logical, informs where the occurrences are found. (Default, \code{FALSE})}
+
+\item{what}{Which file conflicts we talking about}
 }
 \value{
 \code{FALSE} if no occurrences were found. \code{TRUE} if non-existent files

@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `check_files_exist_in_dir()` -> `check_referenced_files()`
+
 * Require R 4.1 and use base pipe
 
 * `rename_files2()` is an experimental function to rename data files, file names.

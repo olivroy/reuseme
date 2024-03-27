@@ -10,6 +10,7 @@
       Replace All if confident.
       i Consider changing name snake_case objects that follow the file names
       i Use [Ctrl + C], then [Ctrl + Shift + Up] for replacing
+      i Found 2 references to my-streets
       'R/my-analysis.R:1:0'
       'R/my-analysis.R:2:11'
       Rerun the code to make it work or use `force = TRUE`
@@ -23,9 +24,11 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
+      i Found 2 references to my-streets
       'R/my-analysis.R:1:0'
       'R/my-analysis.R:2:11'
       Testing mode, did not rename file
+      i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
 # rename_files2(): renames files if forced to do so
 
@@ -34,11 +37,9 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
+      i Found 2 references to my-streets
       'R/my-analysis.R:1:0'
       'R/my-analysis.R:2:11'
-      v Renamed file to 'data/my-roads.csv' without issue.
-      Check in source files and rename the referenced (csv, xlsx etc.) files
-      accordingly.
-      'R/my-analysis.R:1:24'
-      'R/my-analysis.R:7:27'
+      x Renamed file to 'data/my-roads.csv' by force. Be careful.
+      i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 

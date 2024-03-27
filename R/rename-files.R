@@ -33,9 +33,22 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   if (fs::is_dir(old)) {
     cli::cli_abort("Can't rename directories with this function See {.fn fs::dir_copy} and {.fn fs::dir_delete}.")
   }
+
+  # TODO don't fail if testing?
+  if (fs::file_exists(new) && !force) {
+    cli::cli_abort(c(
+      "Can't rename file to {.val {new}}",
+      "!" = "{.arg new} already exists {.path {new}}.",
+      "i" = "Use {.code force = TRUE} to override."
+    ))
+  }
+
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
-  if (is_git) {
-    cli::cli_warn("It is better to use this function in a version-controlled repository.")
+  if (interactive() && !is_git) {
+    cli::cli_warn(c(
+      "It is better to use this function in a version-controlled repository.",
+      i = "See {.help usethis::use_git} for help."
+    ))
   }
   # looking for the object name as well if changing from a file name to another
   path_file_name <- fs::path_ext_remove(old)
@@ -78,7 +91,14 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
 
 
   file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    solve_file_name_conflict(regex = regex_file_name, dir = ".", extra_msg = extra_msg_if_file_conflict, quiet = FALSE)
+    fs::path_filter(regexp = "_files", invert = TRUE) |> # need to do elsewhere too
+    solve_file_name_conflict(
+      regex = regex_file_name,
+      dir = ".",
+      extra_msg = extra_msg_if_file_conflict,
+      quiet = FALSE,
+      what = paste0("to ", file_name_base)
+    )
 
   if (!force && file_names_conflicts) {
     cli::cli_bullets("Rerun the code to make it work or use `force = TRUE`")
@@ -86,33 +106,13 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
 
 
   if (!file_names_conflicts || force) {
-    if (tools::file_ext(old) == "R" && action == "test") {
-      # usethis::rename_files(old_name, new_name)
-      cli::cli_inform("See if need for tests change snapshots")
-    }
-    if (tools::file_ext(new) %in% c("png")) {
-      cli::cli_inform(
-        c(
-          "Use in markdown/quarto docs (source mode) with",
-          '![]({new}){{fig-alt="" width="70%"}}'
-        )
-      )
-    }
-
-    if (action == "test") {
-      cli::cli_inform("Testing mode, did not rename file")
-      return(invisible(new))
-    }
-
-    fs::file_move(old, new)
-
-    if (force) {
-      cli::cli_alert_success("Renamed file to {.file {new}} without issue.")
-    } else {
-      cli::cli_alert_danger("Renamed file to {.file {new}} by force. Be careful.")
-    }
-
-    check_files_exist_in_dir(path = ".", quiet = !verbose)
+    rename_file_action(new, old, force, action, verbose)
+    # Can't remember why I put this here?
+    # Seems to query all-non existent files, only if renaming?
+    # check_referenced_files(path = ".", quiet = !verbose)
+    cli::cli_inform(c(
+      i = "Call {.run reuseme::check_referenced_files()} to see if there are dead links in dir."
+    ))
     return(invisible(new))
   }
 
@@ -136,32 +136,45 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
 #' 2. It identifies data files (.csv, .xlsx) read or written
 #' 3. Search on the system if these files exist.
 #'
+#' Still WIP, so you can add code for false positive as needed.
+#'
 #' @param path a directory to search for
 #' @param quiet Whether it should print messages?
 #' @returns A logical
 #' @export
 #' @keywords internal
-check_files_exist_in_dir <- function(path = ".", quiet = FALSE) {
+check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
   if (path == "." || fs::is_dir(path)) {
     path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ml)$")
-  } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd")) {
+    path <- fs::path_filter(path = path, regexp = "_files", invert = TRUE) # need to do this in 2 places
+  } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown")) {
     path <- path
   } else {
     cli::cli_abort("Wrong specification.")
   }
+
+  # TODO Add false positive references
   referenced_files <- path |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::list_c(ptype = "character") |>
+    stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
+    stringr::str_subset(pattern = "regexp\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
+    stringr::str_subset(pattern = "unlink|file_delete|nocheck", negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
     stringr::str_subset("\"") |>
     stringr::str_trim() |>
     stringr::str_extract_all("\"[^\"]+\"") |>
     unlist() |>
     stringr::str_remove_all("\",?") |>
     stringr::str_subset(pattern = "\\.\\w{1,6}$") |> # file pattern
-    stringr::str_subset(pattern = "\\.plot|\\.fr$|\\.frame", negate = TRUE) |> # Manually add file exts that are not file exts.
+    stringr::str_subset(pattern = "\\.plot|\\.fr$|\\.frame|\\.obs$|\\.\\d{2,}$", negate = TRUE) |> # Manually add file exts that are not file exts.
     stringr::str_subset(pattern = "tmp|temp", negate = TRUE) |> # remove common file names that are not very nice
     stringr::str_subset(pattern = "https?", negate = TRUE) |> # doesn't check for files read online.
+    stringr::str_subset(pattern = "\\@.+\\.", negate = TRUE) |> # email addresses or containing @
+    stringr::str_subset(pattern = "_fichiers/", negate = TRUE) |> # manually remove false positive
+    stringr::str_subset(pattern = "\n", negate = TRUE) |> # remove things with line breaks
+    stringr::str_subset(pattern = "^\\.[:alpha:]{1,4}$", negate = TRUE) |> # remove reference to only file extensions
+    stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) |> # remove 0.000 type
     purrr::set_names()
 
   files_detected <- unique(referenced_files)
@@ -173,18 +186,21 @@ check_files_exist_in_dir <- function(path = ".", quiet = FALSE) {
   if (quiet) {
     cli::cli_warn(
       c(
+        "Found {length(non_existent_files)} referenced file{?s} in folder.",
+        i = "See {.help reuseme::check_referenced_files} for more info.",
         "There are locations in source files (qmd, Rmd, R) where a non-existent file (.csv, .xlsx etc.) is referenced.",
-        "Run {.code check_files_exist_in_dir(quiet = FALSE)} to see where this file is referenced.",
-        "{non_existent_files}"
+        "Run {.code check_referenced_files(quiet = FALSE)} to see where this file is referenced.",
+        "{non_existent_files_show}"
       ),
-      call = expr(check_files_exist_in_dir())
+      call = expr(check_referenced_files())
     )
   } else {
     solve_file_name_conflict(
       files = path,
       regex = paste0(non_existent_files, collapse = "|"),
       extra_msg = "Check in source files and rename the referenced (csv, xlsx etc.) files accordingly.",
-      quiet = quiet
+      quiet = quiet,
+      what = "to non-existent files"
     )
   }
   invisible(non_existent_files)
@@ -196,12 +212,16 @@ check_files_exist_in_dir <- function(path = ".", quiet = FALSE) {
 #'
 #' @param files which files to search in
 #' @param regex a regex related to the file name to search for
+#' @param dir A directory where to operate
+#' @param extra_msg Extra message to pass
+#' @param what Which file conflicts we talking about
 #' @param quiet A logical, informs where the occurrences are found. (Default, `FALSE`)
+#'
 #' @return `FALSE` if no occurrences were found. `TRUE` if non-existent files
 #'   are referenced
 #' @export
 #' @keywords internal
-solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE) {
+solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL) {
   regex <- stringr::str_replace_all(regex, "\\\\|\\)|\\(|\\}\\{\\?|\\$|~", ".")
   # regex <- as.character(regex)
   if (dir != ".") {
@@ -221,30 +241,71 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
 
 
   if (!quiet) {
-    bullets <-
-      dplyr::mutate(
-        bullets_df,
-        col_number = stringr::str_locate(.data$content, regex)[, "start"] - 1,
-        col_number = dplyr::coalesce(.data$col_number, 0L),
-        hyperlink = stringr::str_glue(
-          "{{.file {file}:{line_number}:{col_number}}}"
-        )
-      )
-    bullets <- dplyr::pull(bullets)
+    lines_match <- bullets_df$line_number
+    # Derive column match
+    start_end_pos <- stringr::str_locate(bullets_df$content, regex)
+    cols_match <- dplyr::coalesce(
+      start_end_pos[, "start"] - 1L,
+      0L
+    )
+    # Create hyperlinks from lines and columns
+    bullets <- stringr::str_glue(
+      "{{.file {bullets_df$file}:{lines_match}:{cols_match}}}"
+    )
 
+    if (length(bullets) > 20) {
+      display_msg <- cli::format_inline("Displaying only the first 10")
+      # Showing First ten to avoid screen overflow.
+      bullets_to_display <- bullets[seq_len(10)]
+    } else {
+      bullets_to_display <- bullets
+      display_msg <- NULL
+    }
     cli::cli_bullets(c(
       extra_msg,
-      bullets
+      i = paste0("Found {length(bullets)} reference{?s} ", what),
+      display_msg,
+      bullets_to_display
     ))
   } else {
     cli::cli_inform(
       c(
         extra_msg,
-        "run {.run reuseme::check_file_exist_in_dir(quiet = TRUE)} to see where the conflicts here."
+        "run {.run reuseme::check_referenced_files(quiet = TRUE)} to see where the conflicts are."
       ),
       .frequency = "always", .frequency_id = "nonexistantfiles"
     )
   }
 
   invisible(TRUE)
+}
+
+# put into own function
+# arguments should all be checked
+# Performs the action of renaming file
+rename_file_action <- function(new, old, force, action, verbose) {
+  if (tools::file_ext(old) == "R" && action == "test") {
+    # usethis::rename_files(old_name, new_name)
+    cli::cli_inform("See if need for tests change snapshots")
+  }
+  if (tools::file_ext(new) %in% c("png")) {
+    cli::cli_inform(
+      c(
+        "Use in markdown/quarto docs (source mode) with",
+        '![]({new}){{fig-alt="" width="70%"}}'
+      )
+    )
+  }
+
+  if (action == "rename") {
+    fs::file_move(old, new)
+    if (!force) {
+      cli::cli_alert_success("Renamed file to {.file {new}} without issue.")
+    } else {
+      cli::cli_alert_danger("Renamed file to {.file {new}} by force. Be careful.")
+    }
+  } else if (action == "test") {
+    # Not renaming, but going through the same path as I would have
+    cli::cli_inform("Testing mode, did not rename file")
+  }
 }
