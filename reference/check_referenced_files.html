@@ -22,7 +22,7 @@ Search on the system if these files exist.
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9006</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,10 @@ Search on the system if these files exist.
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Still WIP, so you can add code for false positive as needed.</p>
-    </div>
+<p>To find genuine referenced files, we exclude different paths</p><ol><li><p>Those created with <code><a href="https://fs.r-lib.org/reference/path.html" class="external-link">fs::path()</a></code> or <code><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path()</a></code> or <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code></p></li>
+<li><p>Those that are checked for <code><a href="https://fs.r-lib.org/reference/file_access.html" class="external-link">fs::file_exists()</a></code>, <code><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists()</a></code></p></li>
+<li><p>Deleted with <code><a href="https://fs.r-lib.org/reference/delete.html" class="external-link">fs::file_delete()</a></code>, <code><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink()</a></code></p></li>
+</ol></div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
