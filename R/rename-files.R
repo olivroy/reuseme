@@ -55,7 +55,12 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   file_name_base <- fs::path_file(path_file_name)
   new_name_base <- fs::path_file(fs::path_ext_remove(new))
 
-  cnd_check_for_object_names <- file_name_base != new_name_base & !file_name_base %in% (c("index", "temp"))
+  # don't check for regexp if the original file name has less than min_n_char
+  min_n_char <- 5
+  cnd_check_for_object_names <-
+    file_name_base != new_name_base &&
+    !file_name_base %in% (c("index", "temp")) &&
+    nchar(file_name_base) > min_n_char
 
   if (cnd_check_for_object_names) {
     object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
@@ -88,10 +93,9 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
 
   verbose <- cnd_check_for_object_names | length(related_files) > 0 | force
 
-
-
+  # avoid searching in generated files and tests/testthat files
   file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    fs::path_filter(regexp = "_files", invert = TRUE) |> # need to do elsewhere too
+    fs::path_filter(regexp = "_files|tests/testthat", invert = TRUE) |> # need to do elsewhere too
     solve_file_name_conflict(
       regex = regex_file_name,
       dir = ".",
@@ -143,24 +147,36 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
 #' @returns A logical
 #' @export
 #' @keywords internal
+#' @details
+#' To find genuine referenced files, we exclude different paths
+#'
+#' 1. Those created with `fs::path()` or `file.path()` or `glue::glue()`
+#' 2. Those that are checked for `fs::file_exists()`, `file.exists()`
+#' 3. Deleted with `fs::file_delete()`, `unlink()`
 check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
   if (path == "." || fs::is_dir(path)) {
     path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ml)$")
-    path <- fs::path_filter(path = path, regexp = "_files", invert = TRUE) # need to do this in 2 places
+    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat", invert = TRUE) # need to do this in 2 places
   } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown")) {
     path <- path
   } else {
     cli::cli_abort("Wrong specification.")
   }
 
+  # Create a list of genuine referenced files
   # TODO Add false positive references
+  # TODO fs::path and file.path should be handled differently
+  # TODO probably needs a `detect_genuine_path()`
   referenced_files <- path |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
-    stringr::str_subset(pattern = "regexp\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
-    stringr::str_subset(pattern = "unlink|file_delete|nocheck", negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
+    stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
+    stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
+    stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
+    stringr::str_subset(pattern = "grepl?\\(|stringr", negate = TRUE) |> # avoid regexp
+    stringr::str_subset(pattern = "nocheck", negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
     stringr::str_subset("\"") |>
     stringr::str_trim() |>
     stringr::str_extract_all("\"[^\"]+\"") |>

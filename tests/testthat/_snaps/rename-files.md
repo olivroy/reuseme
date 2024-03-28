@@ -43,3 +43,11 @@
       x Renamed file to 'data/my-roads.csv' by force. Be careful.
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
+# rename_files2(): doesn't check for references if file name is short
+
+    Code
+      rename_files2("R/a.R", "R/b.R")
+    Message
+      v Renamed file to 'R/b.R' without issue.
+      i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
+

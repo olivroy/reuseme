@@ -6,7 +6,7 @@ describe("rename_files2()", {
   fs::dir_create(c("data", "R"))
   fs::file_create("data/my-streets.csv")
   fs::file_create("data/my-highways.csv")
-
+  fs::file_create("R/a.R")
   fs::file_copy(og_file, "R/my-analysis.R")
   it("prevents file renaming if conflicts", {
     rlang::local_interactive(TRUE)
@@ -35,6 +35,14 @@ describe("rename_files2()", {
     # changed
     expect_true(fs::file_exists("data/my-roads.csv"))
     expect_false(fs::file_exists("data/my-streets.csv"))
+  })
+
+  it("doesn't check for references if file name is short", {
+    rlang::local_interactive(TRUE)
+    expect_snapshot(
+      rename_files2("R/a.R", "R/b.R")
+    )
+    expect_true(fs::file_exists("R/b.R"))
   })
 })
 test_that("A fake test", {

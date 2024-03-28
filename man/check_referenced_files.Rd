@@ -23,5 +23,12 @@ A logical
 }
 \details{
 Still WIP, so you can add code for false positive as needed.
+
+To find genuine referenced files, we exclude different paths
+\enumerate{
+\item Those created with \code{fs::path()} or \code{file.path()} or \code{glue::glue()}
+\item Those that are checked for \code{fs::file_exists()}, \code{file.exists()}
+\item Deleted with \code{fs::file_delete()}, \code{unlink()}
+}
 }
 \keyword{internal}
