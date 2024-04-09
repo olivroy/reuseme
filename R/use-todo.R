@@ -13,6 +13,7 @@
 #' @param proj By default, the active project, an arbitrary directory, or a
 #'   RStudio project name in the following directories
 #'   `options(reuseme.destdir)`, uses [proj_list()] in this case.
+#'   If a path, will write there
 #' @param code If `TRUE`, will render code output (default is text).
 #' @seealso [usethis::write_union()]
 #'
@@ -56,9 +57,13 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
     todo_lines <- todo
   }
 
-  path_todo <- "TODO.R"
+  if (file.exists(proj)) {
+    path_todo <- proj
+  } else {
+    path_todo <- "TODO.R"
+  }
 
-  if (!fs::dir_exists(proj)) { # when referring to a project by name.
+  if (!fs::dir_exists(proj) && !file.exists(proj)) { # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
     proj_path <- unname(all_projects[proj])
@@ -66,7 +71,7 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
     proj_path <- proj
   }
 
-  full_path_todo <- if (is_active_proj) {
+  full_path_todo <- if (is_active_proj || file.exists(path_todo)) {
     path_todo
   } else {
     fs::path(proj_path, path_todo)

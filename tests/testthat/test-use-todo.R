@@ -30,8 +30,9 @@ test_that("Marking a TODO item as done works", {
     "print('R code')"
   )
   writeLines(text = content, con = tmp)
-
-  # tmp still has 6 lines
+  # test use_todo
+  expect_message(use_todo("Another TODO", tmp))
+  # tmp still has 7 lines
   expect_snapshot(error = TRUE, {
     # Can't delete the first line as it doesn't contain a TODO item
     mark_todo_as_complete(line_id = 1, file = tmp, regexp = "I Want this done")
@@ -73,7 +74,8 @@ test_that("Marking a TODO item as done works", {
       "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
       "# TODO Check https://github.com/r-lib/usethis/issues/1890",
-      "print('R code')"
+      "print('R code')",
+      "# TODO Another TODO"
     )
   )
   unlink(tmp)
