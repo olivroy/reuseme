@@ -22,4 +22,25 @@
       browse_pkg("reuseme", ref_only = TRUE)
     Output
       [1] "https://olivroy.github.io/reuseme/reference"
+    Code
+      browse_pkg("Matrix")
+    Condition
+      Warning:
+      Package Matrix has no gh URLs, using CRAN mirror.
+    Message
+      
+      -- Matrix --
+      
+      cran (<https://cran.r-project.org/package=Matrix>)
+      
+      No pkgdown found. <https://Matrix.R-forge.R-project.org> and
+      <https://R-forge.R-project.org/tracker/?atid=294&group_id=61>
+      
+      -- Vignettes --
+      
+      `vignette(Matrix::Intro2Matrix)`
+      `vignette(Matrix::Comparisons)`
+      `vignette(Matrix::Design-issues)`
+      `vignette(Matrix::Introduction)`
+      `vignette(Matrix::sparseModels)`
 
