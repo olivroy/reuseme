@@ -1,8 +1,8 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.8
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-04-10T14:33Z
+last_built: 2024-04-12T02:50Z
 urls:
   reference: https://olivroy.github.io/reuseme/reference
   article: https://olivroy.github.io/reuseme/articles
