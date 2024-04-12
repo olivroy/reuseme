@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `use_todo()` should work on all platforms now.
+
 * `check_files_exist_in_dir()` -> `check_referenced_files()`
 
 * Require R 4.1 and use base pipe

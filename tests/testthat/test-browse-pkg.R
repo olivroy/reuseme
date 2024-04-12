@@ -5,6 +5,8 @@ test_that("browse_pkg() works", {
     browse_pkg("cli", open = FALSE)
     browse_pkg("reuseme", news_only = TRUE)
     browse_pkg("reuseme", ref_only = TRUE)
-    browse_pkg("Matrix")
   })
+  skip_if_not_installed("Matrix")
+  expect_snapshot(browse_pkg("Matrix"))
 })
+

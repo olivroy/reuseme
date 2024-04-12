@@ -39,7 +39,9 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 
   if (!proj_is_a_file) {
     # compute full path of todo
-    path_todo <- compute_path_todo(todo, proj)
+    todo_pkg <- compute_path_todo(todo, proj)
+    path_todo <- todo_pkg$path_todo
+    todo <- todo_pkg$todo
   } else {
     path_todo <- proj
   }
@@ -178,6 +180,8 @@ extract_tag_in_text <- function(text, error_call = caller_env()) {
 
 # Helpers --------
 
+#' @returns A list of path_todo and transformed todo
+#' @noRd
 compute_path_todo <- function(todo, proj) {
   # if clipr::read_clip(), should put code = TRUE.
   proj_name_in_todo <- stringr::str_extract(todo[1], "^([^\\s\\:]{2,20})\\:{2}", group = 1)
@@ -189,6 +193,7 @@ compute_path_todo <- function(todo, proj) {
   }
 
   is_active_proj <- identical(proj, proj_get2())
+
   # Handle special global and all syntax for todo items.
   if (proj %in% c("global", "all")) {
     proj <- Sys.getenv("R_USER", Sys.getenv("HOME")) # ?base::path.expand
@@ -214,5 +219,5 @@ compute_path_todo <- function(todo, proj) {
   } else {
     path_todo <- fs::path(proj, "TODO.R")
   }
-  path_todo
+  list(path_todo = path_todo, todo = todo)
 }

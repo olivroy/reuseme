@@ -4,3 +4,4 @@
 # TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585
 # TODO rename_files2 should do less checks for images. only check for references in files, not object names
 # TODO mark_todo_as_complete should strip leading whitespace in the message Marking...
+# TODO reuseme::Not striping the beginning now
