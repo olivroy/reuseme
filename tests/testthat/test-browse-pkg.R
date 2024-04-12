@@ -9,4 +9,3 @@ test_that("browse_pkg() works", {
   skip_if_not_installed("Matrix")
   expect_snapshot(browse_pkg("Matrix"))
 })
-

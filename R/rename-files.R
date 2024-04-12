@@ -59,8 +59,8 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   min_n_char <- 5
   cnd_check_for_object_names <-
     file_name_base != new_name_base &&
-    !file_name_base %in% (c("index", "temp")) &&
-    nchar(file_name_base) > min_n_char
+      !file_name_base %in% (c("index", "temp")) &&
+      nchar(file_name_base) > min_n_char
 
   if (cnd_check_for_object_names) {
     object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
