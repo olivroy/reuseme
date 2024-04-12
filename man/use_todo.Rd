@@ -12,7 +12,7 @@ use_todo(todo, proj = proj_get(), code = FALSE)
 \item{proj}{By default, the active project, an arbitrary directory, or a
 RStudio project name in the following directories
 \code{options(reuseme.destdir)}, uses \code{\link[=proj_list]{proj_list()}} in this case.
-If a path, will write there}
+If a file, will write there.}
 
 \item{code}{If \code{TRUE}, will render code output (default is text).}
 }

@@ -11,7 +11,7 @@ write_union2 <- function(path, lines, quiet = FALSE) {
   check_bool(quiet)
   path <- fs::path_expand(path)
 
-  if (fs::file_exists(path)) {
+  if (!fs::is_dir(path) && fs::file_exists(path)) {
     existing_lines <- read_utf8(path)
     new_flag <- FALSE
   } else {
@@ -36,4 +36,5 @@ write_union2 <- function(path, lines, quiet = FALSE) {
 
   all <- c(existing_lines, new)
   usethis::write_over(path = path, lines = all, quiet = TRUE, overwrite = TRUE)
+  invisible(path)
 }

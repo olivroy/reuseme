@@ -81,3 +81,15 @@ test_that("Marking a TODO item as done works", {
   unlink(tmp)
   skip("mark_todo_as_complete fails if changing lines + regexp match in many places. Many add a condition like closest")
 })
+
+test_that("use_todo global works", {
+  skip_on_cran()
+  skip_on_ci()
+  expect_no_error(
+    path <- use_todo("global::it it time")
+  )
+  expect_no_error(
+    path <- use_todo("global::print()", code = TRUE)
+  )
+  unlink(path)
+})

@@ -9,11 +9,12 @@
 #' to be included in git. If using in a package directory, use
 #' `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`
 #'
-#' @param todo A character vector of lines to add to the TODO file
+#' @param todo A character vector of lines to add to the TODO file. See details
+#'   for special handling.
 #' @param proj By default, the active project, an arbitrary directory, or a
 #'   RStudio project name in the following directories
 #'   `options(reuseme.destdir)`, uses [proj_list()] in this case.
-#'   If a path, will write there
+#'   If a file, will write there.
 #' @param code If `TRUE`, will render code output (default is text).
 #' @seealso [usethis::write_union()]
 #'
@@ -34,52 +35,27 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   check_character(todo)
   # TODO think about maybe using todo = clipr::read_clip()
   # Check how reprex do it.
+  proj_is_a_file <- fs::is_file(proj) && !fs::is_dir(proj)
 
-  # if clipr::read_clip(), should put code = TRUE.
-  proj_name_in_todo <- stringr::str_extract(todo[1], "^([^\\s\\:]{2,20})\\:{2}", group = 1)
-
-  if (!is.na(proj_name_in_todo)) {
-    proj <- proj_name_in_todo
-    regex_proj_in_todo <- paste0(proj_name_in_todo, "\\:\\:", "\\s?")
-    todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
-  }
-
-  # Handle special global and all syntax for todo items.
-  if (proj %in% c("global", "all")) {
-    proj <- Sys.getenv("R_USER") # ?base::path.expand
-  }
-
-  is_active_proj <- identical(proj, proj_get2())
-
-  if (!code) {
-    todo_lines <- paste("# TODO", todo)
+  if (!proj_is_a_file) {
+    # compute full path of todo
+    path_todo <- compute_path_todo(todo, proj)
   } else {
-    todo_lines <- todo
-  }
-
-  if (file.exists(proj)) {
     path_todo <- proj
-  } else {
-    path_todo <- "TODO.R"
   }
 
-  if (!fs::dir_exists(proj) && !file.exists(proj)) { # when referring to a project by name.
-    all_projects <- proj_list()
-    rlang::arg_match0(proj, values = names(all_projects))
-    proj_path <- unname(all_projects[proj])
+  if (code) {
+    todo_lines <- todo
   } else {
-    proj_path <- proj
+    todo_lines <- paste("# TODO", todo)
   }
 
-  full_path_todo <- if (is_active_proj || file.exists(path_todo)) {
-    path_todo
-  } else {
-    fs::path(proj_path, path_todo)
-  }
+
+
   # TODO nice to have, but would need to extract duplicates
   # (ideally changes in usethis)
   # Change the default write_union message.
-  write_union2(full_path_todo, lines = todo_lines, quiet = FALSE)
+  write_union2(path_todo, lines = todo_lines, quiet = FALSE)
 }
 
 #' Remove a TODO/WORK/FIXME item from a file
@@ -197,4 +173,46 @@ extract_tag_in_text <- function(text, error_call = caller_env()) {
   }
   # Fails if no WORK, FIXME or TODO tags are found.
   arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = error_call, arg_nm = "line_content")
+}
+
+
+# Helpers --------
+
+compute_path_todo <- function(todo, proj) {
+  # if clipr::read_clip(), should put code = TRUE.
+  proj_name_in_todo <- stringr::str_extract(todo[1], "^([^\\s\\:]{2,20})\\:{2}", group = 1)
+
+  if (!is.na(proj_name_in_todo)) {
+    proj <- proj_name_in_todo
+    regex_proj_in_todo <- paste0(proj_name_in_todo, "\\:\\:", "\\s?")
+    todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
+  }
+
+  is_active_proj <- identical(proj, proj_get2())
+  # Handle special global and all syntax for todo items.
+  if (proj %in% c("global", "all")) {
+    proj <- Sys.getenv("R_USER", Sys.getenv("HOME")) # ?base::path.expand
+  } else if (!is_active_proj) {
+    # in interactive session with options set
+    all_projects <- proj_list()
+    rlang::arg_match0(proj, values = names(all_projects))
+    proj <- unname(all_projects[proj])
+  }
+
+  if (!is_active_proj && !fs::dir_exists(proj)) {
+    cli::cli_abort(
+      c(
+        "proj should be a valid path now.",
+        i = "Transformed proj to {.path {proj}}"
+      ),
+      .internal = TRUE,
+      call = error_call
+    )
+  }
+  if (is_active_proj) {
+    path_todo <- "TODO.R"
+  } else {
+    path_todo <- fs::path(proj, "TODO.R")
+  }
+  path_todo
 }
