@@ -81,7 +81,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   if (!force) {
     extra_msg_if_file_conflict <- c(
       x = "Did not rename files!",
-      "!" = paste0("Found references to {.val ", old,"} in project"),
+      "!" = paste0("Found references to {.val ", old, "} in project"),
       i = paste0("Change file path to {.val ", new, "} or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
       i = "Also change object names to snake_case that follow the new file name."
     )
@@ -274,12 +274,12 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     } else {
       display_msg <- NULL
 
-    bullets_to_display <- cli::ansi_collapse(bullets)
+      bullets_to_display <- cli::ansi_collapse(bullets)
     }
     # Remove duplicated Found x references
     which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = T)
     # possibly just move up our
-    #extra_msg[i] <-
+    # extra_msg[i] <-
     cli::cli_bullets(c(
       extra_msg,
       "i" = paste0("Found {length(bullets)} reference{?s} ", what, " in ", bullets_to_display, "."),

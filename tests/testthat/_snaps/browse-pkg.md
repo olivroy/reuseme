@@ -22,6 +22,9 @@
       browse_pkg("reuseme", ref_only = TRUE)
     Output
       [1] "https://olivroy.github.io/reuseme/reference"
+
+---
+
     Code
       browse_pkg("Matrix")
     Condition
