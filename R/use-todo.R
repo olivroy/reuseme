@@ -81,6 +81,9 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   check_number_whole(line_id)
   line_id_original <- line_id
   # to defer warning.
+  if (interactive() && rstudioapi::isAvailable()) {
+    rstudioapi::documentSaveAll()
+  }
   warn_change_of_line <- FALSE
 
   file_content <- readLines(file, encoding = "UTF-8")

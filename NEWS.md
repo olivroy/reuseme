@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `mark_todo_as_complete()` will save opened documents before attempting to mark as complete.
+
 * `use_todo()` should work on all platforms now.
 
 * `check_files_exist_in_dir()` -> `check_referenced_files()`
