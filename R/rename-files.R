@@ -29,9 +29,12 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   }
 
   # Still a bit buggy.. Will have to look more closely eventually.
-  fs::path_real(old) # Will fail immediately if it doesn't exist.
+  # fs::path_real(old) # Will fail immediately if it doesn't exist.
   if (fs::is_dir(old)) {
     cli::cli_abort("Can't rename directories with this function See {.fn fs::dir_copy} and {.fn fs::dir_delete}.")
+  }
+  if (!fs::is_file(old)) {
+    cli::cli_abort("Can't rename {.file {old}} as it does not exist. Supply {.arg old} an existing file.")
   }
 
   # TODO don't fail if testing?
@@ -44,7 +47,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
-  if (interactive() && !is_git) {
+  if (interactive() && !is_git && !identical(Sys.getenv("TESTTHAT"), "true")) {
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
       i = "See {.help usethis::use_git} for help."
@@ -66,7 +69,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
     object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
     regex_file_name <- paste0(c(object_snake_from_file_kebab, old), collapse = "|")
   } else {
-    regex_file_name <- paste0(path_file_name, "[^-]")
+    regex_file_name <- paste0(path_file_name, "[^-]?")
   }
 
   related_files <- fs::dir_ls(regexp = paste0(regex_file_name, "\\."), recurse = TRUE)
@@ -90,7 +93,9 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   }
 
   verbose <- cnd_check_for_object_names | length(related_files) > 0 | force
-
+  # Either the file name base or the full file name
+  what_are_we_looking_for <- ifelse(cnd_check_for_object_names, file_name_base, old)
+  what_are_we_looking_for <- paste0("to {.val ", what_are_we_looking_for, "}")
   # avoid searching in generated files and tests/testthat files
   file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
     fs::path_filter(regexp = "_files|tests/testthat", invert = TRUE) |> # need to do elsewhere too
@@ -99,7 +104,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
       dir = ".",
       extra_msg = extra_msg_if_file_conflict,
       quiet = FALSE,
-      what = paste0("to {.val ", file_name_base, "}")
+      what = what_are_we_looking_for # either full path or basename.
     )
 
   if (!force && file_names_conflicts) {
@@ -196,6 +201,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   if (!any(references_a_non_existent_file)) {
     return(invisible())
   }
+  # maybe order (so link to location) isn't quite right when many are found?
   non_existent_files <- files_detected[references_a_non_existent_file]
   if (quiet) {
     cli::cli_warn(

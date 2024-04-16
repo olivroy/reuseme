@@ -46,3 +46,19 @@
       v Renamed file to 'R/b.R' without issue.
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
+# rename_files2(): priorizes references if name is generic or widely used in files
+
+    Code
+      rename_files2("data/my-streets.csv", "data-raw/my-streets.csv")
+    Message
+      x Did not rename files!
+      ! Found references to "data/my-streets.csv" in project
+      i Change file path to "data-raw/my-streets.csv" or see `Find in Files` Replace
+        All if confident. Copied new name to clipboard
+      i Also change object names to snake_case that follow the new file name.
+      i Found 2 references to "data/my-streets.csv" in 'R/my-analysis.R:1:24' and
+        'R/my-analysis.R:7:27'.
+      Rerun the code to make it work or use `force = TRUE`
+    Output
+      [1] "data-raw/my-streets.csv"
+
