@@ -3,16 +3,13 @@
     Code
       rename_files2("data/my-streets.csv", "data/my-roads.csv")
     Message
-      Did not rename files!
-      i Make sure you change the file path to
-      data/my-roads.csv
-      in these locations (`new_name` copied to clipboard) or see `Find in Files`
-      Replace All if confident.
-      i Consider changing name snake_case objects that follow the file names
-      i Use [Ctrl + C], then [Ctrl + Shift + Up] for replacing
-      i Found 2 references to my-streets
-      'R/my-analysis.R:1:0'
-      'R/my-analysis.R:2:11'
+      x Did not rename files!
+      ! Found references to "data/my-streets.csv" in project
+      i Change file path to "data/my-roads.csv" or see `Find in Files` Replace All if
+        confident. Copied new name to clipboard
+      i Also change object names to snake_case that follow the new file name.
+      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
+        'R/my-analysis.R:2:11'.
       Rerun the code to make it work or use `force = TRUE`
     Output
       [1] "data/my-roads.csv"
@@ -24,9 +21,8 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
-      i Found 2 references to my-streets
-      'R/my-analysis.R:1:0'
-      'R/my-analysis.R:2:11'
+      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
+        'R/my-analysis.R:2:11'.
       Testing mode, did not rename file
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
@@ -37,9 +33,8 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
-      i Found 2 references to my-streets
-      'R/my-analysis.R:1:0'
-      'R/my-analysis.R:2:11'
+      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
+        'R/my-analysis.R:2:11'.
       x Renamed file to 'data/my-roads.csv' by force. Be careful.
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 

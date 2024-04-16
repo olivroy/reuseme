@@ -80,12 +80,10 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   }
   if (!force) {
     extra_msg_if_file_conflict <- c(
-      "Did not rename files!",
-      i = "Make sure you change the file path to",
-      new,
-      "in these locations (`new_name` copied to clipboard) or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident.",
-      i = "Consider changing name snake_case objects that follow the file names",
-      i = "Use {.kbd Ctrl + C}, then {.kbd Ctrl + Shift + Up} for replacing"
+      x = "Did not rename files!",
+      "!" = paste0("Found references to {.val ", old,"} in project"),
+      i = paste0("Change file path to {.val ", new, "} or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
+      i = "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")
@@ -101,7 +99,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
       dir = ".",
       extra_msg = extra_msg_if_file_conflict,
       quiet = FALSE,
-      what = paste0("to ", file_name_base)
+      what = paste0("to {.val ", file_name_base, "}")
     )
 
   if (!force && file_names_conflicts) {
@@ -270,18 +268,22 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     )
 
     if (length(bullets) > 20) {
-      display_msg <- cli::format_inline("Displaying only the first 10")
+      display_msg <- cli::format_inline("[10 first references only]")
       # Showing First ten to avoid screen overflow.
-      bullets_to_display <- bullets[seq_len(10)]
+      bullets_to_display <- cli::ansi_collapse(bullets[seq_len(10)])
     } else {
-      bullets_to_display <- bullets
       display_msg <- NULL
+
+    bullets_to_display <- cli::ansi_collapse(bullets)
     }
+    # Remove duplicated Found x references
+    which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = T)
+    # possibly just move up our
+    #extra_msg[i] <-
     cli::cli_bullets(c(
       extra_msg,
-      i = paste0("Found {length(bullets)} reference{?s} ", what),
-      display_msg,
-      bullets_to_display
+      "i" = paste0("Found {length(bullets)} reference{?s} ", what, " in ", bullets_to_display, "."),
+      display_msg
     ))
   } else {
     cli::cli_inform(
