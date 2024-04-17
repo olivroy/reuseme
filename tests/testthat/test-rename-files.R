@@ -3,11 +3,25 @@ describe("rename_files2()", {
   # temp dir + change working directory
   tmp_dir <- withr::local_tempdir()
   withr::local_dir(new = tmp_dir)
-  fs::dir_create(c("data", "R", "data-raw"))
-  fs::file_create("data/my-streets.csv")
-  fs::file_create("data/my-highways.csv")
-  fs::file_create("R/a.R")
+  fs::dir_create(
+    c("data", "R", "data-raw"))
+  fs::file_create(c(
+    "data/my-streets.csv","data/my-highways.csv",
+    "data/my-king.png", "R/a.R"
+    ))
   fs::file_copy(og_file, "R/my-analysis.R")
+
+  it("prevents file renaming if dangerous", {
+    rlang::local_interactive(TRUE)
+    expect_error(
+      rename_files2("data/my-streets.csv", "data/my-roads"),
+      "extension"
+    )
+    expect_error(
+      rename_files2("data/my-straeets.csv", "data/my-roads.csv"),
+      "exist"
+    )
+  })
   it("prevents file renaming if conflicts", {
     rlang::local_interactive(TRUE)
     expect_snapshot({
@@ -52,6 +66,11 @@ describe("rename_files2()", {
       rename_files2("data/my-streets.csv", "data-raw/my-streets.csv")
     })
     expect_true(fs::file_exists("data/my-streets.csv"))
+  })
+  it("relaxes its conditions for figures", {
+    rlang::local_interactive(TRUE)
+    rename_files2("data/my-king.png", "data/my-king2.png")
+    expect_true(fs::file_exists("data/my-king2.png"))
   })
 })
 test_that("A fake test", {

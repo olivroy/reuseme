@@ -36,7 +36,12 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   if (!fs::is_file(old)) {
     cli::cli_abort("Can't rename {.file {old}} as it does not exist. Supply {.arg old} an existing file.")
   }
-
+  if (fs::path_ext(old) != fs::path_ext(new)) {
+    cli::cli_abort(c(
+      "!" = "{.arg new} and {.arg old} must have the same file extension, not\\
+          {.val {fs::path_ext(old)}} and {.val {fs::path_ext(new)}}."
+    ))
+  }
   # TODO don't fail if testing?
   if (fs::file_exists(new) && !force) {
     cli::cli_abort(c(
@@ -62,8 +67,9 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   min_n_char <- 5
   cnd_check_for_object_names <-
     file_name_base != new_name_base &&
-      !file_name_base %in% (c("index", "temp")) &&
-      nchar(file_name_base) > min_n_char
+    !file_name_base %in% (c("index", "temp")) &&
+    nchar(file_name_base) > min_n_char &&
+    !tolower(fs::path_ext(old)) %in% c("png", "jpg", "jpeg", "pdf", "svg") # don't check for figures
 
   if (cnd_check_for_object_names) {
     object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
@@ -199,6 +205,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   files_detected <- unique(referenced_files)
   references_a_non_existent_file <- !(fs::file_exists(files_detected) | file.exists(files_detected)) # to avoid burden for now.
   if (!any(references_a_non_existent_file)) {
+    if (!quiet) cli::cli_inform(c("v" = "Did not find references to non-existent files."))
     return(invisible())
   }
   # maybe order (so link to location) isn't quite right when many are found?
