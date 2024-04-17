@@ -7,7 +7,8 @@
 use_todo(todo, proj = proj_get(), code = FALSE)
 }
 \arguments{
-\item{todo}{A character vector of lines to add to the TODO file}
+\item{todo}{A character vector of lines to add to the TODO file. See details
+for special handling.}
 
 \item{proj}{By default, the active project, an arbitrary directory, or a
 RStudio project name in the following directories
