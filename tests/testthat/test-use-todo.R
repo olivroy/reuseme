@@ -91,5 +91,4 @@ test_that("use_todo global works", {
   expect_no_error(
     path <- use_todo("global::print()", code = TRUE)
   )
-  unlink(path)
 })
