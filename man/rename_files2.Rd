@@ -2,14 +2,28 @@
 % Please edit documentation in R/rename-files.R
 \name{rename_files2}
 \alias{rename_files2}
-\title{Rename an output or a data file}
+\title{Rename an output or a data file and watch for references}
 \usage{
-rename_files2(old, new, force = FALSE, action = c("rename", "test"))
+rename_files2(
+  old,
+  new,
+  warn_conflicts = c("default", "all", "exact", "none"),
+  force = FALSE,
+  action = c("rename", "test")
+)
 }
 \arguments{
 \item{old, new}{Old and new file names (with or without extensions).}
 
-\item{force}{Whether to force renaming if there are conflicts}
+\item{warn_conflicts}{One of
+\itemize{
+\item \code{"default"}: will be \code{"all"} if only moving directory, and \code{"all"} otherwise.
+\item \code{"all"} (stricter: if \code{old = "data/my-streets.csv"} will check for objects named \code{my_streets}, other files like \code{my-streets.R}, etc.),
+\item \code{"exact"} will only search for \code{"data/my-streets.csv"} in documents
+\code{"none"} will not search for references in documents and will rename.
+}}
+
+\item{force}{Whether to force renaming if there are conflicts. Use \code{warn_conflicts = "none"}}
 
 \item{action}{One of \code{"rename"} or \code{"test"}}
 }
@@ -26,6 +40,8 @@ is more oriented towards analysis script.
 \section{Use case}{
 Let's say you have an analysis and work on a certain subject.
 You want to rename a figure for clarity.
+For example, you had an input file named \code{data/my-streets.csv} and you now want to
+rename it to
 
 Here is what \code{rename_files2()} does for you, before it renames files.
 \enumerate{
@@ -33,5 +49,13 @@ Here is what \code{rename_files2()} does for you, before it renames files.
 \item Look for data frame name conflicts
 \item Sends information to clipboard
 }
+
+Will work well for you if you tend to name your objects using snake case and
+naming objects with snake case or kebab-case.
+
+The philosophy is to inform you of manual steps required before actually
+performing file renaming.
+
+A way to be less strict is to us
 }
 

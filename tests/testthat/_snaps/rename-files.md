@@ -5,11 +5,11 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data/my-roads.csv" or see `Find in Files` Replace All if
-        confident. Copied new name to clipboard
-      i Also change object names to snake_case that follow the new file name.
-      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Change file path to "data/my-roads.csv" in files ahead of renaming file or
+        see `Find in Files` Replace All if confident. Copied new name to clipboard
+      Also change object names to snake_case that follow the new file name.
+      i Found 2 references to "data/my-streets.csv" in 'R/my-analysis.R:1:24' and
+        'R/my-analysis.R:7:27'.
       Rerun the code to make it work or use `force = TRUE`
     Output
       [1] "data/my-roads.csv"
@@ -21,8 +21,8 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
-      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Found 2 references to "data/my-streets.csv" in 'R/my-analysis.R:1:24' and
+        'R/my-analysis.R:7:27'.
       Testing mode, did not rename file
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
@@ -33,8 +33,8 @@
     Message
       Here are the conflicts. Review changes carefully
       renaming file anyway
-      i Found 2 references to "my-streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Found 2 references to "data/my-streets.csv" in 'R/my-analysis.R:1:24' and
+        'R/my-analysis.R:7:27'.
       x Renamed file to 'data/my-roads.csv' by force. Be careful.
       i Call `reuseme::check_referenced_files()` to see if there are dead links in dir.
 
@@ -53,8 +53,8 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data-raw/my-streets.csv" or see `Find in Files` Replace
-        All if confident. Copied new name to clipboard
+      i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file
+        or see `Find in Files` Replace All if confident. Copied new name to clipboard
       i Found 2 references to "data/my-streets.csv" in 'R/my-analysis.R:1:24' and
         'R/my-analysis.R:7:27'.
       Rerun the code to make it work or use `force = TRUE`
