@@ -121,7 +121,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = TRUE)
     # possibly just move up our
     # extra_msg[i] <-
-    cli::cli_inform(c(
+    f_inform(c(
       extra_msg,
       "i" = paste0("Found {length(bullets)} reference{?s} ", what, " in ", bullets_to_display, "."),
       display_msg
