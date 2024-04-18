@@ -58,8 +58,10 @@ rename_files2 <- function(old,
         "{.arg overwrite} must be used with caution to allow overwriing {.code new}"
       )
     )
-    warn_conflicts <- "none"
-    overwrite <- TRUE
+   if (isTRUE(force) {
+      warn_conflicts <- "none"
+      overwrite <- TRUE
+    }
   }
 
   # `overwrite` should only be used to overwrite a file, probably should rename to overwrite.
