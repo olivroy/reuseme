@@ -66,6 +66,14 @@ describe("rename_files2()", {
     expect_true(fs::file_exists("data/my-king2.png"))
   })
 })
-test_that("A fake test", {
+test_that("Helper files returns the expected input", {
+  expect_true(is_adding_a_suffix("streets.csv", "streets2.csv"))
+  expect_true(is_adding_a_suffix("aasa", "aasa2"))
+  skip("Not ready")
+  # there could be a my-streets-raw.csv that exists.
+  expect_equal(compute_conflicts_regex("my-streets.csv", "my-roads.csv"), "my-streets|my_streets")
+  expect_equal(compute_conflicts_regex("my-streets.csv", "data/my-streets.csv"), "my-streets.csv")
+  expect_equal(compute_conflicts_regex("data/my-streets.csv", "my-streets.csv"), "data/my-streets.csv")
+
   expect_true(TRUE)
 })

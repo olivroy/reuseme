@@ -97,6 +97,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
       "!" = paste0("Found references to {.val ", old, "} in project"),
       i = paste0("Change file path to {.val ", new, "} or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
       i = "Also change object names to snake_case that follow the new file name."
+      if (!is_moving(old, new)) i = "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")
@@ -170,6 +171,58 @@ rename_file_action <- function(new, old, force, action, verbose) {
   } else if (action == "test") {
     # Not renaming, but going through the same path as I would have
     cli::cli_inform("Testing mode, did not rename file")
+  }
+}
+
+compute_conflicts_regex <- function(old, new, action) {
+  cli::cli_abort("todo.")
+
+  if (cnd_check_for_object_names) {
+    object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
+    regex_file_name <- paste0(c(object_snake_from_file_kebab, old), collapse = "|")
+  } else if (match_conflicts == "exact") {
+    # if generic name, search exclusively for file extension
+    regex_file_name <- file_name_base
+  } else {
+    # if objects are called
+    regex_file_name <- paste0(path_file_name, "[^-]?")
+  }
+}
+
+compute_action <- function(old, new, action) {
+  dplyr::case_when(
+    action == "none" ~ "none",
+    is_moving(old, new) ~ "exact",
+    is_adding_a_suffix(old, new) ~ "default", # is it correct? like moving data to data-raw
+    .default = "all"
+   )
+}
+
+is_moving <- function(old, new) {
+  fs::path_file(old) == fs::path_file(new)
+}
+
+is_adding_a_suffix <- function(old, new) {
+  # TODO measure of string proximity
+  base_name_old <- basename_remove_ext(old)
+  base_name_new <- basename_remove_ext(new)
+
+  matches <- c(
+    stringr::str_match(base_name_new, base_name_old),
+    stringr::str_match(base_name_old, base_name_new)
+  )
+  matches <- matches[!is.na(matches)]
+
+  if (length(matches) == 0) {
+    # no matches
+    return(FALSE)
+  }
+
+  shortest_char <- min(nchar(c(base_name_new, base_name_old))) - 1L
+  if (nchar(matches) >= max(4, shortest_char)) {
+    TRUE
+  } else {
+    FALSE
   }
 }
 
