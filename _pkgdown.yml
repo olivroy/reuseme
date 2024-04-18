@@ -16,6 +16,7 @@ reference:
 - subtitle: Package browsing / management
   contents:
   - browse_pkg
+  - quarto_help
   - outdated_pkgs
 
 - subtitle: Interact with documents
