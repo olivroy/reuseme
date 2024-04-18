@@ -13,6 +13,9 @@ rename_files2(old, new, force = FALSE, action = c("rename", "test"))
 
 \item{action}{One of \code{"rename"} or \code{"test"}}
 }
+\value{
+\code{new} if renaming succeeded. Mostly called for its side-effects
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

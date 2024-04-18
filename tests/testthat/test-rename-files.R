@@ -12,7 +12,6 @@ describe("rename_files2()", {
   fs::file_copy(og_file, "R/my-analysis.R")
 
   it("prevents file renaming if dangerous", {
-    rlang::local_interactive(TRUE)
     expect_error(
       rename_files2("data/my-streets.csv", "data/my-roads"),
       "extension"
@@ -23,7 +22,6 @@ describe("rename_files2()", {
     )
   })
   it("prevents file renaming if conflicts", {
-    rlang::local_interactive(TRUE)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv")
     })
@@ -32,7 +30,6 @@ describe("rename_files2()", {
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
   it("is easier to test messages with no action", {
-    rlang::local_interactive(TRUE)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE, action = "test")
     })
@@ -42,7 +39,6 @@ describe("rename_files2()", {
   })
 
   it("renames files if forced to do so", {
-    rlang::local_interactive(TRUE)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE)
     })
@@ -52,7 +48,6 @@ describe("rename_files2()", {
   })
 
   it("doesn't check for references if file name is short", {
-    rlang::local_interactive(TRUE)
     expect_snapshot(
       rename_files2("R/a.R", "R/b.R")
     )
@@ -61,14 +56,12 @@ describe("rename_files2()", {
   it("priorizes references if name is generic or widely used in files", {
     fs::file_move("data/my-roads.csv", "data/my-streets.csv")
     expect_true(fs::file_exists("data/my-streets.csv"))
-    rlang::local_interactive(TRUE)
     expect_snapshot(error = FALSE, {
       rename_files2("data/my-streets.csv", "data-raw/my-streets.csv")
     })
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
   it("relaxes its conditions for figures", {
-    rlang::local_interactive(TRUE)
     rename_files2("data/my-king.png", "data/my-king2.png")
     expect_true(fs::file_exists("data/my-king2.png"))
   })

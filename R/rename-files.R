@@ -22,10 +22,9 @@
 #'
 #' @export
 rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test")) {
+#' @returns `new` if renaming succeeded. Mostly called for its side-effects
   action <- rlang::arg_match(action)
 
-  if (!rlang::is_interactive()) {
-    return()
   }
 
   # Still a bit buggy.. Will have to look more closely eventually.
@@ -49,6 +48,11 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
       "!" = "{.arg new} already exists {.path {new}}.",
       "i" = "Use {.code force = TRUE} to override."
     ))
+  }
+
+  # renaming should only happen in tests or interactive sessions
+  if (action == "rename" && (!rlang::is_interactive() || !identical(Sys.getenv("TESTTHAT"), "true"))) {
+    cli::cli_inform(c("Should only rename files in interactive sessions (or in tests)"))
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
