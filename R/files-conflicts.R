@@ -109,24 +109,19 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
       "{{.file {bullets_df$file}:{lines_match}:{cols_match}}}"
     )
 
-    if (length(bullets) > 20) {
-      # display_msg <- cli::format_inline("[10 first references only]")
-      # Showing First ten to avoid screen overflow.
-      # bullets_to_display <- cli::ansi_collapse(bullets[seq_len(10)])
-    } else {
-      # display_msg <- NULL
-
-      # bullets_to_display <- cli::ansi_collapse(bullets)
-    }
-
     # Will truncate 20 (revert up if you don't like)
     display_msg <- NULL
     bullets_to_display <- cli::ansi_collapse(bullets)
+    f_inform <- if (length(bullets) > 20) {
+      cli::cli_warn
+    } else {
+      cli::cli_inform
+    }
     # Remove duplicated Found x references
     which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = TRUE)
     # possibly just move up our
     # extra_msg[i] <-
-    cli::cli_bullets(c(
+    cli::cli_inform(c(
       extra_msg,
       "i" = paste0("Found {length(bullets)} reference{?s} ", what, " in ", bullets_to_display, "."),
       display_msg

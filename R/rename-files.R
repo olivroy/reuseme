@@ -192,7 +192,7 @@ rename_file_action <- function(new, old, strategy, action, verbose) {
 
 compute_conflicts_regex <- function(file, renaming_strategy) {
   if (renaming_strategy == "free_for_all") {
-    return("")
+    return("impossible to match nowhere")
   }
 
   if (renaming_strategy == "file_names") {
@@ -201,17 +201,19 @@ compute_conflicts_regex <- function(file, renaming_strategy) {
 
   file_name_base <- basename_remove_ext(file)
 
-  if (renaming_strategy == "base_names") {
-    # TODO maybe: dat/file-name.csv|file-name
-    return(file_name_base)
-  }
+  object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
 
   if (renaming_strategy == "object_names") {
-    object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
     # dat/file-name.csv|file_name
-    # TODO maybe: dat/file-name.csv|file_name|file-name
+    # dat/file-name.csv|file_name|file-name
 
     regex_file_name <- paste(file, object_snake_from_file_kebab, sep = "|")
+    return(regex_file_name)
+  }
+
+  if (renaming_strategy == "base_names") { # most strict and picky
+    # file-name|file_name
+    regex_file_name <- paste(file_name_base, object_snake_from_file_kebab, sep = "|")
     return(regex_file_name)
   }
   # other cases?
@@ -240,12 +242,12 @@ scope_rename <- function(old, new, warn_conflicts = "default") {
     is_generic_file_name(old) ~ "file_names",
     # other option ~ "base_names", # would check for base names, but only file, instead of object.
     warn_conflicts == "default" ~ "object_names",
-    .default = "object_names"
+    .default = "base_names" # will probably change this as this gives too many matches...
   )
 
   # if exception, will check up
 
-  if (res == "object_names") {
+  if (res == "base_names") {
     # see if exceptions are needed.
     # don't check for regexp if the original file name has less than min_n_char
   }

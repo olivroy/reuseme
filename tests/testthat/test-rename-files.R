@@ -4,11 +4,12 @@ describe("rename_files2()", {
   tmp_dir <- withr::local_tempdir()
   withr::local_dir(new = tmp_dir)
   fs::dir_create(
-    c("data", "R", "data-raw"))
+    c("data", "R", "data-raw")
+  )
   fs::file_create(c(
-    "data/my-streets.csv","data/my-highways.csv",
+    "data/my-streets.csv", "data/my-highways.csv",
     "data/my-king.png", "R/a.R"
-    ))
+  ))
   # TODO when ready add test for the presence of my-streets-raw.csv
   # fs::file_create("my-streets-raw.csv")
   fs::file_copy(og_file, "R/my-analysis.R")
@@ -20,6 +21,10 @@ describe("rename_files2()", {
     )
     expect_error(
       rename_files2("data/my-straeets.csv", "data/my-roads.csv"),
+      "exist"
+    )
+    expect_error(
+      rename_files2("data/my-streets.csv", "data/my-highways.csv"),
       "exist"
     )
   })
@@ -75,8 +80,6 @@ describe("rename_files2()", {
   })
 })
 test_that("Helper files returns the expected input", {
-
-
   expect_equal(scope_rename("streets.csv", "streets2.csv"), "file_names")
   expect_equal(compute_conflicts_regex("streets.csv", "file_names"), "streets.csv")
 
@@ -84,11 +87,9 @@ test_that("Helper files returns the expected input", {
   expect_equal(compute_conflicts_regex("R/a.R", "file_names"), "R/a.R")
 
   expect_snapshot(error = TRUE, compute_conflicts_regex("x", "unknown_strategy"))
-  skip("Not ready")
   # there could be a my-streets-raw.csv that exists.
-  expect_equal(compute_conflicts_regex("my-streets.csv", "object_names"), "my-streets|my_streets")
-  expect_equal(compute_conflicts_regex("my-streets.csv"), "my-streets.csv")
-  expect_equal(compute_conflicts_regex("data/my-streets.csv"), "data/my-streets.csv")
+  expect_equal(compute_conflicts_regex("dat/my-streets.csv", "object_names"), "dat/my-streets.csv|my_streets")
+  expect_equal(compute_conflicts_regex("my-streets.csv", "base_names"), "my-streets|my_streets")
 })
 
 test_that("file testing are working as expected", {
@@ -99,4 +100,13 @@ test_that("file testing are working as expected", {
   expect_true(is_image("x.PNG"))
   expect_true(is_generic_file_name("data1.xlsx"))
   expect_false(is_generic_file_name("my-data.csv"))
+})
+
+test_that("force and action are deprecated", {
+  file <- withr::local_tempfile(fileext = ".R", lines = c("# x1"))
+  file2 <- withr::local_tempfile(fileext = ".R")
+  unlink(file2)
+  lifecycle::expect_deprecated(
+    rename_files2(file, file2, force = TRUE)
+  )
 })

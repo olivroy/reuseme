@@ -5,11 +5,9 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data/my-roads.csv" in files ahead of renaming file or
-        see `Find in Files` Replace All if confident. Copied new name to clipboard
+      i Change file path to "data/my-roads.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
       Also change object names to snake_case that follow the new file name.
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and 'R/my-analysis.R:2:11'.
     Output
       [1] "data/my-roads.csv"
 
@@ -21,11 +19,9 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data/my-roads.csv" in files ahead of renaming file or
-        see `Find in Files` Replace All if confident. Copied new name to clipboard
+      i Change file path to "data/my-roads.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
       Also change object names to snake_case that follow the new file name.
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and 'R/my-analysis.R:2:11'.
     Output
       [1] "data/my-roads.csv"
 
@@ -35,11 +31,6 @@
       rename_files2("data/my-streets.csv", "data/my-roads.csv", warn_conflicts = "none",
         overwrite = TRUE)
     Message
-      Here are the conflicts. Review changes carefully
-      renaming file anyway
-      i Found 7 references to "data/my-streets.csv" in 'R/my-analysis.R:1:0',
-        'R/my-analysis.R:2:0', 'R/my-analysis.R:3:0', 'R/my-analysis.R:4:0',
-        'R/my-analysis.R:5:0', 'R/my-analysis.R:6:0', and 'R/my-analysis.R:7:0'.
       x Renamed file to 'data/my-roads.csv' by force. Be careful.
 
 # rename_files2(): doesn't check for references if file name is short
@@ -56,8 +47,7 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file
-        or see `Find in Files` Replace All if confident. Copied new name to clipboard
+      i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
       i Found 1 reference to "data/my-streets.csv" in 'R/my-analysis.R:1:24'.
     Output
       [1] "data-raw/my-streets.csv"
@@ -69,10 +59,8 @@
     Message
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
-      i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file
-        or see `Find in Files` Replace All if confident. Copied new name to clipboard
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and
-        'R/my-analysis.R:2:11'.
+      i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:1:0' and 'R/my-analysis.R:2:11'.
     Output
       [1] "data-raw/my-streets.csv"
 
