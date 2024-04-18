@@ -53,7 +53,7 @@ rename_files2 <- function(old,
     lifecycle::deprecate_warn(
       when = "0.0.9006",
       what = "rename_files2(force)",
-      with = "rename_files2(warn_conflicts = 'none')",
+      with = "rename_files2(warn_conflicts)",
       details = cli::format_inline(
         "{.arg overwrite} must be used with caution to allow overwriing {.code new}"
       )
