@@ -61,7 +61,7 @@ rename_files2 <- function(old, new, force = FALSE, action = c("rename", "test"))
   # looking for the object name as well if changing from a file name to another
   path_file_name <- fs::path_ext_remove(old)
   file_name_base <- fs::path_file(path_file_name)
-  new_name_base <- fs::path_file(fs::path_ext_remove(new))
+  new_name_base <- basename_remove_ext(new)
 
   # don't check for regexp if the original file name has less than min_n_char
   min_n_char <- 5
@@ -167,4 +167,8 @@ rename_file_action <- function(new, old, force, action, verbose) {
     # Not renaming, but going through the same path as I would have
     cli::cli_inform("Testing mode, did not rename file")
   }
+}
+
+basename_remove_ext <- function(x) {
+  fs::path_ext_remove(basename(x))
 }
