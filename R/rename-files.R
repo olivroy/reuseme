@@ -325,11 +325,43 @@ check_proper_renaming_condition <- function(old, new, overwrite, call = rlang::c
 
   if (fs::file_exists(new) && !overwrite) {
     # FIXME maybe not fail while testing
+    hint_acceptable_renaming(old, new, overwrite)
     cli::cli_abort(c(
       "Can't rename file to {.val {new}}",
       "!" = "{.arg new} already exists {.path {new}}.",
-      "i" = "Use {.code warn_conflicts = 'none'} to override."
+      "i" = "Use {.code overwrite = TRUE} to override."
     ), call = call)
   }
   invisible()
+}
+
+hint_acceptable_renaming <- function(old, new, overwrite) {
+  # for now: only acceptable renaming is moving
+  if (is_moving(old, new)) {
+    info <- fs::file_info(c(old, new))
+    if (anyNA(info$change_time)) {
+      cli::cli_inform("One of the file doesn't exist. hint_acceptable_renaming() expects 2 existing files.", .internal = FALSE)
+    }
+    # TODO Check that old
+    if (info$change_time[1] > info$change_time[2]) {
+      cli::cli_inform(c(
+        "!" = "{.val {new}} was modified later than {.val {old}}",
+        x = "It is generally not a good idea to overwrite a file that doesn't have the latest modification"
+      ))
+      return(FALSE)
+    }
+    # r-lib/cli#683
+    old_chr <- as.character(old)
+    new_chr <- as.character(new)
+
+
+    cli::cli_inform(c(
+      "!" = "{.val {old}} was modified later than {.val {new}}",
+      "It may be a good idea to view the diff it it makes sense.",
+      i = "Use {.run diffviewer::visual_diff('{old_chr}',  '{new_chr}')}."
+    ))
+    return(TRUE)
+  } else {
+    FALSE
+  }
 }
