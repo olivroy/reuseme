@@ -28,49 +28,42 @@
 #'
 #' A way to be less strict is to us
 #' @inheritParams usethis::rename_files
-#' @param force Whether to force renaming if there are conflicts. Use `warn_conflicts = "none"`
+#' @param overwrite whether to overwrite `new` if it already exists. Be careful.
+#' @param force `r lifecycle::badge('deprecated')` Whether to force renaming if there are conflicts. Use `warn_conflicts = "none"`
 #' @param action One of `"rename"` or `"test"`
 #' @param warn_conflicts One of
-#' * `"default"`: will be `"all"` if only moving directory, and `"all"` otherwise.
-#' * `"all"` (stricter: if `old = "data/my-streets.csv"` will check for objects named `my_streets`, other files like `my-streets.R`, etc.),
+#' * `"default"`: will be check more thoroughly depending on the situation. If only moving directory, and `"all"` otherwise.
+#' * `"all"` (larger scope: if `old = "data/my-streets.csv|my_streets"` will check for objects named `my_streets`, other files like `my-streets.R`, etc.),
 #' * `"exact"` will only search for `"data/my-streets.csv"` in documents
 #'   `"none"` will not search for references in documents and will rename.
 #' @export
 #' @returns `new` if renaming succeeded. Mostly called for its side-effects
-rename_files2 <- function(old, new, warn_conflicts = c("default","all", "exact", "none"), force = FALSE, action = c("rename", "test")) {
+rename_files2 <- function(old,
+                          new,
+                          warn_conflicts = c("default", "all", "exact", "none"),
+                          overwrite = FALSE,
+                          action = c("rename", "test"),
+                          force = deprecated()) {
   action <- rlang::arg_match(action)
-  # TODO separate all this in helper functions
-  if (action == "default") {
-    action <- "all"
-  }
+
   warn_conflicts <- rlang::arg_match(warn_conflicts)
+  check_logical(overwrite)
 
-  if (action == "none") {
-    force <- TRUE
+  if (lifecycle::is_present(force)) {
+    lifecycle::deprecate_warn(
+      when = "0.0.9006",
+      what = "rename_files2(force)",
+      with = "rename_files2(warn_conflicts = 'none')",
+      details = cli::format_inline(
+        "{.arg overwrite} must be used with caution to allow overwriing {.code new}"
+      )
+    )
+    warn_conflicts <- "none"
+    overwrite <- TRUE
   }
 
-  # Still a bit buggy.. Will have to look more closely eventually.
-  # fs::path_real(old) # Will fail immediately if it doesn't exist.
-  if (fs::is_dir(old) || fs::is_dir(new)) {
-    cli::cli_abort("Can't rename directories with this function See {.fn fs::dir_copy} and {.fn fs::dir_delete}.")
-  }
-  if (!fs::is_file(old)) {
-    cli::cli_abort("Can't rename {.file {old}} as it does not exist. Supply {.arg old} an existing file.")
-  }
-  if (fs::path_ext(old) != fs::path_ext(new)) {
-    cli::cli_abort(c(
-      "!" = "{.arg new} and {.arg old} must have the same file extension, not\\
-          {.val {fs::path_ext(old)}} and {.val {fs::path_ext(new)}}."
-    ))
-  }
-  # TODO don't fail if testing?
-  if (fs::file_exists(new) && !force) {
-    cli::cli_abort(c(
-      "Can't rename file to {.val {new}}",
-      "!" = "{.arg new} already exists {.path {new}}.",
-      "i" = "Use {.code warn_conflicts = 'none'} to override."
-    ))
-  }
+  # `overwrite` should only be used to overwrite a file, probably should rename to overwrite.
+  check_proper_renaming_condition(old, new, overwrite)
 
   # renaming should only happen in tests or interactive sessions
   if (action == "rename" && !(rlang::is_interactive() || identical(Sys.getenv("TESTTHAT"), "true"))) {
@@ -82,82 +75,75 @@ rename_files2 <- function(old, new, warn_conflicts = c("default","all", "exact",
   if (interactive() && !is_git && !identical(Sys.getenv("TESTTHAT"), "true")) {
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
-      i = "See {.help usethis::use_git} for help."
+      i = "See {.fn usethis::use_git} for help."
     ))
   }
-  # looking for the object name as well if changing from a file name to another
-  path_file_name <- fs::path_ext_remove(old)
-  file_name_base <- fs::path_file(path_file_name)
-  new_name_base <- basename_remove_ext(new)
+  # After here, we start doing some renaming real situations---
+  renaming_strategy <- scope_rename(old, new, warn_conflicts)
 
-  # don't check for regexp if the original file name has less than min_n_char
-  min_n_char <- 5
-  cnd_check_for_object_names <-
-    file_name_base != new_name_base &&
-    !file_name_base %in% (c("index", "temp")) &&
-    nchar(file_name_base) > min_n_char &&
-    !tolower(fs::path_ext(old)) %in% c("png", "jpg", "jpeg", "pdf", "svg") && # don't check for figures
-    warn_conflicts == "all" # check for all problems
+  regexp_to_search_for_in_files <- compute_conflicts_regex(old, renaming_strategy)
 
-  if (cnd_check_for_object_names) {
-    object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
-    regex_file_name <- paste0(c(object_snake_from_file_kebab, old), collapse = "|")
-  } else if (warn_conflicts == "exact") {
-    # if generic name, search exclusively for file extension
-    regex_file_name <- file_name_base
-  } else {
-    # if objects are called
-    regex_file_name <- paste0(path_file_name, "[^-]?")
-  }
-
-  related_files <- fs::dir_ls(regexp = paste0(regex_file_name, "\\."), recurse = TRUE)
+  # FIXME doesn't fit now.
+  related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
   related_files <- setdiff(related_files, old)
   if (length(related_files) > 0) {
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",
-      "No support yet for that"
+      "No support yet for that yet.",
+      "Think about what triggers this and add new rules  in {.fn scope_rename}"
     ))
   }
-  if (!force) {
+
+
+  if (renaming_strategy != "free_for_all") {
     extra_msg_if_file_conflict <- c(
       x = "Did not rename files!",
       "!" = paste0("Found references to {.val ", old, "} in project"),
-      i = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
-      if (!is_moving(old, new)) i = "Also change object names to snake_case that follow the new file name."
+      i = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or \\
+                  see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
+      if (!is_moving(old, new)) i <- "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")
   }
 
-  verbose <- cnd_check_for_object_names | length(related_files) > 0 | force
+  verbose <- TRUE # length(related_files) > 0 || renaming_strategy == "free_for_all"
   # Either the file name base or the full file name
-  what_are_we_looking_for <- ifelse(cnd_check_for_object_names, file_name_base, old)
-  what_are_we_looking_for <- paste0("to {.val ", what_are_we_looking_for, "}")
+
+  if (renaming_strategy == "object_names") {
+    regex_friendly <- paste0(basename_remove_ext(old), "/", stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+  } else {
+    regex_friendly <- ifelse(renaming_strategy %in% c("object_names"), basename_remove_ext(old), old)
+  }
+
+  regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
-  file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
+  n_file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
     fs::path_filter(regexp = "_files|tests/testthat", invert = TRUE) |> # need to do elsewhere too
     solve_file_name_conflict(
-      regex = regex_file_name,
+      regex = regexp_to_search_for_in_files,
       dir = ".",
       extra_msg = extra_msg_if_file_conflict,
       quiet = FALSE,
-      what = what_are_we_looking_for # either full path or basename.
+      what = regex_friendly # either full path or basename.
     )
 
-  if (!force && file_names_conflicts) {
-    cli::cli_bullets("Rerun the code to make it work or use `force = TRUE`")
+  if (renaming_strategy != "free_for_all" && n_file_names_conflicts > 10) {
+    cli::cli_bullets("You can use {.code warn_conflicts = 'exact'} to see only exact references of {.val {old}}.")
   }
 
 
-  if (!file_names_conflicts || force) {
-    rename_file_action(new, old, force, action, verbose)
+  if (n_file_names_conflicts == 0 || renaming_strategy == "free_for_all") {
+    rename_file_action(new, old, strategy = renaming_strategy, action, verbose)
     # Can't remember why I put this here?
     # Seems to query all-non existent files, only if renaming?
     # check_referenced_files(path = ".", quiet = !verbose)
-    cli::cli_inform(c(
-      i = "Call {.run reuseme::check_referenced_files()} to see if there are dead links in dir."
-    ))
+    if (interactive() && action != "test") {
+      cli::cli_inform(c(
+        i = "Call {.run reuseme::check_referenced_files()} to see if there are dead links in dir."
+      ))
+    }
     return(invisible(new))
   }
 
@@ -174,7 +160,7 @@ rename_files2 <- function(old, new, warn_conflicts = c("default","all", "exact",
 
 # arguments should all be checked
 # Performs the action of renaming file
-rename_file_action <- function(new, old, force, action, verbose) {
+rename_file_action <- function(new, old, strategy, action, verbose) {
   if (tools::file_ext(old) == "R" && action == "test") {
     # usethis::rename_files(old_name, new_name)
     cli::cli_inform("See if need for tests change snapshots")
@@ -190,43 +176,104 @@ rename_file_action <- function(new, old, force, action, verbose) {
 
   if (action == "rename") {
     fs::file_move(old, new)
-    if (!force) {
-      cli::cli_alert_success("Renamed file to {.file {new}} without issue.")
+    if (strategy == "free_for_all") {
+      cli::cli_inform(c("x" = "Renamed file to {.file {new}} by force. Be careful."))
     } else {
-      cli::cli_alert_danger("Renamed file to {.file {new}} by force. Be careful.")
+      cli::cli_inform(c("v" = "Renamed file to {.file {new}} without issue."))
     }
   } else if (action == "test") {
     # Not renaming, but going through the same path as I would have
-    cli::cli_inform("Testing mode, did not rename file")
+    cli::cli_inform(c(
+      "Testing mode, did not rename file, but would have!",
+      "strategy: {.val {strategy}}"
+    ))
   }
 }
 
-compute_conflicts_regex <- function(old, new, action) {
-  cli::cli_abort("todo.")
+compute_conflicts_regex <- function(file, renaming_strategy) {
+  if (renaming_strategy == "free_for_all") {
+    return("")
+  }
 
-  if (cnd_check_for_object_names) {
+  if (renaming_strategy == "file_names") {
+    return(file)
+  }
+
+  file_name_base <- basename_remove_ext(file)
+
+  if (renaming_strategy == "base_names") {
+    # TODO maybe: dat/file-name.csv|file-name
+    return(file_name_base)
+  }
+
+  if (renaming_strategy == "object_names") {
     object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
-    regex_file_name <- paste0(c(object_snake_from_file_kebab, old), collapse = "|")
-  } else if (match_conflicts == "exact") {
-    # if generic name, search exclusively for file extension
-    regex_file_name <- file_name_base
-  } else {
-    # if objects are called
-    regex_file_name <- paste0(path_file_name, "[^-]?")
+    # dat/file-name.csv|file_name
+    # TODO maybe: dat/file-name.csv|file_name|file-name
+
+    regex_file_name <- paste(file, object_snake_from_file_kebab, sep = "|")
+    return(regex_file_name)
   }
+  # other cases?
+  # if objects are called
+  # regex_file_name <- paste0(path_file_name, "[^-]?")
+  cli::cli_abort(
+    c(
+      "Not implemented a return value for {.val {renaming_strategy}}",
+      "Make sure tests are added."
+    ),
+    .internal = TRUE
+  )
 }
 
-compute_action <- function(old, new, action) {
-  dplyr::case_when(
-    action == "none" ~ "none",
-    is_moving(old, new) ~ "exact",
-    is_adding_a_suffix(old, new) ~ "default", # is it correct? like moving data to data-raw
-    .default = "all"
-   )
+scope_rename <- function(old, new, warn_conflicts = "default") {
+  res <- dplyr::case_when(
+    # respect preferences before checking other conditions
+    warn_conflicts == "none" ~ "free_for_all",
+    warn_conflicts == "exact" ~ "file_names", # be careful with this
+    warn_conflicts == "all" ~ "object_names",
+    is_moving(old, new) ~ "file_names",
+    is_image(old) ~ "file_names",
+    is_generic_file_name(old) ~ "file_names",
+    is_adding_a_suffix(old, new) ~ "file_names", # FIXME is it correct? like moving data to data-raw
+    is_short_file_name(old, 5L) ~ "file_names",
+    is_generic_file_name(old) ~ "file_names",
+    # other option ~ "base_names", # would check for base names, but only file, instead of object.
+    warn_conflicts == "default" ~ "object_names",
+    .default = "object_names"
+  )
+
+  # if exception, will check up
+
+  if (res == "object_names") {
+    # see if exceptions are needed.
+    # don't check for regexp if the original file name has less than min_n_char
+  }
+
+  res
 }
 
+## helpers for computing scope of renaming ---
 is_moving <- function(old, new) {
   fs::path_file(old) == fs::path_file(new)
+}
+
+is_short_file_name <- function(file, nchars) {
+  nchar(basename_remove_ext(file)) <= nchars
+}
+
+# verifies short and contains certain keywords
+is_generic_file_name <- function(file) {
+  generic_words <- c("change", "temp", "dat", "data")
+  regexp <- paste0(generic_words, collapse = "|")
+  file_name <- basename_remove_ext(file)
+  stringr::str_starts(file_name, regexp) &
+    is_short_file_name(file_name, nchars = 9)
+}
+
+is_image <- function(file) {
+  file_ext <- tolower(fs::path_ext(file))
+  file_ext %in% c("png", "jpg", "jpeg", "pdf", "svg")
 }
 
 is_adding_a_suffix <- function(old, new) {
@@ -246,13 +293,37 @@ is_adding_a_suffix <- function(old, new) {
   }
 
   shortest_char <- min(nchar(c(base_name_new, base_name_old))) - 1L
-  if (nchar(matches) >= max(4, shortest_char)) {
+  if (max(nchar(matches)) >= max(4, shortest_char)) {
     TRUE
   } else {
     FALSE
   }
 }
 
-basename_remove_ext <- function(x) {
-  fs::path_ext_remove(basename(x))
+## Prevent renaming if something is going on -----
+
+
+check_proper_renaming_condition <- function(old, new, overwrite, call = rlang::caller_env()) {
+  if (fs::is_dir(old) || fs::is_dir(new)) {
+    cli::cli_abort("Can't rename directories with this function See {.fn fs::dir_copy} and {.fn fs::dir_delete}.", call = call)
+  }
+  if (!fs::is_file(old)) {
+    cli::cli_abort("Can't rename {.file {old}} as it does not exist. Supply {.arg old} an existing file.", call = call)
+  }
+  if (fs::path_ext(old) != fs::path_ext(new)) {
+    cli::cli_abort(c(
+      "!" = "{.arg new} and {.arg old} must have the same file extension, not\\
+          {.val {fs::path_ext(old)}} and {.val {fs::path_ext(new)}}."
+    ), call = call)
+  }
+
+  if (fs::file_exists(new) && !overwrite) {
+    # FIXME maybe not fail while testing
+    cli::cli_abort(c(
+      "Can't rename file to {.val {new}}",
+      "!" = "{.arg new} already exists {.path {new}}.",
+      "i" = "Use {.code warn_conflicts = 'none'} to override."
+    ), call = call)
+  }
+  invisible()
 }

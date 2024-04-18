@@ -8,8 +8,9 @@ rename_files2(
   old,
   new,
   warn_conflicts = c("default", "all", "exact", "none"),
-  force = FALSE,
-  action = c("rename", "test")
+  overwrite = FALSE,
+  action = c("rename", "test"),
+  force = deprecated()
 )
 }
 \arguments{
@@ -17,15 +18,17 @@ rename_files2(
 
 \item{warn_conflicts}{One of
 \itemize{
-\item \code{"default"}: will be \code{"all"} if only moving directory, and \code{"all"} otherwise.
-\item \code{"all"} (stricter: if \code{old = "data/my-streets.csv"} will check for objects named \code{my_streets}, other files like \code{my-streets.R}, etc.),
+\item \code{"default"}: will be check more thoroughly depending on the situation. If only moving directory, and \code{"all"} otherwise.
+\item \code{"all"} (larger scope: if \code{old = "data/my-streets.csv|my_streets"} will check for objects named \code{my_streets}, other files like \code{my-streets.R}, etc.),
 \item \code{"exact"} will only search for \code{"data/my-streets.csv"} in documents
 \code{"none"} will not search for references in documents and will rename.
 }}
 
-\item{force}{Whether to force renaming if there are conflicts. Use \code{warn_conflicts = "none"}}
+\item{overwrite}{whether to overwrite \code{new} if it already exists. Be careful.}
 
 \item{action}{One of \code{"rename"} or \code{"test"}}
+
+\item{force}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Whether to force renaming if there are conflicts. Use \code{warn_conflicts = "none"}}
 }
 \value{
 \code{new} if renaming succeeded. Mostly called for its side-effects

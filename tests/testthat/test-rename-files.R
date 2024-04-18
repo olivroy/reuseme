@@ -33,7 +33,7 @@ describe("rename_files2()", {
   })
   it("is easier to test messages with no action", {
     expect_snapshot({
-      rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE, action = "test")
+      rename_files2("data/my-streets.csv", "data/my-roads.csv", overwrite = TRUE, action = "test")
     })
     # No change
     expect_false(fs::file_exists("data/my-roads.csv"))
@@ -42,7 +42,7 @@ describe("rename_files2()", {
 
   it("renames files if forced to do so", {
     expect_snapshot({
-      rename_files2("data/my-streets.csv", "data/my-roads.csv", force = TRUE)
+      rename_files2("data/my-streets.csv", "data/my-roads.csv", warn_conflicts = "none", overwrite = TRUE)
     })
     # changed
     expect_true(fs::file_exists("data/my-roads.csv"))
@@ -63,19 +63,40 @@ describe("rename_files2()", {
     })
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
+  it("can accept overridden preferences", {
+    expect_snapshot(error = FALSE, {
+      rename_files2("data/my-streets.csv", "data-raw/my-streets.csv", warn_conflicts = "all")
+    })
+    expect_true(fs::file_exists("data/my-streets.csv"))
+  })
   it("relaxes its conditions for figures", {
     rename_files2("data/my-king.png", "data/my-king2.png")
     expect_true(fs::file_exists("data/my-king2.png"))
   })
 })
 test_that("Helper files returns the expected input", {
-  expect_true(is_adding_a_suffix("streets.csv", "streets2.csv"))
-  expect_true(is_adding_a_suffix("aasa", "aasa2"))
+
+
+  expect_equal(scope_rename("streets.csv", "streets2.csv"), "file_names")
+  expect_equal(compute_conflicts_regex("streets.csv", "file_names"), "streets.csv")
+
+  expect_equal(scope_rename("R/a.R", "R/b.R"), "file_names")
+  expect_equal(compute_conflicts_regex("R/a.R", "file_names"), "R/a.R")
+
+  expect_snapshot(error = TRUE, compute_conflicts_regex("x", "unknown_strategy"))
   skip("Not ready")
   # there could be a my-streets-raw.csv that exists.
-  expect_equal(compute_conflicts_regex("my-streets.csv", "my-roads.csv"), "my-streets|my_streets")
-  expect_equal(compute_conflicts_regex("my-streets.csv", "data/my-streets.csv"), "my-streets.csv")
-  expect_equal(compute_conflicts_regex("data/my-streets.csv", "my-streets.csv"), "data/my-streets.csv")
+  expect_equal(compute_conflicts_regex("my-streets.csv", "object_names"), "my-streets|my_streets")
+  expect_equal(compute_conflicts_regex("my-streets.csv"), "my-streets.csv")
+  expect_equal(compute_conflicts_regex("data/my-streets.csv"), "data/my-streets.csv")
+})
 
-  expect_true(TRUE)
+test_that("file testing are working as expected", {
+  expect_true(is_adding_a_suffix("streets.csv", "streets2.csv"))
+  expect_true(is_adding_a_suffix("aasa", "aasa2"))
+  expect_true(is_short_file_name("R/12345.R", nchars = 5))
+  expect_true(is_moving("R/my.R", "data/my.R"))
+  expect_true(is_image("x.PNG"))
+  expect_true(is_generic_file_name("data1.xlsx"))
+  expect_false(is_generic_file_name("my-data.csv"))
 })

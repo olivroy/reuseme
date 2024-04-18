@@ -73,8 +73,8 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @param what Which file conflicts we talking about
 #' @param quiet A logical, informs where the occurrences are found. (Default, `FALSE`)
 #'
-#' @return `FALSE` if no occurrences were found. `TRUE` if non-existent files
-#'   are referenced
+#' @return Mostly called for its side-effects, but will return the number of matches
+#' (0 if no referenced files are problmatic)
 #' @export
 #' @keywords internal
 solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL) {
@@ -92,7 +92,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
   bullets_df <- bullets_df[grepl(regex, bullets_df$content), ]
 
   if (nrow(bullets_df) == 0) {
-    return(FALSE)
+    return(0)
   }
 
 
@@ -141,7 +141,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     )
   }
 
-  invisible(TRUE)
+  length(bullets)
 }
 
 # Helpers ----------------
