@@ -29,7 +29,7 @@
 #' A way to be less strict is to us
 #' @inheritParams usethis::rename_files
 #' @param overwrite whether to overwrite `new` if it already exists. Be careful.
-#' @param force `r lifecycle::badge('deprecated')` Whether to force renaming if there are conflicts. Use `warn_conflicts = "none"`
+#' @param force `r lifecycle::badge('deprecated')`  Use `warn_conflicts` instead of `force = TRUE`
 #' @param action One of `"rename"` or `"test"`
 #' @param warn_conflicts One of
 #' * `"default"`: will be check more thoroughly depending on the situation. If only moving directory, and `"all"` otherwise.
@@ -104,7 +104,7 @@ rename_files2 <- function(old,
       "!" = paste0("Found references to {.val ", old, "} in project"),
       i = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or \\
                   see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
-      if (!is_moving(old, new)) i <- "Also change object names to snake_case that follow the new file name."
+      if (!is_moving(old, new) || !is_adding_a_suffix(old, new)) i <- "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")
@@ -192,6 +192,7 @@ rename_file_action <- function(new, old, strategy, action, verbose) {
   }
 }
 
+# the order of implementation is from the least strict to most strict
 compute_conflicts_regex <- function(file, renaming_strategy) {
   if (renaming_strategy == "free_for_all") {
     return("impossible to match nowhere")
@@ -236,14 +237,15 @@ scope_rename <- function(old, new, warn_conflicts = "default") {
     warn_conflicts == "none" ~ "free_for_all",
     warn_conflicts == "exact" ~ "file_names", # be careful with this
     warn_conflicts == "all" ~ "object_names",
+    #  if moving file
     is_moving(old, new) ~ "file_names",
-    is_image(old) ~ "file_names",
+    is_adding_a_suffix(old, new) ~ "file_names", # adding  suffix adds precision usually.
+    is_image(old) ~ "file_names", # only check full file name
     is_generic_file_name(old) ~ "file_names",
-    is_adding_a_suffix(old, new) ~ "file_names", # FIXME is it correct? like moving data to data-raw
     is_short_file_name(old, 5L) ~ "file_names",
     is_generic_file_name(old) ~ "file_names",
     # other option ~ "base_names", # would check for base names, but only file, instead of object.
-    warn_conflicts == "default" ~ "object_names",
+    warn_conflicts == "default" ~ "object_names", # strict
     .default = "base_names" # will probably change this as this gives too many matches...
   )
 
@@ -268,7 +270,7 @@ is_short_file_name <- function(file, nchars) {
 
 # verifies short and contains certain keywords
 is_generic_file_name <- function(file) {
-  generic_words <- c("change", "temp", "dat", "data")
+  generic_words <- c("change", "temp", "dat", "data", "clipboard")
   regexp <- paste0(generic_words, collapse = "|")
   file_name <- basename_remove_ext(file)
   stringr::str_starts(file_name, regexp) &

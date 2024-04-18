@@ -168,9 +168,11 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   change_project_command <- "[{proj_chr}](reuseme::proj_switch('{proj_chr}'))"
 
   bullets <- if (is_active_proj) {
-    "Use with quarto, Rmd (source mode) with"
+    if (length(fs::dir_ls(".", regexp = "qmd|Rmd")) > 0) {
+      "Use with Quarto, Rmd (source mode) with"
+    }
   } else {
-    "Use with quarto, Rmd (source mode) in {.run [{proj_chr}](reuseme::proj_switch('{proj_chr}'))}"
+    "Use with Quarto, Rmd (source mode) in {.run [{proj_chr}](reuseme::proj_switch('{proj_chr}'))}"
   }
 
   if (is_quarto_blog(proj_path)) {
@@ -191,7 +193,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
     bullets <- c(
       bullets,
       "i" = "Consider using a more precise name",
-      "reuseme::rename_files2('{img_path_chr}', '{img_dir_chr}/better-name.png')",
+      "reuseme::rename_files2('{img_path_chr}', '{img_dir_chr}/better-name.png', warn_conflicts = 'none')",
       "i" = "See {.help reuseme::rename_files2} for details."
     )
   }

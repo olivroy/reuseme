@@ -108,5 +108,6 @@ test_that("force and action are deprecated", {
   unlink(file2)
   lifecycle::expect_deprecated(
     rename_files2(file, file2, force = TRUE)
-  )
+  ) |>
+    expect_message("Renamed .+ by force")
 })

@@ -28,7 +28,7 @@ rename_files2(
 
 \item{action}{One of \code{"rename"} or \code{"test"}}
 
-\item{force}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Whether to force renaming if there are conflicts. Use \code{warn_conflicts = "none"}}
+\item{force}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}  Use \code{warn_conflicts} instead of \code{force = TRUE}}
 }
 \value{
 \code{new} if renaming succeeded. Mostly called for its side-effects
