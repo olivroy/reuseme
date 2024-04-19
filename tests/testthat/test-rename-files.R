@@ -10,10 +10,8 @@ describe("rename_files2()", {
     tmp_dir,
     c(
     "data/my-streets.csv", "data/my-highways.csv",
-    "data/my-king.png", "R/a.R"
+    "data/my-king.png", "R/a.R", "my-streets-raw.csv"
   ))
-  # TODO when ready add test for the presence of my-streets-raw.csv
-  # fs::file_create("my-streets-raw.csv")
   fs::file_copy(og_file, fs::path(tmp_dir, "R/my-analysis.R"))
 
   it("prevents file renaming if dangerous", {
