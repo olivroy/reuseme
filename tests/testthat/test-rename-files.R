@@ -9,9 +9,10 @@ describe("rename_files2()", {
   fs::file_create(
     tmp_dir,
     c(
-    "data/my-streets.csv", "data/my-highways.csv",
-    "data/my-king.png", "R/a.R", "my-streets-raw.csv"
-  ))
+      "data/my-streets.csv", "data/my-highways.csv",
+      "data/my-king.png", "R/a.R", "my-streets-raw.csv"
+    )
+  )
   fs::file_copy(og_file, fs::path(tmp_dir, "R/my-analysis.R"))
 
   it("prevents file renaming if dangerous", {

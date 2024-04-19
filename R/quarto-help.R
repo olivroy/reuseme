@@ -10,9 +10,9 @@
 #'
 #' @examplesIf rlang::is_installed("gt")
 #' quarto_help() |>
-#'  tibble::enframe() |>
-#'  gt::gt() |>
-#'  gt::fmt_url(value)
+#'   tibble::enframe() |>
+#'   gt::gt() |>
+#'   gt::fmt_url(value)
 quarto_help <- function(subject = NULL) {
   # need to update snapshot as we enhance this!
   links_help <- c(
