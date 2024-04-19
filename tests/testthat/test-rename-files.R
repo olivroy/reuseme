@@ -1,20 +1,23 @@
 describe("rename_files2()", {
-  og_file <- fs::path_real(test_path("ref", "my-analysis.R"))
+  og_file <- fs::path_real(test_path("_ref", "my-analysis.R"))
   # temp dir + change working directory
   tmp_dir <- withr::local_tempdir()
-  withr::local_dir(new = tmp_dir)
   fs::dir_create(
+    tmp_dir,
     c("data", "R", "data-raw")
   )
-  fs::file_create(c(
+  fs::file_create(
+    tmp_dir,
+    c(
     "data/my-streets.csv", "data/my-highways.csv",
     "data/my-king.png", "R/a.R"
   ))
   # TODO when ready add test for the presence of my-streets-raw.csv
   # fs::file_create("my-streets-raw.csv")
-  fs::file_copy(og_file, "R/my-analysis.R")
+  fs::file_copy(og_file, fs::path(tmp_dir, "R/my-analysis.R"))
 
   it("prevents file renaming if dangerous", {
+    withr::local_dir(new = tmp_dir)
     expect_error(
       rename_files2("data/my-streets.csv", "data/my-roads"),
       "extension"
@@ -29,6 +32,7 @@ describe("rename_files2()", {
     )
   })
   it("prevents file renaming if conflicts", {
+    withr::local_dir(new = tmp_dir)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv")
     })
@@ -37,6 +41,7 @@ describe("rename_files2()", {
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
   it("is easier to test messages with no action", {
+    withr::local_dir(new = tmp_dir)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", overwrite = TRUE, action = "test")
     })
@@ -46,6 +51,7 @@ describe("rename_files2()", {
   })
 
   it("renames files if forced to do so", {
+    withr::local_dir(new = tmp_dir)
     expect_snapshot({
       rename_files2("data/my-streets.csv", "data/my-roads.csv", warn_conflicts = "none", overwrite = TRUE)
     })
@@ -55,12 +61,14 @@ describe("rename_files2()", {
   })
 
   it("doesn't check for references if file name is short", {
+    withr::local_dir(new = tmp_dir)
     expect_snapshot(
       rename_files2("R/a.R", "R/b.R")
     )
     expect_true(fs::file_exists("R/b.R"))
   })
   it("priorizes references if name is generic or widely used in files", {
+    withr::local_dir(new = tmp_dir)
     fs::file_move("data/my-roads.csv", "data/my-streets.csv")
     expect_true(fs::file_exists("data/my-streets.csv"))
     expect_snapshot(error = FALSE, {
@@ -69,14 +77,24 @@ describe("rename_files2()", {
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
   it("can accept overridden preferences", {
+    withr::local_dir(new = tmp_dir)
     expect_snapshot(error = FALSE, {
       rename_files2("data/my-streets.csv", "data-raw/my-streets.csv", warn_conflicts = "all")
     })
     expect_true(fs::file_exists("data/my-streets.csv"))
   })
   it("relaxes its conditions for figures", {
+    withr::local_dir(new = tmp_dir)
     rename_files2("data/my-king.png", "data/my-king2.png")
     expect_true(fs::file_exists("data/my-king2.png"))
+  })
+
+  it("calls check_referenced_files()", {
+    withr::local_options(cli.hyperlinks = FALSE, cli.width = Inf)
+    expect_snapshot(
+      check_referenced_files(path = tmp_dir),
+      transform = ~ gsub(" in.+$", " in some locations.", .x)
+    )
   })
 })
 test_that("Helper files returns the expected input", {

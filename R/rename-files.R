@@ -61,7 +61,9 @@ rename_files2 <- function(old,
    if (isTRUE(force)) {
       warn_conflicts <- "none"
       overwrite <- TRUE
-    }
+   }
+    # force is now inactive! force = FALSE meant nothing
+    force <- NULL
   }
 
   # `overwrite` should only be used to overwrite a file, probably should rename to overwrite.
@@ -78,7 +80,7 @@ rename_files2 <- function(old,
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
       i = "See {.fn usethis::use_git} for help."
-    ))
+    ), .frequency = "regularly", .frequency_id = "gitproject")
   }
   # After here, we start doing some renaming real situations---
   renaming_strategy <- scope_rename(old, new, warn_conflicts)
@@ -170,7 +172,7 @@ rename_file_action <- function(new, old, strategy, action, verbose) {
   if (tools::file_ext(new) %in% c("png")) {
     cli::cli_inform(
       c(
-        "Use in markdown/quarto docs (source mode) with",
+        "Use in markdown/Quarto docs (source mode) with",
         '![]({new}){{fig-alt="" width="70%"}}'
       )
     )

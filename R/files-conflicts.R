@@ -145,7 +145,7 @@ get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
-  path |>
+  files |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files

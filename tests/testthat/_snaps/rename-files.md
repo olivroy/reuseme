@@ -64,6 +64,14 @@
     Output
       [1] "data-raw/my-streets.csv"
 
+# rename_files2(): calls check_referenced_files()
+
+    Code
+      check_referenced_files(path = tmp_dir)
+    Message
+      Check in some locations.
+      i Found 2 references to non-existent files in some locations.
+
 # Helper files returns the expected input
 
     Code
