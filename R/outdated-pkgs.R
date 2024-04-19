@@ -20,8 +20,8 @@ outdated_pkgs <- function(type = c("binary", "source")) {
   type <- rlang::arg_match(type)
   if (rlang::is_installed("curl")) {
     default_repo <- getOption("repos")[[1]]
-    default_repo <- stringr::str_remove(default_repo, "/$")
-    default_repo <- stringr::str_remove(default_repo, "https://")
+    default_repo <- sub("/$", "", default_repo)
+    default_repo <- sub("https://", "", default_repo, fixed = TRUE)
 
     access_repo <- tryCatch(curl::nslookup(default_repo),
       error = function(e) {

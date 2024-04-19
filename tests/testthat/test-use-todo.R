@@ -1,6 +1,6 @@
 test_that("Marking TODO as done detects tags", {
   expect_equal(
-    extract_tag_in_text(c("TODO I am crazy")),
+    extract_tag_in_text("TODO I am crazy"),
     "TODO"
   )
   expect_error(

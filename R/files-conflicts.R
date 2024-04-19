@@ -95,8 +95,8 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     return(0)
   }
 
-
-  if (!quiet) {
+  verbose <- !quiet
+  if (verbose) {
     lines_match <- bullets_df$line_number
     # Derive column match
     start_end_pos <- stringr::str_locate(bullets_df$content, regex)

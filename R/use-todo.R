@@ -37,13 +37,13 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   # Check how reprex do it.
   proj_is_a_file <- fs::is_file(proj) && !fs::is_dir(proj)
 
-  if (!proj_is_a_file) {
+  if (proj_is_a_file) {
+    path_todo <- proj
+  } else {
     # compute full path of todo
     todo_pkg <- compute_path_todo(todo, proj)
     path_todo <- todo_pkg$path_todo
     todo <- todo_pkg$todo
-  } else {
-    path_todo <- proj
   }
 
   if (code) {
@@ -91,8 +91,8 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
 
   # Special case for issues (probably need to opt out at some point)
   # patch that will likely not work for many cases.
-  if (grepl(pattern = "issues", x = regexp)) {
-    regexp <- stringr::str_replace(regexp, "issues", "#")
+  if (grepl(pattern = "issues", x = regexp, fixed = TRUE)) {
+    regexp <- sub("issues", "#", regexp, fixed = TRUE)
     # regexp <- stringr::str_replace(regexp, "([^\\d]+)(\\d+)", "\\1#\\2")
   }
 

@@ -100,12 +100,13 @@ rename_files2 <- function(old,
 
 
   if (renaming_strategy != "free_for_all") {
+    suggest_snake_case_change <- !is_moving(old, new) || !is_adding_a_suffix(old, new)
     extra_msg_if_file_conflict <- c(
-      x = "Did not rename files!",
+      "x" = "Did not rename files!",
       "!" = paste0("Found references to {.val ", old, "} in project"),
-      i = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or \\
+      "i" = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or \\
                   see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
-      if (!is_moving(old, new) || !is_adding_a_suffix(old, new)) i <- "Also change object names to snake_case that follow the new file name."
+      if (suggest_snake_case_change) "i" = "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")

@@ -178,6 +178,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   if (is_quarto_blog(proj_path)) {
     bullets <- c(
       bullets,
+      # cli bug r-lib/cli#683
       '![]({fs::path_file(img_path_chr)}){{fig-alt="" width="70%"}}'
     )
   } else {
