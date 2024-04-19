@@ -64,6 +64,15 @@
     Output
       [1] "data-raw/my-streets.csv"
 
+# rename_files2(): relaxes its conditions for figures
+
+    Code
+      rename_files2("data/my-king.png", "data/my-king2.png")
+    Message
+      Use in markdown/Quarto docs (source mode) with
+      ![](data/my-king2.png){fig-alt="" width="70%"}
+      v Renamed file to 'data/my-king2.png' without issue.
+
 # rename_files2(): calls check_referenced_files()
 
     Code

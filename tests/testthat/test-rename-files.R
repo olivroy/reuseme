@@ -84,7 +84,9 @@ describe("rename_files2()", {
   })
   it("relaxes its conditions for figures", {
     withr::local_dir(new = tmp_dir)
-    rename_files2("data/my-king.png", "data/my-king2.png")
+    expect_snapshot(
+      rename_files2("data/my-king.png", "data/my-king2.png")
+    )
     expect_true(fs::file_exists("data/my-king2.png"))
   })
 
