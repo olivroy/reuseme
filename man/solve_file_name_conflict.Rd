@@ -27,8 +27,8 @@ solve_file_name_conflict(
 \item{what}{Which file conflicts we talking about}
 }
 \value{
-\code{FALSE} if no occurrences were found. \code{TRUE} if non-existent files
-are referenced
+Mostly called for its side-effects, but will return the number of matches
+(0 if no referenced files are problmatic)
 }
 \description{
 If \code{quiet = FALSE} (default) will give a hint of where the file is referenced.

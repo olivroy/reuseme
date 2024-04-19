@@ -73,8 +73,8 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @param what Which file conflicts we talking about
 #' @param quiet A logical, informs where the occurrences are found. (Default, `FALSE`)
 #'
-#' @return `FALSE` if no occurrences were found. `TRUE` if non-existent files
-#'   are referenced
+#' @return Mostly called for its side-effects, but will return the number of matches
+#' (0 if no referenced files are problmatic)
 #' @export
 #' @keywords internal
 solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL) {
@@ -92,7 +92,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
   bullets_df <- bullets_df[grepl(regex, bullets_df$content), ]
 
   if (nrow(bullets_df) == 0) {
-    return(FALSE)
+    return(0)
   }
 
 
@@ -109,24 +109,19 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
       "{{.file {bullets_df$file}:{lines_match}:{cols_match}}}"
     )
 
-    if (length(bullets) > 20) {
-      # display_msg <- cli::format_inline("[10 first references only]")
-      # Showing First ten to avoid screen overflow.
-      # bullets_to_display <- cli::ansi_collapse(bullets[seq_len(10)])
-    } else {
-      # display_msg <- NULL
-
-      # bullets_to_display <- cli::ansi_collapse(bullets)
-    }
-
     # Will truncate 20 (revert up if you don't like)
     display_msg <- NULL
     bullets_to_display <- cli::ansi_collapse(bullets)
+    f_inform <- if (length(bullets) > 20) {
+      cli::cli_warn
+    } else {
+      cli::cli_inform
+    }
     # Remove duplicated Found x references
     which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = TRUE)
     # possibly just move up our
     # extra_msg[i] <-
-    cli::cli_bullets(c(
+    f_inform(c(
       extra_msg,
       "i" = paste0("Found {length(bullets)} reference{?s} ", what, " in ", bullets_to_display, "."),
       display_msg
@@ -141,7 +136,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     )
   }
 
-  invisible(TRUE)
+  length(bullets)
 }
 
 # Helpers ----------------
@@ -150,7 +145,7 @@ get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
-  path |>
+  files |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files

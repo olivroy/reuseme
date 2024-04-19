@@ -3,5 +3,9 @@ new_dat <- my_streets |>
   dplyr::mutate(
     x = 2**2
   )
+
 # my-streets are everywhere
 utils::write.csv(new_dat, "data/my-streets-clean.csv", row.names = FALSE)
+
+file.path("data", "my-streets.csv") # TODO eventually detect this
+fs::path("data", "my-streets", ext = "csv")
