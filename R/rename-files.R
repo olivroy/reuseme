@@ -71,8 +71,7 @@ rename_files2 <- function(old,
 
   # renaming should only happen in tests or interactive sessions
   if (action == "rename" && !(rlang::is_interactive() || identical(Sys.getenv("TESTTHAT"), "true"))) {
-    cli::cli_inform(c("Should only rename files in interactive sessions (or in tests)"))
-    return(invisible(FALSE))
+    cli::cli_abort(c("Should only rename files in interactive sessions (or in tests)"))
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))

@@ -19,8 +19,8 @@ accessible from R console.
 \examples{
 \dontshow{if (rlang::is_installed("gt")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 quarto_help() |>
- tibble::enframe() |>
- gt::gt() |>
- gt::fmt_url(value)
+  tibble::enframe() |>
+  gt::gt() |>
+  gt::fmt_url(value)
 \dontshow{\}) # examplesIf}
 }
