@@ -8,7 +8,8 @@
 #'
 #' @return A formatted linked issue to GitHub issue
 #' @export
-#'
+#' @keywords internal
+#' @family inline markup internal helpers
 #' @examples
 #' link_issue(c("We really need rstudio/gt#1469 to be fixed.")) |> cli::cli_bullets()
 link_issue <- function(x) {
