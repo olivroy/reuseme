@@ -26,7 +26,7 @@
 #'
 #' @returns A list / tree of the file outline
 #' @name outline
-#' @examples
+#' @examplesIf interactive()
 #' file_outline()
 #' proj_outline()
 #' dir_outline()
@@ -327,8 +327,8 @@ file_outline <- function(regex_outline = NULL,
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(regex_outline = NULL, proj = usethis::proj_get(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
-  is_active_proj <- identical(proj, usethis::proj_get())
+proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+  is_active_proj <- identical(proj, proj_get2())
 
   if (is_active_proj && !is.null(regex_outline) && regex_outline %in% names(reuseme::proj_list())) {
     # only throw warning if proj is supplied
@@ -368,7 +368,7 @@ proj_outline <- function(regex_outline = NULL, proj = usethis::proj_get(), work_
     cli::cli_abort("Internal errors due to path processing. Maybe use fs's path processing ")
   }
 
-  is_active_proj <- identical(fs::path(proj_dir), usethis::proj_get())
+  is_active_proj <- identical(fs::path(proj_dir), proj_get2())
   if (!is_active_proj) {
     # Add an outline that enables switching projects if searching outside
     cli::cli_h1(paste0("{.run [", proj, "](reuseme::proj_switch('", proj, "'))}"))

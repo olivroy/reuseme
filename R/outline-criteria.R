@@ -5,7 +5,7 @@
 #' * is_roxygen_line
 #' * is_tab_title
 #'
-
+#' @noRd
 o_is_roxygen_comment <- function(x, file_ext = NULL) {
 
   if (!is.null(file_ext)) {

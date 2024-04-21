@@ -21,7 +21,7 @@ file_outline(
 
 proj_outline(
   regex_outline = NULL,
-  proj = usethis::proj_get(),
+  proj = proj_get2(),
   work_only = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,

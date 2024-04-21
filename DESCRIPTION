@@ -19,6 +19,7 @@ Imports:
     dplyr (>= 1.1.1),
     fs,
     glue,
+    kit,
     lifecycle,
     purrr,
     rlang (>= 1.1.0),
