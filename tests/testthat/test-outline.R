@@ -10,7 +10,7 @@ test_that("Other arguments work", {
   my_test_file <- test_path("_ref", "my-analysis.R")
   rlang::local_interactive(TRUE)
   expect_snapshot(
-    error = TRUE,
-    file_outline("mystreets", my_test_file, alpha = TRUE, work_only = FALSE)
+    error = F,
+    file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
   )
 })

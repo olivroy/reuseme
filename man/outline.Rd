@@ -9,7 +9,7 @@
 \usage{
 file_outline(
   regex_outline = NULL,
-  path = active_document(),
+  path = active_rs_doc(),
   work_only = TRUE,
   alpha = FALSE,
   dir_common = NULL,

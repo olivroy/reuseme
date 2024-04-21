@@ -14,7 +14,7 @@
 # Other arguments work
 
     Code
-      file_outline("streets", my_test_file, alpha = TRUE, work_only = FALSE)
+      file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
       -- `_ref/my-analysis.R` 🦐 

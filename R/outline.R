@@ -37,10 +37,10 @@ file_outline <- function(regex_outline = NULL,
                          path = active_rs_doc(),
                          work_only = TRUE,
                          alpha = FALSE,
-                         dir_common = NULL, # WORK maybe width is no longer needed with 2023.12
+                         dir_common = NULL,
                          print_todo = TRUE,
                          recent_only = FALSE,
-                         width = cli::console_width(), # TODO put this in ... when I understand {.fn rlang::check_dots_used}
+                         width = cli::console_width(), # TODO put this in ... when I understand {.fn rlang::check_dots_used} as it may not be needed with 2023.12
                          n_colors = NULL) {
   # https://github.com/r-lib/cli/issues/607
   # Make output faster with cli!
@@ -108,7 +108,7 @@ file_outline <- function(regex_outline = NULL,
   # Handle differently if in showing work items only
   if (work_only) {
     # Detect special tag for work item
-    should_show_only_work_items <- any(grepl("# WORK", file_content$content))
+    should_show_only_work_items <- any(o_is_work_item(file_content$content))
     # Check if there are work items in files
   } else {
     should_show_only_work_items <- FALSE
@@ -136,6 +136,9 @@ file_outline <- function(regex_outline = NULL,
       # maybe force no leading space.
       is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
         !stringr::str_detect(content, "(warn|abort|div)|c\\(\\s?$") &
+        !stringr::str_detect(content, "paste") &
+        !stringr::str_detect(file, "outline.R") &
+        !stringr::str_detect(file, "_snaps") &
         !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
       is_cli_info = is_cli_info & !file_with_many_functions,
       is_doc_title = stringr::str_detect(content, "title\\:"),
@@ -151,13 +154,10 @@ file_outline <- function(regex_outline = NULL,
         .default = is_chunk_cap
       ),
       is_chunk_cap_next = is_chunk_cap,
-      is_test_name = is_test_file & stringr::str_detect(content, "test_that\\([\"'].+[\"']"),
+      is_test_name = is_test_file & o_is_test_that(content),
       is_section_title = stringr::str_detect(content, "^\\#+\\s"),
       is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
-      is_todo_fixme = print_todo & stringr::str_detect(content, "TODO[^\\.]|FIXME|BOOK|WORK[^I``]") &
-        !stringr::str_detect(content, "str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-        !stringr::str_detect(content, "[:upper:]\""), # eliminate false positives
-      # before there was also [^\"]
+      is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
       is_section_title_source = stringr::str_detect(content, "\\#+\\s") & stringr::str_detect(content, "[\\-\\=]{3,}") & !stringr::str_detect(content, "\\@param") & stringr::str_starts(content, "\\s*\"", negate = TRUE),
       before_and_after_empty = !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
       n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
@@ -200,7 +200,7 @@ file_outline <- function(regex_outline = NULL,
       outline_el = stringr::str_remove(outline_el, "\\-{3,}"),
       is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
       important = dplyr::case_when(
-        is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle ~ FALSE,
+        is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ FALSE,
         .default = TRUE
       )
     )
@@ -218,7 +218,8 @@ file_outline <- function(regex_outline = NULL,
           outline_el,
           "- {.run [Done{cli::symbol$tick}?](reuseme::mark_todo_as_complete(",
           # Removed ending dot. (possibly will fail with older versions)
-          line_id, ", '", (file), "', '", stringr::str_trim(stringr::str_sub(stringr::str_replace_all(outline_el, "[:punct:]", rs_version), start = -15L), side = "right"), "'))}"
+          line_id, ", '", (file), "', '", cli::ansi_strip(stringr::str_trim(stringr::str_sub(stringr::str_replace_all(outline_el, "[:punct:]", "."), start = -15L), side = "right")), "'))}",
+          rs_version
         ),
         .default = outline_el
       ),
@@ -252,7 +253,8 @@ file_outline <- function(regex_outline = NULL,
   }
 
   custom_styling <- c(
-    "(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.strong \\1\\} ", # put/work todo as emphasis
+    # 500 is the max path length.
+    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.strong \\2\\} ",  # put/work todo as emphasis
     "\\{+gt\\}+" = "{{gt}}" # little patch, but should look into how escape_markup would better work.
   )
   # browser()
@@ -269,11 +271,12 @@ file_outline <- function(regex_outline = NULL,
   }
 
   summary_links_files <- file_sections |>
-    dplyr::mutate(link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)) |>
+    dplyr::mutate(
+      link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)) |>
     dplyr::group_by(file_hl, file) |>
     # dplyr::summarise(link = list(link_rs_api)) # reinstate iff other is too slow.
     dplyr::summarise(link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))), .groups = "drop")
-  # At the moment, especially `active_document()`, we are relying on inconsistencies by RStudio.
+  # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
   in_vscode <- FALSE # to do create it.
   if (in_vscode) {
     which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
@@ -308,11 +311,13 @@ file_outline <- function(regex_outline = NULL,
     if (recent_only) {
       if (i %in% is_recently_modified) {
         purrr::walk(dat[[i]], \(y) {
+          y <- escape_markup(y)
           cat(cli::format_inline(y), sep = "\n")
         })
       }
     } else {
       purrr::walk(dat[[i]], \(y) {
+        y <- escape_markup(y)
         cat(cli::format_inline(y), sep = "\n")
       })
     }
@@ -392,7 +397,9 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     recurse = TRUE
   )
   file_list_to_outline <- fs::path_filter(file_list_to_outline, regexp = "vignette-dump", invert = TRUE)
-
+  if (any(grepl("README.Rmd", file_list_to_outline))) {
+    file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
+  }
   if (dir_tree) {
     cli::cli_h2("Here are the non-R files of {.file {path}}")
 

@@ -10,6 +10,11 @@ test_that("escape_markup() works", {
   input <- "{.href [cran]({cran_home})}"
   exp_str <- "<cran>"
   expect_equal(escape_markup(input), exp_str)
+  skip("Not ready")
+  input <- "{fn}({arg})"
+  exp_str <- "fn({{arg}})"
+  expect_equal(escape_markup(input), exp_str)
+  escape_markup("Marking {.code {line_content}} as done! ")
 })
 
 test_that("is_markup_okay() works", {

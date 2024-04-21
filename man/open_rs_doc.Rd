@@ -23,6 +23,12 @@ Invisibly returns the document id
 Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
 If the file could not be opened, a clickable hyperlink is displayed.
 }
+\details{
+\itemize{
+\item \code{active_rs_doc()} is a wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentPath()}} that handles
+unsaved files gracefully
+}
+}
 \examples{
 if (FALSE) {
   # open the fictious file.R at line 5
