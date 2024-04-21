@@ -102,7 +102,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     start_end_pos <- stringr::str_locate(bullets_df$content, regex)
     cols_match <- dplyr::coalesce(
       start_end_pos[, "start"] - 1L,
-      0L
+      1L
     )
     # Create hyperlinks from lines and columns
     bullets <- stringr::str_glue(

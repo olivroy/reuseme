@@ -7,6 +7,9 @@ test_that("escape_markup() works", {
   input <- "multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}"
   exp_str <- "multi problems {{gt}} to {{gt}} to {.file gt} to {.file {.url gt}}"
   expect_equal(escape_markup(input), exp_str)
+  input <- "{.href [cran]({cran_home})}"
+  exp_str <- "<cran>"
+  expect_equal(escape_markup(input), exp_str)
 })
 
 test_that("is_markup_okay() works", {

@@ -23,7 +23,7 @@ escape_markup <- function(x) {
   }
 
   is_markup_referring_to_local_variable <-
-    is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+\\s\\{")
+    is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+\\s\\{|\\(\\{.+\\}\\)")
   is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !is_markup_referring_to_local_variable
 
   if (all(is_markup_okay) && !any(is_markup_referring_to_local_variable)) {
@@ -37,6 +37,11 @@ escape_markup <- function(x) {
     #       =   {.file {}}
     pattern = "(\\{\\.[:alpha:]+\\s\\{)([:alpha:]+)\\}\\}",
     replacement = "\\1.url \\2}}"
+  )
+  x <- stringr::str_replace_all(
+    x,
+    pattern = "\\{\\.href\\s\\[(.+)\\]\\(\\{.+\\}\\)\\}",
+    "<\\1>"
   )
   # possibly this could be word characters?
   x <- stringr::str_replace_all(
@@ -70,7 +75,8 @@ escape_markup <- function(x) {
 #' is_markup_okay("{.file {gt}}")
 is_markup_okay <- function(x) {
   # no match of single { or }
-  stringr::str_detect(x, pattern = "(?<!\\{)\\{[:alpha:]+\\}(?!\\{)", negate = TRUE)
+  stringr::str_detect(x, pattern = "(?<!\\{)\\{[:alpha:]+\\}(?!\\{)", negate = TRUE) &
+    stringr::str_detect(x, pattern = "\\]\\(\\{.+\\}\\)\\}", negate = TRUE)
 }
 
 # from cli
