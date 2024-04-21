@@ -102,8 +102,7 @@ file_outline <- function(regex_outline = NULL,
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-
-  in_active_project <- tryCatch(identical(usethis::proj_get(), dir_common), error = function(e) FALSE)
+  suppressMessages(in_active_project <- tryCatch(identical(usethis::proj_get(), dir_common), error = function(e) FALSE))
   # After this point we have validated that paths exist.
 
   # Handle differently if in showing work items only
@@ -124,7 +123,7 @@ file_outline <- function(regex_outline = NULL,
     regex_outline <- regex_outline %||% ".+"
   }
 
-  rlang:::check_string(regex_outline, arg = "You may have specified regex Internal error")
+  check_string(regex_outline, arg = "You may have specified regex Internal error")
 
   file_sections0 <- file_content |>
     dplyr::mutate(
@@ -248,7 +247,8 @@ file_outline <- function(regex_outline = NULL,
     dplyr::filter(tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
 
   if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
-    cli::cli_abort("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}.")
+    msg <- "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}."
+    cli::cli_abort(msg)
   }
 
   custom_styling <- c(
