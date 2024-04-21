@@ -34,7 +34,7 @@ NULL
 #' @export
 #' @rdname outline
 file_outline <- function(regex_outline = NULL,
-                         path = active_document(),
+                         path = active_rs_doc(),
                          work_only = TRUE,
                          alpha = FALSE,
                          dir_common = NULL, # WORK maybe width is no longer needed with 2023.12
