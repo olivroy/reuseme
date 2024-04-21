@@ -69,7 +69,8 @@ escape_markup <- function(x) {
 #' is_markup_okay("{gt}")
 #' is_markup_okay("{.file {gt}}")
 is_markup_okay <- function(x) {
-  stringr::str_detect(x, pattern = "(?<!\\{)\\{[:alpha:]+\\}")
+  # no match of single { or }
+  stringr::str_detect(x, pattern = "(?<!\\{)\\{[:alpha:]+\\}(?!\\{)", negate = TRUE)
 }
 
 # from cli

@@ -11,5 +11,8 @@ test_that("escape_markup() works", {
 
 test_that("is_markup_okay() works", {
   expect_false(is_markup_okay("{gt}"))
+  expect_true(is_markup_okay("{{gt}}"))
+  expect_false(is_markup_okay("{.file {gt}}"))
+  expect_true(is_markup_okay("{.file x}"))
 })
 
