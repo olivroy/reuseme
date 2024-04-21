@@ -22,7 +22,7 @@ Writes a file with corrections, and returns the new line
 content invisibly.
 }
 \description{
-Function meant to be wrapped as \code{{.run}} hyperlinks with \code{file_outline()}.
+Function meant to be wrapped as \code{{.run}} hyperlinks with \code{\link[=file_outline]{file_outline()}}.
 It basically removes a line from a file.
 }
 \keyword{internal}

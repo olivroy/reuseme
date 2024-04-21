@@ -62,7 +62,7 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 
 #' Remove a TODO/WORK/FIXME item from a file
 #'
-#' Function meant to be wrapped as `{.run}` hyperlinks with `file_outline()`.
+#' Function meant to be wrapped as `{.run}` hyperlinks with [file_outline()].
 #' It basically removes a line from a file.
 #'
 #' @param line_id The line number (a single integer)
