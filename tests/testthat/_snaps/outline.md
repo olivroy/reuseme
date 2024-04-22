@@ -4,7 +4,7 @@
       file_outline(path = my_test_file)
     Message
       
-      -- `_ref/my-analysis.R` 🦐 
+      -- `ref/my-analysis.R` 🦐 
     Output
       `i` Read my streets data
       `i` Write my streets
@@ -17,7 +17,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `_ref/my-analysis.R` 🦐 
+      -- `ref/my-analysis.R` 🦐 
     Output
       `i` Read my streets data
       `i` Write my streets
