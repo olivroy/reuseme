@@ -197,7 +197,7 @@ file_outline <- function(regex_outline = NULL,
         is_chunk_cap_next ~ stringr::str_remove(content, "\\s?\\#\\|\\s+"),
         is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
         is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
-        is_doc_title ~ stringr::str_remove_all(content, "title\\:\\s?|\"|\\#\\|\\s?"),
+        is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
         is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+"), # strip cross-refs.
         .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[\\-\\=]{4,}")
       ),
@@ -307,9 +307,9 @@ file_outline <- function(regex_outline = NULL,
       # may decide to just color the name after all
       # was cli::bg_br_green("*")
       # Une crevette
-      cli::cli_h3(c(names(dat)[[i]], " ", cli::style_no_blurred("\U0001f990")))
+      cli::cli_h3(c(cli::col_blue(names(dat)[[i]]), " ", cli::style_no_blurred("\U0001f990")))
     } else {
-      cli::cli_h3(names(dat)[[i]])
+      cli::cli_h3(cli::col_blue(names(dat)[[i]]))
     }
 
 
