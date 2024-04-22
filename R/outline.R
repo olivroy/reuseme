@@ -27,7 +27,7 @@
 #' @param width Width (internal)
 #' @param n_colors Number colors (Internal)
 #'
-#' @returns A list / tree of the file outline
+#' @returns A data.frame that contains the information.
 #' @name outline
 #' @examplesIf interactive()
 #' file_outline()
@@ -329,6 +329,7 @@ file_outline <- function(regex_outline = NULL,
   }
 
   # rm(a_useles_value)
+  invisible(file_sections)
 }
 #' @rdname outline
 #' @export

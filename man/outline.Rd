@@ -62,7 +62,7 @@ If \code{FALSE}, will print a less verbose output with sections.}
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}
 }
 \value{
-A list / tree of the file outline
+A data.frame that contains the information.
 }
 \description{
 This will fail if you are trying to map an unsaved file.
