@@ -35,6 +35,7 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
   invisible(doc_id)
 }
 
+#' @name open_rs_doc
 #' @export
 active_rs_doc <- function() {
   if (!rstudioapi::isAvailable()) {

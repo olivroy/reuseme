@@ -51,6 +51,12 @@ dir_outline(
 \item{print_todo}{Should include TODOs in the file outline?
 If \code{FALSE}, will print a less verbose output with sections.}
 
+\item{recent_only}{Show outline for recnet files}
+
+\item{width}{Width (internal)}
+
+\item{n_colors}{Number colors (Internal)}
+
 \item{proj}{The project name (See \code{\link[=proj_list]{proj_list()}})}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}

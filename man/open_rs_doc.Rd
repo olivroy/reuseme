@@ -2,9 +2,12 @@
 % Please edit documentation in R/open.R
 \name{open_rs_doc}
 \alias{open_rs_doc}
+\alias{active_rs_doc}
 \title{Open a Document in RStudio}
 \usage{
 open_rs_doc(path, line = -1L, col = -1L, move_cursor = TRUE)
+
+active_rs_doc()
 }
 \arguments{
 \item{path}{The path to the document.}
