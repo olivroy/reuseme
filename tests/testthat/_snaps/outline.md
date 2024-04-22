@@ -6,8 +6,8 @@
       
       -- `ref/my-analysis.R` 🦐 
     Output
-      `i` Read my streets data
-      `i` Write my streets
+      `i` Read my streets data 
+      `i` Write my streets 
       `i` TODO eventually detect this- `Donev?`
       `i` TODO Create a new version- `Donev?`
 
@@ -19,6 +19,6 @@
       
       -- `ref/my-analysis.R` 🦐 
     Output
-      `i` Read my streets data
-      `i` Write my streets
+      `i` Read my streets data 
+      `i` Write my streets 
 
