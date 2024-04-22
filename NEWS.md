@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* Add `file_outline()`
+
 * `solve_file_name_conflicts()` now returns the number of conflicts instead of `TRUE`, `FALSE`
 
 * `rename_files2()` was rewritten. Now uses `warn_conflicts` to determine what to do. `force` is now deprecated. Is now separated in smaller functions that are easier to test and to extend.

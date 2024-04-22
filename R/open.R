@@ -3,6 +3,8 @@
 #' Wrapper around [rstudioapi::documentOpen()], but with `fs paths`, for consistency.
 #' If the file could not be opened, a clickable hyperlink is displayed.
 #'
+#' * `active_rs_doc()` is a wrapper around [rstudioapi::documentPath()] that handles
+#'   unsaved files gracefully
 #' @inheritParams rstudioapi::documentOpen
 #' @param move_cursor Boolean; move the cursor to the requested location after
 #'   opening the document?
@@ -31,4 +33,21 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
     cli::cli_bullets()
   }
   invisible(doc_id)
+}
+
+#' @name open_rs_doc
+#' @export
+active_rs_doc <- function() {
+  if (!rstudioapi::isAvailable()) {
+    cli::cli_abort("Not in RStudio.")
+  }
+  unsaved_doc <- tryCatch(rstudioapi::documentPath(), error = function(e) TRUE)
+  if (isTRUE(unsaved_doc)) {
+    return(NULL)
+  }
+  path <- tryCatch(rstudioapi::documentPath(), error = function(e) {
+    cli::cli_abort("Either RStudio is not available or you are trying to map an unsaved file")
+  })
+  path <- fs::path_expand_r(path)
+  # likely not hapenning on RStudio >= 2023.06.2
 }

@@ -43,7 +43,7 @@ test_that("Marking a TODO item as done works", {
   expect_mark_as_complete(
     mark_todo_as_complete(line_id = 2, file = tmp, regexp = "item to delete")
   )
-  # Deleting the WORK tag (on new line 2), but keeping the comment.
+  # Deleting the work tag (on new line 2), but keeping the comment.
   # Will throw a warning for now.
 
   expect_mark_as_complete(

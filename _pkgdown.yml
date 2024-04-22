@@ -12,6 +12,7 @@ reference:
 - subtitle: Project Management
   contents:
   - starts_with("proj_")
+  - outline
 
 - subtitle: Package browsing / management
   contents:

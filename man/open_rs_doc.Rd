@@ -2,9 +2,12 @@
 % Please edit documentation in R/open.R
 \name{open_rs_doc}
 \alias{open_rs_doc}
+\alias{active_rs_doc}
 \title{Open a Document in RStudio}
 \usage{
 open_rs_doc(path, line = -1L, col = -1L, move_cursor = TRUE)
+
+active_rs_doc()
 }
 \arguments{
 \item{path}{The path to the document.}
@@ -22,6 +25,12 @@ Invisibly returns the document id
 \description{
 Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
 If the file could not be opened, a clickable hyperlink is displayed.
+}
+\details{
+\itemize{
+\item \code{active_rs_doc()} is a wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentPath()}} that handles
+unsaved files gracefully
+}
 }
 \examples{
 if (FALSE) {

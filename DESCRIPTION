@@ -1,6 +1,6 @@
 Package: reuseme
 Title: Collections of Utility Functions to Work Across Projects
-Version: 0.0.0.9007
+Version: 0.0.0.9008
 Authors@R: 
     person("Olivier", "Roy", , "olivierroy71@hotmail.com", role = c("aut", "cre"))
 Description: Allows you to browse current projects, rename files safely,
@@ -19,6 +19,7 @@ Imports:
     dplyr (>= 1.1.1),
     fs,
     glue,
+    kit,
     lifecycle,
     purrr,
     rlang (>= 1.1.0),

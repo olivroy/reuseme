@@ -52,7 +52,7 @@ test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {
   )
 })
 
-test_that("`filter_if_any()` doesn't work with `across()`", {
+test_that("`filter_if_any()` errors with `across()`", {
   # TODO improve this error
   expect_snapshot(
     error = TRUE,

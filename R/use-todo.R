@@ -62,7 +62,7 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
 
 #' Remove a TODO/WORK/FIXME item from a file
 #'
-#' Function meant to be wrapped as `{.run}` hyperlinks with `file_outline()`.
+#' Function meant to be wrapped as `{.run}` hyperlinks with [file_outline()].
 #' It basically removes a line from a file.
 #'
 #' @param line_id The line number (a single integer)
@@ -137,7 +137,8 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   }
 
   if (rm_line) {
-    cli::cli_alert_success("Marking `{line_content}` as done! ")
+    cli::cli_alert_success(
+      "Marking {.code {line_content}} as done! ")
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {
@@ -176,7 +177,7 @@ extract_tag_in_text <- function(text, error_call = caller_env()) {
       i = "Did not detect any {.val {choices}} tags in the specified line."
     ), call = error_call)
   }
-  # Fails if no WORK, FIXME or TODO tags are found.
+  # Fails if no `WORK`, `FIXME` or `TODO` tags are found.
   arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = error_call, arg_nm = "line_content")
 }
 
