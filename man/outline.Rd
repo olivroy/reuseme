@@ -75,7 +75,9 @@ By default
 proj_* and dir_ call file_outline
 }
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 file_outline()
 proj_outline()
 dir_outline()
+\dontshow{\}) # examplesIf}
 }

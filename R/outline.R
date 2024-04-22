@@ -23,6 +23,9 @@
 #' @param alpha Whether to show in alphabetical order
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in the directory
 #' @param dir_common (Do not use it)
+#' @param recent_only Show outline for recnet files
+#' @param width Width (internal)
+#' @param n_colors Number colors (Internal)
 #'
 #' @returns A list / tree of the file outline
 #' @name outline
@@ -302,7 +305,8 @@ file_outline <- function(regex_outline = NULL,
     if (i %in% is_recently_modified) {
       # may decide to just color the name after all
       # was cli::bg_br_green("*")
-      cli::cli_h3(c(names(dat)[[i]], " ", cli::style_no_blurred("🦐")))
+      # Une crevette
+      cli::cli_h3(c(names(dat)[[i]], " ", cli::style_no_blurred("\U0001f990")))
     } else {
       cli::cli_h3(names(dat)[[i]])
     }
