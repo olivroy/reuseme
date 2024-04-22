@@ -34,6 +34,9 @@
     <loc>https://olivroy.github.io/reuseme/reference/eda-identity.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/escape_markup.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/extract_cell_value.html</loc>
   </url>
   <url>
@@ -41,6 +44,12 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/is_markup_okay.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/link_issue.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/mark_todo_as_complete.html</loc>
@@ -56,6 +65,9 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/outdated_pkgs.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/outline.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/proj_list.html</loc>
