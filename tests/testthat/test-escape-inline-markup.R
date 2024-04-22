@@ -15,6 +15,10 @@ test_that("escape_markup() works", {
   exp_str <- "fn({{arg}})"
   expect_equal(escape_markup(input), exp_str)
   escape_markup("Marking {.code {line_content}} as done! ")
+  input <- "date is {.path okay} to {release_date}."
+  exp_str <- "date is {.path okay} to {{release_date}}."
+  expect_equal(escape_markup(input), exp_str)
+
 })
 
 test_that("is_markup_okay() works", {

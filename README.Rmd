@@ -30,7 +30,7 @@ You may need to switch quickly to a project, add things or browse a certain file
 Sometimes, it is hard to do that.
 reuseme also aims to help me overcome things I don't like on Windows.
 
-## Installation
+## Installation {.unnumbered}
 
 You can install the development version of reuseme like so:
 
