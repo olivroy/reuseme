@@ -67,6 +67,7 @@ Since the package is meant for interactive use, there may not be a lot of code.
 It takes advantage of [cli hyperlinks](https://cli.r-lib.org/reference/links.html) to improve productivity.
 
 ```{r}
+#| title: hello
 library(reuseme)
 ## basic example code
 ```

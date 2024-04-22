@@ -4,4 +4,4 @@
 # TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585
 # TODO mark_todo_as_complete should strip leading whitespace in the message Marking...
 # TODO if many matches, separate those with the exact path.
-# TODO escape_inline('{gt_var}') # variable name
+# TODO escape_inline('{gt_var}') # variable name with snake case is not escaped properly.
