@@ -25,7 +25,7 @@ test_that("Marking a TODO item as done works", {
     "# WORK Explain what the next code does.",
     "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
-    "# TODO Check r-lib/usethis#1890",
+    "   # TODO Check r-lib/usethis#1890",
     "# TODO Check https://github.com/r-lib/usethis/issues/1890",
     "print('R code')"
   )

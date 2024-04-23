@@ -135,15 +135,15 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
   if (is.null(rm_line)) {
     rm_line <- tag_type %in% c("TODO", "FIXME")
   }
-
+  line_content_show <- stringr::str_squish(line_content)
   if (rm_line) {
     cli::cli_alert_success(
-      "Marking {.code {line_content}} as done! ")
+      "Marking {.code {line_content_show}} as done! ")
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {
     cli::cli_alert_success(
-      "Marking `{line_content}` as done! (Removing the {tag_type})"
+      "Marking {.code {line_content}} as done! (Removing the {tag_type})"
     )
     line_content_new <- sub(
       pattern = paste0(tag_type, "\\s+"),
@@ -158,7 +158,7 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
     usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE)
   } else {
     cli::cli_inform(c(
-      "x" = "No more TODOs.",
+      "!" = "No more TODOs.",
       "v" = "Deleting {.file {file}}."
     ))
     fs::file_delete(file)
