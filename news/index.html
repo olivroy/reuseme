@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9009</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="reuseme-development-version">reuseme (development version)<a class="anchor" aria-label="anchor" href="#reuseme-development-version"></a></h2>
+<ul><li><p>Improved support for escaping inline markup.</p></li>
+<li><p>Add a print method to <code><a href="../reference/outline.html">file_outline()</a></code>.</p></li>
+</ul><p>To investigate what’s gone wrong, use</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outline.html">proj_outline</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">f</span> <span class="op">|&gt;</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <ul><li><p>Add <code><a href="../reference/outline.html">file_outline()</a></code></p></li>
 <li><p><code>solve_file_name_conflicts()</code> now returns the number of conflicts instead of <code>TRUE</code>, <code>FALSE</code></p></li>
 <li><p><code><a href="../reference/rename_files2.html">rename_files2()</a></code> was rewritten. Now uses <code>warn_conflicts</code> to determine what to do. <code>force</code> is now deprecated. Is now separated in smaller functions that are easier to test and to extend.</p></li>

@@ -46,9 +46,6 @@
     <loc>https://olivroy.github.io/reuseme/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://olivroy.github.io/reuseme/reference/is_markup_okay.html</loc>
-  </url>
-  <url>
     <loc>https://olivroy.github.io/reuseme/reference/link_issue.html</loc>
   </url>
   <url>
@@ -68,6 +65,9 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/outline.html</loc>
+  </url>
+  <url>
+    <loc>https://olivroy.github.io/reuseme/reference/proj-reuseme.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/proj_file.html</loc>
