@@ -88,7 +88,7 @@ For a better file parser, explore other options, like \href{https://thinkr-open.
 Will show TODO items and will offer a link to \link[=mark_todo_as_complete]{mark them as complete}
 }
 \examples{
-file <- fs::path_package("example-file", "basic-script.R")
+file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 file_outline(path = file)
 
 # Remove TODO

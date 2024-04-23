@@ -35,7 +35,7 @@ use_todo <- function(todo, proj = proj_get(), code = FALSE) {
   check_character(todo)
   # TODO think about maybe using todo = clipr::read_clip()
   # Check how reprex do it.
-  proj_is_a_file <- fs::is_file(proj) && !fs::is_dir(proj)
+  proj_is_a_file <- fs::is_file(proj)
 
   if (proj_is_a_file) {
     path_todo <- proj
@@ -196,7 +196,10 @@ compute_path_todo <- function(todo, proj) {
     todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
   }
 
-  is_active_proj <- identical(proj, proj_get2())
+  is_active_proj <- tryCatch(
+    identical(proj, proj_get2()),
+    error = function(e) FALSE
+  )
 
   # Handle special global and all syntax for todo items.
   if (proj %in% c("global", "all")) {

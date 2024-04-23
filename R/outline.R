@@ -37,7 +37,7 @@
 #' A symbol will show for recently modified files.
 #' @name outline
 #' @examples
-#' file <- fs::path_package("example-file", "basic-script.R")
+#' file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 #' file_outline(path = file)
 #'
 #' # Remove TODO

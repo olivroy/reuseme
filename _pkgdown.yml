@@ -13,6 +13,7 @@ reference:
   contents:
   - starts_with("proj_")
   - outline
+  - proj-reuseme
 
 - subtitle: Package browsing / management
   contents:
