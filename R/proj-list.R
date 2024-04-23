@@ -9,6 +9,7 @@
 #' @returns Single logical value indicating if current session is modified.
 #' @export
 #' @seealso [usethis::proj_activate()]
+#' @family project management helpers
 proj_switch <- function(proj = NULL, new_session = TRUE) {
   # This is my default places (reuseme.reposdir possibly)
   # See fs::path_home
@@ -40,6 +41,7 @@ proj_switch <- function(proj = NULL, new_session = TRUE) {
 #'
 #' @examples
 #' try(proj_file("A non-existent file"))
+#' @family project management helpers
 proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
   rlang::check_required(file)
   # search will only be conducted with regex_outline
@@ -98,13 +100,14 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
 #'
 #' @return A named character vector with the project name as
 #' @export
+#' @family project management helpers
 proj_list <- function(dirs = getOption("reuseme.reposdir")) {
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
   directories <- fs::dir_ls(
     proj_location,
     type = "directory",
     recurse = FALSE,
-    regexp = ".Rcheck",
+    regexp = ".Rcheck|_files",
     invert = TRUE
   )
 

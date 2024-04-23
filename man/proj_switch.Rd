@@ -20,4 +20,10 @@ If not specified, will generate hyperlinks that call \code{\link[usethis:proj_ac
 }
 \seealso{
 \code{\link[usethis:proj_activate]{usethis::proj_activate()}}
+
+Other project management helpers: 
+\code{\link{proj-reuseme}},
+\code{\link{proj_file}()},
+\code{\link{proj_list}()}
 }
+\concept{project management helpers}

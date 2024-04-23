@@ -22,3 +22,10 @@ Active a file at location
 \examples{
 try(proj_file("A non-existent file"))
 }
+\seealso{
+Other project management helpers: 
+\code{\link{proj-reuseme}},
+\code{\link{proj_list}()},
+\code{\link{proj_switch}()}
+}
+\concept{project management helpers}

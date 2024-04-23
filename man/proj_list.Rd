@@ -15,3 +15,10 @@ A named character vector with the project name as
 \description{
 It peeks \code{options(reuseme.reposdir)} to find projects.
 }
+\seealso{
+Other project management helpers: 
+\code{\link{proj-reuseme}},
+\code{\link{proj_file}()},
+\code{\link{proj_switch}()}
+}
+\concept{project management helpers}

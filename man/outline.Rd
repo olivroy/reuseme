@@ -5,7 +5,7 @@
 \alias{file_outline}
 \alias{proj_outline}
 \alias{dir_outline}
-\title{Gives the outlines of file, RStudio project, or directories}
+\title{Print interactive outline of file sections}
 \usage{
 file_outline(
   regex_outline = NULL,
@@ -65,6 +65,7 @@ If \code{FALSE}, will print a less verbose output with sections.}
 A data.frame that contains the information.
 }
 \description{
+RStudio project, or directories
 This will fail if you are trying to map an unsaved file.
 }
 \details{
@@ -78,12 +79,24 @@ By default
 \item \code{dir_outline()} prints the outline of the active working directory by default or
 }
 
-proj_* and dir_ call file_outline
+proj_* and dir_ call file_outline.
+
+The parser is very opinioneted and is not very robust as it is based on regexps.
+For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser}
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("withr")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
+file <- fs::path_package("example-file", "basic-script.R")
+file_outline(file)
+
+# Remove TODO
+\dontshow{\}) # examplesIf}
+\dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# These all work on the active file / project or directory.
 file_outline()
 proj_outline()
 dir_outline()
+# Like proj_switch(), proj_outline() accepts a project
 \dontshow{\}) # examplesIf}
 }

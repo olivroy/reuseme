@@ -1,6 +1,7 @@
 ## `proj_outline()` -------------
-#' Gives the outlines of file, RStudio project, or directories
+#' Print interactive outline of file sections
 #'
+#' RStudio project, or directories
 #' This will fail if you are trying to map an unsaved file.
 #'
 #' If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
@@ -12,7 +13,10 @@
 #' * `dir_outline()` prints the outline of the active working directory by default or
 #'
 #' @details
-#' proj_* and dir_ call file_outline
+#' proj_* and dir_ call file_outline.
+#'
+#' The parser is very opinioneted and is not very robust as it is based on regexps.
+#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/)
 #'
 #' @param path a character vector of file paths (file_outline) or directory by default `rstudioapi::documentPath()`
 #' @param proj The project name (See [proj_list()])
@@ -22,17 +26,32 @@
 #'   If `FALSE`, will print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in the directory
+#' @param recent_only Show outline for recent files
 #' @param dir_common (Do not use it)
-#' @param recent_only Show outline for recnet files
 #' @param width Width (internal)
-#' @param n_colors Number colors (Internal)
+#' @param n_colors Number colours (Internal)
 #'
-#' @returns A data.frame that contains the information.
+#' @returns A `reuseme_outline` object that contains the information. Inherits
+#' `tbl_df`.
+#'
+#' A symbol will show for recently modified files.
 #' @name outline
-#' @examplesIf interactive()
+#' @examples
+#' file <- fs::path_package("example-file", "basic-script.R")
+#' file_outline(path = file)
+#'
+#' # Remove TODO
+#' file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+#'
+#' # interact with data frame
+#' file_outline(path = file) |> dplyr::as_tibble()
+#' @examplesIf rlang::is_interactive()
+#' # These all work on the active file / project or directory.
 #' file_outline()
 #' proj_outline()
 #' dir_outline()
+#' # Like proj_switch(), proj_outline() accepts a project
+#'
 NULL
 #' @export
 #' @rdname outline
@@ -73,7 +92,7 @@ file_outline <- function(regex_outline = NULL,
       tryCatch(
         fs::path_real(dir_common),
         error = function(e) {
-          cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE)
+          cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE, parent = e)
         }
       )
     } else if (rlang::has_length(path, 1)) {
@@ -185,10 +204,9 @@ file_outline <- function(regex_outline = NULL,
   if (exists("link_doc")) {
     file_sections0$content <- purrr::map_chr(file_sections0$content, link_doc)
   }
-
+# Fille outline ===================
   file_sections0 <- file_sections0 |>
     dplyr::mutate(
-      # FIXME creates issues for mark_todo_as_complete.
       content = purrr::map_chr(content, link_issue), # to add link to GitHub.
       outline_el = dplyr::case_when(
         is_todo_fixme ~ stringr::str_extract(content, "(TODO.+)|(FIXME.+)|(WORK.+)"),
@@ -201,7 +219,7 @@ file_outline <- function(regex_outline = NULL,
         is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+"), # strip cross-refs.
         .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[\\-\\=]{4,}")
       ),
-      outline_el = stringr::str_remove(outline_el, "\\-{3,}"),
+      outline_el = stringr::str_remove(outline_el, "[\\-\\=]{3,}"), # remove trailing bars
       is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
       important = dplyr::case_when(
         is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ FALSE,
@@ -405,6 +423,7 @@ print.reuseme_outline <- function(x, ...) {
   } else {
     is_recently_modified <- 1L
   }
+
   for (i in seq_along(dat)) {
     if (i %in% is_recently_modified) {
       # may decide to just color the name after all
