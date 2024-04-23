@@ -16,10 +16,10 @@
 #' proj_* and dir_ call file_outline.
 #'
 #' The parser is very opinioneted and is not very robust as it is based on regexps.
-#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/)
+#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/), `{roxygen2}`
 #'
-#' @param path a character vector of file paths (file_outline) or directory by default `rstudioapi::documentPath()`
-#' @param proj The project name (See [proj_list()])
+#' Will show TODO items and will offer a link to [mark them as complete][mark_todo_as_complete()]
+#' @param path,proj A character vector of file paths, a [project][proj_list()]. Defaults to active file, project or directory. `rstudioapi::documentPath()`
 #' @param regex_outline A string or regex to search for in the outline
 #' @param work_only If `TRUE`, (the default), will only show you work items first. Set to `FALSE` if you want to see the full outline. `WORK` will combine with `regex_outline`
 #' @param print_todo Should include TODOs in the file outline?

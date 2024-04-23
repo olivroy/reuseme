@@ -40,7 +40,7 @@ dir_outline(
 \arguments{
 \item{regex_outline}{A string or regex to search for in the outline}
 
-\item{path}{a character vector of file paths (file_outline) or directory by default \code{rstudioapi::documentPath()}}
+\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}. Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
 
 \item{work_only}{If \code{TRUE}, (the default), will only show you work items first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will combine with \code{regex_outline}}
 
@@ -51,18 +51,19 @@ dir_outline(
 \item{print_todo}{Should include TODOs in the file outline?
 If \code{FALSE}, will print a less verbose output with sections.}
 
-\item{recent_only}{Show outline for recnet files}
+\item{recent_only}{Show outline for recent files}
 
 \item{width}{Width (internal)}
 
-\item{n_colors}{Number colors (Internal)}
-
-\item{proj}{The project name (See \code{\link[=proj_list]{proj_list()}})}
+\item{n_colors}{Number colours (Internal)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}
 }
 \value{
-A data.frame that contains the information.
+A \code{reuseme_outline} object that contains the information. Inherits
+\code{tbl_df}.
+
+A symbol will show for recently modified files.
 }
 \description{
 RStudio project, or directories
@@ -82,16 +83,19 @@ By default
 proj_* and dir_ call file_outline.
 
 The parser is very opinioneted and is not very robust as it is based on regexps.
-For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser}
+For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser}, \code{{roxygen2}}
+
+Will show TODO items and will offer a link to \link[=mark_todo_as_complete]{mark them as complete}
 }
 \examples{
-\dontshow{if (rlang::is_installed("withr")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-
 file <- fs::path_package("example-file", "basic-script.R")
-file_outline(file)
+file_outline(path = file)
 
 # Remove TODO
-\dontshow{\}) # examplesIf}
+file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+
+# interact with data frame
+file_outline(path = file) |> dplyr::as_tibble()
 \dontshow{if (rlang::is_interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # These all work on the active file / project or directory.
 file_outline()

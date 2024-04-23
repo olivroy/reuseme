@@ -10,7 +10,7 @@
 #' I would recommend you add the following. It works better if you store your RStudio
 #' projects in common directories.
 #'
-#' Inspired by [usethis::usethis_options][usethis options]
+#' Inspired by [usethis options][usethis::usethis_options]
 #'
 #' ```
 #' if (interactive()) {

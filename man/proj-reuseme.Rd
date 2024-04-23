@@ -13,7 +13,7 @@ your .Rprofile file. Access it with \code{\link[usethis:edit]{usethis::edit_r_pr
 I would recommend you add the following. It works better if you store your RStudio
 projects in common directories.
 
-Inspired by \link[=usethis options]{usethis::usethis_options}
+Inspired by \link[usethis:usethis_options]{usethis options}
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{if (interactive()) \{
   options(reuseme.reposdir = c("~/rrr/", "~/packages", "~/rrr-work/"))
