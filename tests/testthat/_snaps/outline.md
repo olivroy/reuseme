@@ -23,3 +23,16 @@
       `i` Read my streets data 
       `i` Write my streets 
 
+# file_outline() is a data frame
+
+    Code
+      outline
+    Message
+      
+      -- `outline-script.R` 🦐 
+    Output
+      `i` Load packages 
+      `i` Wrangle + visualize data 
+      `i` A great title
+      `i` TODO improve this Viz!- `Donev?`
+

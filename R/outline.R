@@ -256,13 +256,7 @@ file_outline <- function(regex_outline = NULL,
     cli::cli_abort(msg)
   }
 
-  custom_styling <- c(
-    # 500 is the max path length.
-    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.strong \\2\\} ",  # put/work todo as emphasis
-    "\\{+gt\\}+" = "{{gt}}" # little patch, but should look into how escape_markup would better work.
-  )
-  # browser()
-  # TODO filter or provide n-max
+
 
   if (alpha) {
     # browser()
@@ -273,63 +267,11 @@ file_outline <- function(regex_outline = NULL,
         dplyr::coalesce(stringr::str_extract(stringr::str_remove_all(outline_el, "TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}"), "[:alpha:]"), sample(letters, size = 1))
       )
   }
+  file_sections$recent_only <- recent_only
 
-  summary_links_files <- file_sections |>
-    dplyr::mutate(
-      link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)) |>
-    dplyr::group_by(file_hl, file) |>
-    # dplyr::summarise(link = list(link_rs_api)) # reinstate iff other is too slow.
-    dplyr::summarise(link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))), .groups = "drop")
-  # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
-  in_vscode <- FALSE # to do create it.
-  if (in_vscode) {
-    which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
-    summary_links_files$file_hl[which_detect] <-
-      stringr::str_replace(
-        summary_links_files$file_hl[which_detect],
-        "{.href [",
-        "{.href [./"
-      )
-  }
-  dat <- tibble::deframe(summary_links_files[, c("file_hl", "link")])
-  # dat <- purrr::map_depth(dat, 1, \(x) purrr::set_names(x, "xd"))
-  # browser()
-  # current_time <- Sys.time()
-  mod_date <- file.mtime(summary_links_files$file)
-  # five most recent get a little ching
-  if (length(mod_date) > 0) {
-    suppressWarnings(is_recently_modified <- kit::topn(mod_date, n = 5))
-  } else {
-    is_recently_modified <- 1L
-  }
-  for (i in seq_along(dat)) {
-    if (i %in% is_recently_modified) {
-      # may decide to just color the name after all
-      # was cli::bg_br_green("*")
-      # Une crevette
-      cli::cli_h3(c(cli::col_blue(names(dat)[[i]]), " ", cli::style_no_blurred("\U0001f990")))
-    } else {
-      cli::cli_h3(cli::col_blue(names(dat)[[i]]))
-    }
+  class(file_sections) <- c("reuseme_outline", class(file_sections))
 
-
-    if (recent_only) {
-      if (i %in% is_recently_modified) {
-        purrr::walk(dat[[i]], \(y) {
-          y <- escape_markup(y)
-          cat(cli::format_inline(y), sep = "\n")
-        })
-      }
-    } else {
-      purrr::walk(dat[[i]], \(y) {
-        y <- escape_markup(y)
-        cat(cli::format_inline(y), sep = "\n")
-      })
-    }
-  }
-
-  # rm(a_useles_value)
-  invisible(file_sections)
+  file_sections
 }
 #' @rdname outline
 #' @export
@@ -417,4 +359,78 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     )
   }
   file_outline(path = file_list_to_outline, regex_outline = regex_outline, work_only = work_only, dir_common = dir, alpha = alpha, n_colors = n_colors, recent_only = recent_only)
+}
+
+# Methods -------------------
+
+#' @export
+print.reuseme_outline <- function(x, ...) {
+
+
+  custom_styling <- c(
+    # 500 is the max path length.
+    # green todo
+    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.field \\2\\} ",  # put/work todo as emphasis
+    "\\{+gt\\}+" = "{{gt}}" # little patch, but should look into how escape_markup would better work.
+  )
+  # browser()
+  # TODO filter or provide n-max
+  file_sections <- x
+  recent_only <- x$recent_only[1]
+  summary_links_files <- file_sections |>
+    dplyr::mutate(
+      link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)) |>
+    dplyr::group_by(file_hl, file) |>
+    # dplyr::summarise(link = list(link_rs_api)) # reinstate iff other is too slow.
+    dplyr::summarise(link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))), .groups = "drop")
+  # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
+  in_vscode <- FALSE # to do create it.
+  if (in_vscode) {
+    which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
+    summary_links_files$file_hl[which_detect] <-
+      stringr::str_replace(
+        summary_links_files$file_hl[which_detect],
+        "{.href [",
+        "{.href [./"
+      )
+  }
+  dat <- tibble::deframe(summary_links_files[, c("file_hl", "link")])
+  # dat <- purrr::map_depth(dat, 1, \(x) purrr::set_names(x, "xd"))
+  # browser()
+  # current_time <- Sys.time()
+  mod_date <- file.mtime(summary_links_files$file)
+  # five most recent get a little ching
+  if (length(mod_date) > 0) {
+    suppressWarnings(is_recently_modified <- kit::topn(mod_date, n = 5))
+  } else {
+    is_recently_modified <- 1L
+  }
+  for (i in seq_along(dat)) {
+    if (i %in% is_recently_modified) {
+      # may decide to just color the name after all
+      # was cli::bg_br_green("*")
+      # Une crevette
+      cli::cli_h3(c(cli::col_blue(names(dat)[[i]]), " ", cli::style_no_blurred("\U0001f990")))
+    } else {
+      cli::cli_h3(cli::col_blue(names(dat)[[i]]))
+    }
+
+
+    if (recent_only) {
+      if (i %in% is_recently_modified) {
+        purrr::walk(dat[[i]], \(y) {
+          y <- escape_markup(y)
+          cat(cli::format_inline(y), sep = "\n")
+        })
+      }
+    } else {
+      purrr::walk(dat[[i]], \(y) {
+        y <- escape_markup(y)
+        cat(cli::format_inline(y), sep = "\n")
+      })
+    }
+  }
+
+  # rm(a_useles_value)
+  invisible(file_sections)
 }
