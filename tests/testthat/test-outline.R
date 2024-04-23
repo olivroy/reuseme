@@ -25,6 +25,6 @@ test_that("file_outline() is a data frame", {
   expect_s3_class(outline, "reuseme_outline")
   expect_snapshot(
     outline,
-    transform = ~ stringr::str_remove_all(.x, "[^`]+inst/|example-file/")
+    transform = ~ stringr::str_replace(.x, " `.+` ", " `outline-script.R` ")
   )
 })

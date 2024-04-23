@@ -38,6 +38,9 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
 #' @name open_rs_doc
 #' @export
 active_rs_doc <- function() {
+  if (!interactive() && !rstudioapi::isAvailable()) {
+    return("Non-existing doc")
+  }
   if (!rstudioapi::isAvailable()) {
     cli::cli_abort("Not in RStudio.")
   }

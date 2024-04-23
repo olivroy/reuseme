@@ -130,7 +130,7 @@ file_outline <- function(regex_outline = NULL,
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  suppressMessages(in_active_project <- tryCatch(identical(usethis::proj_get(), dir_common), error = function(e) FALSE))
+  suppressMessages(in_active_project <- tryCatch(identical(proj_get2(), dir_common), error = function(e) FALSE))
   # After this point we have validated that paths exist.
 
   # Handle differently if in showing work items only

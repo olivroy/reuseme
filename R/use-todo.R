@@ -31,7 +31,7 @@
 #'   # add to a global todo.
 #'   use_todo(c("all::Here", "I am"))
 #' }
-use_todo <- function(todo, proj = proj_get(), code = FALSE) {
+use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
   check_character(todo)
   # TODO think about maybe using todo = clipr::read_clip()
   # Check how reprex do it.
