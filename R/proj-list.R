@@ -83,7 +83,7 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
     if (is.null(regex_outline)) {
       open_rs_doc(possible_files)
     } else {
-      file_outline(regex_outline = regex_outline, path = path)
+      file_outline(regex_outline = regex_outline, path = possible_files)
     }
   }
   cli::cli_inform(c(
