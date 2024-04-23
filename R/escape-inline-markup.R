@@ -24,7 +24,7 @@ escape_markup <- function(x) {
 
   is_markup_referring_to_local_variable <-
     is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+\\s\\{|\\(\\{.+\\}\\)")
-  is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !is_markup_referring_to_local_variable
+  is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !is_markup_referring_to_local_variable & !is_markup_incorrect(x)
 
   if (all(is_markup_okay) && !any(is_markup_referring_to_local_variable)) {
     x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")

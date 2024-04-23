@@ -163,9 +163,8 @@ file_outline <- function(regex_outline = NULL,
         !stringr::str_detect(file, "_snaps") &
         !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
       is_cli_info = is_cli_info & !file_with_many_functions,
-      is_doc_title = stringr::str_detect(content, "title\\:"),
-      is_tab_or_plot_title = stringr::str_detect(content, "[^(\")]title = \"|tab_header") &
-        stringr::str_detect(content, "\\[", negate = TRUE),
+      is_doc_title = stringr::str_detect(content, "(?<!-)title\\:"),
+      is_tab_or_plot_title = o_is_object_title(content),
       is_chunk_cap = stringr::str_detect(content, "\\#\\|.*cap:"),
       # deal with chunk cap
       # FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe {.pkg lightparser}.
@@ -176,24 +175,19 @@ file_outline <- function(regex_outline = NULL,
         .default = is_chunk_cap
       ),
       is_chunk_cap_next = is_chunk_cap,
-      is_test_name = is_test_file & o_is_test_that(content),
+      is_test_name = is_test_file & o_is_test_that(content) & o_is_generic_test(content),
       is_section_title = stringr::str_detect(content, "^\\#+\\s"),
       is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
       is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
-      is_section_title_source = stringr::str_detect(content, "\\#+\\s") & stringr::str_detect(content, "[\\-\\=]{3,}") & !stringr::str_detect(content, "\\@param") & stringr::str_starts(content, "\\s*\"", negate = TRUE),
+      is_section_title_source = stringr::str_detect(content, "\\#+\\s") & stringr::str_detect(content, "[-\\=]{3,}") & !stringr::str_detect(content, "\\@param") & stringr::str_starts(content, "\\s*\"", negate = TRUE),
       before_and_after_empty = !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
       n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
       n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
       is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
       is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
-    ) |>
-    # TODO improve to the full outline of the file containing a works item
-    # Maybe suggest
-    # dplyr::mutate(
-    #   is_work_item = any(stringr::str_detect(content, regex_outline_work)),
-    #   .by = file
-    # ) |>
-    dplyr::filter(
+    )
+    file_sections0 <- file_sections0 |>
+      dplyr::filter(
       # still regular comments in .md files
       # what to keep in .md docs
       (is_md & (is_chunk_cap | is_doc_title | (is_section_title & before_and_after_empty & !is_a_comment_or_code))) |
@@ -217,9 +211,9 @@ file_outline <- function(regex_outline = NULL,
         is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
         is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
         is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+"), # strip cross-refs.
-        .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[\\-\\=]{4,}")
+        .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
       ),
-      outline_el = stringr::str_remove(outline_el, "[\\-\\=]{3,}"), # remove trailing bars
+      outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}"), # remove trailing bars
       is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
       important = dplyr::case_when(
         is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ FALSE,
@@ -388,7 +382,7 @@ print.reuseme_outline <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
-    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
+    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
   )
   # browser()
   # TODO filter or provide n-max

@@ -22,7 +22,7 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
 }
 
 o_is_todo_fixme <- function(x) {
-  stringr::str_detect(x, "TODO[^\\.]|FIXME|BOOK|(?<!\")WORK[^I``]") &
+  stringr::str_detect(x, "TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``]") &
     !o_is_test_that(x) &
     !stringr::str_starts(x, "\\s*\"") &
     !stringr::str_detect(x, "extract_tag_in_text") &
@@ -35,5 +35,17 @@ o_is_work_item <- function(x) {
   o_is_todo_fixme(x) & stringr::str_detect(x, "(?<!\")# WORK")
 }
 o_is_test_that <- function(x) {
+  # avoid generic like f works.
   stringr::str_detect(x, "test_that\\(\"")
+}
+o_is_generic_test <- function(x) {
+  !stringr::str_detect(x, "works\"|correctly\"|properly\"|expected\"")
+}
+
+o_is_object_title <- function(x) {
+  stringr::str_detect(x, "[^(\")]title = \"|tab_header") &
+    stringr::str_detect(x, "\\[", negate = TRUE) &
+    !stringr::str_detect(x, "Foo|test|Table Title|Table Subtitle")
+
+
 }
