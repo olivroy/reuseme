@@ -1,5 +1,16 @@
 # reuseme (development version)
 
+* Improved support for escaping inline markup.
+
+* Add a print method to `file_outline()`.
+
+To investigate what's gone wrong, use 
+
+```r
+f <- proj_outline()
+f |> as_tibble()
+```
+
 * Add `file_outline()`
 
 * `solve_file_name_conflicts()` now returns the number of conflicts instead of `TRUE`, `FALSE`

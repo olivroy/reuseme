@@ -71,8 +71,14 @@ file_outline <- function(regex_outline = NULL,
   } else {
     withr::local_options(list(cli.num_colors = n_colors))
   }
-  # active_document() returns `NULL` if the active document is unsaved.
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
   is_unsaved_doc <- is.null(path)
+  if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
+    is_active_doc <- identical(path, active_rs_doc())
+  } else {
+    FALSE
+  }
+
   if (!is_unsaved_doc) {
     # little help temporarily
     if (any(stringr::str_detect(path, "~/rrr|~/Requests"))) {
@@ -163,7 +169,7 @@ file_outline <- function(regex_outline = NULL,
         !stringr::str_detect(file, "_snaps") &
         !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
       is_cli_info = is_cli_info & !file_with_many_functions,
-      is_doc_title = stringr::str_detect(content, "(?<!-)title\\:"),
+      is_doc_title = stringr::str_detect(content, "(?<!-)title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
       is_tab_or_plot_title = o_is_object_title(content),
       is_chunk_cap = stringr::str_detect(content, "\\#\\|.*cap:"),
       # deal with chunk cap
@@ -175,12 +181,12 @@ file_outline <- function(regex_outline = NULL,
         .default = is_chunk_cap
       ),
       is_chunk_cap_next = is_chunk_cap,
-      is_test_name = is_test_file & o_is_test_that(content) & o_is_generic_test(content),
+      is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
       is_section_title = stringr::str_detect(content, "^\\#+\\s"),
       is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
       is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
       is_section_title_source = stringr::str_detect(content, "\\#+\\s") & stringr::str_detect(content, "[-\\=]{3,}") & !stringr::str_detect(content, "\\@param") & stringr::str_starts(content, "\\s*\"", negate = TRUE),
-      before_and_after_empty = !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
+      before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
       n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
       n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
       is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
@@ -198,7 +204,7 @@ file_outline <- function(regex_outline = NULL,
   if (exists("link_doc")) {
     file_sections0$content <- purrr::map_chr(file_sections0$content, link_doc)
   }
-# Fille outline ===================
+# File outline ===================
   file_sections0 <- file_sections0 |>
     dplyr::mutate(
       content = purrr::map_chr(content, link_issue), # to add link to GitHub.
@@ -210,7 +216,7 @@ file_outline <- function(regex_outline = NULL,
         is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
         is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
         is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
-        is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+"), # strip cross-refs.
+        is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
         .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
       ),
       outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}"), # remove trailing bars
@@ -264,7 +270,12 @@ file_outline <- function(regex_outline = NULL,
     dplyr::filter(tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
 
   if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
-    msg <- "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}."
+    if (is_active_doc) {
+      msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
+               "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?")
+    } else {
+      msg <- "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}."
+    }
     cli::cli_abort(msg)
   }
 
@@ -279,6 +290,10 @@ file_outline <- function(regex_outline = NULL,
         dplyr::coalesce(stringr::str_extract(stringr::str_remove_all(outline_el, "TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}"), "[:alpha:]"), sample(letters, size = 1))
       )
   }
+  file_sections <- file_sections |>
+    dplyr::arrange(
+      stringr::str_detect(file, "README|NEWS|vignettes")
+    )
   file_sections$recent_only <- recent_only
 
   class(file_sections) <- c("reuseme_outline", class(file_sections))
@@ -391,9 +406,11 @@ print.reuseme_outline <- function(x, ...) {
   summary_links_files <- file_sections |>
     dplyr::mutate(
       link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)) |>
-    dplyr::group_by(file_hl, file) |>
     # dplyr::summarise(link = list(link_rs_api)) # reinstate iff other is too slow.
-    dplyr::summarise(link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))), .groups = "drop")
+    dplyr::summarise(
+      link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))),
+      .by = c(file_hl, file)
+      )
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
   in_vscode <- FALSE # to do create it.
   if (in_vscode) {

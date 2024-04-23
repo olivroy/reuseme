@@ -39,13 +39,14 @@ o_is_test_that <- function(x) {
   stringr::str_detect(x, "test_that\\(\"")
 }
 o_is_generic_test <- function(x) {
-  !stringr::str_detect(x, "works\"|correctly\"|properly\"|expected\"")
+  stringr::str_detect(x, "works\"|correctly\"|properly\"|expected\"")
 }
 
+# Returns table or plot titles.
 o_is_object_title <- function(x) {
-  stringr::str_detect(x, "[^(\")]title = \"|tab_header") &
+  stringr::str_detect(x, "(?<!\")title = [\"']|tab_header") &
     stringr::str_detect(x, "\\[", negate = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Table Title|Table Subtitle")
+    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
 
 
 }

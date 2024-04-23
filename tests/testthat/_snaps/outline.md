@@ -11,6 +11,8 @@
       `i` Write my streets 
       `i` TODO eventually detect this- `Donev?`
       `i` TODO Create a new version- `Donev?`
+      `i`  gt::tabheader(title = "A real one
+      `i`    gt::tabheader(subtitle = "A true one
 
 # Other arguments work
 
