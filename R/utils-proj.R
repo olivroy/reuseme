@@ -36,7 +36,9 @@ proj_get2 <- function() {
   path <- tryCatch(
     rprojroot::find_root(criterion = rprojroot::is_rstudio_project),
     error = function(e) {
-      cli::cli_warn("Not in a Project, returning the current working directory")
+      if (!identical(Sys.getenv("TESTTHAT"), "true")) {
+        cli::cli_warn("Not in a Project, returning the current working directory")
+      }
       getwd() # wd is a criterion.. to see...
     }
   )

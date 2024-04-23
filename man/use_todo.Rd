@@ -4,7 +4,7 @@
 \alias{use_todo}
 \title{Add a TODO list by project to a TODO.R file in the base directory}
 \usage{
-use_todo(todo, proj = proj_get(), code = FALSE)
+use_todo(todo, proj = proj_get2(), code = FALSE)
 }
 \arguments{
 \item{todo}{A character vector of lines to add to the TODO file. See details

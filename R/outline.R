@@ -45,12 +45,16 @@
 #'
 #' # interact with data frame
 #' file_outline(path = file) |> dplyr::as_tibble()
-#' @examplesIf rlang::is_interactive()
+#'
+#' @examplesIf interactive()
 #' # These all work on the active file / project or directory.
+#' \donttest{
+#'
 #' file_outline()
 #' proj_outline()
 #' dir_outline()
 #' # Like proj_switch(), proj_outline() accepts a project
+#' }
 #'
 NULL
 #' @export
@@ -192,8 +196,8 @@ file_outline <- function(regex_outline = NULL,
       is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
       is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
     )
-    file_sections0 <- file_sections0 |>
-      dplyr::filter(
+  file_sections0 <- file_sections0 |>
+    dplyr::filter(
       # still regular comments in .md files
       # what to keep in .md docs
       (is_md & (is_chunk_cap | is_doc_title | (is_section_title & before_and_after_empty & !is_a_comment_or_code))) |
@@ -204,7 +208,7 @@ file_outline <- function(regex_outline = NULL,
   if (exists("link_doc")) {
     file_sections0$content <- purrr::map_chr(file_sections0$content, link_doc)
   }
-# File outline ===================
+  # File outline ===================
   file_sections0 <- file_sections0 |>
     dplyr::mutate(
       content = purrr::map_chr(content, link_issue), # to add link to GitHub.
