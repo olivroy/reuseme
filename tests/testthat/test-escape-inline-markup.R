@@ -10,7 +10,6 @@ test_that("escape_markup() works", {
   input <- "{.href [cran]({cran_home})}"
   exp_str <- "<cran>"
   expect_equal(escape_markup(input), exp_str)
-  skip("Not ready")
   input <- "{fn}({arg})"
   exp_str <- "fn({{arg}})"
   expect_equal(escape_markup(input), exp_str)
@@ -18,13 +17,29 @@ test_that("escape_markup() works", {
   input <- "date is {.path okay} to {release_date}."
   exp_str <- "date is {.path okay} to {{release_date}}."
   expect_equal(escape_markup(input), exp_str)
-
+  expect_snapshot({
+    escape_markup("i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
+    escape_markup("{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
+  })
+  # No error when formatting inline! (end goal)
+  expect_no_error(
+    cli::format_inline(escape_markup(c(
+      "i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}."
+    ))
+  ))
 })
 
-test_that("is_markup_okay() works", {
-  expect_false(is_markup_okay("{gt}"))
-  expect_true(is_markup_okay("{{gt}}"))
-  expect_false(is_markup_okay("{.file {gt}}"))
-  expect_true(is_markup_okay("{.file x}"))
+# test helpers
+
+test_that("replace_r_var() works", {
+  expect_snapshot({
+    replace_r_var("i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
+  })
 })
 
+test_that("is_markup_incorrect() works", {
+  expect_true(is_markup_incorrect("{gt}"))
+  expect_false(is_markup_incorrect("{{gt}}"))
+  expect_true(is_markup_incorrect("{.file {gt}}"))
+  expect_false(is_markup_incorrect("{.file x}"))
+})

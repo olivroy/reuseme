@@ -388,8 +388,7 @@ print.reuseme_outline <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
-    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.field \\2\\} ",  # put/work todo as emphasis
-    "\\{+gt\\}+" = "{{gt}}" # little patch, but should look into how escape_markup would better work.
+    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
   )
   # browser()
   # TODO filter or provide n-max
