@@ -23,6 +23,11 @@ test_that("o_is_object_title() works", {
   expect_true(o_is_object_title("title = 'A great'"))
 })
 
+test_that("o_is_section_title() works", {
+  expect_true(o_is_section_title("# Analysis of this"))
+  expect_false(o_is_section_title("# TidyTuesday"))
+})
+
 test_that("No outline criteria are untested", {
   skip_on_ci()
   skip_on_cran()

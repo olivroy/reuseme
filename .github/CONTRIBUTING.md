@@ -49,27 +49,68 @@ See our guide on [how to create a great issue](https://code-review.tidyverse.org
 
 * `keep_outline_element()`: if an element is **missing** from outline.
 
-* `strip_outline_element()` if the outline element doesn't show as expected (i.e right position, but not enough or too much stripping), edit 
+* `define_important_element()` if an element is important [^1] 
+
+[^1]: Importance definition is in `define_important_element()`, while styling is in `construct_outline_link()`
+
+* `display_outline_element()` if the outline element doesn't show as expected (i.e right position, but not enough or too much stripping), edit 
 
 * `construct_outline_link()` if the link (formatting) seems incorrect.
 
 * `print.reuseme_outline()` if you want to improve styling
 
 
+
 ### Enhancing `proj_outline()`
 
 Example with [ggtitle](link)
 
-1. Create new variable in `define_outline_criteria()`
 
-<details><summary></summary>
-<p>
+1. Create a new function in `R/outline-criteria.R` (place right before `define_outline_criteria()`)
+
 
 ```r
-
-is_ggtitle
-
+# Detects ggtitle(')
+o_is_ggtitle <- function(x) {
+  stringr::str_detect(x, "ggtitle\\(['\"]")
+}
 ```
 
-</p>
-</details>
+2. Add test for function
+
+```r
+# Run
+use_test("outline-criteria")
+
+# add where appropriate (at the end probably)
+
+test_that("o_is_ggtitle() works", {
+  expect_true(o_is_ggtitle("ggtitle('Main plot title')"))
+})
+```
+
+2. Create new variable in `define_outline_criteria()`
+
+```r
+is_ggtitle = o_is_ggtitle(content),
+```
+
+3. Add correct criteria to `keep_outline_element()`
+
+Be careful for markdown vs non-markdown (i.e. section title not the same)
+
+```r
+# in our case we'd go in the third section (generic) and would add
+| is_ggtitle
+```
+
+4. Create new conditions on how to display in `display_outline_element()`
+
+```r
+   is_ggtitle = stringr::str_remove_all(content, "(ggplot2\\:\\:)?ggtitle\\([\"']|[\"']$")
+```
+
+5. If important, add to criteria in `define_important_element()`
+
+6. Look at the result. Ideally, add to _ref/my-analysis.R, so it shows somehow in snapshots.
+

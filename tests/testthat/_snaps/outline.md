@@ -6,13 +6,14 @@
       
       -- `ref/my-analysis.R` 🦐 
     Output
-      `i` Read my streets data 
+      `i` Read my streets data
       `i` data wrangling
-      `i` Write my streets 
+      `i` Write my streets
       `i` TODO eventually detect this- `Donev?`
       `i` TODO Create a new version- `Donev?`
-      `i`  gt::tabheader(title = "A real one
-      `i`    gt::tabheader(subtitle = "A true one
+      `i` A real one
+      `i` A true one
+      `i` 'R/my-file.R'
 
 # Other arguments work
 
@@ -22,8 +23,8 @@
       
       -- `ref/my-analysis.R` 🦐 
     Output
-      `i` Read my streets data 
-      `i` Write my streets 
+      `i` Read my streets data
+      `i` Write my streets
 
 # file_outline() is a data frame
 
@@ -33,8 +34,8 @@
       
       -- `outline-script.R` 🦐 
     Output
-      `i` Load packages 
-      `i` Wrangle + visualize data 
+      `i` Load packages
+      `i` Wrangle + visualize data
       `i` A great title
       `i` TODO improve this Viz!- `Donev?`
 

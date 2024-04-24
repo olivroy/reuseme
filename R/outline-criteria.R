@@ -47,8 +47,12 @@ o_is_object_title <- function(x) {
   stringr::str_detect(x, "(?<!\")title = [\"']|tab_header") &
     stringr::str_detect(x, "\\[", negate = TRUE) &
     !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
+}
 
-
+o_is_section_title <- function(x) {
+  section_title <- stringr::str_detect(x, "^\\#+\\s")
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle)$"
+  section_title & !stringr::str_detect(x, uninteresting_headings)
 }
 
 # Add variable to outline data frame --------------------
@@ -82,7 +86,7 @@ define_outline_criteria <- function(.data, print_todo) {
     ),
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
-    is_section_title = stringr::str_detect(content, "^\\#+\\s"),
+    is_section_title = o_is_section_title(content),
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
@@ -95,3 +99,5 @@ define_outline_criteria <- function(.data, print_todo) {
   )
 
 }
+
+# it is {.file R/outline-criteria.R} ------

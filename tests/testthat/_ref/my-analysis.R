@@ -19,3 +19,5 @@ fs::path("data", "my-streets", ext = "csv")
 #'
 #' gt::tab_header(title = "A real one") |>
 #'   gt::tab_header(subtitle = "A true one")
+
+# {.file R/my-file.R} ---

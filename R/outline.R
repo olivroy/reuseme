@@ -397,10 +397,15 @@ display_outline_element <- function(.data) {
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
       is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
-      is_section_title ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
+      is_section_title & !is_md ~ stringr::str_remove(content, "^\\#+\\s+"), # Keep inline markup
+      is_section_title & is_md ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
       .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
-    outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}"), # remove trailing bars
+    outline_el = dplyr::case_when(
+      is_tab_or_plot_title ~  stringr::str_remove_all(outline_el, "(gt\\:\\:)?tab_header\\(|\\s*(sub)?title\\s\\=\\s['\"]|['\"],?$"),
+      .default = outline_el
+    ),
+    outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
     is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt")
   )
 }

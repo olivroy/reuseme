@@ -9,10 +9,15 @@
 #' @export
 #'
 #' @examplesIf rlang::is_installed("gt")
-#' quarto_help() |>
+#' gt_help <- quarto_help() |>
 #'   tibble::enframe() |>
 #'   gt::gt() |>
 #'   gt::fmt_url(value)
+#'
+#' \dontshow{
+# FIXME when r-lib/pkgdown#2326 is done
+#' gt_help |> gt::as_raw_html()
+#' }
 quarto_help <- function(subject = NULL) {
   # need to update snapshot as we enhance this!
   links_help <- c(
