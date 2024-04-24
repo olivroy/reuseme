@@ -99,6 +99,7 @@ file_outline(path = file) |> dplyr::as_tibble()
 
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # These all work on the active file / project or directory.
+
 file_outline()
 proj_outline()
 dir_outline()
