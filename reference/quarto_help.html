@@ -72,487 +72,53 @@ accessible from R console.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">quarto_help</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">gt_help</span> <span class="op">&lt;-</span> <span class="fu">quarto_help</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/enframe.html" class="external-link">enframe</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">gt</span><span class="fu">::</span><span class="fu"><a href="https://gt.rstudio.com/reference/gt.html" class="external-link">gt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">gt</span><span class="fu">::</span><span class="fu"><a href="https://gt.rstudio.com/reference/fmt_url.html" class="external-link">fmt_url</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \dontshow{</span></span></span>
+<span class="r-in"><span><span class="va">gt_help</span> <span class="op">|&gt;</span> <span class="fu">gt</span><span class="fu">::</span><span class="fu"><a href="https://gt.rstudio.com/reference/as_raw_html.html" class="external-link">as_raw_html</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div id="wlefoodfie" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;style&gt;#wlefoodfie table {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -webkit-font-smoothing: antialiased;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -moz-osx-font-smoothing: grayscale;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie thead, #wlefoodfie tbody, #wlefoodfie tfoot, #wlefoodfie tr, #wlefoodfie td, #wlefoodfie th {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie p {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_table {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   display: table;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-collapse: collapse;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   line-height: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin-left: auto;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin-right: auto;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 16px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-style: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   width: auto;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #A8A8A8;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #A8A8A8;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_caption {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_title {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 125%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_subtitle {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 85%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 3px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_heading {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-align: center;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_bottom_border {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_col_headings {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_col_heading {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: bottom;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 6px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   overflow-x: hidden;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_column_spanner_outer {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_column_spanner_outer:first-child {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_column_spanner_outer:last-child {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_column_spanner {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: bottom;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   overflow-x: hidden;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   display: inline-block;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   width: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_spanner_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: hidden;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_group_heading {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: middle;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-align: left;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_empty_group_heading {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding: 0.5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: middle;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_from_md &gt; :first-child {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin-top: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_from_md &gt; :last-child {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin-bottom: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin: 10px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 1px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: middle;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   overflow-x: hidden;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_stub {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_stub_row_group {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: top;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_row_group_first td {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_row_group_first th {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_summary_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_first_summary_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_first_summary_row.thick {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_last_summary_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_grand_summary_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-transform: inherit;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_first_grand_summary_row {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: double;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 6px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_last_grand_summary_row_top {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 8px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: double;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 6px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_striped {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: rgba(128, 128, 128, 0.05);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_table_body {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-top-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: solid;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_footnotes {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_footnote {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   margin: 0px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 90%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_sourcenotes {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   color: #333333;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   background-color: #FFFFFF;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-bottom-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-left-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-style: none;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-width: 2px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   border-right-color: #D3D3D3;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_sourcenote {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 90%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-top: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-bottom: 4px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-left: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   padding-right: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_left {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-align: left;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_center {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-align: center;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_right {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-align: right;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-variant-numeric: tabular-nums;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_font_normal {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: normal;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_font_bold {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-weight: bold;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_font_italic {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-style: italic;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_super {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 65%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_footnote_marks {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 75%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: 0.4em;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   position: initial;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_asterisk {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   font-size: 100%;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   vertical-align: 0;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_indent_1 {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-indent: 5px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_indent_2 {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-indent: 10px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_indent_3 {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-indent: 15px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_indent_4 {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-indent: 20px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> #wlefoodfie .gt_indent_5 {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   text-indent: 25px;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/style&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;thead&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr class="gt_col_headings"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="name"&gt;name&lt;/th&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="value"&gt;value&lt;/th&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3;" bgcolor="#FFFFFF"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;thead style="border-style: none;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr class="gt_col_headings" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="name" style="border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; text-align: left;" bgcolor="#FFFFFF" valign="bottom" align="left"&gt;name&lt;/th&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="value" style="border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; text-align: left;" bgcolor="#FFFFFF" valign="bottom" align="left"&gt;value&lt;/th&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/tr&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/thead&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;tbody class="gt_table_body"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;dashboard&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/dashboards/data-display.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/dashboards/data-display.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;manuscript&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/manuscripts/authoring/rstudio.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/manuscripts/authoring/rstudio.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;revealjs&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/presentations/revealjs/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/presentations/revealjs/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;blog&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/websites/website-blog.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/websites/website-blog.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;theme&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/dashboards/theming.html#theme-options" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/dashboards/theming.html#theme-options&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;param&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/computations/parameters.html#knitr" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/computations/parameters.html#knitr&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;quartopub&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/quarto-pub.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/quarto-pub.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;gh-actions&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/github-pages.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/github-pages.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;netlify&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/netlify.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/netlify.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;gallery&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/gallery/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/gallery/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;news&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/download/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/download/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr&gt;&lt;td headers="name" class="gt_row gt_left"&gt;shortcode&lt;/td&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/extensions/shortcodes.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/extensions/shortcodes.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;dashboard&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/dashboards/data-display.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/dashboards/data-display.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;manuscript&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/manuscripts/authoring/rstudio.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/manuscripts/authoring/rstudio.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;revealjs&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/presentations/revealjs/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/presentations/revealjs/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;blog&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/websites/website-blog.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/websites/website-blog.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;theme&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/dashboards/theming.html#theme-options" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/dashboards/theming.html#theme-options&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;param&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/computations/parameters.html#knitr" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/computations/parameters.html#knitr&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;quartopub&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/quarto-pub.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/quarto-pub.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;gh-actions&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/github-pages.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/github-pages.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;netlify&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/publishing/netlify.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/publishing/netlify.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;gallery&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/gallery/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/gallery/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;news&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/download/" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/download/&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;tr style="border-style: none;"&gt;&lt;td headers="name" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;shortcode&lt;/td&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;td headers="value" class="gt_row gt_left" style="border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;" valign="middle" align="left"&gt;&lt;span style="white-space: pre;"&gt;&lt;a href="https://quarto.org/docs/extensions/shortcodes.html" target="_blank" style="color:#008B8B;text-decoration:underline;text-underline-position: under;display: inline-block;"&gt;https://quarto.org/docs/extensions/shortcodes.html&lt;/a&gt;&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/tbody&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/table&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
