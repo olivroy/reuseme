@@ -21,3 +21,5 @@ fs::path("data", "my-streets", ext = "csv")
 #'   gt::tab_header(subtitle = "A true one")
 
 # {.file R/my-file.R} ---
+
+cli::cli_ul("Refer to {.href [google](https://google.com)}") # not rendered properly currently.
