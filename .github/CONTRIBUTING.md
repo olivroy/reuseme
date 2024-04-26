@@ -57,7 +57,7 @@ See our guide on [how to create a great issue](https://code-review.tidyverse.org
 
 * `construct_outline_link()` if the link (formatting) seems incorrect.
 
-* `print.reuseme_outline()` if you want to improve styling
+* `print.outline_report()` if you want to improve styling
 
 
 

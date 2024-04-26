@@ -60,7 +60,7 @@ If \code{FALSE}, will print a less verbose output with sections.}
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}
 }
 \value{
-A \code{reuseme_outline} object that contains the information. Inherits
+A \code{outline_report} object that contains the information. Inherits
 \code{tbl_df}.
 
 A symbol will show for recently modified files.

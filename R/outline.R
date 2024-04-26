@@ -31,7 +31,7 @@
 #' @param width Width (internal)
 #' @param n_colors Number colours (Internal)
 #'
-#' @returns A `reuseme_outline` object that contains the information. Inherits
+#' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
 #'
 #' A symbol will show for recently modified files.
@@ -178,7 +178,10 @@ file_outline <- function(regex_outline = NULL,
         "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
       )
     } else {
-      msg <- "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}."
+      msg <- c(
+        "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}.",
+        "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{regex_outline}\"))} to search in file names too."
+      )
     }
     cli::cli_abort(msg)
   }
@@ -200,7 +203,7 @@ file_outline <- function(regex_outline = NULL,
     )
   file_sections$recent_only <- recent_only
 
-  class(file_sections) <- c("reuseme_outline", class(file_sections))
+  class(file_sections) <- c("outline_report", class(file_sections))
 
   file_sections
 }
@@ -295,7 +298,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
 # Methods -------------------
 
 #' @export
-print.reuseme_outline <- function(x, ...) {
+print.outline_report <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
@@ -338,13 +341,15 @@ print.reuseme_outline <- function(x, ...) {
   }
 
   for (i in seq_along(dat)) {
+    base_name <- c(cli::col_blue(names(dat)[[i]]), " ")
+
     if (i %in% is_recently_modified) {
       # may decide to just color the name after all
       # was cli::bg_br_green("*")
       # Une crevette
-      cli::cli_h3(c(cli::col_blue(names(dat)[[i]]), " ", cli::style_no_blurred("\U0001f990")))
+      cli::cli_h3(c(base_name, cli::style_no_blurred("\U0001f990")))
     } else {
-      cli::cli_h3(cli::col_blue(names(dat)[[i]]))
+      cli::cli_h3(base_name)
     }
 
 

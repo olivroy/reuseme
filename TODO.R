@@ -8,3 +8,4 @@
 # TODO detect url automatically, like link_issue instead of needing {.url }
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
 # TODO [outline] add first item to title (no need for a link)
+# TODO [outline] If a snapshot exists with the same name as test, don't include this test in final
