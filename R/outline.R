@@ -392,7 +392,8 @@ display_outline_element <- function(.data) {
     outline_el = dplyr::case_when(
       is_todo_fixme ~ stringr::str_extract(content, "(TODO.+)|(FIXME.+)|(WORK.+)"),
       is_test_name ~ stringr::str_extract(content, "test_that\\(['\"](.+)['\"]", group = 1),
-      is_cli_info | is_tab_or_plot_title ~ stringr::str_extract(content, "[\"'](.{5,})[\"']", group = 1),
+      is_cli_info ~ stringr::str_extract(content, "[\"'](.{5,})[\"']"),
+      is_tab_or_plot_title ~ stringr::str_extract(content, "title = [\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next ~ stringr::str_remove(content, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),

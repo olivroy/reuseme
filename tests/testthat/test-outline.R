@@ -28,3 +28,7 @@ test_that("file_outline() is a data frame", {
     transform = ~ stringr::str_replace(.x, " `.+` ", " `outline-script.R` ")
   )
 })
+
+test_that("dir_outline() works with no error", {
+  expect_no_error(dir_outline(regex_outline = ".+", path = test_path("_ref")))
+})

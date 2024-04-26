@@ -2,7 +2,7 @@
 my_streets <- read.csv("data/my-streets.csv")
 new_dat <- my_streets |>
   dplyr::mutate(
-    title = "data wrangling",
+    title = "data wrangling", # "problem"
     x = 2**2,
     title = NULL
   )

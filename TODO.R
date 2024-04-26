@@ -8,4 +8,3 @@
 # TODO detect url automatically, like link_issue instead of needing {.url }
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
 # TODO [outline] add first item to title (no need for a link)
-# TODO [outline] strip things before title.
