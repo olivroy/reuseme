@@ -60,6 +60,9 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     as.list() |>
     purrr::map(function(x) purrr::set_names(x, fields_names))
 
+  if (!is.null(getOption("reuseme.ignore_update"))) {
+    outdated_pkg <- outdated_pkg[!getOption("reuseme.ignore_update")]
+  }
   # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {
     cli::cli_alert_success("There is a new version of pak.")
