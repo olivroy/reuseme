@@ -79,7 +79,7 @@ file_outline <- function(regex_outline = NULL,
   if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
-    FALSE
+    is_active_doc <-FALSE
   }
 
   if (!is_unsaved_doc) {

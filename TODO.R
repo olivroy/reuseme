@@ -5,3 +5,7 @@
 # TODO [rename] if many matches, separate those with the exact path.
 # TODO [outline] make ggtitle work
 # TODO [outline] show extra msg only for some, but in file outline, not in proj?
+# TODO detect url automatically, like link_issue instead of needing {.url }
+# TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
+# TODO [outline] add first item to title (no need for a link)
+# TODO [outline] strip things before title.
