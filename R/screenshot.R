@@ -46,12 +46,13 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   check_string(file, allow_null = TRUE)
   is_active_proj <- identical(proj, proj_get2())
 
-  if (!fs::dir_exists(proj)) { # when referring to a project by name.
+  if (fs::dir_exists(proj)) {
+    proj_path <- proj
+  } else {
+    # when referring to a project by name.
     all_projects <- proj_list()
     rlang::arg_match0(proj, values = names(all_projects))
     proj_path <- unname(all_projects[proj])
-  } else {
-    proj_path <- proj
   }
 
 
@@ -124,11 +125,11 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
       recurse = FALSE
     )
 
-    increment <- if (!rlang::has_length(files_named_image)) {
-      0
-    } else {
+    if (rlang::has_length(files_named_image)) {
       increment_val <- stringr::str_extract(files_named_image, "image-(\\d{2})", group = 1)
-      max(as.numeric(increment_val))
+      increment <- max(as.numeric(increment_val))
+    } else {
+      increment <- 0
     }
 
     file <- glue::glue("image-{stringr::str_pad(increment + 1, width = 2, pad = '0')}")

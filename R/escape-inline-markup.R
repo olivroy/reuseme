@@ -12,8 +12,8 @@
 #' escape_markup("{.file {here}}")
 #' escape_markup("multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}")
 escape_markup <- function(x) {
-  is_left_bracket <- stringr::str_detect(x, "\\{")
-  is_right_bracket <- stringr::str_detect(x, "\\}")
+  is_left_bracket <- grepl("{", x, fixed = TRUE)
+  is_right_bracket <- grepl("}", x, fixed = TRUE)
   is_bracket <- is_left_bracket & is_right_bracket
 
   if (!any(is_bracket)) {
@@ -22,11 +22,11 @@ escape_markup <- function(x) {
     return(x)
   }
 
-  is_markup_referring_to_local_variable <-
+  local_var_ref_in_markup <-
     is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+\\s\\{|\\(\\{.+\\}\\)")
-  is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !is_markup_referring_to_local_variable & !is_markup_incorrect(x)
+  is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !local_var_ref_in_markup & !is_markup_incorrect(x)
 
-  if (all(is_markup_okay) && !any(is_markup_referring_to_local_variable)) {
+  if (all(is_markup_okay) && !any(local_var_ref_in_markup)) {
     x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
     x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
     return(x)

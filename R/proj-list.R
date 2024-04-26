@@ -46,9 +46,9 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
   rlang::check_required(file)
   # search will only be conducted with regex_outline
   if (is.null(regex_outline) && is.null(file)) {
-    cli::cli_abort(c(
+    cli::cli_abort(
       "One of {.arg regex_outline} or {.arg file} must exist."
-    ))
+    )
   }
   file <- file %||% "A non-existent rubbish file placeholder"
   if (fs::file_exists(file)) {
@@ -86,7 +86,7 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
       file_outline(regex_outline = regex_outline, path = possible_files)
     }
   }
-  cli::cli_inform(c(
+  cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
   file_outline(regex_outline = regex_outline, path = possible_files)

@@ -74,15 +74,16 @@ file_outline <- function(regex_outline = NULL,
   } else {
     withr::local_options(list(cli.num_colors = n_colors))
   }
-  # active_rs_doc() returns `NULL` if the active document is unsaved.
-  is_unsaved_doc <- is.null(path)
+
   if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
-    is_active_doc <-FALSE
+    is_active_doc <- FALSE
   }
 
-  if (!is_unsaved_doc) {
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
+  is_saved_doc <- !is.null(path)
+  if (is_saved_doc) {
     # little help temporarily
     if (any(stringr::str_detect(path, "~/rrr|~/Requests"))) {
       path <- fs::path_expand_r(path)
@@ -105,7 +106,7 @@ file_outline <- function(regex_outline = NULL,
         }
       )
     } else if (rlang::has_length(path, 1)) {
-      # If a single path,
+      # If a single path
       tryCatch(
         rprojroot::find_root_file(
           path = path,
@@ -169,7 +170,7 @@ file_outline <- function(regex_outline = NULL,
   file_sections1 <- display_outline_element(file_sections0)
 
   # Create hyperlink in console
-  file_sections <- construct_outline_link(file_sections1, is_unsaved_doc, dir_common, regex_outline)
+  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, regex_outline)
 
   if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
     if (is_active_doc) {
@@ -421,7 +422,7 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_unsaved_doc, dir_common, regex_outline) {
+construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outline) {
   rs_avail_file_link <- rstudioapi::isAvailable("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
   .data <- dplyr::mutate(
@@ -432,7 +433,7 @@ construct_outline_link <- function(.data, is_unsaved_doc, dir_common, regex_outl
       # Not showing up are the longer items.
       # truncating to make sure the hyperlink shows up.
       # Mark as done caused issues as it ends with inline markup/.(tracked in r-lib/cli#627)
-      is_todo_fixme & !is_unsaved_doc ~ paste0(
+      is_todo_fixme & is_saved_doc ~ paste0(
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::mark_todo_as_complete(",
         # Removed ending dot. (possibly will fail with older versions)
@@ -444,7 +445,7 @@ construct_outline_link <- function(.data, is_unsaved_doc, dir_common, regex_outl
     link = paste0(outline_el, " {.path ", file, ":", line_id, "}"),
     # rstudioapi::documentOpen works in the visual mode!! but not fully.
     file_path = .data$file,
-    is_unsaved_doc = .env$is_unsaved_doc,
+    is_saved_doc = .env$is_saved_doc,
 
     # May have caused CI failure
     text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common %||% "Don't remove anything if NULL")) |> stringr::str_remove("^/"),
@@ -462,12 +463,12 @@ construct_outline_link <- function(.data, is_unsaved_doc, dir_common, regex_outl
   dplyr::mutate(.data,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
     link_rs_api = dplyr::case_when(
-      is_unsaved_doc ~ paste0("line ", line_id, " -", outline_el),
+      !is_saved_doc ~ paste0("line ", line_id, " -", outline_el),
       rs_avail_file_link ~ paste0("{cli::style_hyperlink(cli::", style_fun, '("i"), "', paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el)
     ),
     file_hl = dplyr::case_when(
-      is_unsaved_doc ~ file_path,
+      !is_saved_doc ~ file_path,
       rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
       .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
     ),

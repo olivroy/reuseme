@@ -27,6 +27,7 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
 
   doc_id <- rstudioapi::documentOpen(path = path, line = line, col = col, moveCursor = move_cursor)
   if (is.null(doc_id)) {
+    # FIXME why is this code like this?
     file_pos_string <- path
     if (line != -1L) pos_string <- paste0(pos_string, ":", line)
     if (col != -1L) pos_string <- paste0(pos_string, ":", col)

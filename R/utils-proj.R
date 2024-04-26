@@ -77,7 +77,9 @@ get_active_qmd_post <- function(base_path = proj_get(), error_call = caller_env(
   relative_path <- fs::path_rel(full_doc_path, start = base_path)
   if (!has_length(relative_path, 1)) {
     cli::cli_abort(
-      c("Debug: base_path = {base_path}, dir = {dir}, relative_path = {relative_path}, full_doc_path = {full_doc_path}"),
+      "Debug: base_path = {base_path},
+              dir = {dir}, relative_path = {relative_path},
+              full_doc_path = {full_doc_path}",
       .internal = TRUE
     )
   }

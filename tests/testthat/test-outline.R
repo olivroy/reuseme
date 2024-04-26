@@ -3,7 +3,7 @@ test_that("file_outline() works", {
   rlang::local_interactive(TRUE)
   expect_snapshot(
     file_outline(path = my_test_file),
-    transform = ~ stringr::str_remove(.x, "_")
+    transform = ~ sub("_", "", .x, fixed = TRUE)
   )
 })
 
@@ -14,7 +14,7 @@ test_that("Other arguments work", {
   expect_snapshot(
     error = FALSE,
     file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE),
-    transform = ~ stringr::str_remove(.x, "_")
+    transform = ~ sub("_", "", .x, fixed = TRUE)
   )
 })
 
@@ -25,7 +25,7 @@ test_that("file_outline() is a data frame", {
   expect_s3_class(outline, "reuseme_outline")
   expect_snapshot(
     outline,
-    transform = ~ stringr::str_replace(.x, " `.+` ", " `outline-script.R` ")
+    transform = ~ sub(" `.+` ", " `outline-script.R` ", .x)
   )
 })
 
