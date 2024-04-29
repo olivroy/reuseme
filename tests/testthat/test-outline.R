@@ -21,12 +21,11 @@ test_that("Other arguments work", {
 test_that("file_outline() is a data frame", {
   file <- fs::path_package("reuseme", "example-file", "outline-script.R")
   outline <- file_outline(path = file)
-  expect_s3_class(outline, "tbl_df")
-  expect_s3_class(outline, "outline_report")
+  expect_s3_class(outline, c("outline_report", "tbl_df"))
   expect_snapshot(
     outline,
     # simplify path display to avoid snapshot failures.
-    transform = ~ sub(" `[^`+]` ", " `outline-script.R` ", .x)
+    transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
   )
 })
 
