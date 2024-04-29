@@ -34,10 +34,12 @@ o_is_todo_fixme <- function(x) {
 o_is_work_item <- function(x) {
   o_is_todo_fixme(x) & stringr::str_detect(x, "(?<!\")# WORK")
 }
+
 o_is_test_that <- function(x) {
   # avoid generic like f works.
   stringr::str_detect(x, "test_that\\(\"")
 }
+
 o_is_generic_test <- function(x) {
   stringr::str_detect(x, "works\"|correctly\"|properly\"|expected\"")
 }
@@ -63,17 +65,16 @@ define_outline_criteria <- function(.data, print_todo) {
     file_ext = fs::path_ext(file),
     is_md = file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown"),
     # is_function_def = stringr::str_detect(file, "[(\\<\\-)=]\\s?function\\("),
-    file_with_many_functions = stringr::str_detect(file, "Rprofile|r-profile"), # TODO readjust that... package for example
     is_test_file = stringr::str_detect(file, "tests/testthat"),
     # Problematic when looking inside functions
     # maybe force no leading space.
+    # TODO strip is_cli_info in Package? only valid for EDA
     is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
       !stringr::str_detect(content, "(warn|abort|div)|c\\(\\s?$") &
       !stringr::str_detect(content, "paste") &
       !stringr::str_detect(file, "outline.R") &
       !stringr::str_detect(file, "_snaps") &
       !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
-    is_cli_info = is_cli_info & !file_with_many_functions, # TODO strip is_cli_info in Package? only valid for EDA
     is_doc_title = stringr::str_detect(content, "(?<!-)title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*cap:"),
     # deal with chunk cap
@@ -97,7 +98,6 @@ define_outline_criteria <- function(.data, print_todo) {
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
   )
-
 }
 
 # it is {.file R/outline-criteria.R} ------
