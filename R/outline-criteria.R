@@ -27,7 +27,7 @@ o_is_todo_fixme <- function(x) {
     !stringr::str_starts(x, "\\s*\"") &
     !stringr::str_detect(x, "extract_tag_in_text") &
     !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
-    !stringr::str_detect(x, "str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+    !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
     !stringr::str_detect(x, "[:upper:]\"") # eliminate false positives
 }
 
@@ -37,7 +37,7 @@ o_is_work_item <- function(x) {
 
 o_is_test_that <- function(x) {
   # avoid generic like f works.
-  stringr::str_detect(x, "test_that\\(\"")
+  stringr::str_detect(x, "(?<!['\"])test_that\\(\"")
 }
 
 o_is_generic_test <- function(x) {
@@ -66,15 +66,16 @@ define_outline_criteria <- function(.data, print_todo) {
     is_md = file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown"),
     # is_function_def = stringr::str_detect(file, "[(\\<\\-)=]\\s?function\\("),
     is_test_file = stringr::str_detect(file, "tests/testthat"),
+    is_snap_file = stringr::str_detect(file, "_snaps"),
     # Problematic when looking inside functions
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
     is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
       stringr::str_detect(content, "\\([\"']") &
+      !is_snap_file &
       !stringr::str_detect(content, "(text|inform|bullets|warn|abort|div)|c\\(\\s?$") &
       !stringr::str_detect(content, "paste") &
       !stringr::str_detect(file, "outline.R") &
-      !stringr::str_detect(file, "_snaps") &
       !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
     is_doc_title = stringr::str_detect(content, "(?<!-)title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*cap:"),

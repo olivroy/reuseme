@@ -152,7 +152,7 @@ get_referenced_files <- function(files) {
     stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
     stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
     stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
-    stringr::str_subset(pattern = "grepl?\\(|stringr", negate = TRUE) |> # avoid regexp
+    stringr::str_subset(pattern = "grepl?\\(|stringr|g?sub\\(", negate = TRUE) |> # avoid regexp
     stringr::str_subset(pattern = "nocheck", negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
     stringr::str_subset("\"") |>
     stringr::str_trim() |>

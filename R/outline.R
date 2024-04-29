@@ -316,7 +316,7 @@ print.outline_report <- function(x, ...) {
 
   summary_links_files <- file_sections |>
     dplyr::summarise(
-      first_line = ifelse(any((line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name), outline_el[(line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name][1], NA),
+      first_line = ifelse(any((line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file), outline_el[(line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file][1], NA),
       link = list(purrr::set_names(
         link_rs_api,
         purrr::map_chr(
