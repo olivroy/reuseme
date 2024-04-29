@@ -34,7 +34,7 @@
       outline
     Message
       
-      -- `inst/example-file/outline-script.R` 🦐 Example for `file_outline()` 
+      -- `outline-script.R` 🦐 Example for `file_outline()` 
     Output
       `i` Load packages
       `i` Wrangle + visualize data
