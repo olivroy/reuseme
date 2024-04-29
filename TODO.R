@@ -7,5 +7,4 @@
 # TODO [outline] show extra msg only for some, but in file outline, not in proj?
 # TODO detect url automatically, like link_issue instead of needing {.url }
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
-# TODO [outline] add first item to title (no need for a link)
-# TODO [outline] If a snapshot exists with the same name as test, don't include this test in final
+# TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function.

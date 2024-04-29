@@ -4,13 +4,14 @@
 #' @param x A character vector
 #'
 #' @return A character vector with inline markup scrubbed.
-#' @export
+#' @noRd
 #' @keywords internal
 #' @family inline markup internal helpers
 #' @examples
 #' escape_markup("{gt}")
 #' escape_markup("{.file {here}}")
 #' escape_markup("multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}")
+#' escape_markup("{x^2}")
 escape_markup <- function(x) {
   is_left_bracket <- grepl("{", x, fixed = TRUE)
   is_right_bracket <- grepl("}", x, fixed = TRUE)

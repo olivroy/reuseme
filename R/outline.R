@@ -203,6 +203,9 @@ file_outline <- function(regex_outline = NULL,
     )
   file_sections$recent_only <- recent_only
 
+  if (any(duplicated(file_sections$outline_el))) {
+    file_sections <- scrub_duplicate_outline(file_sections)
+  }
   class(file_sections) <- c("outline_report", class(file_sections))
 
   file_sections
@@ -411,7 +414,7 @@ display_outline_element <- function(.data) {
     outline_el = dplyr::case_when(
       is_todo_fixme ~ stringr::str_extract(content, "(TODO.+)|(FIXME.+)|(WORK.+)"),
       is_test_name ~ stringr::str_extract(content, "test_that\\(['\"](.+)['\"]", group = 1),
-      is_cli_info ~ stringr::str_extract(content, "[\"'](.{5,})[\"']"),
+      is_cli_info ~ stringr::str_extract(content, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
       is_tab_or_plot_title ~ stringr::str_extract(content, "title = [\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next ~ stringr::str_remove(content, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
@@ -494,4 +497,31 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     rs_version = NULL
   ) |>
     dplyr::filter(tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
+}
+
+# Remove duplicated entries from outline
+# for example, snapshots will have priority and will not return both the snapshot and the original test
+scrub_duplicate_outline <- function(x) {
+  x$order <- seq_len(nrow(x))
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = outline_el)
+
+  x <- dplyr::mutate(
+    x,
+    # higher is better
+    points = !is_test_name + is_section_title
+  )
+
+  x <- dplyr::slice_max(
+    x,
+    n = 1,
+    order_by = points,
+    with_ties = TRUE,
+    by = outline_el
+  )
+  # use the previous order
+  x <- dplyr::arrange(x, order)
+  x$points <- NULL
+  x$order <- NULL
+  x$n_dup <- NULL
+  x
 }

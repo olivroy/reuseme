@@ -22,9 +22,5 @@ Note: doesn't support without \if{html}{\out{<OWNER>}}/\if{html}{\out{<REPO>}}
 \examples{
 link_issue(c("We really need rstudio/gt#1469 to be fixed.")) |> cli::cli_bullets()
 }
-\seealso{
-Other inline markup internal helpers: 
-\code{\link{escape_markup}()}
-}
 \concept{inline markup internal helpers}
 \keyword{internal}

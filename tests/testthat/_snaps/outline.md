@@ -15,7 +15,7 @@
       `i` A real one
       `i` A true one
       `i` 'R/my-file.R'
-      `i` "Refer to google (<https://google.com>)"
+      `i` Refer to google (<https://google.com>)
 
 # Other arguments work
 

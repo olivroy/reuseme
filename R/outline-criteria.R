@@ -70,7 +70,8 @@ define_outline_criteria <- function(.data, print_todo) {
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
     is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
-      !stringr::str_detect(content, "(warn|abort|div)|c\\(\\s?$") &
+      stringr::str_detect(content, "\\([\"']") &
+      !stringr::str_detect(content, "(text|inform|bullets|warn|abort|div)|c\\(\\s?$") &
       !stringr::str_detect(content, "paste") &
       !stringr::str_detect(file, "outline.R") &
       !stringr::str_detect(file, "_snaps") &
