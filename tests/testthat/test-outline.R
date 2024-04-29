@@ -3,7 +3,7 @@ test_that("file_outline() works", {
   rlang::local_interactive(TRUE)
   expect_snapshot(
     file_outline(path = my_test_file),
-    transform = ~ sub("_", "", .x, fixed = TRUE)
+    transform = ~ sub("_?ref/", "", .x)
   )
 })
 

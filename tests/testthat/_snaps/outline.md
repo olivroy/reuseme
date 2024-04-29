@@ -4,12 +4,12 @@
       file_outline(path = my_test_file)
     Message
       
-      -- `ref/my-analysis.R` 🦐 Analyse my streets 
+      -- `my-analysis.R` 🦐 Analyse my streets 
     Output
       `i` Read my streets data
       `i` data wrangling
       `i` Write my streets
-      `i` TODO eventually detect this- `Donev?`
+      `i` TODO eventually detect file.path for check_referenced_files- `Donev?`
       `i` TODO Create a new version- `Donev?`
       `i` Roxygen section
       `i` A real one

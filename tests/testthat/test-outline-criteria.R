@@ -12,6 +12,8 @@ test_that("o_is_roxygen_comment() works", {
 
 test_that("o_is_todo_fixme() works", {
   expect_true(o_is_todo_fixme("# TODO: go for it"))
+  # avoid finding comments.
+  expect_false(o_is_todo_fixme("# another TODO item"))
 })
 
 test_that("o_is_work_item() works", {

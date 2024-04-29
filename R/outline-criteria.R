@@ -28,7 +28,7 @@ o_is_todo_fixme <- function(x) {
     !stringr::str_detect(x, "extract_tag_in_text") &
     !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
     !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-    !stringr::str_detect(x, "[:upper:]\"") # eliminate false positives
+    !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,} item") # eliminate false positives
 }
 
 o_is_work_item <- function(x) {

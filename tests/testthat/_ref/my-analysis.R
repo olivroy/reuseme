@@ -12,7 +12,7 @@ new_dat <- my_streets |>
 # Write my streets ------------
 utils::write.csv(new_dat, "data/my-streets-clean.csv", row.names = FALSE)
 
-file.path("data", "my-streets.csv") # TODO eventually detect this
+file.path("data", "my-streets.csv") # TODO eventually detect file.path for check_referenced_files
 fs::path("data", "my-streets", ext = "csv")
 # TODO Create a new version
 
