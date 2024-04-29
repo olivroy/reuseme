@@ -16,6 +16,7 @@
       `i` A true one
       `i` 'R/my-file.R'
       `i` Refer to google (<https://google.com>)
+      `i` Section title
 
 # Other arguments work
 

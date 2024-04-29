@@ -52,9 +52,9 @@ o_is_object_title <- function(x) {
 }
 
 o_is_section_title <- function(x) {
-  section_title <- stringr::str_detect(x, "^\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+  section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
   uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle)$"
-  section_title & !stringr::str_detect(x, uninteresting_headings)
+  section_title & !stringr::str_detect(x, uninteresting_headings) & !o_is_todo_fixme(x)
 }
 
 # Add variable to outline data frame --------------------

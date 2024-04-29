@@ -26,3 +26,7 @@ fs::path("data", "my-streets", ext = "csv")
 
 cli::cli_ul("Refer to {.href [google](https://google.com)}") # not rendered properly currently.
 # ## a commented section title -----
+
+if (TRUE) {
+  # Section title ---
+}

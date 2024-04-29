@@ -421,8 +421,8 @@ display_outline_element <- function(.data) {
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "cap:(.+)", group = 1), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
-      is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
-      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
+      is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
+      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}"), # strip cross-refs.
       .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
     outline_el = dplyr::case_when(
