@@ -189,14 +189,11 @@ file_outline <- function(regex_outline = NULL,
 
 
   if (alpha) {
-    # browser()
     # remove inline markup first before sorting alphabetically
-    file_sections <-
-      dplyr::arrange(
-        file_sections,
-        dplyr::coalesce(stringr::str_extract(stringr::str_remove_all(outline_el, "TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}"), "[:alpha:]"), sample(letters, size = 1))
-      )
+    file_sections <- arrange_outline(file_sections)
   }
+
+  # take most important first!
   file_sections <- file_sections |>
     dplyr::arrange(
       stringr::str_detect(file, "README|NEWS|vignettes")
@@ -461,7 +458,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::mark_todo_as_complete(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", (file), "', '", stringr::str_sub(content, start = -15L), "'))}",
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
         rs_version
       ),
       .default = outline_el
@@ -527,4 +524,22 @@ scrub_duplicate_outline <- function(x) {
   x$order <- NULL
   x$n_dup <- NULL
   x
+}
+
+arrange_outline <- function(x) {
+
+  # extract first letter after removing inline markup
+  var_to_order_by <-  gsub("TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}", "", x$outline_el)
+
+  # Extract first letters
+  var_to_order_by <- stringr::str_extract(
+    var_to_order_by,
+    "[:alpha:]+"
+    )
+  # if no letter, place it randomly
+  var_to_order_by <- dplyr::coalesce(var_to_order_by, sample(letters, size = 1))
+
+  ordered_rows <- order(var_to_order_by)
+
+  x[ordered_rows, ]
 }

@@ -25,9 +25,13 @@ link_issue <- function(x) {
   res <- purrr::map(li, function(x) {
     purrr::map_chr(x, function(y) {
       if (stringr::str_detect(y, issue_regex)) {
+        rest <- stringr::str_extract(y, "([:graph:]+/[^#\\s]+)#(\\d+)(.*)", 3)
+        if (!is.na(rest)) {
+          y <- stringr::str_remove(y, paste0(rest, "$"))
+        }
         rep <- stringr::str_replace_all(y, "([:graph:]+/[^#\\s]+)#(\\d+)", "https://github.com/\\1/issues/\\2")
 
-        y <- paste0("{.href [", y, "](", rep, ")}")
+        y <- paste0("{.href [", y, "](", rep, ")}", rest)
       }
       y
     })
