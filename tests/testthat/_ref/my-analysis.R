@@ -15,6 +15,7 @@ file.path("data", "my-streets.csv") # TODO eventually detect this
 fs::path("data", "my-streets", ext = "csv")
 # TODO Create a new version
 
+#' ## Roxygen section
 #'
 #'
 #' gt::tab_header(title = "A real one") |>
@@ -23,3 +24,4 @@ fs::path("data", "my-streets", ext = "csv")
 # {.file R/my-file.R} ---
 
 cli::cli_ul("Refer to {.href [google](https://google.com)}") # not rendered properly currently.
+# ## a commented section title -----

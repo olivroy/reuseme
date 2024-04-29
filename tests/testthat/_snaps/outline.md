@@ -11,6 +11,7 @@
       `i` Write my streets
       `i` TODO eventually detect this- `Donev?`
       `i` TODO Create a new version- `Donev?`
+      `i` Roxygen section
       `i` A real one
       `i` A true one
       `i` 'R/my-file.R'

@@ -50,7 +50,7 @@ o_is_object_title <- function(x) {
 }
 
 o_is_section_title <- function(x) {
-  section_title <- stringr::str_detect(x, "^\\#+\\s")
+  section_title <- stringr::str_detect(x, "^\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
   uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle)$"
   section_title & !stringr::str_detect(x, uninteresting_headings)
 }
@@ -87,10 +87,10 @@ define_outline_criteria <- function(.data, print_todo) {
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
+    is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
-    is_section_title_source = stringr::str_detect(content, "\\#+\\s") & stringr::str_detect(content, "[-\\=]{3,}") & !stringr::str_detect(content, "\\@param") & stringr::str_starts(content, "\\s*\"", negate = TRUE),
     before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),

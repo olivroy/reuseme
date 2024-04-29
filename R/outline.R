@@ -306,15 +306,18 @@ print.outline_report <- function(x, ...) {
   )
   # browser()
   # TODO filter or provide n-max
-  file_sections <- x
+  file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
+  file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
+
   summary_links_files <- file_sections |>
-    dplyr::mutate(
-      link_rs_api = stringr::str_replace_all(link_rs_api, custom_styling)
-    ) |>
-    # dplyr::summarise(link = list(link_rs_api)) # reinstate iff other is too slow.
     dplyr::summarise(
-      link = list(purrr::set_names(link_rs_api, purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline))),
+      link = list(purrr::set_names(
+        link_rs_api,
+        cli::col_blue(
+          purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline)
+          )
+        )),
       .by = c(file_hl, file)
     )
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
@@ -341,7 +344,7 @@ print.outline_report <- function(x, ...) {
   }
 
   for (i in seq_along(dat)) {
-    base_name <- c(cli::col_blue(names(dat)[[i]]), " ")
+    base_name <- c(names(dat)[[i]], " ")
 
     if (i %in% is_recently_modified) {
       # may decide to just color the name after all
@@ -369,7 +372,7 @@ print.outline_report <- function(x, ...) {
   }
 
   # rm(a_useles_value)
-  invisible(file_sections)
+  invisible(x)
 }
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
@@ -404,7 +407,7 @@ display_outline_element <- function(.data) {
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
       is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
-      is_section_title & !is_md ~ stringr::str_remove(content, "^\\#+\\s+"), # Keep inline markup
+      is_section_title & !is_md ~ stringr::str_remove(content, "^\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
       .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
