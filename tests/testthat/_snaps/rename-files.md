@@ -7,7 +7,7 @@
       ! Found references to "data/my-streets.csv" in project
       i Change file path to "data/my-roads.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
       Also change object names to snake_case that follow the new file name.
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:2:0' and 'R/my-analysis.R:3:11'.
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:3:0' and 'R/my-analysis.R:4:11'.
     Output
       [1] "data/my-roads.csv"
 
@@ -21,7 +21,7 @@
       ! Found references to "data/my-streets.csv" in project
       i Change file path to "data/my-roads.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
       Also change object names to snake_case that follow the new file name.
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:2:0' and 'R/my-analysis.R:3:11'.
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:3:0' and 'R/my-analysis.R:4:11'.
     Output
       [1] "data/my-roads.csv"
 
@@ -48,7 +48,7 @@
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
       i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
-      i Found 1 reference to "data/my-streets.csv" in 'R/my-analysis.R:2:24'.
+      i Found 1 reference to "data/my-streets.csv" in 'R/my-analysis.R:3:24'.
     Output
       [1] "data-raw/my-streets.csv"
 
@@ -60,7 +60,7 @@
       x Did not rename files!
       ! Found references to "data/my-streets.csv" in project
       i Change file path to "data-raw/my-streets.csv" in files ahead of renaming file or see `Find in Files` Replace All if confident. Copied new name to clipboard
-      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:2:0' and 'R/my-analysis.R:3:11'.
+      i Found 2 references to "my-streets/my_streets" in 'R/my-analysis.R:3:0' and 'R/my-analysis.R:4:11'.
     Output
       [1] "data-raw/my-streets.csv"
 

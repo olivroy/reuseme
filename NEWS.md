@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `file_outline()` now prints the first outline element on the first line (to encourage to give an informative description as first line)
+
 * Improved support for escaping inline markup.
 
 * Add a print method to `file_outline()`.

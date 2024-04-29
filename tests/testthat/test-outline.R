@@ -25,7 +25,8 @@ test_that("file_outline() is a data frame", {
   expect_s3_class(outline, "outline_report")
   expect_snapshot(
     outline,
-    transform = ~ sub(" `.+` ", " `outline-script.R` ", .x)
+    # simplify path display to avoid snapshot failures.
+    transform = ~ sub(" `[^`+]` ", " `outline-script.R` ", .x)
   )
 })
 

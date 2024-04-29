@@ -1,3 +1,4 @@
+# Example for `file_outline()` -------------
 # Load packages -----
 library(ggplot2)
 

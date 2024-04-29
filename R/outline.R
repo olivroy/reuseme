@@ -312,14 +312,19 @@ print.outline_report <- function(x, ...) {
 
   summary_links_files <- file_sections |>
     dplyr::summarise(
+      first_line = ifelse(any(line_id == 1), outline_el[line_id == 1][1], NA),
       link = list(purrr::set_names(
         link_rs_api,
-        cli::col_blue(
-          purrr::map_chr(paste0("{.file ", file, ":", line_id, "}"), cli::format_inline)
-          )
-        )),
+        purrr::map_chr(
+          paste0("{.file ", file, ":", line_id, "}"),
+          cli::format_inline
+        )
+      )),
       .by = c(file_hl, file)
     )
+  if (any(duplicated(summary_links_files$file))) {
+    cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
+  }
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
   in_vscode <- FALSE # to do create it.
   if (in_vscode) {
@@ -344,17 +349,22 @@ print.outline_report <- function(x, ...) {
   }
 
   for (i in seq_along(dat)) {
-    base_name <- c(names(dat)[[i]], " ")
+    base_name <- c(cli::col_blue(names(dat)[[i]]), " ")
 
     if (i %in% is_recently_modified) {
       # may decide to just color the name after all
       # was cli::bg_br_green("*")
       # Une crevette
-      cli::cli_h3(c(base_name, cli::style_no_blurred("\U0001f990")))
-    } else {
-      cli::cli_h3(base_name)
+      base_name <- c(base_name, cli::style_no_blurred("\U0001f990"))
     }
 
+    # add first line to title and remove
+    if (!is.na(summary_links_files$first_line[[i]])) {
+      base_name <- c(base_name, " ", cli::format_inline(escape_markup(summary_links_files$first_line[[i]])))
+      dat[[i]] <- dat[[i]][-1L] # remove 1st element
+    }
+
+    cli::cli_h3(base_name)
 
     if (recent_only) {
       if (i %in% is_recently_modified) {
@@ -412,7 +422,7 @@ display_outline_element <- function(.data) {
       .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
     outline_el = dplyr::case_when(
-      is_tab_or_plot_title ~  stringr::str_remove_all(outline_el, "(gt\\:\\:)?tab_header\\(|\\s*(sub)?title\\s\\=\\s['\"]|['\"],?$"),
+      is_tab_or_plot_title ~ stringr::str_remove_all(outline_el, "(gt\\:\\:)?tab_header\\(|\\s*(sub)?title\\s\\=\\s['\"]|['\"],?$"),
       .default = outline_el
     ),
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
@@ -462,7 +472,8 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
       "important" ~ "style_italic", # cli::style_inverse for bullets
       "not_important" ~ "style_inverse",
       .default = NA
-    ))
+    )
+  )
 
   if (anyNA(.data$style_fun)) {
     cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
