@@ -7,4 +7,5 @@
 # TODO [outline] show extra msg only for some, but in file outline, not in proj?
 # TODO detect url automatically, like link_issue instead of needing {.url }
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
-# TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function.
+# TODO escape_markup doesn't work with complex operation {{x^2}} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
+# TODO [outline] avoid evaluating in current env.

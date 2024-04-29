@@ -175,7 +175,7 @@ file_outline <- function(regex_outline = NULL,
   if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
     if (is_active_doc) {
       msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
-        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
+               "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
       )
     } else {
       msg <- c(
@@ -302,6 +302,10 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
 
 #' @export
 print.outline_report <- function(x, ...) {
+  if (nrow(x) == 0) {
+    cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
+    return(invisible(x))
+  }
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
@@ -410,19 +414,19 @@ keep_outline_element <- function(.data) {
 display_outline_element <- function(.data) {
   dplyr::mutate(
     .data,
-    content = purrr::map_chr(content, link_issue), # to add link to GitHub.
+    outline_el = purrr::map_chr(content, link_issue), # to add link to GitHub.
     outline_el = dplyr::case_when(
-      is_todo_fixme ~ stringr::str_extract(content, "(TODO.+)|(FIXME.+)|(WORK.+)"),
-      is_test_name ~ stringr::str_extract(content, "test_that\\(['\"](.+)['\"]", group = 1),
-      is_cli_info ~ stringr::str_extract(content, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
-      is_tab_or_plot_title ~ stringr::str_extract(content, "title = [\"']([^\"]{5,})[\"']", group = 1),
-      is_chunk_cap_next ~ stringr::str_remove(content, "\\s?\\#\\|\\s+"),
-      is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(content, "cap:(.+)", group = 1), "\"|'"),
-      is_cross_ref ~ stringr::str_remove_all(content, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
-      is_doc_title ~ stringr::str_remove_all(content, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
-      is_section_title & !is_md ~ stringr::str_remove(content, "^\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
-      is_section_title & is_md ~ stringr::str_remove_all(content, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
-      .default = stringr::str_remove_all(content, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
+      is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)"),
+      is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"]", group = 1),
+      is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
+      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title = [\"']([^\"]{5,})[\"']", group = 1),
+      is_chunk_cap_next ~ stringr::str_remove(outline_el, "\\s?\\#\\|\\s+"),
+      is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "cap:(.+)", group = 1), "\"|'"),
+      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
+      is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
+      is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
+      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "\\#+\\s+|\\{.+\\}"), # strip cross-refs.
+      .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
     outline_el = dplyr::case_when(
       is_tab_or_plot_title ~ stringr::str_remove_all(outline_el, "(gt\\:\\:)?tab_header\\(|\\s*(sub)?title\\s\\=\\s['\"]|['\"],?$"),
@@ -453,12 +457,11 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     outline_el = dplyr::case_when(
       # Not showing up are the longer items.
       # truncating to make sure the hyperlink shows up.
-      # Mark as done caused issues as it ends with inline markup/.(tracked in r-lib/cli#627)
       is_todo_fixme & is_saved_doc ~ paste0(
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::mark_todo_as_complete(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", (file), "', '", cli::ansi_strip(stringr::str_trim(stringr::str_sub(stringr::str_replace_all(outline_el, "[:punct:]", "."), start = -15L), side = "right")), "'))}",
+        line_id, ", '", (file), "', '", stringr::str_sub(content, start = -15L), "'))}",
         rs_version
       ),
       .default = outline_el

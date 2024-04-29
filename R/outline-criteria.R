@@ -18,11 +18,11 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
     return(FALSE)
   }
 
-  ifelse(is_r_file, stringr::str_starts(x, "#'\\s"), FALSE)
+  ifelse(rep(is_r_file, length.out = length(x)), stringr::str_starts(x, "#'\\s"), FALSE)
 }
 
 o_is_todo_fixme <- function(x) {
-  stringr::str_detect(x, "TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``]") &
+  stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])") &
     !o_is_test_that(x) &
     !stringr::str_starts(x, "\\s*\"") &
     !stringr::str_detect(x, "extract_tag_in_text") &
@@ -60,7 +60,7 @@ o_is_section_title <- function(x) {
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {
-  dplyr::mutate(
+  x <- dplyr::mutate(
     .data,
     file_ext = fs::path_ext(file),
     is_md = file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown"),
@@ -99,6 +99,7 @@ define_outline_criteria <- function(.data, print_todo) {
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
   )
+  x
 }
 
-# it is {.file R/outline-criteria.R} ------
+# it is {.file R/outline.R} ------

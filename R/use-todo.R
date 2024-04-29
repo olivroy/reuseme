@@ -143,7 +143,7 @@ mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
     line_content_new <- ""
   } else {
     cli::cli_alert_success(
-      "Marking {.code {line_content}} as done! (Removing the {tag_type})"
+      "Marking {.code {line_content_show}} as done! (Removing the {tag_type})"
     )
     line_content_new <- sub(
       pattern = paste0(tag_type, "\\s+"),

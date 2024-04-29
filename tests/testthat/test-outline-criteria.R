@@ -1,6 +1,13 @@
 # Testing individual components of the outline ------
 test_that("o_is_roxygen_comment() works", {
   expect_true(o_is_roxygen_comment("#' @param"))
+  expect_equal(
+    o_is_roxygen_comment(
+      c("#' @param", "# a comment", "#' a qmd things?"),
+      c("R", "R", "qmd")
+    ),
+    c(TRUE, FALSE, FALSE)
+    )
 })
 
 test_that("o_is_todo_fixme() works", {
