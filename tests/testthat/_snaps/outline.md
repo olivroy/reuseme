@@ -24,6 +24,9 @@
       `i` A code section
       `i` A subsection
       `i` A section2
+      `i` A long ggplot2 title
+      `i` A code section
+      `i` Dashboard card
 
 # Other arguments work
 
