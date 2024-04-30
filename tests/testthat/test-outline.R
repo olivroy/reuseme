@@ -30,6 +30,14 @@ test_that("file_outline() is a data frame", {
   )
 })
 
+test_that("file_outline() contains function calls", {
+  file <- fs::path_package("reuseme", "example-file", "outline-script.R")
+  outline <- file_outline(path = file)
+  expect_contains(outline$outline_el, c("f_example", "f2_example"))
+  # excludes commented things
+  expect_no_match(outline$outline_el, "f_commented_example")
+})
+
 test_that("dir_outline() works with no error", {
   expect_no_error(dir_outline(regex_outline = ".+", path = test_path("_ref")))
 })

@@ -10,3 +10,15 @@ mtcars |>
     title = "A great title"
   )
 # TODO improve this Viz!
+
+f_example <- function(x) {
+  x ** 2
+}
+if (FALSE) {
+  f2_example <- function(x) {
+    x ** 2
+  }
+  # f_commented_example <- function(x) {
+  #   x ** 2
+  # }
+}

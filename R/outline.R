@@ -309,6 +309,7 @@ print.outline_report <- function(x, ...) {
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
   summary_links_files <- file_sections |>
+    dplyr::filter(!is_function_def) |>
     dplyr::summarise(
       first_line = unique(title_el_line),
       first_line_el = unique(title_el),
@@ -394,7 +395,7 @@ keep_outline_element <- function(.data) {
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-      is_cli_info | is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref
+      is_cli_info | is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def
   )
 }
 
@@ -417,6 +418,7 @@ display_outline_element <- function(.data) {
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}"), # strip cross-refs.
+      is_function_def ~ stringr::str_extract(outline_el, "(.+)\\<-", group = 1) |> stringr::str_trim(),
       .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
     outline_el = dplyr::case_when(

@@ -100,7 +100,8 @@ define_outline_criteria <- function(.data, print_todo) {
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
+    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
   )
   x
 }

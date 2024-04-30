@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `file_outline()` now get function calls, but doesn't print them by default.
+
 * `proj_outline()` truncates todo items to fit on a single line.
 
 * can now personalize recent file indicator with `options(reuseme.recent_indicator)`, by default, a clock.
