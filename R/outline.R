@@ -457,6 +457,7 @@ display_outline_element <- function(.data) {
     )
     y <- y[!is.na(y$outline_el), ]
   }
+  y
 }
 
 define_important_element <- function(.data) {
