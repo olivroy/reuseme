@@ -1,7 +1,7 @@
 # file_outline() works
 
     Code
-      file_outline(path = my_test_file, alpha = TRUE)
+      file_outline(path = my_test_files, alpha = TRUE)
     Message
       
       -- `my-analysis.R` 🕒 Analyse my streets 
@@ -16,6 +16,14 @@
       `i` Write my streets
       `i` data wrangling
       `i` 'R/my-file.R'
+    Message
+      
+      -- `my-analysis.md` 🕒 A section 
+    Output
+      `i` A section
+      `i` A code section
+      `i` A subsection
+      `i` A section2
 
 # Other arguments work
 

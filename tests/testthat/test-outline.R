@@ -1,8 +1,8 @@
 test_that("file_outline() works", {
-  my_test_file <- test_path("_ref", "my-analysis.R")
+  my_test_files <- test_path("_ref", c("my-analysis.R", "my-analysis.md"))
   rlang::local_interactive(TRUE)
   expect_snapshot(
-    file_outline(path = my_test_file, alpha = TRUE),
+    file_outline(path = my_test_files, alpha = TRUE),
     transform = ~ sub("_?ref/", "", .x)
   )
 })
