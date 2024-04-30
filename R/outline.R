@@ -437,7 +437,7 @@ display_outline_element <- function(.data) {
     x,
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        is_doc_title,
+        (is_doc_title & !is_subtitle),
     title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | is_doc_title], NA),
     title_el = outline_el[title_el_line],
     .by = file
@@ -446,6 +446,9 @@ display_outline_element <- function(.data) {
   na_if0 <- function(x) {
     if (length(x) == 0) {
       x <- NA
+    }
+    if (length(x) == 2) {
+      cli::cli_inform("{x} are detected as document title. Internal error")
     }
     x
   }
