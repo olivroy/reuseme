@@ -47,7 +47,7 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_object_title <- function(x) {
-  stringr::str_detect(x, "(?<!\")title = [\"']|tab_header") &
+  stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']|tab_header") &
     !grepl("[", x, fixed = TRUE) &
     !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
 }

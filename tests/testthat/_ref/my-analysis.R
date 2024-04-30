@@ -29,4 +29,6 @@ cli::cli_ul("Refer to {.href [google](https://google.com)}") # not rendered prop
 
 if (TRUE) {
   # Section title ---
+  pattern = "{1} <abbr title = '{4}'>{3}</abbr> <br> <small><p style='color:gray;'> {2}</p> </small>"
+
 }
