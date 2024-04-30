@@ -1,19 +1,20 @@
 ## `proj_outline()` -------------
 #' Print interactive outline of file sections
 #'
+#' @description
 #' RStudio project, or directories
 #' This will fail if you are trying to map an unsaved file.
 #'
 #' If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #' in `path`. `work_only = TRUE` will have an effect on regex_outline.
-#' These functions are more
+#'
 #' By default
-#' * `file_outline()` prints the outline the [`active document`](active_document) if in RStudio
-#' * `proj_outline()` prints the outline of the active project if in RStudio
-#' * `dir_outline()` prints the outline of the active working directory by default or
+#' * `file_outline()` prints the outline the [active document][active_rs_doc()] if in RStudio
+#' * `proj_outline()` prints the outline of the [active project][usethis::proj_get()] if in RStudio
+#' * `dir_outline()` prints the outline of the [active working directory][getwd()] by default or
 #'
 #' @details
-#' proj_* and dir_ call file_outline.
+#' `proj_outline()` and `dir_outline()` are wrapper of `file_outline()`.
 #'
 #' The parser is very opinioneted and is not very robust as it is based on regexps.
 #' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/), `{roxygen2}`

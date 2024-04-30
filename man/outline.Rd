@@ -62,19 +62,19 @@ A symbol will show for recently modified files.
 \description{
 RStudio project, or directories
 This will fail if you are trying to map an unsaved file.
-}
-\details{
+
 If \code{work_only} is set to \code{TRUE}, the function will only return outline of the \verb{# WORK} comment
 in \code{path}. \code{work_only = TRUE} will have an effect on regex_outline.
-These functions are more
+
 By default
 \itemize{
-\item \code{file_outline()} prints the outline the \href{active_document}{\verb{active document}} if in RStudio
-\item \code{proj_outline()} prints the outline of the active project if in RStudio
-\item \code{dir_outline()} prints the outline of the active working directory by default or
+\item \code{file_outline()} prints the outline the \link[=active_rs_doc]{active document} if in RStudio
+\item \code{proj_outline()} prints the outline of the \link[usethis:proj_utils]{active project} if in RStudio
+\item \code{dir_outline()} prints the outline of the \link[=getwd]{active working directory} by default or
 }
-
-proj_* and dir_ call file_outline.
+}
+\details{
+\code{proj_outline()} and \code{dir_outline()} are wrapper of \code{file_outline()}.
 
 The parser is very opinioneted and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser}, \code{{roxygen2}}
