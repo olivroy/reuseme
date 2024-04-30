@@ -76,7 +76,7 @@ use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
 #'   content invisibly.
 #' @export
 #' @keywords internal
-mark_todo_as_complete <- function(line_id, file, regexp, rm_line = NULL) {
+complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   check_string(regexp)
   check_number_whole(line_id)
   line_id_original <- line_id

@@ -35,19 +35,19 @@ test_that("Marking a TODO item as done works", {
   # tmp still has 7 lines
   expect_snapshot(error = TRUE, {
     # Can't delete the first line as it doesn't contain a TODO item
-    mark_todo_as_complete(line_id = 1, file = tmp, regexp = "I Want this done")
+    complete_todo(line_id = 1, file = tmp, regexp = "I Want this done")
     # Try to delete TODO item at line 2 without providing the regexp for safeguard
-    mark_todo_as_complete(line_id = 2, file = tmp)
+    complete_todo(line_id = 2, file = tmp)
   })
   # Deleting the TODO item line completely (tmp now has 4 lines)
   expect_mark_as_complete(
-    mark_todo_as_complete(line_id = 2, file = tmp, regexp = "item to delete")
+    complete_todo(line_id = 2, file = tmp, regexp = "item to delete")
   )
   # Deleting the work tag (on new line 2), but keeping the comment.
   # Will throw a warning for now.
 
   expect_mark_as_complete(
-    out <- mark_todo_as_complete(
+    out <- complete_todo(
       line_id = 3,
       file = tmp,
       regexp = "Explain what the next code does"
@@ -59,7 +59,7 @@ test_that("Marking a TODO item as done works", {
     "# Explain what the next code does."
   )
   expect_mark_as_complete(
-    out <- mark_todo_as_complete(
+    out <- complete_todo(
       line_id = 4,
       file = tmp,
       regexp = "ethisissues1890"
@@ -79,7 +79,7 @@ test_that("Marking a TODO item as done works", {
     )
   )
   unlink(tmp)
-  skip("mark_todo_as_complete fails if changing lines + regexp match in many places. Many add a condition like closest")
+  skip("complete_todo fails if changing lines + regexp match in many places. Many add a condition like closest")
 })
 
 test_that("use_todo global works", {
