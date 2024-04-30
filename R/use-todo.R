@@ -136,13 +136,19 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   if (is.null(rm_line)) {
     rm_line <- tag_type %in% c("TODO", "FIXME")
   }
+  line_content_before_comment <- stringr::str_extract(line_content, "([^#]+)#", group = 1)
+  line_content_todo <- stringr::str_extract(line_content, "#[^#]+")
   line_content_show <- stringr::str_squish(line_content)
 
   if (rm_line) {
-    line_content_show <- cli::style_strikethrough(line_content_show)
+    if (is.na(line_content_before_comment)) {
+      line_content_show <- cli::style_strikethrough(line_content_show)
+    } else {
+      line_content_show <- paste(line_content_before_comment, cli::style_strikethrough(line_content_todo))
+    }
   } else {
     # Only strikethrough the tag
-    regex <- paste0("\\s", tag_type)
+    regex <- paste0(" ", tag_type)
     regex_new <- cli::style_strikethrough(regex)
     line_content_show <- stringr::str_replace(line_content_show, regex, regex_new)
   }
@@ -152,8 +158,15 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   )
 
   if (rm_line) {
-    file_content_new <- file_content[-line_id]
-    line_content_new <- ""
+    if (is.na(line_content_before_comment)) {
+      file_content_new <- file_content[-line_id]
+      line_content_new <- ""
+    } else {
+      line_content_new <- line_content_before_comment
+      file_content[line_id] <- line_content_before_comment
+      file_content_new <- file_content
+    }
+
   } else {
     line_content_new <- sub(
       pattern = paste0(tag_type, "\\s+"),

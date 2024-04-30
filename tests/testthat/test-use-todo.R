@@ -21,8 +21,8 @@ test_that("Marking a TODO item as done works", {
   tmp <- tempfile(fileext = "R")
   content <- c(
     "# I Want this done",
-    "# TODO item to delete",
-    "# WORK Explain what the next code does.",
+    "2^2 # TODO item to delete",
+    "2^2 # WORK Explain what the next code does.",
     "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
     "   # TODO Check r-lib/usethis#1890",
@@ -56,7 +56,7 @@ test_that("Marking a TODO item as done works", {
   )
   expect_equal(
     out,
-    "# Explain what the next code does."
+    "2^2 # Explain what the next code does."
   )
   expect_complete_todo(
     out <- complete_todo(
@@ -70,9 +70,11 @@ test_that("Marking a TODO item as done works", {
     read_utf8(tmp),
     c(
       "# I Want this done",
-      "# Explain what the next code does.",
+      "2^2 ",
+      "2^2 # Explain what the next code does.",
       "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
+      "   ",
       "# TODO Check https://github.com/r-lib/usethis/issues/1890",
       "print('R code')",
       "# TODO Another TODO"
