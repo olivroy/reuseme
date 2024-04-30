@@ -438,8 +438,8 @@ display_outline_element <- function(.data) {
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
         (is_doc_title & !is_subtitle),
-    title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | is_doc_title], NA),
-    title_el = outline_el[title_el_line],
+    title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | (is_doc_title & !is_subtitle)], NA),
+    title_el = outline_el[line_id == title_el_line],
     .by = file
   )
   y$outline_el <- ifelse(y$has_title_el, NA, y$outline_el)

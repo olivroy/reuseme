@@ -11,6 +11,7 @@ test_that("Other arguments work", {
   my_test_file <- test_path("_ref/my-analysis.R")
   rlang::local_interactive(TRUE)
   # Somehow on r cmd check, strips _ref -> ref?
+  # it is just RStudio vs non-Rstudio
   expect_snapshot(
     error = FALSE,
     file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE),

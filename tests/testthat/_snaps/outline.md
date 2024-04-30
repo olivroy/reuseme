@@ -18,7 +18,7 @@
       `i` 'R/my-file.R'
     Message
       
-      -- `my-analysis.md` 🕒 A section 
+      -- `my-analysis.md` 🕒 My doc title 
     Output
       `i` A section
       `i` A code section
