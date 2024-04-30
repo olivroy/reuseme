@@ -19,7 +19,7 @@ f |> as_tibble()
 
 * `rename_files2()` was rewritten. Now uses `warn_conflicts` to determine what to do. `force` is now deprecated. Is now separated in smaller functions that are easier to test and to extend.
 
-* `mark_todo_as_complete()` will save opened documents before attempting to mark as complete.
+* `complete_todo()` will save opened documents before attempting to mark as complete.
 
 * `use_todo()` should work on all platforms now.
 
@@ -40,7 +40,7 @@ f |> as_tibble()
 
 * `use_todo()` no longer fails when not in a RStudio project
 
-* `mark_todo_as_complete()` can be used multiple times sequentially and will only throw a warning (for now).
+* `complete_todo()` can be used multiple times sequentially and will only throw a warning (for now).
 
 * `screenshot()` works with generic file paths that contain numbers and returns the correct message.
 

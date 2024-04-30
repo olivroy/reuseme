@@ -18,7 +18,7 @@
 #' The parser is very opinioneted and is not very robust as it is based on regexps.
 #' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/), `{roxygen2}`
 #'
-#' Will show TODO items and will offer a link to [mark them as complete][mark_todo_as_complete()]
+#' Will show TODO items and will offer a link to [mark them as complete][complete_todo()]
 #' @param path,proj A character vector of file paths, a [project][proj_list()]. Defaults to active file, project or directory. `rstudioapi::documentPath()`
 #' @param regex_outline A string or regex to search for in the outline
 #' @param work_only If `TRUE`, (the default), will only show you work items first. Set to `FALSE` if you want to see the full outline. `WORK` will combine with `regex_outline`
@@ -458,9 +458,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
       # truncating to make sure the hyperlink shows up.
       is_todo_fixme & is_saved_doc ~ paste0(
         outline_el,
-        "- {.run [Done{cli::symbol$tick}?](reuseme::mark_todo_as_complete(",
+        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
         rs_version
       ),
       .default = outline_el
