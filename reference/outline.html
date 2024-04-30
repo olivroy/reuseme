@@ -61,9 +61,7 @@ This will fail if you are trying to map an unsaved file.</p>
 <span>  alpha <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  dir_common <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  print_todo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  width <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/console_width.html" class="external-link">console_width</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  n_colors <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">proj_outline</span><span class="op">(</span></span>
@@ -116,14 +114,6 @@ If <code>FALSE</code>, will print a less verbose output with sections.</p></dd>
 <dd><p>Show outline for recent files</p></dd>
 
 
-<dt>width</dt>
-<dd><p>Width (internal)</p></dd>
-
-
-<dt>n_colors</dt>
-<dd><p>Number colours (Internal)</p></dd>
-
-
 <dt>dir_tree</dt>
 <dd><p>If <code>TRUE</code>, will print the <code><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">fs::dir_tree()</a></code> or non-R files in the directory</p></dd>
 
@@ -173,14 +163,14 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># interact with data frame</span></span></span>
 <span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 35</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 37</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   file          line_id content outline_el title_el title_el_line file_ext is_md</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /home/runner…       2 <span style="color: #949494;">"</span># Loa… Load pack… Example…             1 R        FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /home/runner…       5 <span style="color: #949494;">"</span># Wra… Wrangle +… Example…             1 R        FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /home/runner…      10 <span style="color: #949494;">"</span>    t… A great t… Example…             1 R        FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /home/runner…      12 <span style="color: #949494;">"</span># TOD… TODO impr… Example…             1 R        FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 27 more variables: is_test_file &lt;lgl&gt;, is_snap_file &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 29 more variables: is_test_file &lt;lgl&gt;, is_snap_file &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_cli_info &lt;lgl&gt;, is_doc_title &lt;lgl&gt;, is_chunk_cap &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_chunk_cap_next &lt;lgl&gt;, is_test_name &lt;lgl&gt;, is_section_title &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_section_title_source &lt;lgl&gt;, is_tab_or_plot_title &lt;lgl&gt;,</span></span>
