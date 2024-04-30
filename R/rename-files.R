@@ -106,7 +106,7 @@ rename_files2 <- function(old,
       "!" = paste0("Found references to {.val ", old, "} in project"),
       "i" = paste0("Change file path to {.val ", new, "} in files ahead of renaming file or \\
                   see {.run [Find in Files](rstudioapi::executeCommand('findInFiles'))} Replace All if confident. {.emph Copied new name to clipboard}"),
-      if (suggest_snake_case_change) "i" = "Also change object names to snake_case that follow the new file name."
+      if (suggest_snake_case_change) "i" <- "Also change object names to snake_case that follow the new file name."
     )
   } else {
     extra_msg_if_file_conflict <- c("Here are the conflicts. Review changes carefully", "renaming file anyway")

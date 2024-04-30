@@ -175,7 +175,7 @@ file_outline <- function(regex_outline = NULL,
   if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
     if (is_active_doc) {
       msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
-               "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
+        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
       )
     } else {
       msg <- c(
@@ -203,6 +203,9 @@ file_outline <- function(regex_outline = NULL,
   if (any(duplicated(file_sections$outline_el))) {
     file_sections <- scrub_duplicate_outline(file_sections)
   }
+  file_sections <- file_sections |> dplyr::relocate(
+    outline_el, title_el, title_el_line, .after = content
+  )
   class(file_sections) <- c("outline_report", class(file_sections))
 
   file_sections
@@ -433,14 +436,12 @@ display_outline_element <- function(.data) {
     x,
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        is_doc_title
-    ,
+        is_doc_title,
     title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | is_doc_title], NA),
-
     title_el = outline_el[title_el_line],
-    outline_el = ifelse(has_title_el, NA, outline_el)
+    .by = file
   )
-  y
+  y$outline_el <- ifelse(y$has_title_el, NA, y$outline_el)
   na_if0 <- function(x) {
     if (length(x) == 0) {
       x <- NA
@@ -452,11 +453,10 @@ display_outline_element <- function(.data) {
       y,
       title_el = na_if0(title_el[!is.na(title_el)]),
       title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
-      .by = file
+      .by = c(file)
     )
-    y <- y[!is.na(y$outline_el),]
+    y <- y[!is.na(y$outline_el), ]
   }
-
 }
 
 define_important_element <- function(.data) {
@@ -472,6 +472,10 @@ define_important_element <- function(.data) {
 construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outline) {
   rs_avail_file_link <- rstudioapi::isAvailable("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
+
+  if (is.null(dir_common) || !nzchar(dir_common)) {
+    dir_common <- "Don't remove anything if not null"
+  }
   .data <- dplyr::mutate(
     .data,
     # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
@@ -494,7 +498,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     is_saved_doc = .env$is_saved_doc,
 
     # May have caused CI failure
-    text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common %||% "Don't remove anything if NULL")) |> stringr::str_remove("^/"),
+    text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common)) |> stringr::str_remove("^/"),
     # decide which is important
     style_fun = dplyr::case_match(importance,
       "important" ~ "style_italic", # cli::style_inverse for bullets
@@ -552,15 +556,14 @@ scrub_duplicate_outline <- function(x) {
 }
 
 arrange_outline <- function(x) {
-
   # extract first letter after removing inline markup
-  var_to_order_by <-  gsub("TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}", "", x$outline_el)
+  var_to_order_by <- gsub("TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}", "", x$outline_el)
 
   # Extract first letters
   var_to_order_by <- stringr::str_extract(
     var_to_order_by,
     "[:alpha:]+"
-    )
+  )
   # if no letter, place it randomly
   var_to_order_by <- dplyr::coalesce(var_to_order_by, sample(letters, size = 1))
 

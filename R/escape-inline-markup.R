@@ -71,7 +71,6 @@ escape_markup <- function(x) {
     cli::cli_abort("internal errror. Did not transform string correctly.")
   }
   x
-
 }
 
 #' Is inline markup valid?

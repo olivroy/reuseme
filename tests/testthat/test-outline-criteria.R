@@ -7,7 +7,7 @@ test_that("o_is_roxygen_comment() works", {
       c("R", "R", "qmd")
     ),
     c(TRUE, FALSE, FALSE)
-    )
+  )
 })
 
 test_that("o_is_todo_fixme() works", {
@@ -50,6 +50,6 @@ test_that("No outline criteria are untested", {
     stringr::str_subset(ls("package:reuseme"), "^o_is")
   # Add tests if it fails.
   expect_snapshot(
-     cat(outline_crit, sep = "\n")
+    cat(outline_crit, sep = "\n")
   )
 })

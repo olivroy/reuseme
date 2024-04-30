@@ -65,8 +65,8 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
   possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE)
-  possible_files <- fs::path_filter(possible_files, regexp =  "_snaps", invert = TRUE)
-  possible_files <- fs::path_filter(possible_files, regexp =  file)
+  possible_files <- fs::path_filter(possible_files, regexp = "_snaps", invert = TRUE)
+  possible_files <- fs::path_filter(possible_files, regexp = file)
 
   if (length(possible_files) == 0) {
     if (is.null(regex_outline)) {

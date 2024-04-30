@@ -148,10 +148,10 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   }
 
   cli::cli_alert_success(
-    "Removed {.code {line_content_show}} from {.file {file}}!")
+    "Removed {.code {line_content_show}} from {.file {file}}!"
+  )
 
   if (rm_line) {
-
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {

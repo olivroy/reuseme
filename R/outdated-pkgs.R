@@ -113,6 +113,7 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     fn_install <- "utils::install.packages"
   }
   cli::cli_bullets(c(
-    "Update all with", "{fn_install}({pkgs})"))
+    "Update all with", "{fn_install}({pkgs})"
+  ))
   invisible(names(outdated_pkg))
 }

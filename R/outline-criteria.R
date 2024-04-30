@@ -7,7 +7,6 @@
 #'
 #' @noRd
 o_is_roxygen_comment <- function(x, file_ext = NULL) {
-
   if (!is.null(file_ext)) {
     is_r_file <- tolower(file_ext) == "r"
   } else {

@@ -25,8 +25,8 @@ test_that("escape_markup() works", {
   expect_no_error(
     cli::format_inline(escape_markup(c(
       "i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}."
-    ))
-  ))
+    )))
+  )
 })
 
 # test helpers
