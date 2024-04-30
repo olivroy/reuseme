@@ -57,7 +57,7 @@
 <ul><li><p>Add <code><a href="../reference/outline.html">file_outline()</a></code></p></li>
 <li><p><code>solve_file_name_conflicts()</code> now returns the number of conflicts instead of <code>TRUE</code>, <code>FALSE</code></p></li>
 <li><p><code><a href="../reference/rename_files2.html">rename_files2()</a></code> was rewritten. Now uses <code>warn_conflicts</code> to determine what to do. <code>force</code> is now deprecated. Is now separated in smaller functions that are easier to test and to extend.</p></li>
-<li><p><code><a href="../reference/mark_todo_as_complete.html">mark_todo_as_complete()</a></code> will save opened documents before attempting to mark as complete.</p></li>
+<li><p><code><a href="../reference/complete_todo.html">complete_todo()</a></code> will save opened documents before attempting to mark as complete.</p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> should work on all platforms now.</p></li>
 <li><p><code>check_files_exist_in_dir()</code> -&gt; <code><a href="../reference/check_referenced_files.html">check_referenced_files()</a></code></p></li>
 <li><p>Require R 4.1 and use base pipe</p></li>
@@ -67,7 +67,7 @@
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> allows to write to no project with use_todo(“all::”)</p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> provides the handy <proj>::<todo items> as a shortcut for `use_todo(“todo items”, “proj”) to write TODO items to other projects.</todo></proj></p></li>
 <li><p><code><a href="../reference/use_todo.html">use_todo()</a></code> no longer fails when not in a RStudio project</p></li>
-<li><p><code><a href="../reference/mark_todo_as_complete.html">mark_todo_as_complete()</a></code> can be used multiple times sequentially and will only throw a warning (for now).</p></li>
+<li><p><code><a href="../reference/complete_todo.html">complete_todo()</a></code> can be used multiple times sequentially and will only throw a warning (for now).</p></li>
 <li><p><code><a href="../reference/screenshot.html">screenshot()</a></code> works with generic file paths that contain numbers and returns the correct message.</p></li>
 <li><p><code><a href="../reference/screenshot.html">screenshot()</a></code> had internal cleanup.</p></li>
 <li>

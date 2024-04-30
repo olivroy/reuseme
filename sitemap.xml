@@ -31,6 +31,9 @@
     <loc>https://olivroy.github.io/reuseme/reference/check_referenced_files.html</loc>
   </url>
   <url>
+    <loc>https://olivroy.github.io/reuseme/reference/complete_todo.html</loc>
+  </url>
+  <url>
     <loc>https://olivroy.github.io/reuseme/reference/count_pct.html</loc>
   </url>
   <url>
@@ -47,9 +50,6 @@
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/link_issue.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/mark_todo_as_complete.html</loc>
   </url>
   <url>
     <loc>https://olivroy.github.io/reuseme/reference/na_if2.html</loc>
