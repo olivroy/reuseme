@@ -22,13 +22,15 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
 }
 
 o_is_todo_fixme <- function(x) {
-  stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])") &
+  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])") &
     !o_is_test_that(x) &
-    !stringr::str_starts(x, "\\s*\"") &
+    !stringr::str_starts(x, "\\s*\"\\s*") &
     !stringr::str_detect(x, "extract_tag_in_text") &
     !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
     !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
     !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,} item") # eliminate false positives
+
+  has_todo & !stringr::str_detect(x, "\".*(TODO|FIXME|WORK)") # remove some true negs for now.
 }
 
 o_is_work_item <- function(x) {
@@ -47,7 +49,7 @@ o_is_generic_test <- function(x) {
 # Returns table or plot titles.
 o_is_object_title <- function(x) {
   stringr::str_detect(x, "(?<!\")title = [\"']|tab_header") &
-    stringr::str_detect(x, "\\[", negate = TRUE) &
+    !grepl("[", x, fixed = TRUE) &
     !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
 }
 
@@ -60,13 +62,14 @@ o_is_section_title <- function(x) {
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {
+  x <- .data
+  x$file_ext <- fs::path_ext(x$file)
+  x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
+  x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
+  x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
+
   x <- dplyr::mutate(
-    .data,
-    file_ext = fs::path_ext(file),
-    is_md = file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown"),
-    # is_function_def = stringr::str_detect(file, "[(\\<\\-)=]\\s?function\\("),
-    is_test_file = stringr::str_detect(file, "tests/testthat"),
-    is_snap_file = stringr::str_detect(file, "_snaps"),
+    x,
     # Problematic when looking inside functions
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
@@ -74,9 +77,9 @@ define_outline_criteria <- function(.data, print_todo) {
       stringr::str_detect(content, "\\([\"']") &
       !is_snap_file &
       !stringr::str_detect(content, "(text|inform|bullets|warn|abort|div)|c\\(\\s?$") &
-      !stringr::str_detect(content, "paste") &
-      !stringr::str_detect(file, "outline.R") &
-      !stringr::str_detect(content, "\\^"), # Detect UI messages and remove them
+      !grepl("paste", content, fixed = TRUE) &
+      !grepl("outline.R", file, fixed = TRUE) &
+      !grepl("^", content, fixed = TRUE), # Detect UI messages and remove them
     is_doc_title = stringr::str_detect(content, "(?<!-)title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*cap:"),
     # deal with chunk cap
@@ -93,7 +96,7 @@ define_outline_criteria <- function(.data, print_todo) {
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
-    is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !stringr::str_detect(file, "_snaps"),
+    is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),

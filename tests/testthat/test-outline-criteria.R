@@ -14,6 +14,10 @@ test_that("o_is_todo_fixme() works", {
   expect_true(o_is_todo_fixme("# TODO: go for it"))
   # avoid finding comments.
   expect_false(o_is_todo_fixme("# another TODO item"))
+  expect_true(o_is_todo_fixme("  # WORK this out"))
+  expect_true(o_is_todo_fixme("  # TODO this is important"))
+  expect_true(o_is_todo_fixme("  # FIXME this is important"))
+  expect_false(o_is_todo_fixme("  expect_true(o_is_todo_fixme(\"  # TODO this is important\"))"))
 })
 
 test_that("o_is_work_item() works", {

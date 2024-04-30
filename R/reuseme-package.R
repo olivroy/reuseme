@@ -5,5 +5,6 @@
 #' @import rlang
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
+#' @importFrom rlang %|%
 ## usethis namespace: end
 NULL

@@ -314,12 +314,8 @@ print.outline_report <- function(x, ...) {
 
   summary_links_files <- file_sections |>
     dplyr::summarise(
-      first_line = ifelse(
-        any((line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file),
-        which((is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file)[1] %|% which(line_id == 1) %|% 1L,
-      NA_integer_
-      ),
-      first_line_el = ifelse(!is.na(first_line), outline_el[first_line], NA),
+      first_line = unique(title_el_line),
+      first_line_el = unique(title_el),
       link = list(purrr::set_names(
         link_rs_api,
         purrr::map_chr(
@@ -368,7 +364,6 @@ print.outline_report <- function(x, ...) {
     # add first line to title and remove
     if (!is.na(summary_links_files$first_line[[i]])) {
       base_name <- c(base_name, " ", cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]])))
-      dat[[i]] <- dat[[i]][-summary_links_files$first_line[[i]]] # remove 1st element
     }
 
     cli::cli_h3(base_name)
@@ -411,7 +406,7 @@ keep_outline_element <- function(.data) {
 # Remove title =
 # Removing quotes, etc.
 display_outline_element <- function(.data) {
-  dplyr::mutate(
+  x <- dplyr::mutate(
     .data,
     outline_el = purrr::map_chr(content, link_issue), # to add link to GitHub.
     outline_el = dplyr::case_when(
@@ -432,8 +427,36 @@ display_outline_element <- function(.data) {
       .default = outline_el
     ),
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
-    is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt")
+    is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
   )
+  y <- dplyr::mutate(
+    x,
+    has_title_el =
+      (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+        is_doc_title
+    ,
+    title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | is_doc_title], NA),
+
+    title_el = outline_el[title_el_line],
+    outline_el = ifelse(has_title_el, NA, outline_el)
+  )
+  y
+  na_if0 <- function(x) {
+    if (length(x) == 0) {
+      x <- NA
+    }
+    x
+  }
+  if (!all(is.na(y$title_el))) {
+    y <- dplyr::mutate(
+      y,
+      title_el = na_if0(title_el[!is.na(title_el)]),
+      title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
+      .by = file
+    )
+    y <- y[!is.na(y$outline_el),]
+  }
+
 }
 
 define_important_element <- function(.data) {

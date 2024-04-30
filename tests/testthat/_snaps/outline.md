@@ -15,7 +15,6 @@
       `i` Section title
       `i` Write my streets
       `i` data wrangling
-      `i` TODO eventually detect file.path for check_referenced_files- `Donev?`
       `i` 'R/my-file.R'
 
 # Other arguments work
