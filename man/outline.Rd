@@ -14,9 +14,7 @@ file_outline(
   alpha = FALSE,
   dir_common = NULL,
   print_todo = TRUE,
-  recent_only = FALSE,
-  width = cli::console_width(),
-  n_colors = NULL
+  recent_only = FALSE
 )
 
 proj_outline(
@@ -52,10 +50,6 @@ dir_outline(
 If \code{FALSE}, will print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
-
-\item{width}{Width (internal)}
-
-\item{n_colors}{Number colours (Internal)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}
 }

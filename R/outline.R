@@ -28,8 +28,6 @@
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in the directory
 #' @param recent_only Show outline for recent files
 #' @param dir_common (Do not use it)
-#' @param width Width (internal)
-#' @param n_colors Number colours (Internal)
 #'
 #' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
@@ -63,17 +61,9 @@ file_outline <- function(regex_outline = NULL,
                          alpha = FALSE,
                          dir_common = NULL,
                          print_todo = TRUE,
-                         recent_only = FALSE,
-                         width = cli::console_width(), # TODO put this in ... when I understand {.fn rlang::check_dots_used} as it may not be needed with 2023.12
-                         n_colors = NULL) {
+                         recent_only = FALSE
+                         ) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
-  # https://github.com/r-lib/cli/issues/607
-  # Make output faster with cli!
-  if (is.null(n_colors)) {
-    withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
-  } else {
-    withr::local_options(list(cli.num_colors = n_colors))
-  }
 
   if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
@@ -270,7 +260,6 @@ proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = T
 #' @rdname outline
 #' @export
 dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
-  n_colors <- cli::num_ansi_colors()
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -295,13 +284,17 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, regex_outline = regex_outline, work_only = work_only, dir_common = dir, alpha = alpha, n_colors = n_colors, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, regex_outline = regex_outline, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
 # Methods -------------------
 
 #' @export
 print.outline_report <- function(x, ...) {
+  # https://github.com/r-lib/cli/issues/607
+  # Make output faster with cli!
+  withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
+
   if (nrow(x) == 0) {
     cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
     return(invisible(x))
@@ -309,7 +302,7 @@ print.outline_report <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
-    "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
+    "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
   )
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
@@ -481,13 +474,22 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
+  width <- cli::console_width()
   .data <- dplyr::mutate(
     .data,
     # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
     rs_version = ifelse(!rstudioapi::isAvailable("2023.12.0.274") && rstudioapi::isAvailable(), ".", ""),
-    outline_el = dplyr::case_when(
+    has_inline_markup = stringr::str_detect(outline_el, "\\{|\\}"),
+    outline_el2 = dplyr::case_when(
       # Not showing up are the longer items.
       # truncating to make sure the hyperlink shows up.
+      is_todo_fixme & is_saved_doc & !has_inline_markup ~ paste0(
+        as.character(cli::ansi_strtrim(outline_el, width - 8L)),
+        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+        # Removed ending dot. (possibly will fail with older versions)
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+        rs_version
+      ),
       is_todo_fixme & is_saved_doc ~ paste0(
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
@@ -497,7 +499,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
       ),
       .default = outline_el
     ),
-    link = paste0(outline_el, " {.path ", file, ":", line_id, "}"),
+    link = paste0(outline_el2, " {.path ", file, ":", line_id, "}"),
     # rstudioapi::documentOpen works in the visual mode!! but not fully.
     file_path = .data$file,
     is_saved_doc = .env$is_saved_doc,
@@ -519,16 +521,17 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   dplyr::mutate(.data,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
     link_rs_api = dplyr::case_when(
-      !is_saved_doc ~ paste0("line ", line_id, " -", outline_el),
-      rs_avail_file_link ~ paste0("{cli::style_hyperlink(cli::", style_fun, '("i"), "', paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el),
-      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el)
+      !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
+      rs_avail_file_link ~ paste0("{cli::style_hyperlink(cli::", style_fun, '("i"), "', paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2),
+      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
     ),
     file_hl = dplyr::case_when(
       !is_saved_doc ~ file_path,
       rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
       .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
     ),
-    rs_version = NULL
+    rs_version = NULL,
+    outline_el2
   ) |>
     dplyr::filter(tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
 }

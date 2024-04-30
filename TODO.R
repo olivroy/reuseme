@@ -10,3 +10,4 @@
 # TODO escape_markup doesn't work with complex operation {{x^2}} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
 # TODO [outline] avoid evaluating in current env.
 # TODO wrap regexps in functions
+# TODO items should not truncate leading code when marking as complte trunc-todo-code

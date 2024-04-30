@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `proj_outline()` truncates todo items to fit on a single line.
+
 * can now personalize recent file indicator with `options(reuseme.recent_indicator)`, by default, a clock.
 
 * Simplified internal function from `mark_todo_as_complete()` to `complete_todo()`
