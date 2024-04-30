@@ -458,7 +458,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
         rs_version
       ),
       .default = outline_el

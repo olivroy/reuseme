@@ -138,10 +138,12 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   line_content_show <- stringr::str_squish(line_content)
   if (rm_line) {
     cli::cli_alert_success(
-      "Marking {.code {line_content_show}} as done! ")
+      "Marking {.code {cli::style_strikethrough(line_content_show)}} as done! ")
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {
+    # WORK use strikethrough for tag type
+    # {# cli::style_strikethrough("WORK ") msg (to remove Removing the)
     cli::cli_alert_success(
       "Marking {.code {line_content_show}} as done! (Removing the {tag_type})"
     )
@@ -167,7 +169,7 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
 }
 
 extract_tag_in_text <- function(text, error_call = caller_env()) {
-  check_string(text, call = call, arg = "line_content")
+  check_string(text, call = error_call, arg = "line_content")
   match_tag <- regexpr(pattern = "WORK|FIXME|TODO", text = text)
   tag_type <- regmatches(x = text, m = match_tag)
   if (length(tag_type) == 0) {
@@ -177,7 +179,6 @@ extract_tag_in_text <- function(text, error_call = caller_env()) {
       i = "Did not detect any {.val {choices}} tags in the specified line."
     ), call = error_call)
   }
-  # Fails if no `WORK`, `FIXME` or `TODO` tags are found.
   arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = error_call, arg_nm = "line_content")
 }
 
@@ -228,3 +229,4 @@ compute_path_todo <- function(todo, proj) {
   }
   list(path_todo = path_todo, todo = todo)
 }
+# this doesn't work
