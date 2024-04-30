@@ -121,11 +121,11 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     }
   }
 
-  tag_type <- extract_tag_in_text(text = line_content)
+  tag_type <- extract_tag_in_text(text = line_content, line_id)
 
   if (warn_change_of_line) {
     cli::cli_warn(c(
-      x = "Could not detect {.arg regexp} as expected",
+      x = "Could not find {.arg regexp} as expected",
       "Could not find {.val {regexp}} at line {line_id_original}.",
       i = "Has the file content changed since you ran this code?",
       # needs qty for cli pluralization, but no printing
@@ -137,17 +137,24 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     rm_line <- tag_type %in% c("TODO", "FIXME")
   }
   line_content_show <- stringr::str_squish(line_content)
+
   if (rm_line) {
-    cli::cli_alert_success(
-      "Marking {.code {cli::style_strikethrough(line_content_show)}} as done! ")
+    line_content_show <- cli::style_strikethrough(line_content_show)
+  } else {
+    # Only strikethrough the tag
+    regex <- paste0("\\s", tag_type)
+    regex_new <- cli::style_strikethrough(regex)
+    line_content_show <- stringr::str_replace(line_content_show, regex, regex_new)
+  }
+
+  cli::cli_alert_success(
+    "Removed {.code {line_content_show}} from {.file {file}}!")
+
+  if (rm_line) {
+
     file_content_new <- file_content[-line_id]
     line_content_new <- ""
   } else {
-    # WORK use strikethrough for tag type
-    # {# cli::style_strikethrough("WORK ") msg (to remove Removing the)
-    cli::cli_alert_success(
-      "Marking {.code {line_content_show}} as done! (Removing the {tag_type})"
-    )
     line_content_new <- sub(
       pattern = paste0(tag_type, "\\s+"),
       replacement = "",
@@ -158,7 +165,7 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     file_content_new <- file_content
   }
   if (length(file_content_new) > 0) {
-    usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE)
+    usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE, quiet = TRUE)
   } else {
     cli::cli_inform(c(
       "!" = "No more TODOs.",
@@ -169,15 +176,15 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   invisible(line_content_new)
 }
 
-extract_tag_in_text <- function(text, error_call = caller_env()) {
+extract_tag_in_text <- function(text, line, error_call = caller_env()) {
   check_string(text, call = error_call, arg = "line_content")
   match_tag <- regexpr(pattern = "WORK|FIXME|TODO", text = text)
   tag_type <- regmatches(x = text, m = match_tag)
   if (length(tag_type) == 0) {
     choices <- c("WORK", "FIXME", "TODO")
     cli::cli_abort(c(
-      x = "Cannot mark a TODO item as complete if it doesn't contain the tags.",
-      i = "Did not detect any {.val {choices}} tags in the specified line."
+      x = "Could not delete the TODO item.",
+      i = "Line {line} does not contain any {.or {.val {choices}}} tags."
     ), call = error_call)
   }
   arg_match0(tag_type, c("WORK", "FIXME", "TODO"), error_call = error_call, arg_nm = "line_content")

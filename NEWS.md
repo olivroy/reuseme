@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* Simplified internal function from `mark_todo_as_complete()` to `complete_todo()`
+
 * `file_outline()` now prints the first outline element on the first line (to encourage to give an informative description as first line) (todos or tests excluded)
 
 * Improved support for escaping inline markup.

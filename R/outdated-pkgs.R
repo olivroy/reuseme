@@ -35,7 +35,7 @@ outdated_pkgs <- function(type = c("binary", "source")) {
 
   if (isFALSE(access_repo)) {
     cli::cli_warn(c(
-      "Couldn't check for outdated packages.",
+      "Could not check for outdated packages.",
       "Can't connect to your default repository.",
       "Are you offline?"
     ))

@@ -40,13 +40,13 @@ test_that("Marking a TODO item as done works", {
     complete_todo(line_id = 2, file = tmp)
   })
   # Deleting the TODO item line completely (tmp now has 4 lines)
-  expect_mark_as_complete(
+  expect_complete_todo(
     complete_todo(line_id = 2, file = tmp, regexp = "item to delete")
   )
   # Deleting the work tag (on new line 2), but keeping the comment.
   # Will throw a warning for now.
 
-  expect_mark_as_complete(
+  expect_complete_todo(
     out <- complete_todo(
       line_id = 3,
       file = tmp,
@@ -58,7 +58,7 @@ test_that("Marking a TODO item as done works", {
     out,
     "# Explain what the next code does."
   )
-  expect_mark_as_complete(
+  expect_complete_todo(
     out <- complete_todo(
       line_id = 4,
       file = tmp,
