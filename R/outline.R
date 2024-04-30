@@ -361,7 +361,8 @@ print.outline_report <- function(x, ...) {
       # may decide to just color the name after all
       # was cli::bg_br_green("*")
       # Une crevette
-      base_name <- c(base_name, cli::style_no_blurred("\U0001f990"))
+      emoji_recent <- getOption("reuseme.recent_indicator", "\U0001f552")
+      base_name <- c(base_name, emoji_recent)
     }
 
     # add first line to title and remove
