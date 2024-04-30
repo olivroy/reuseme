@@ -4,7 +4,7 @@
       file_outline(path = my_test_file, alpha = TRUE)
     Message
       
-      -- `my-analysis.R` 🦐 Analyse my streets 
+      -- `my-analysis.R` 🕒 Analyse my streets 
     Output
       `i` A real one
       `i` A true one
@@ -23,7 +23,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `ref/my-analysis.R` 🦐 Analyse my streets 
+      -- `ref/my-analysis.R` 🕒 Analyse my streets 
     Output
       `i` Read my streets data
       `i` Write my streets
@@ -34,7 +34,7 @@
       outline
     Message
       
-      -- `outline-script.R` 🦐 Example for `file_outline()` 
+      -- `outline-script.R` 🕒 Example for `file_outline()` 
     Output
       `i` Load packages
       `i` Wrangle + visualize data
