@@ -91,7 +91,7 @@ Will show TODO items and will offer a link to \link[=mark_todo_as_complete]{mark
 file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 file_outline(path = file)
 
-# Remove TODO
+# Remove todo items
 file_outline(path = file, print_todo = FALSE, alpha = TRUE)
 
 # interact with data frame

@@ -58,6 +58,7 @@ use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
   # (ideally changes in usethis)
   # Change the default write_union message.
   write_union2(path_todo, lines = todo_lines, quiet = FALSE)
+  invisible(path_todo)
 }
 
 #' Remove a TODO/WORK/FIXME item from a file

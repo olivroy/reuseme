@@ -40,7 +40,7 @@
 #' file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 #' file_outline(path = file)
 #'
-#' # Remove TODO
+#' # Remove todo items
 #' file_outline(path = file, print_todo = FALSE, alpha = TRUE)
 #'
 #' # interact with data frame
@@ -308,15 +308,18 @@ print.outline_report <- function(x, ...) {
     # green todo
     "(?<!(as_complete.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
   )
-  # browser()
-  # TODO filter or provide n-max
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
   summary_links_files <- file_sections |>
     dplyr::summarise(
-      first_line = ifelse(any((line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file), outline_el[(line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file][1], NA),
+      first_line = ifelse(
+        any((line_id == 1 | is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file),
+        which((is_doc_title) & !is_todo_fixme & !is_test_name & !is_snap_file)[1] %|% which(line_id == 1) %|% 1L,
+      NA_integer_
+      ),
+      first_line_el = ifelse(!is.na(first_line), outline_el[first_line], NA),
       link = list(purrr::set_names(
         link_rs_api,
         purrr::map_chr(
@@ -364,8 +367,8 @@ print.outline_report <- function(x, ...) {
 
     # add first line to title and remove
     if (!is.na(summary_links_files$first_line[[i]])) {
-      base_name <- c(base_name, " ", cli::format_inline(escape_markup(summary_links_files$first_line[[i]])))
-      dat[[i]] <- dat[[i]][-1L] # remove 1st element
+      base_name <- c(base_name, " ", cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]])))
+      dat[[i]] <- dat[[i]][-summary_links_files$first_line[[i]]] # remove 1st element
     }
 
     cli::cli_h3(base_name)
@@ -385,7 +388,6 @@ print.outline_report <- function(x, ...) {
     }
   }
 
-  # rm(a_useles_value)
   invisible(x)
 }
 # Step: tweak outline look as they show ---------

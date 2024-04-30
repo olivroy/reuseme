@@ -1,22 +1,22 @@
 # file_outline() works
 
     Code
-      file_outline(path = my_test_file)
+      file_outline(path = my_test_file, alpha = TRUE)
     Message
       
       -- `my-analysis.R` 🦐 Analyse my streets 
     Output
-      `i` Read my streets data
-      `i` data wrangling
-      `i` Write my streets
-      `i` TODO eventually detect file.path for check_referenced_files- `Donev?`
-      `i` TODO Create a new version- `Donev?`
-      `i` Roxygen section
       `i` A real one
       `i` A true one
-      `i` 'R/my-file.R'
+      `i` TODO Create a new version- `Donev?`
+      `i` Read my streets data
       `i` Refer to google (<https://google.com>)
+      `i` Roxygen section
       `i` Section title
+      `i` Write my streets
+      `i` data wrangling
+      `i` TODO eventually detect file.path for check_referenced_files- `Donev?`
+      `i` 'R/my-file.R'
 
 # Other arguments work
 

@@ -26,10 +26,10 @@ test_that("Marking a TODO item as done works", {
     "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
     "   # TODO Check r-lib/usethis#1890",
-    "# TODO Check https://github.com/r-lib/usethis/issues/1890",
-    "print('R code')"
+    "# TODO Check https://github.com/r-lib/usethis/issues/1890"
   )
   writeLines(text = content, con = tmp)
+  suppressMessages(use_todo("print('R code')", tmp, code = TRUE))
   # test use_todo
   expect_message(use_todo("Another TODO", tmp))
   # tmp still has 7 lines
@@ -86,9 +86,8 @@ test_that("use_todo global works", {
   skip_on_cran()
   skip_on_ci()
   expect_no_error(
-    path <- use_todo("global::it it time")
+    suppressMessages(path <- use_todo("global::it is time"))
   )
-  expect_no_error(
-    path <- use_todo("global::print()", code = TRUE)
-  )
+  line_to_delete <- length(readLines(path, encoding = "UTF-8"))
+  suppressMessages(complete_todo(file = path, regexp = "it is time", line_id = line_to_delete, rm_line = TRUE))
 })
