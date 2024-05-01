@@ -21,15 +21,25 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
 }
 
 o_is_todo_fixme <- function(x) {
-  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])") &
-    !o_is_test_that(x) &
-    !stringr::str_starts(x, "\\s*\"\\s*") &
-    !stringr::str_detect(x, "extract_tag_in_text") &
-    !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
-    !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-    !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,10} item") # eliminate false positives
 
-  has_todo & !stringr::str_detect(x, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
+  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])")
+
+  if (!any(has_todo)) {
+    return(has_todo)
+  }
+  # only check for potential candidates
+  p <- which(has_todo)
+  candidates <- x[has_todo]
+  # Eliminate candidates
+  has_todo[p] <-
+    !o_is_test_that(candidates) &
+    !stringr::str_starts(candidates, "\\s*\"\\s*") &
+    !stringr::str_detect(candidates, "extract_tag_in_text") &
+    !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
+    !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+    !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
+    !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
+  has_todo
 }
 
 o_is_work_item <- function(x) {

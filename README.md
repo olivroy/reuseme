@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    450ms    459ms      2.18    20.2MB     3.27
+#> 1 outline <- proj_outline()    419ms    459ms      2.18    18.4MB     3.27
 ```
 
 <details>
@@ -215,7 +215,7 @@ outline
 #> `i` dplyr extensions identity
 #> `i` helpers
 #> 
-#> ── `R/escape-inline-markup.R` 🕒
+#> ── `R/escape-inline-markup.R`
 #> `i` example code
 #> `i` last instance taken care of with escape_markup with a different strategy
 #> 
@@ -238,20 +238,20 @@ outline
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
 #> 
-#> ── `R/outdated-pkgs.R` 🕒
+#> ── `R/outdated-pkgs.R`
 #> `i` All packages are up to date.
 #> `i` There is a new version of pak.
 #> `i` Update pak with `pak::pak_update()`
 #> `i` Restart R session then run `outdated_pkgs()` again.
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
-#> ── `R/outline-criteria.R` 🕒
+#> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
 #> `i` TODO strip is_cli_info in Package? only valid for EDA- `Done✔?`
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
 #> `i` it is 'R/outline.R'
 #> 
-#> ── `R/outline.R` 🕒 `proj_outline()`
+#> ── `R/outline.R`  `proj_outline()`
 #> `i` Remove todo items
 #> `i` interact with data frame
 #> `i` These all work on the active file / project or directory.
@@ -323,19 +323,19 @@ outline
 #> ── `tests/testthat/_snaps/eda-identity.md`
 #> `i` Side effects are what's intended in interactive sessions
 #> 
-#> ── `tests/testthat/_snaps/outline-criteria.md`
+#> ── `tests/testthat/_snaps/outline-criteria.md` 🕒
 #> `i` No outline criteria are untested
 #> 
-#> ── `tests/testthat/_snaps/outline.md`
+#> ── `tests/testthat/_snaps/outline.md` 🕒
 #> `i` Other arguments work
 #> 
-#> ── `tests/testthat/_snaps/quarto-help.md`
+#> ── `tests/testthat/_snaps/quarto-help.md` 🕒
 #> `i` link_href works
 #> 
-#> ── `tests/testthat/_snaps/rename-files.md`
+#> ── `tests/testthat/_snaps/rename-files.md` 🕒
 #> `i` Helper files returns the expected input
 #> 
-#> ── `tests/testthat/_snaps/use-todo.md`
+#> ── `tests/testthat/_snaps/use-todo.md` 🕒
 #> `i` Marking a TODO item as done works
 #> 
 #> ── `tests/testthat/test-case-if-any.R`
@@ -399,7 +399,7 @@ outline
 #> `i` TODO [outline] avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
 #> 
-#> ── `README.Rmd` 🕒
+#> ── `README.Rmd`
 #> `i` reuseme
 #> `i` Installation
 #> `i` Getting started

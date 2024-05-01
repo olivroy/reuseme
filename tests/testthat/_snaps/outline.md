@@ -4,6 +4,17 @@
       file_outline(path = my_test_files, alpha = TRUE)
     Message
       
+      -- `my-analysis.md` 🕒 My doc title 
+    Output
+      `i` A section
+      `i` A code section
+      `i` A subsection
+      `i` A section2
+      `i` A long ggplot2 title
+      `i` A code section
+      `i` Dashboard card
+    Message
+      
       -- `my-analysis.R` 🕒 Analyse my streets 
     Output
       `i` A real one
@@ -16,17 +27,6 @@
       `i` Write my streets
       `i` data wrangling
       `i` 'R/my-file.R'
-    Message
-      
-      -- `my-analysis.md` 🕒 My doc title 
-    Output
-      `i` A section
-      `i` A code section
-      `i` A subsection
-      `i` A section2
-      `i` A long ggplot2 title
-      `i` A code section
-      `i` Dashboard card
 
 # Other arguments work
 
