@@ -47,12 +47,10 @@ outdated_pkgs <- function(type = c("binary", "source")) {
 
   if (rlang::has_length(outdated_pkg_mat) && !is.null(getOption("reuseme.ignore_update"))) {
     indices_to_discard <- which(rownames(outdated_pkg_mat) %in% getOption("reuseme.ignore_update"))
-    if (rlang::has_length(indices_to_discard)) {
-      outdated_pkg_mat <- outdated_pkg_mat[-indices_to_discard, ]
-    }
+      outdated_pkg_mat <- outdated_pkg_mat[-indices_to_discard, , drop = FALSE]
   }
 
-  if (rlang::has_length(outdated_pkg_mat, 0)) {
+  if (rlang::has_length(rownames(outdated_pkg_mat), 0)) {
     cli::cli_alert_success("All packages are up to date.")
     return(invisible())
   }
