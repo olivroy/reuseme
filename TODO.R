@@ -11,3 +11,7 @@
 # TODO [outline] avoid evaluating in current env.
 # TODO wrap regexps in functions
 # TODO items should not truncate leading code when marking as complte trunc-todo-code
+# TODO [outline] news heading should not all show by default.
+# TODO [outline] remove examples from outline. Sometimes commented code is caught.
+# TODO [outline] roxygen comments processing should be left to {.fn roxygen2::parse_file}
+# TODO [outline] show key like {.fn pak::pkg_deps_tree} does.

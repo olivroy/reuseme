@@ -69,10 +69,13 @@ o_is_object_title <- function(x) {
 
 o_is_section_title <- function(x) {
   section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle)$"
-  section_title & !stringr::str_detect(x, uninteresting_headings) & !o_is_todo_fixme(x)
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation"
+  section_title & !stringr::str_detect(x, uninteresting_headings) & !o_is_todo_fixme(x) & !o_is_commented_code(x)
 }
 
+o_is_commented_code <- function(x) {
+  stringr::str_detect(x, "#.+\\(.+\\=.+[\\),\"']$")
+}
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {

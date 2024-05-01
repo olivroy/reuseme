@@ -17,14 +17,14 @@ fs::path("data", "my-streets", ext = "csv")
 # TODO Create a new version
 
 #' ## Roxygen section
-#'
+#' \url{https://github.com}
 #'
 #' gt::tab_header(title = "A real one") |>
 #'   gt::tab_header(subtitle = "A true one")
 
 # {.file R/my-file.R} ---
 
-cli::cli_ul("Refer to {.href [google](https://google.com)}") # not rendered properly currently.
+cli::cli_ul("Refer to {.href [google](https://google.com)}")
 # ## a commented section title -----
 
 if (TRUE) {
