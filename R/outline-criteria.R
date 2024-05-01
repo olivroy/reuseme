@@ -79,7 +79,8 @@ define_outline_criteria <- function(.data, print_todo) {
       !grepl("paste", content, fixed = TRUE) &
       !grepl("outline.R", file, fixed = TRUE) &
       !grepl("^", content, fixed = TRUE), # Detect UI messages and remove them
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)])title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
+      !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap
     # FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe {.pkg lightparser}.

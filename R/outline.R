@@ -62,8 +62,7 @@ file_outline <- function(regex_outline = NULL,
                          alpha = FALSE,
                          dir_common = NULL,
                          print_todo = TRUE,
-                         recent_only = FALSE
-                         ) {
+                         recent_only = FALSE) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
 
   if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
@@ -195,7 +194,8 @@ file_outline <- function(regex_outline = NULL,
     file_sections <- scrub_duplicate_outline(file_sections)
   }
   file_sections <- file_sections |> dplyr::relocate(
-    outline_el, title_el, title_el_line, .after = content
+    outline_el, title_el, title_el_line,
+    .after = content
   )
   class(file_sections) <- c("outline_report", class(file_sections))
 
@@ -303,7 +303,8 @@ print.outline_report <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
-    "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} " # put/work todo as emphasis
+    "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
+    "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}" # until complex markup is resolved.
   )
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
@@ -433,17 +434,32 @@ display_outline_element <- function(.data) {
     x,
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        (is_doc_title & !is_subtitle),
-    title_el_line = ifelse(has_title_el, line_id[(line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) | (is_doc_title & !is_subtitle)], NA),
-    title_el = outline_el[line_id == title_el_line],
+        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !stringr::str_detect(file, "NEWS"),
     .by = file
   )
+  y <- withCallingHandlers(
+    dplyr::mutate(y,
+      title_el_line = ifelse(has_title_el, line_id[
+        (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !stringr::str_detect(file, "NEWS")
+      ][1], # take  the first element to avoid problems (may be the reason why problems occur)
+      NA
+      ),
+      title_el = outline_el[line_id == title_el_line],
+      .by = file
+    ),
+    error = function(e) {
+      # browser()
+      cli::cli_abort("Failed to do outline", parent = e)
+    }
+  )
+
   y$outline_el <- ifelse(y$has_title_el, NA, y$outline_el)
   na_if0 <- function(x) {
     if (length(x) == 0) {
       x <- NA
     }
-    if (length(x) == 2) {
+    if (length(x) != 1) {
       cli::cli_inform("{x} are detected as document title. Internal error")
     }
     x
