@@ -45,6 +45,13 @@ outdated_pkgs <- function(type = c("binary", "source")) {
   # similar to install.packages default
   outdated_pkg_mat <- utils::old.packages(type = type, lib.loc = .libPaths()[1])
 
+  if (rlang::has_length(outdated_pkg_mat) && !is.null(getOption("reuseme.ignore_update"))) {
+    indices_to_discard <- which(rownames(outdated_pkg_mat) %in% getOption("reuseme.ignore_update"))
+    if (rlang::has_length(indices_to_discard)) {
+      outdated_pkg_mat <- outdated_pkg_mat[-indices_to_discard, ]
+    }
+  }
+
   if (rlang::has_length(outdated_pkg_mat, 0)) {
     cli::cli_alert_success("All packages are up to date.")
     return(invisible())
@@ -60,9 +67,6 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     as.list() |>
     purrr::map(function(x) purrr::set_names(x, fields_names))
 
-  if (!is.null(getOption("reuseme.ignore_update"))) {
-    outdated_pkg <- outdated_pkg[!getOption("reuseme.ignore_update")]
-  }
   # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {
     cli::cli_alert_success("There is a new version of pak.")
