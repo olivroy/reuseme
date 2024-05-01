@@ -66,7 +66,7 @@ escape_markup <- function(x) {
   x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
   x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
 
-  if (any(stringr::str_detect(x, "\\{{3,}"))) {
+  if (any(stringr::str_detect(x, "\\{{3,10}"))) {
     # more than 3 {
     cli::cli_abort("internal errror. Did not transform string correctly.")
   }

@@ -162,12 +162,10 @@ slowing down a bit. I will address that.
 bench::mark(
   outline <-proj_outline()
 )
-#> Warning: Some expressions had a GC in every iteration; so filtering is
-#> disabled.
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    537ms    537ms      1.86    19.9MB     3.72
+#> 1 outline <- proj_outline()    450ms    459ms      2.18    20.2MB     3.27
 ```
 
 <details>
@@ -178,6 +176,12 @@ Example outline
 
 ``` r
 outline
+#> 
+#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
+#> `i` Load packages
+#> `i` Wrangle + visualize data
+#> `i` A great title
+#> `i` TODO improve this Viz!- `Done✔?`
 #> 
 #> ── `R/browse-pkg.R`
 #> `i` {package}
@@ -211,7 +215,7 @@ outline
 #> `i` dplyr extensions identity
 #> `i` helpers
 #> 
-#> ── `R/escape-inline-markup.R`
+#> ── `R/escape-inline-markup.R` 🕒
 #> `i` example code
 #> `i` last instance taken care of with escape_markup with a different strategy
 #> 
@@ -234,14 +238,14 @@ outline
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
 #> 
-#> ── `R/outdated-pkgs.R`
+#> ── `R/outdated-pkgs.R` 🕒
 #> `i` All packages are up to date.
 #> `i` There is a new version of pak.
 #> `i` Update pak with `pak::pak_update()`
 #> `i` Restart R session then run `outdated_pkgs()` again.
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
-#> ── `R/outline-criteria.R`
+#> ── `R/outline-criteria.R` 🕒
 #> `i` Add variable to outline data frame
 #> `i` TODO strip is_cli_info in Package? only valid for EDA- `Done✔?`
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
@@ -288,25 +292,14 @@ outline
 #> ── `R/utils-write.R`
 #> `i` Creating <path>
 #> 
-#> ── `TODO.R`
-#> `i` TODO [screenshot] make the behaviour different when vignettes vs articl…- `Done✔?`
-#> `i` TODO [screenshot] RStudio addin to insert the code directly in the qmd …- `Done✔?`
-#> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
-#> `i` TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
-#> `i` TODO [rename] if many matches, separate those with the exact path.- `Done✔?`
-#> `i` TODO [outline] make ggtitle work- `Done✔?`
-#> `i` TODO [outline] show extra msg only for some, but in file outline, not i…- `Done✔?`
-#> `i` TODO detect url automatically, like link_issue instead of needing <>- `Done✔?`
-#> `i` TODO [outline] detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
-#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
-#> `i` TODO [outline] avoid evaluating in current env.- `Done✔?`
-#> `i` TODO wrap regexps in functions- `Done✔?`
-#> 
-#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
-#> `i` Load packages
-#> `i` Wrangle + visualize data
-#> `i` A great title
-#> `i` TODO improve this Viz!- `Done✔?`
+#> ── `tests/testthat/_ref/my-analysis.md`  My doc title
+#> `i` A section
+#> `i` Dashboard card
+#> `i` A code section
+#> `i` A subsection
+#> `i` A section2
+#> `i` A long ggplot2 title
+#> `i` A code section
 #> 
 #> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
 #> `i` Read my streets data
@@ -319,15 +312,6 @@ outline
 #> `i` 'R/my-file.R'
 #> `i` Refer to google (<https://google.com>)
 #> `i` Section title
-#> 
-#> ── `tests/testthat/_ref/my-analysis.md`  My doc title
-#> `i` A section
-#> `i` Dashboard card
-#> `i` A code section
-#> `i` A subsection
-#> `i` A section2
-#> `i` A long ggplot2 title
-#> `i` A code section
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
 #> `i` case_if_any basic work
@@ -345,13 +329,13 @@ outline
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` Other arguments work
 #> 
-#> ── `tests/testthat/_snaps/quarto-help.md` 🕒
+#> ── `tests/testthat/_snaps/quarto-help.md`
 #> `i` link_href works
 #> 
-#> ── `tests/testthat/_snaps/rename-files.md` 🕒
+#> ── `tests/testthat/_snaps/rename-files.md`
 #> `i` Helper files returns the expected input
 #> 
-#> ── `tests/testthat/_snaps/use-todo.md` 🕒
+#> ── `tests/testthat/_snaps/use-todo.md`
 #> `i` Marking a TODO item as done works
 #> 
 #> ── `tests/testthat/test-case-if-any.R`
@@ -400,6 +384,20 @@ outline
 #> 
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
+#> 
+#> ── `TODO.R`
+#> `i` TODO [screenshot] make the behaviour different when vignettes vs articl…- `Done✔?`
+#> `i` TODO [screenshot] RStudio addin to insert the code directly in the qmd …- `Done✔?`
+#> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
+#> `i` TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
+#> `i` TODO [rename] if many matches, separate those with the exact path.- `Done✔?`
+#> `i` TODO [outline] make ggtitle work- `Done✔?`
+#> `i` TODO [outline] show extra msg only for some, but in file outline, not i…- `Done✔?`
+#> `i` TODO detect url automatically, like link_issue instead of needing <>- `Done✔?`
+#> `i` TODO [outline] detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
+#> `i` TODO [outline] avoid evaluating in current env.- `Done✔?`
+#> `i` TODO wrap regexps in functions- `Done✔?`
 #> 
 #> ── `README.Rmd` 🕒
 #> `i` reuseme

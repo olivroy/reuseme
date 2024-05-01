@@ -27,13 +27,18 @@ o_is_todo_fixme <- function(x) {
     !stringr::str_detect(x, "extract_tag_in_text") &
     !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
     !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-    !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,} item") # eliminate false positives
+    !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,10} item") # eliminate false positives
 
-  has_todo & !stringr::str_detect(x, "\".*(TODO|FIXME|WORK)") # remove some true negs for now.
+  has_todo & !stringr::str_detect(x, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
 }
 
 o_is_work_item <- function(x) {
-  o_is_todo_fixme(x) & stringr::str_detect(x, "(?<!\")# WORK")
+  res <- stringr::str_detect(x, "(?<!\")# WORK")
+  if (!any(res)) {
+    return(res)
+  }
+  res[which(res)] <- o_is_todo_fixme(x[which(res)])
+  res
 }
 
 o_is_test_that <- function(x) {
@@ -79,7 +84,7 @@ define_outline_criteria <- function(.data, print_todo) {
       !grepl("paste", content, fixed = TRUE) &
       !grepl("outline.R", file, fixed = TRUE) &
       !grepl("^", content, fixed = TRUE), # Detect UI messages and remove them
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap

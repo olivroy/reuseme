@@ -109,6 +109,7 @@ file_outline <- function(regex_outline = NULL,
     } else {
       fs::path_common(path)
     }
+    path <- stringr::str_sort(path)
     file_content <- purrr::set_names(path)
     # Not warn
     file_content <- purrr::map(file_content, function(x) readLines(fs::path_real(x), encoding = "UTF-8", warn = FALSE))
@@ -145,7 +146,7 @@ file_outline <- function(regex_outline = NULL,
     regex_outline <- regex_outline %||% ".+"
   }
 
-  check_string(regex_outline, arg = "You may have specified regex Internal error")
+  check_string(regex_outline, arg = "You may have specified path Internal error")
 
   file_sections0 <- define_outline_criteria(file_content, print_todo = print_todo)
 
