@@ -34,7 +34,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   files_detected <- unique(referenced_files)
   references_a_non_existent_file <- !(fs::file_exists(files_detected) | file.exists(files_detected)) # to avoid burden for now.
   if (!any(references_a_non_existent_file)) {
-    if (!quiet) cli::cli_inform(c("v" = "Did not find references to non-existent files."))
+    if (!quiet) cli::cli_inform(c("v" = "All referenced files in current dir exist."))
     return(invisible())
   }
   # maybe order (so link to location) isn't quite right when many are found?

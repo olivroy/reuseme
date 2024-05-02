@@ -153,17 +153,7 @@ file_outline <- function(regex_outline = NULL,
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections0)
 
-  if (exists("link_doc")) {
-    file_sections0$content <- purrr::map_chr(file_sections0$content, link_doc)
-  }
-  # File outline ===================
-  # strip outline element .data$outline = `# Section 1` becomes `Section 1`
-  file_sections1 <- display_outline_element(file_sections0)
-
-  # Create hyperlink in console
-  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, regex_outline)
-
-  if (nrow(file_sections) == 0 && !identical(regex_outline, ".+")) {
+  if (nrow(file_sections0) == 0 && !identical(regex_outline, ".+")) {
     if (is_active_doc) {
       msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
         "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
@@ -174,10 +164,18 @@ file_outline <- function(regex_outline = NULL,
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{regex_outline}\"))} to search in file names too."
       )
     }
-    cli::cli_abort(msg)
+    cli::cli_inform(msg)
+    return(invisible())
   }
+  if (exists("link_doc")) {
+    file_sections0$content <- purrr::map_chr(file_sections0$content, link_doc)
+  }
+  # File outline ===================
+  # strip outline element .data$outline = `# Section 1` becomes `Section 1`
+  file_sections1 <- display_outline_element(file_sections0)
 
-
+  # Create hyperlink in console
+  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, regex_outline)
 
   if (alpha) {
     # remove inline markup first before sorting alphabetically

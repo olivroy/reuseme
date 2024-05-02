@@ -102,7 +102,7 @@ rename_files2 <- function(old,
 
 
   if (renaming_strategy != "free_for_all") {
-    suggest_snake_case_change <- !is_moving(old, new) || !is_adding_a_suffix(old, new)
+    suggest_snake_case_change <- !is_moving(old, new) || !is_adding_a_suffix(old, new) # And found references?
     extra_msg_if_file_conflict <- c(
       "x" = "Did not rename files!",
       "!" = paste0("Found references to {.val ", old, "} in project"),
