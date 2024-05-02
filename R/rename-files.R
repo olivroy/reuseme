@@ -86,8 +86,10 @@ rename_files2 <- function(old,
 
   regexp_to_search_for_in_files <- compute_conflicts_regex(old, renaming_strategy)
 
-  # FIXME doesn't fit now.
+  # Warn if some related files are found. If I have file.R and file.csv,
+  # this will warn if I rename file.R, but not file.csv
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
+  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze", invert = TRUE)
   related_files <- setdiff(related_files, old)
   if (length(related_files) > 0) {
     cli::cli_warn(c(
@@ -116,7 +118,10 @@ rename_files2 <- function(old,
   # Either the file name base or the full file name
 
   if (renaming_strategy == "object_names") {
-    regex_friendly <- paste0(basename_remove_ext(old), "/", stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    # Create regex = replace kebab-case by snake_case to verify object names
+    # Then the regex is the union of these.
+    regex_friendly <- c(basename_remove_ext(old), stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    regex_friendly <- paste0(unique(regex_friendly), collapse = "|")
   } else {
     regex_friendly <- ifelse(renaming_strategy %in% c("object_names"), basename_remove_ext(old), old)
   }
@@ -145,7 +150,7 @@ rename_files2 <- function(old,
     # check_referenced_files(path = ".", quiet = !verbose)
     if (interactive() && action != "test") {
       cli::cli_inform(c(
-        i = "Call {.run reuseme::check_referenced_files()} to see if there are dead links in dir."
+        i = "Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files."
       ))
     }
     return(invisible(new))
