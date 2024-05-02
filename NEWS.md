@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `rename_files2()` should work better with Quarto books, avoiding to look in `_book` and `_execute`, and classifying `summary.qmd` as generic file name, hence not looking for this regexp when searching for conflicts.
+
 * `file_outline()` now get function calls, but doesn't print them by default.
 
 * `proj_outline()` truncates todo items to fit on a single line.

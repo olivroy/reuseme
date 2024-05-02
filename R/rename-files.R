@@ -124,7 +124,7 @@ rename_files2 <- function(old,
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
   n_file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    fs::path_filter(regexp = "_files|tests/testthat", invert = TRUE) |> # need to do elsewhere too
+    fs::path_filter(regexp = "_files|tests/testthat|_book/|_freeze/", invert = TRUE) |> # need to do elsewhere too
     solve_file_name_conflict(
       regex = regexp_to_search_for_in_files,
       dir = ".",
@@ -272,7 +272,7 @@ is_short_file_name <- function(file, nchars) {
 
 # verifies short and contains certain keywords
 is_generic_file_name <- function(file) {
-  generic_words <- c("change", "temp", "dat", "data", "clipboard")
+  generic_words <- c("change", "temp", "dat", "data", "clipboard", "summary", "intro")
   regexp <- paste0(generic_words, collapse = "|")
   file_name <- basename_remove_ext(file)
   stringr::str_starts(file_name, regexp) &
