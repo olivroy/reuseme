@@ -153,16 +153,19 @@ file_outline <- function(regex_outline = NULL,
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections0)
 
-  if (nrow(file_sections0) == 0 && !identical(regex_outline, ".+")) {
-    if (is_active_doc) {
+  if (nrow(file_sections0) == 0) {
+
+    if (is_active_doc && !identical(regex_outline, ".+")) {
       msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
         "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
       )
-    } else {
+    } else if (!identical(regex_outline, ".+")) {
       msg <- c(
         "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}.",
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{regex_outline}\"))} to search in file names too."
       )
+    } else {
+      msg <- "Empty outline."
     }
     cli::cli_inform(msg)
     return(invisible())
