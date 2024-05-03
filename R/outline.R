@@ -490,12 +490,12 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
+  .data$rs_version <- ifelse(!rstudioapi::isAvailable("2023.12.0.274") && rstudioapi::isAvailable(), ".", "")
+  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
+  .data$is_saved_doc <- is_saved_doc
   width <- cli::console_width()
   .data <- dplyr::mutate(
     .data,
-    # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
-    rs_version = ifelse(!rstudioapi::isAvailable("2023.12.0.274") && rstudioapi::isAvailable(), ".", ""),
-    has_inline_markup = stringr::str_detect(outline_el, "\\{|\\}"),
     outline_el2 = dplyr::case_when(
       # Not showing up are the longer items.
       # truncating to make sure the hyperlink shows up.
@@ -558,26 +558,29 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
 # for example, snapshots will have priority and will not return both the snapshot and the original test
 scrub_duplicate_outline <- function(x) {
   x$order <- seq_len(nrow(x))
-  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = outline_el)
+  # outline = NA (title)
+  x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = c(outline_el_count))
 
   x <- dplyr::mutate(
     x,
     # higher is better
-    points = !is_test_name + is_section_title
+    points = 1L + !is_test_name + is_section_title
   )
 
   x <- dplyr::slice_max(
     x,
-    n = 1,
+    n = 1L,
     order_by = points,
     with_ties = TRUE,
-    by = outline_el
+    by = outline_el_count
   )
   # use the previous order
   x <- dplyr::arrange(x, order)
   x$points <- NULL
   x$order <- NULL
   x$n_dup <- NULL
+  x$outline_el_count <- NULL
   x
 }
 
