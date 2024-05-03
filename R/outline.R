@@ -369,8 +369,10 @@ print.outline_report <- function(x, ...) {
     }
 
     # add first line to title and remove
-    if (!is.na(summary_links_files$first_line[[i]])) {
-      base_name <- c(base_name, " ", cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]])))
+    has_title <- !is.na(summary_links_files$first_line[[i]])
+    if (has_title) {
+      title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
+      base_name <- c(base_name, " ", title_el)
     }
 
     cli::cli_h3(base_name)
@@ -460,8 +462,13 @@ display_outline_element <- function(.data) {
       cli::cli_abort("Failed to do outline", parent = e)
     }
   )
+  y <- dplyr::relocate(
+    y,
+    outline_el, line_id, title_el, title_el_line, has_title_el, .after = content
+  )
 
-  y$outline_el <- ifelse(y$has_title_el, NA, y$outline_el)
+
+  y$outline_el <- ifelse(y$has_title_el, NA_character_, y$outline_el)
   na_if0 <- function(x) {
     if (length(x) == 0) {
       x <- NA
@@ -478,7 +485,9 @@ display_outline_element <- function(.data) {
       title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
       .by = c(file)
     )
-    y <- y[!is.na(y$outline_el), ]
+    if (nrow(y) > 1) {
+      y <- y[!is.na(y$outline_el), ]
+    }
   }
   y
 }
