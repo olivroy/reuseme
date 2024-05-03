@@ -228,6 +228,7 @@ arrange_identity <- function(x, ..., .by_group = FALSE, nrows = NULL, extra_msg 
   invisible(x)
 }
 #' @export
+#' @param .arrange Should arrange output?
 #' @rdname eda-identity
 distinct_identity <- function(x, ..., .keep_all = FALSE, .arrange = FALSE, nrows = NULL, extra_msg = NULL) {
   if (!rlang::is_interactive()) {

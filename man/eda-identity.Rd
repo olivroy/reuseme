@@ -74,7 +74,14 @@ slice_max_identity(
 
 arrange_identity(x, ..., .by_group = FALSE, nrows = NULL, extra_msg = NULL)
 
-distinct_identity(x, ..., .keep_all = FALSE, nrows = NULL, extra_msg = NULL)
+distinct_identity(
+  x,
+  ...,
+  .keep_all = FALSE,
+  .arrange = FALSE,
+  nrows = NULL,
+  extra_msg = NULL
+)
 
 filter_identity(x, ..., .by = NULL, nrows = NULL, extra_msg = NULL)
 
@@ -132,6 +139,8 @@ slice_group_sample_identity(
 console, notes taken related to the transformation.}
 
 \item{name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve, ascending}{Check original functions.}
+
+\item{.arrange}{Should arrange output?}
 }
 \value{
 \code{x}, the original input is (invisibly) returned.

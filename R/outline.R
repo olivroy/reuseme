@@ -310,7 +310,7 @@ print.outline_report <- function(x, ...) {
           cli::format_inline
         )
       )),
-      .by = c(file_hl, file)
+      .by = c("file_hl", "file")
     )
   if (any(duplicated(summary_links_files$file))) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
@@ -396,9 +396,10 @@ keep_outline_element <- function(.data) {
 # Remove title =
 # Removing quotes, etc.
 display_outline_element <- function(.data) {
+  x <- .data
+  x$outline_el <-  purrr::map_chr(x$content, link_issue)  # to add link to GitHub.
   x <- dplyr::mutate(
-    .data,
-    outline_el = purrr::map_chr(content, link_issue), # to add link to GitHub.
+    x,
     outline_el = dplyr::case_when(
       is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)"),
       is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"]", group = 1),
@@ -420,12 +421,13 @@ display_outline_element <- function(.data) {
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
     is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
   )
+
   y <- dplyr::mutate(
     x,
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
         (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !stringr::str_detect(file, "NEWS"),
-    .by = file
+    .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
@@ -436,7 +438,7 @@ display_outline_element <- function(.data) {
       NA
       ),
       title_el = outline_el[line_id == title_el_line],
-      .by = file
+      .by = "file"
     ),
     error = function(e) {
       # browser()
@@ -445,7 +447,8 @@ display_outline_element <- function(.data) {
   )
   y <- dplyr::relocate(
     y,
-    outline_el, line_id, title_el, title_el_line, has_title_el, .after = content
+    "outline_el", "line_id", "title_el", "title_el_line", "has_title_el",
+    .after = "content"
   )
 
 
@@ -464,11 +467,8 @@ display_outline_element <- function(.data) {
       y,
       title_el = na_if0(title_el[!is.na(title_el)]),
       title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
-      .by = c(file)
+      .by = c("file")
     )
-    # if (nrow(y) > 1) {
-    #   y <- y[!is.na(y$outline_el), ]
-    # }
   }
   y
 }
@@ -575,7 +575,7 @@ scrub_duplicate_outline <- function(x) {
   x$order <- seq_len(nrow(x))
   # outline = NA (title)
   x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
-  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = c(outline_el_count))
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "outline_el_count")
 
   x <- dplyr::mutate(
     x,
@@ -586,12 +586,12 @@ scrub_duplicate_outline <- function(x) {
   x <- dplyr::slice_max(
     x,
     n = 1L,
-    order_by = points,
+    order_by = .data$points,
     with_ties = TRUE,
-    by = outline_el_count
+    by = "outline_el_count"
   )
   # use the previous order
-  x <- dplyr::arrange(x, order)
+  x <- dplyr::arrange(x, .data$order)
   x$points <- NULL
   x$order <- NULL
   x$n_dup <- NULL
