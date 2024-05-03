@@ -120,7 +120,14 @@ modify the current state of the analysis.</p>
 <span></span>
 <span><span class="fu">arrange_identity</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, .by_group <span class="op">=</span> <span class="cn">FALSE</span>, nrows <span class="op">=</span> <span class="cn">NULL</span>, extra_msg <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">distinct_identity</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, .keep_all <span class="op">=</span> <span class="cn">FALSE</span>, nrows <span class="op">=</span> <span class="cn">NULL</span>, extra_msg <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">distinct_identity</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .keep_all <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .arrange <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  extra_msg <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">filter_identity</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, .by <span class="op">=</span> <span class="cn">NULL</span>, nrows <span class="op">=</span> <span class="cn">NULL</span>, extra_msg <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -187,6 +194,10 @@ console, notes taken related to the transformation.</p></dd>
 
 <dt>name, sort, .keep_all, .by, by, n_groups, group_var, ..., n, prop, with_ties, order_by, .keep, .before, each, na_rm, weight_by, replace, .by_group, .keep_new_var, .preserve, ascending</dt>
 <dd><p>Check original functions.</p></dd>
+
+
+<dt>.arrange</dt>
+<dd><p>Should arrange output?</p></dd>
 
 </dl></div>
     <div class="section level2">
