@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    419ms    459ms      2.18    18.4MB     3.27
+#> 1 outline <- proj_outline()    553ms    553ms      1.81      18MB     1.81
 ```
 
 <details>
@@ -183,6 +183,11 @@ outline
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
 #> 
+#> ── `LICENSE.md`  MIT License
+#> 
+#> ── `playground/roxygen2-test.R`
+#> `i` Section to extract
+#> 
 #> ── `R/browse-pkg.R`
 #> `i` {package}
 #> `i` Vignettes
@@ -191,7 +196,6 @@ outline
 #> `i` in the presence of ties.
 #> `i` Use with_ties = FALSE to return exactly n matches
 #> `i` Use each = FALSE to have n divided in each place
-#> `i` Using each = TRUE (to retun n = 2, for min, n = 2 for max)
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
 #> `i` with dplyr::filter
 #> `i` extract the skin_color for C-3PO
@@ -257,7 +261,7 @@ outline
 #> `i` These all work on the active file / project or directory.
 #> `i` Like proj_switch(), proj_outline() accepts a project
 #> `i` File outline
-#> `i` Methods
+#> `i` Print method
 #> `i` Step: tweak outline look as they show
 #> 
 #> ── `R/proj-list.R`
@@ -273,7 +277,6 @@ outline
 #> ── `R/rename-files.R`
 #> `i` Use case
 #> `i` After here, we start doing some renaming real situations
-#> `i` FIXME doesn't fit now.- `Done✔?`
 #> `i` Helpers
 #> `i` helpers for computing scope of renaming
 #> `i` TODO measure of string proximity- `Done✔?`
@@ -291,6 +294,12 @@ outline
 #> 
 #> ── `R/utils-write.R`
 #> `i` Creating <path>
+#> 
+#> ── `R/utils.R`  OS utils
+#> 
+#> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
+#> `i` Another title
+#> `i` Second level
 #> 
 #> ── `tests/testthat/_ref/my-analysis.md`  My doc title
 #> `i` A section
@@ -312,6 +321,8 @@ outline
 #> `i` 'R/my-file.R'
 #> `i` Refer to google (<https://google.com>)
 #> `i` Section title
+#> 
+#> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
 #> `i` case_if_any basic work
@@ -369,6 +380,7 @@ outline
 #> ── `tests/testthat/test-outline.R`
 #> `i` Other arguments work
 #> `i` file_outline() is a data frame
+#> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
 #> `i` dir_outline() works with no error
 #> 
@@ -398,6 +410,21 @@ outline
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
 #> `i` TODO [outline] avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
+#> `i` TODO [outline] news heading should not all show by default.- `Done✔?`
+#> `i` TODO [outline] remove examples from outline. Sometimes commented code i…- `Done✔?`
+#> `i` TODO [outline] roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
+#> `i` TODO [outline] show key like `pak::pkg_deps_tree()` does.- `Done✔?`
+#> `i` TODO [outline] roxygen function title- `Done✔?`
+#> `i` TODO [outline] truncate other things, like graph title, comment section- `Done✔?`
+#> `i` TODO [outline] remove ggtext markup from plot title.- `Done✔?`
+#> `i` TODO outline comments are now interpreted as section- `Done✔?`
+#> `i` TODO outline doesn't go well if only a title :(- `Done✔?`
+#> `i` TODO exclude renv from rename_files + outline- `Done✔?`
+#> `i` TODO identity distinct, add a arrange arg- `Done✔?`
+#> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
+#> `i` TODO reframe more than one issue. nw drive- `Done✔?`
+#> 
+#> ── `NEWS.md`  reuseme (development version)
 #> 
 #> ── `README.Rmd`
 #> `i` reuseme

@@ -29,6 +29,12 @@
       `i` 'R/my-file.R'
     Message
       
+      -- `many-titles.md` 🕒 The title is the only outline element 
+    Output
+      `i` Another title
+      `i` Second level
+    Message
+      
       -- `single-title.md` 🕒 The title is the only outline element 
 
 # Other arguments work

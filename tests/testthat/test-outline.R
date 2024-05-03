@@ -1,5 +1,5 @@
 test_that("file_outline() works", {
-  my_test_files <- test_path("_ref", c("my-analysis.R", "my-analysis.md", "single-title.md"))
+  my_test_files <- test_path("_ref", c("my-analysis.R", "my-analysis.md", "single-title.md", "many-titles.md"))
   rlang::local_interactive(TRUE)
   expect_snapshot(
     file_outline(path = my_test_files, alpha = TRUE),
@@ -35,6 +35,10 @@ test_that("file_outline() with only title doesn't error", {
     file <- file_outline(path = test_path("_ref", "single-title.md"))
     })
   expect_equal(nrow(file), 1L)
+  expect_no_error({
+    file <- file_outline(path = test_path("_ref", "many-titles.md"))
+  })
+  expect_equal(nrow(file), 3L)
 })
 
 test_that("file_outline() contains function calls", {
