@@ -88,27 +88,8 @@ file_outline <- function(regex_outline = NULL,
     }
 
     # if (rstudioapi::rstudio)
-    dir_common <- if (!is.null(dir_common)) {
-      tryCatch(
-        fs::path_real(dir_common),
-        error = function(e) {
-          cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE, parent = e)
-        }
-      )
-    } else if (rlang::has_length(path, 1)) {
-      # If a single path
-      tryCatch(
-        rprojroot::find_root_file(
-          path = path,
-          criterion = rprojroot::is_rstudio_project
-        ),
-        silent = TRUE,
-        error = function(e) fs::path_dir(path) |> fs::path_dir()
-      ) |>
-        fs::path()
-    } else {
-      fs::path_common(path)
-    }
+    dir_common <- get_dir_common_outline(dir_common, path)
+
     path <- stringr::str_sort(path)
     file_content <- purrr::set_names(path)
     # Not warn
@@ -295,7 +276,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
   file_outline(path = file_list_to_outline, regex_outline = regex_outline, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
-# Methods -------------------
+# Print method -------------------
 
 #' @export
 print.outline_report <- function(x, ...) {
@@ -380,13 +361,13 @@ print.outline_report <- function(x, ...) {
     if (recent_only) {
       if (i %in% is_recently_modified) {
         purrr::walk(dat[[i]], \(y) {
-          y <- escape_markup(y)
+          y <- escape_markup(y[!is.na(y)])
           cat(cli::format_inline(y), sep = "\n")
         })
       }
     } else {
       purrr::walk(dat[[i]], \(y) {
-        y <- escape_markup(y)
+        y <- escape_markup(y[!is.na(y)])
         cat(cli::format_inline(y), sep = "\n")
       })
     }
@@ -518,6 +499,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     outline_el2 = dplyr::case_when(
       # Not showing up are the longer items.
       # truncating to make sure the hyperlink shows up.
+      has_title_el ~ NA_character_,
       is_todo_fixme & is_saved_doc & !has_inline_markup ~ paste0(
         as.character(cli::ansi_strtrim(outline_el, width - 8L)),
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
@@ -556,6 +538,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   dplyr::mutate(.data,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
     link_rs_api = dplyr::case_when(
+      is.na(outline_el2) ~ NA_character_,
       !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
       rs_avail_file_link ~ paste0("{cli::style_hyperlink(cli::", style_fun, '("i"), "', paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
@@ -566,9 +549,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
       .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
     ),
     rs_version = NULL,
-    outline_el2
+    outline_el2 = NULL
   ) |>
-    dplyr::filter(tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
+    dplyr::filter(is.na(outline_el) | tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
 }
 
 # Remove duplicated entries from outline
@@ -613,4 +596,30 @@ arrange_outline <- function(x) {
   ordered_rows <- order(var_to_order_by)
 
   x[ordered_rows, ]
+}
+
+get_dir_common_outline <- function(dir_common, path) {
+  if (!is.null(dir_common)) {
+    dir_common <- tryCatch(
+      fs::path_real(dir_common),
+      error = function(e) {
+        cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE, parent = e)
+      }
+    )
+  } else if (rlang::has_length(path, 1)) {
+    # If a single path
+    root_path <- tryCatch(
+      rprojroot::find_root_file(
+        path = path,
+        criterion = rprojroot::is_rstudio_project
+      ),
+      silent = TRUE,
+      error = function(e) fs::path_dir(fs::path_dir(path)) # parent path
+    )
+    dir_common <- fs::path(root_path)
+  } else {
+    dir_common <- fs::path_common(path)
+  }
+
+  dir_common
 }
