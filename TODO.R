@@ -19,8 +19,5 @@
 # TODO [outline] truncate other things, like graph title, comment section.
 # TODO [outline] remove ggtext markup from plot title.
 # TODO outline comments are now interpreted as section
-# TODO outline doesn't go well if only a title :(
-# TODO exclude renv from rename_files + outline
-# TODO identity distinct, add a arrange arg
 # TODO outline todos in qmd file inside html comment
 # TODO reframe more than one issue. nw drive

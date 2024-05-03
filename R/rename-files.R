@@ -89,14 +89,14 @@ rename_files2 <- function(old,
   # Warn if some related files are found. If I have file.R and file.csv,
   # this will warn if I rename file.R, but not file.csv
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
-  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze", invert = TRUE)
+  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
   if (length(related_files) > 0) {
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",
       "No support yet for that yet.",
-      "Think about what triggers this and add new rules  in {.fn scope_rename}"
+      "Think about what triggers this and add new rules in {.fn scope_rename}"
     ))
   }
 
@@ -129,7 +129,7 @@ rename_files2 <- function(old,
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
   n_file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    fs::path_filter(regexp = "_files|tests/testthat|_book/|_freeze/", invert = TRUE) |> # need to do elsewhere too
+    fs::path_filter(regexp = "_files|tests/testthat|_book/|_freeze/|renv/", invert = TRUE) |> # need to do elsewhere too
     solve_file_name_conflict(
       regex = regexp_to_search_for_in_files,
       dir = ".",

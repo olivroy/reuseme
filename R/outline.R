@@ -259,7 +259,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     glob = file_exts_regex,
     recurse = TRUE
   )
-  file_list_to_outline <- fs::path_filter(file_list_to_outline, regexp = "vignette-dump", invert = TRUE)
+  file_list_to_outline <- fs::path_filter(file_list_to_outline, regexp = "vignette-dump|renv/", invert = TRUE)
   if (any(grepl("README.Rmd", file_list_to_outline))) {
     file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
   }
@@ -508,7 +508,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     as.character(trim_outline(.data$outline_el[cn], width)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
-    .data$line_id[cn], ", '", .data$file[cn], "', '", stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+    .data$line_id[cn], ", '", .data$file[cn], "', '", stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
     .data$rs_version[cn]
   )
   .data <- dplyr::mutate(
@@ -519,7 +519,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
         rs_version
       ),
        outline_el2

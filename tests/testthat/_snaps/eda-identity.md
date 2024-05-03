@@ -70,12 +70,12 @@
       i Looking at people with min and max height (4 each) total = 8 rows.
     Output
       # A tibble: 22 x 2
-        hair_color sex   
-        <chr>      <chr> 
-      1 blond      male  
-      2 <NA>       none  
-      3 none       male  
-      4 brown      female
+        hair_color    sex   
+        <chr>         <chr> 
+      1 auburn        female
+      2 auburn, grey  male  
+      3 auburn, white male  
+      4 black         female
       # i 18 more rows
     Message
       i Looking if there is association between `hair_color` and `sex`. Printing 15 rows.
