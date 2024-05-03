@@ -364,7 +364,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
 
     cli::cli_inform(c(
       "!" = "{.val {old}} was modified later than {.val {new}}",
-      "It may be a good idea to view the diff it it makes sense.",
+      "It may be a good idea to view the diff it makes sense.",
       i = "Use {.run diffviewer::visual_diff('{old_chr}',  '{new_chr}')}."
     ))
     return(TRUE)

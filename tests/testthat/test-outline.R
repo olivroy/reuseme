@@ -30,6 +30,10 @@ test_that("file_outline() is a data frame", {
   )
 })
 
+test_that("file_outline() with only title doesn't error", {
+  expect_no_error({file_outline(path = test_path("_ref", "single-title.md"))})
+})
+
 test_that("file_outline() contains function calls", {
   file <- fs::path_package("reuseme", "example-file", "outline-script.R")
   outline <- file_outline(path = file)

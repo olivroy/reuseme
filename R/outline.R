@@ -125,7 +125,12 @@ file_outline <- function(regex_outline = NULL,
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  suppressMessages(in_active_project <- tryCatch(identical(proj_get2(), dir_common), error = function(e) FALSE))
+  suppressMessages(
+    in_active_project <- tryCatch(
+      identical(suppressWarnings(proj_get2()), dir_common),
+      error = function(e) FALSE
+    )
+  )
   # After this point we have validated that paths exist.
 
   # Handle differently if in showing work items only
@@ -330,7 +335,7 @@ print.outline_report <- function(x, ...) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
   }
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
-  in_vscode <- FALSE # to do create it.
+  in_vscode <- FALSE # to do create it. # Sys.getenv("TERM_PROGRAM") == "vscode" when in vscode!
   if (in_vscode) {
     which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
     summary_links_files$file_hl[which_detect] <-
