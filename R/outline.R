@@ -362,13 +362,13 @@ print.outline_report <- function(x, ...) {
       if (i %in% is_recently_modified) {
         purrr::walk(dat[[i]], \(y) {
           y <- escape_markup(y[!is.na(y)])
-          cat(cli::format_inline(y), sep = "\n")
+          if (length(y)) cat(cli::format_inline(y), sep = "\n")
         })
       }
     } else {
       purrr::walk(dat[[i]], \(y) {
         y <- escape_markup(y[!is.na(y)])
-        cat(cli::format_inline(y), sep = "\n")
+        if (length(y)) cat(cli::format_inline(y), sep = "\n")
       })
     }
   }
@@ -466,9 +466,9 @@ display_outline_element <- function(.data) {
       title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
       .by = c(file)
     )
-    if (nrow(y) > 1) {
-      y <- y[!is.na(y$outline_el), ]
-    }
+    # if (nrow(y) > 1) {
+    #   y <- y[!is.na(y$outline_el), ]
+    # }
   }
   y
 }
@@ -493,29 +493,41 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   .data$rs_version <- ifelse(!rstudioapi::isAvailable("2023.12.0.274") && rstudioapi::isAvailable(), ".", "")
   .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
-  width <- cli::console_width()
   .data <- dplyr::mutate(
     .data,
-    outline_el2 = dplyr::case_when(
-      # Not showing up are the longer items.
-      # truncating to make sure the hyperlink shows up.
-      has_title_el ~ NA_character_,
-      is_todo_fixme & is_saved_doc & !has_inline_markup ~ paste0(
-        as.character(cli::ansi_strtrim(outline_el, width - 8L)),
-        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
-        # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
-        rs_version
-      ),
-      is_todo_fixme & is_saved_doc ~ paste0(
+    condition_to_truncate = !is.na(outline_el) & !has_title_el & is_todo_fixme & is_saved_doc & !has_inline_markup,
+  )
+  # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
+  .data$outline_el2 <- NA_character_
+  width <- cli::console_width()
+
+  cn <- .data$condition_to_truncate
+  # Not showing up are the longer items.
+  # truncating to make sure the hyperlink shows up.
+  .data$outline_el2[cn] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn], width)),
+    "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$line_id[cn], ", '", .data$file[cn], "', '", stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
+    .data$rs_version[cn]
+  )
+  .data <- dplyr::mutate(
+    .data,
+    outline_el2 = ifelse(
+      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & is_todo_fixme & is_saved_doc,
+      paste0(
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
         line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]", "."), start = -15L), "'))}",
         rs_version
       ),
-      .default = outline_el
+       outline_el2
     ),
+    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
+  )
+
+  .data <- dplyr::mutate(.data,
     link = paste0(outline_el2, " {.path ", file, ":", line_id, "}"),
     # rstudioapi::documentOpen works in the visual mode!! but not fully.
     file_path = .data$file,
@@ -553,7 +565,10 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
   ) |>
     dplyr::filter(is.na(outline_el) | tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
 }
-
+trim_outline <- function(x, width) {
+  # problematic in case_when
+  cli::ansi_strtrim(x, width = width - 8L)
+}
 # Remove duplicated entries from outline
 # for example, snapshots will have priority and will not return both the snapshot and the original test
 scrub_duplicate_outline <- function(x) {

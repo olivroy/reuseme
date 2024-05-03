@@ -27,6 +27,9 @@
       `i` Write my streets
       `i` data wrangling
       `i` 'R/my-file.R'
+    Message
+      
+      -- `single-title.md` 🕒 The title is the only outline element 
 
 # Other arguments work
 
