@@ -38,7 +38,7 @@ browse_pkg <- function(package = NULL,
   pkgdown <-
     stringr::str_subset(
       urls,
-      pattern = "github.com/.*/|cran\\.|contact.html",
+      pattern = "github.com/.*/|cran\\.|contact.html|-book",
       negate = TRUE
     )
 
@@ -81,13 +81,13 @@ browse_pkg <- function(package = NULL,
 
     pkgdown <- stringr::str_remove(pkgdown, "/$")
     pkgdown_tabs_url <- paste0(pkgdown, "/", pkgdown_tabs)
-
+    names(pkgdown_tabs_url) <- pkgdown_tabs
     if (news_only) {
-      return(cli::style_hyperlink("news", pkgdown_tabs_url[1]))
+      return(cli::style_hyperlink("news", pkgdown_tabs_url["news"]))
     }
 
     if (ref_only) {
-      return(pkgdown_tabs_url[4])
+      return(pkgdown_tabs_url["reference"])
     }
 
     bullets <- c(
@@ -97,6 +97,7 @@ browse_pkg <- function(package = NULL,
       ""
     )
     hrefs <- paste0("{.href [", package, "](", pkgdown, ")}")
+
     cli::cli_h2(hrefs)
     cli::cli_bullets(bullets)
 
