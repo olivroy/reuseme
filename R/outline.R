@@ -140,7 +140,6 @@ file_outline <- function(regex_outline = NULL,
   file_sections0 <- keep_outline_element(file_sections0)
 
   if (nrow(file_sections0) == 0) {
-
     if (is_active_doc && !identical(regex_outline, ".+")) {
       msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
         "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
@@ -263,7 +262,12 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     glob = file_exts_regex,
     recurse = TRUE
   )
-  file_list_to_outline <- fs::path_filter(file_list_to_outline, regexp = "vignette-dump|renv/", invert = TRUE)
+  # TODO exclude example files (see pkgdown, usethis)
+  file_list_to_outline <- fs::path_filter(
+    file_list_to_outline,
+    regexp = "vignette-dump|renv/",
+    invert = TRUE
+  )
   if (any(grepl("README.Rmd", file_list_to_outline))) {
     file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
   }
@@ -401,7 +405,7 @@ keep_outline_element <- function(.data) {
 # Removing quotes, etc.
 display_outline_element <- function(.data) {
   x <- .data
-  x$outline_el <-  purrr::map_chr(x$content, link_issue)  # to add link to GitHub.
+  x$outline_el <- purrr::map_chr(x$content, link_issue) # to add link to GitHub.
   x <- dplyr::mutate(
     x,
     outline_el = dplyr::case_when(
@@ -526,7 +530,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
         line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
         rs_version
       ),
-       outline_el2
+      outline_el2
     ),
     outline_el2 = dplyr::coalesce(outline_el2, outline_el)
   )

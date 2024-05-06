@@ -1,4 +1,4 @@
-test_that("count_pct works as expected.", {
+test_that("count_pct() works as expected", {
   res <- count_pct(dplyr::group_by(mtcars, vs), cyl)
   expect_s3_class(res, "tbl_df")
   expect_named(res, c("vs", "cyl", "n", "percent"))
@@ -52,7 +52,7 @@ test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {
   )
 })
 
-test_that("`filter_if_any()` errors with `across()`", {
+test_that("filter_if_any() errors with across()", {
   # TODO improve this error
   expect_snapshot(
     error = TRUE,

@@ -121,7 +121,7 @@ Due to the growing number of criteria, regex, `file_outline()` is slowing down a
 ```{r}
 #| warning: false
 bench::mark(
-  outline <-proj_outline()
+  outline <- proj_outline()
 )
 ```
 

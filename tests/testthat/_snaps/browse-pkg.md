@@ -21,7 +21,8 @@
     Code
       browse_pkg("reuseme", ref_only = TRUE)
     Output
-      [1] "https://olivroy.github.io/reuseme/reference"
+                                          reference 
+      "https://olivroy.github.io/reuseme/reference" 
 
 ---
 

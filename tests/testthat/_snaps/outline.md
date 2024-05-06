@@ -37,7 +37,7 @@
       
       -- `single-title.md` 🕒 The title is the only outline element 
 
-# Other arguments work
+# alpha and work_only arguments work
 
     Code
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)

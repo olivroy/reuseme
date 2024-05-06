@@ -7,7 +7,7 @@ test_that("file_outline() works", {
   )
 })
 
-test_that("Other arguments work", {
+test_that("alpha and work_only arguments work", {
   my_test_file <- test_path("_ref/my-analysis.R")
   rlang::local_interactive(TRUE)
   # Somehow on r cmd check, strips _ref -> ref?
@@ -33,7 +33,7 @@ test_that("file_outline() is a data frame", {
 test_that("file_outline() with only title doesn't error", {
   expect_no_error({
     file <- file_outline(path = test_path("_ref", "single-title.md"))
-    })
+  })
   expect_equal(nrow(file), 1L)
   expect_no_error({
     file <- file_outline(path = test_path("_ref", "many-titles.md"))

@@ -49,7 +49,6 @@ test_that("o_is_commented_code() works", {
   expect_true(o_is_commented_code("# DiagrammeR(x = 1\""))
 
   expect_false(o_is_commented_code("# A new section {.unnumbered}"))
-
 })
 
 test_that("No outline criteria are untested", {
