@@ -26,6 +26,14 @@ is_quarto_blog <- function(base_path = proj_get()) {
 
 # Active project / document ----------------------------------------------------
 
+
+is_proj <- function(path) {
+  withCallingHandlers(
+    !is.null(rprojroot::find_root(criterion = rprojroot::criteria$is_rstudio_project, path = path)),
+    error = function(e) FALSE
+  )
+}
+
 proj_get <- function() {
   path <- rprojroot::find_root(criterion = rprojroot::is_rstudio_project)
   fs::path(path)

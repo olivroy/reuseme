@@ -232,6 +232,10 @@ proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = T
     cli::cli_abort("Internal errors due to path processing. Maybe use fs's path processing ")
   }
 
+  if (!is_proj(proj_dir)) {
+    cli::cli_abort("Not in a project. Use {.fn reuseme::dir_outline} instead.")
+  }
+
   is_active_proj <- identical(fs::path(proj_dir), proj_get2())
   if (!is_active_proj) {
     # Add an outline that enables switching projects if searching outside
