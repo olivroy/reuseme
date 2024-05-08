@@ -107,15 +107,20 @@ in <code>path</code>. <code>work_only = TRUE</code> will have an effect on regex
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>regex_outline</dt>
-<dd><p>A string or regex to search for in the outline</p></dd>
+<dd><p>A string or regex to search for in the outline. If
+specified, will search only for elements matching this regular expression.
+The print method will show the document title for context.</p></dd>
 
 
 <dt>path, proj</dt>
-<dd><p>A character vector of file paths, a <a href="proj_list.html">project</a>. Defaults to active file, project or directory. <code><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">rstudioapi::documentPath()</a></code></p></dd>
+<dd><p>A character vector of file paths, a <a href="proj_list.html">project</a>.
+Defaults to active file, project or directory. <code><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">rstudioapi::documentPath()</a></code></p></dd>
 
 
 <dt>work_only</dt>
-<dd><p>If <code>TRUE</code>, (the default), will only show you work items first. Set to <code>FALSE</code> if you want to see the full outline. <code>WORK</code> will combine with <code>regex_outline</code></p></dd>
+<dd><p>If <code>TRUE</code>, (the default), will only show you work items
+first. Set to <code>FALSE</code> if you want to see the full outline. <code>WORK</code> will
+combine with <code>regex_outline</code></p></dd>
 
 
 <dt>alpha</dt>
@@ -127,8 +132,8 @@ in <code>path</code>. <code>work_only = TRUE</code> will have an effect on regex
 
 
 <dt>print_todo</dt>
-<dd><p>Should include TODOs in the file outline?
-If <code>FALSE</code>, will print a less verbose output with sections.</p></dd>
+<dd><p>Should include TODOs in the file outline? If <code>FALSE</code>, will
+print a less verbose output with sections.</p></dd>
 
 
 <dt>recent_only</dt>
@@ -136,7 +141,8 @@ If <code>FALSE</code>, will print a less verbose output with sections.</p></dd>
 
 
 <dt>dir_tree</dt>
-<dd><p>If <code>TRUE</code>, will print the <code><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">fs::dir_tree()</a></code> or non-R files in the directory</p></dd>
+<dd><p>If <code>TRUE</code>, will print the <code><a href="https://fs.r-lib.org/reference/dir_tree.html" class="external-link">fs::dir_tree()</a></code> or non-R files in
+the directory</p></dd>
 
 </dl></div>
     <div class="section level2">
