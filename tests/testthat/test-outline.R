@@ -30,6 +30,24 @@ test_that("file_outline() is a data frame", {
   )
 })
 
+test_that("regex_outline works as expected", {
+  # TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.
+  # The idea is to show doc title + regex outline match when relevant
+  file <- fs::path_package("reuseme", "example-file", "outline-script.R")
+  expect_snapshot(file_outline(regex_outline = "not found", path = file))
+  expect_snapshot({
+    file_outline("Viz", path = file)
+  },
+  transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
+  )
+  # will work also if the regex is only in title
+  expect_snapshot({
+    file_outline("Example for", path = file)
+  },
+  transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
+  )
+})
+
 test_that("file_outline() with only title doesn't error", {
   expect_no_error({
     file <- file_outline(path = test_path("_ref", "single-title.md"))

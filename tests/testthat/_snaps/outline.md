@@ -61,3 +61,29 @@
       `i` A great title
       `i` TODO improve this Viz!- `Donev?`
 
+# regex_outline works as expected
+
+    Code
+      file_outline(regex_outline = "not found", path = file)
+    Message
+      `regex_outline = "not found"` did not return any results looking in 1 file.
+      i Run `` `proj_file()` `` to search in file names too.
+
+---
+
+    Code
+      file_outline("Viz", path = file)
+    Message
+      
+      -- `outline-script.R` 🕒 Example for `file_outline()` 
+    Output
+      `i` TODO improve this Viz!- `Donev?`
+
+---
+
+    Code
+      file_outline("Example for", path = file)
+    Message
+      
+      -- `outline-script.R` 🕒 Example for `file_outline()` 
+

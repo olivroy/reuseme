@@ -19,14 +19,21 @@
 #' The parser is very opinioneted and is not very robust as it is based on regexps.
 #' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/), `{roxygen2}`
 #'
-#' Will show TODO items and will offer a link to [mark them as complete][complete_todo()]
-#' @param path,proj A character vector of file paths, a [project][proj_list()]. Defaults to active file, project or directory. `rstudioapi::documentPath()`
-#' @param regex_outline A string or regex to search for in the outline
-#' @param work_only If `TRUE`, (the default), will only show you work items first. Set to `FALSE` if you want to see the full outline. `WORK` will combine with `regex_outline`
-#' @param print_todo Should include TODOs in the file outline?
-#'   If `FALSE`, will print a less verbose output with sections.
+#' Will show TODO items and will offer a link to [mark them as
+#' complete][complete_todo()]
+#' @param path,proj A character vector of file paths, a [project][proj_list()].
+#'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
+#' @param regex_outline A string or regex to search for in the outline. If
+#'   specified, will search only for elements matching this regular expression.
+#'   The print method will show the document title for context.
+#' @param work_only If `TRUE`, (the default), will only show you work items
+#'   first. Set to `FALSE` if you want to see the full outline. `WORK` will
+#'   combine with `regex_outline`
+#' @param print_todo Should include TODOs in the file outline? If `FALSE`, will
+#'   print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
-#' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in the directory
+#' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in
+#'   the directory
 #' @param recent_only Show outline for recent files
 #' @param dir_common (Do not use it)
 #'
@@ -134,10 +141,19 @@ file_outline <- function(regex_outline = NULL,
 
   check_string(regex_outline, arg = "You may have specified path Internal error")
 
-  file_sections0 <- define_outline_criteria(file_content, print_todo = print_todo)
+  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
-  file_sections0 <- keep_outline_element(file_sections0)
+  file_sections0 <- keep_outline_element(file_sections00)
+
+  if (!grepl(".+", regex_outline, fixed = TRUE)) {
+    # keep files where regex_outline was detected (not the generic .+)
+    file_sections0 <- dplyr::filter(
+      file_sections0,
+      any(grepl(regex_outline, content, ignore.case = TRUE)),
+      .by = "file"
+    )
+  }
 
   if (nrow(file_sections0) == 0) {
     if (is_active_doc && !identical(regex_outline, ".+")) {

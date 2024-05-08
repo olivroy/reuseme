@@ -36,22 +36,28 @@ dir_outline(
 )
 }
 \arguments{
-\item{regex_outline}{A string or regex to search for in the outline}
+\item{regex_outline}{A string or regex to search for in the outline. If
+specified, will search only for elements matching this regular expression.
+The print method will show the document title for context.}
 
-\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}. Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
+\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
+Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
 
-\item{work_only}{If \code{TRUE}, (the default), will only show you work items first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will combine with \code{regex_outline}}
+\item{work_only}{If \code{TRUE}, (the default), will only show you work items
+first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will
+combine with \code{regex_outline}}
 
 \item{alpha}{Whether to show in alphabetical order}
 
 \item{dir_common}{(Do not use it)}
 
-\item{print_todo}{Should include TODOs in the file outline?
-If \code{FALSE}, will print a less verbose output with sections.}
+\item{print_todo}{Should include TODOs in the file outline? If \code{FALSE}, will
+print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
 
-\item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in the directory}
+\item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
+the directory}
 }
 \value{
 A \code{outline_report} object that contains the information. Inherits
