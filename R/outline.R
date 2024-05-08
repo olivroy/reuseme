@@ -300,7 +300,8 @@ print.outline_report <- function(x, ...) {
     # 500 is the max path length.
     # green todo
     "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
-    "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}" # until complex markup is resolved.
+    "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}", # until complex markup is resolved.
+    "\\[([:alpha:]+)\\]\\s" = "{cli::bg_white('\\1')}"
   )
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
@@ -415,7 +416,7 @@ display_outline_element <- function(.data) {
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title = [\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
-      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(instat\\:\\:)?gcdocs_links\\(|\"\\)$"),
+      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$"),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}"), # strip cross-refs.
