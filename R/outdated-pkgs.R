@@ -69,9 +69,11 @@ outdated_pkgs <- function(type = c("binary", "source")) {
 
   # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {
-    cli::cli_alert_success("There is a new version of pak.")
-    cli::cli_alert_info("Update pak with {.run pak::pak_update()}")
-    cli::cli_alert_info("Restart R session then run `outdated_pkgs()` again.")
+    cli::cli_inform(c(
+      "v" = "There is a new version of pak.",
+      "i" = "Update pak with {.run pak::pak_update()}",
+      "i" = "Restart R session then run `outdated_pkgs()` again."
+    ))
     return(invisible())
   }
 
