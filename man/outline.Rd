@@ -8,7 +8,7 @@
 \title{Print interactive outline of file sections}
 \usage{
 file_outline(
-  regex_outline = NULL,
+  pattern = NULL,
   path = active_rs_doc(),
   work_only = TRUE,
   alpha = FALSE,
@@ -18,7 +18,7 @@ file_outline(
 )
 
 proj_outline(
-  regex_outline = NULL,
+  pattern = NULL,
   proj = proj_get2(),
   work_only = TRUE,
   dir_tree = FALSE,
@@ -27,7 +27,7 @@ proj_outline(
 )
 
 dir_outline(
-  regex_outline = NULL,
+  pattern = NULL,
   path = ".",
   work_only = TRUE,
   dir_tree = FALSE,
@@ -37,16 +37,16 @@ dir_outline(
 )
 }
 \arguments{
-\item{regex_outline}{A string or regex to search for in the outline. If
+\item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
-The print method will show the document title for context.}
+The print method will show the document title for context. Previously \code{regex_outline}}
 
 \item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
 Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
 
 \item{work_only}{If \code{TRUE}, (the default), will only show you work items
 first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will
-combine with \code{regex_outline}}
+combine with \code{pattern}}
 
 \item{alpha}{Whether to show in alphabetical order}
 
@@ -74,7 +74,7 @@ RStudio project, or directories
 This will fail if you are trying to map an unsaved file.
 
 If \code{work_only} is set to \code{TRUE}, the function will only return outline of the \verb{# WORK} comment
-in \code{path}. \code{work_only = TRUE} will have an effect on regex_outline.
+in \code{path}. \code{work_only = TRUE} will have an effect on \code{pattern}.
 
 By default
 \itemize{

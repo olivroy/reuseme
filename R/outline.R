@@ -6,7 +6,7 @@
 #' This will fail if you are trying to map an unsaved file.
 #'
 #' If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
-#' in `path`. `work_only = TRUE` will have an effect on regex_outline.
+#' in `path`. `work_only = TRUE` will have an effect on `pattern`.
 #'
 #' By default
 #' * `file_outline()` prints the outline the [active document][active_rs_doc()] if in RStudio
@@ -23,12 +23,12 @@
 #' complete][complete_todo()]
 #' @param path,proj A character vector of file paths, a [project][proj_list()].
 #'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
-#' @param regex_outline A string or regex to search for in the outline. If
+#' @param pattern A string or regex to search for in the outline. If
 #'   specified, will search only for elements matching this regular expression.
-#'   The print method will show the document title for context.
+#'   The print method will show the document title for context. Previously `regex_outline`
 #' @param work_only If `TRUE`, (the default), will only show you work items
 #'   first. Set to `FALSE` if you want to see the full outline. `WORK` will
-#'   combine with `regex_outline`
+#'   combine with `pattern`
 #' @param print_todo Should include TODOs in the file outline? If `FALSE`, will
 #'   print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
@@ -63,7 +63,7 @@
 NULL
 #' @export
 #' @rdname outline
-file_outline <- function(regex_outline = NULL,
+file_outline <- function(pattern = NULL,
                          path = active_rs_doc(),
                          work_only = TRUE,
                          alpha = FALSE,
@@ -131,39 +131,39 @@ file_outline <- function(regex_outline = NULL,
   }
 
   # Will append Work to the regexp outline, if it was provided.
-  # otherwise sets regex_outline to anything
+  # otherwise sets pattern to anything
   if (should_show_only_work_items) {
     cli::cli_inform("Use {.code work_only = FALSE} to display the full file/project outline.")
-    regex_outline <- paste(c("work\\s", regex_outline), collapse = "|")
+    pattern <- paste(c("work\\s", pattern), collapse = "|")
   } else {
-    regex_outline <- regex_outline %||% ".+"
+    pattern <- pattern %||% ".+"
   }
 
-  check_string(regex_outline, arg = "You may have specified path Internal error")
+  check_string(pattern, arg = "You may have specified path Internal error")
 
   file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
 
-  if (!grepl(".+", regex_outline, fixed = TRUE)) {
-    # keep files where regex_outline was detected (not the generic .+)
+  if (!grepl(".+", pattern, fixed = TRUE)) {
+    # keep files where pattern was detected (not the generic .+)
     file_sections0 <- dplyr::filter(
       file_sections0,
-      any(grepl(regex_outline, content, ignore.case = TRUE)),
+      any(grepl(pattern, content, ignore.case = TRUE)),
       .by = "file"
     )
   }
 
   if (nrow(file_sections0) == 0) {
-    if (is_active_doc && !identical(regex_outline, ".+")) {
-      msg <- c("{.code regex_outline = {.val {regex_outline}}} did not return any results looking in the active document.",
-        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {regex_outline}})}?"
+    if (is_active_doc && !identical(pattern, ".+")) {
+      msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.",
+        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {pattern}})}?"
       )
-    } else if (!identical(regex_outline, ".+")) {
+    } else if (!identical(pattern, ".+")) {
       msg <- c(
-        "{.code regex_outline = {.val {regex_outline}}} did not return any results looking in {length(path)} file{?s}.",
-        "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{regex_outline}\"))} to search in file names too."
+        "{.code pattern = {.val {pattern}}} did not return any results looking in {length(path)} file{?s}.",
+        "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
       )
     } else {
       msg <- "Empty outline."
@@ -179,7 +179,7 @@ file_outline <- function(regex_outline = NULL,
   file_sections1 <- display_outline_element(file_sections0)
 
   # Create hyperlink in console
-  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, regex_outline)
+  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, pattern)
 
   if (alpha) {
     # remove inline markup first before sorting alphabetically
@@ -206,20 +206,20 @@ file_outline <- function(regex_outline = NULL,
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
 
-  if (is_active_proj && !is.null(regex_outline) && regex_outline %in% names(reuseme::proj_list())) {
+  if (is_active_proj && !is.null(pattern) && pattern %in% names(reuseme::proj_list())) {
     # only throw warning if proj is supplied
     cli::cli_warn(c(
-      "You specified {.arg regex_outline} = {.val {regex_outline}}",
-      i = "Did you mean to use `proj = {.val {regex_outline}}?"
+      "You specified {.arg pattern} = {.val {pattern}}",
+      i = "Did you mean to use `proj = {.val {pattern}}?"
     ))
   }
 
   if (is_active_proj) {
     return(dir_outline(
-      regex_outline = regex_outline,
+      pattern = pattern,
       work_only = work_only,
       dir_tree = dir_tree,
       alpha = alpha,
@@ -259,16 +259,17 @@ proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = T
   }
 
   dir_outline(
-    regex_outline = regex_outline,
+    pattern = pattern,
     path = proj_dir,
     work_only = work_only,
     dir_tree = dir_tree,
-    alpha = alpha
+    alpha = alpha,
+    recurse = TRUE
   )
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -308,7 +309,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, regex_outline = regex_outline, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
 # Print method -------------------
@@ -521,7 +522,7 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outline) {
+construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   rs_avail_file_link <- rstudioapi::isAvailable("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
@@ -601,7 +602,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, regex_outlin
     rs_version = NULL,
     outline_el2 = NULL
   ) |>
-    dplyr::filter(is.na(outline_el) | tolower(outline_el) |> stringr::str_detect(tolower(regex_outline)))
+    dplyr::filter(is.na(outline_el) | tolower(outline_el) |> stringr::str_detect(tolower(pattern)))
 }
 trim_outline <- function(x, width) {
   # problematic in case_when

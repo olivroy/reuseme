@@ -35,7 +35,7 @@ o_is_todo_fixme <- function(x) {
       !stringr::str_starts(candidates, "\\s*\"\\s*") &
       !stringr::str_detect(candidates, "extract_tag_in_text") &
       !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
-      !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+      !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
       !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
       !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
   has_todo

@@ -4,14 +4,14 @@
 \alias{proj_file}
 \title{Active a file at location}
 \usage{
-proj_file(file = NULL, proj = NULL, regex_outline = NULL)
+proj_file(file = NULL, proj = NULL, pattern = NULL)
 }
 \arguments{
 \item{file}{A filename or regexp to a file inside \code{proj}}
 
 \item{proj}{a project path or file \code{\link[=proj_list]{proj_list()}}}
 
-\item{regex_outline}{A regular expression to look for}
+\item{pattern}{A regular expression to look for}
 }
 \value{
 The file outline if multiple matches are found

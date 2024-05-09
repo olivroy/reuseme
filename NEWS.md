@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* in `file/proj/dir_outline()` `regex_outline` is now `pattern`
+
 * `proj_outline()` and `dir_outline()` now excludes example files
 
 * `file_outline()` better support for TODO in md files

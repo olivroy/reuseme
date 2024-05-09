@@ -333,7 +333,7 @@ outline
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` alpha and work_only arguments work
-#> `i` regex_outline works as expected
+#> `i` pattern works as expected
 #> 
 #> ── `tests/testthat/_snaps/rename-files.md` 🕒
 #> `i` Helper files returns the expected input

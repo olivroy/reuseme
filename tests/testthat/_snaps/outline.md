@@ -62,12 +62,12 @@
       `i` A great title
       `i` TODO improve this Viz!- `Donev?`
 
-# regex_outline works as expected
+# pattern works as expected
 
     Code
-      file_outline(regex_outline = "not found", path = file)
+      file_outline(pattern = "not found", path = file)
     Message
-      `regex_outline = "not found"` did not return any results looking in 1 file.
+      `pattern = "not found"` did not return any results looking in 1 file.
       i Run `` `proj_file()` `` to search in file names too.
 
 ---

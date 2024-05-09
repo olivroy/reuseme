@@ -30,11 +30,11 @@ test_that("file_outline() is a data frame", {
   )
 })
 
-test_that("regex_outline works as expected", {
+test_that("pattern works as expected", {
   # TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.
   # The idea is to show doc title + regex outline match when relevant
   file <- fs::path_package("reuseme", "example-file", "outline-script.R")
-  expect_snapshot(file_outline(regex_outline = "not found", path = file))
+  expect_snapshot(file_outline(pattern = "not found", path = file))
   expect_snapshot({
     file_outline("Viz", path = file)
   },
@@ -69,5 +69,5 @@ test_that("file_outline() contains function calls", {
 })
 
 test_that("dir_outline() works with no error", {
-  expect_no_error(dir_outline(regex_outline = ".+", path = test_path("_ref")))
+  expect_no_error(dir_outline(pattern = ".+", path = test_path("_ref")))
 })

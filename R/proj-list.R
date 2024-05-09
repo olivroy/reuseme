@@ -35,19 +35,19 @@ proj_switch <- function(proj = NULL, new_session = TRUE) {
 #'
 #' @param file A filename or regexp to a file inside `proj`
 #' @param proj a project path or file [proj_list()]
-#' @param regex_outline A regular expression to look for
+#' @param pattern A regular expression to look for
 #' @return The file outline if multiple matches are found
 #' @export
 #'
 #' @examples
 #' try(proj_file("A non-existent file"))
 #' @family project management helpers
-proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
+proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   rlang::check_required(file)
-  # search will only be conducted with regex_outline
-  if (is.null(regex_outline) && is.null(file)) {
+  # search will only be conducted with pattern
+  if (is.null(pattern) && is.null(file)) {
     cli::cli_abort(
-      "One of {.arg regex_outline} or {.arg file} must exist."
+      "One of {.arg pattern} or {.arg file} must exist."
     )
   }
   file <- file %||% "A non-existent rubbish file placeholder"
@@ -69,27 +69,27 @@ proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
   possible_files <- fs::path_filter(possible_files, regexp = file)
 
   if (length(possible_files) == 0) {
-    if (is.null(regex_outline)) {
+    if (is.null(pattern)) {
       cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
     } else {
       return(proj_outline(
-        regex_outline = regex_outline,
+        pattern = pattern,
         proj = proj
       ))
     }
   }
 
   if (length(possible_files) == 1) {
-    if (is.null(regex_outline)) {
+    if (is.null(pattern)) {
       open_rs_doc(possible_files)
     } else {
-      file_outline(regex_outline = regex_outline, path = possible_files)
+      file_outline(pattern = pattern, path = possible_files)
     }
   }
   cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
-  file_outline(regex_outline = regex_outline, path = possible_files)
+  file_outline(pattern = pattern, path = possible_files)
 }
 
 #' Returns a named project list options
