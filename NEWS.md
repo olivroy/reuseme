@@ -1,3 +1,5 @@
+# reuseme (development version)
+
 # reuseme 0.0.1
 
 * in `file/proj/dir_outline()` `regex_outline` is now `pattern`
