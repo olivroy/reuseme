@@ -160,12 +160,12 @@ slowing down a bit. I will address that.
 
 ``` r
 bench::mark(
-  outline <-proj_outline()
+  outline <- proj_outline()
 )
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    553ms    553ms      1.81      18MB     1.81
+#> 1 outline <- proj_outline()    623ms    623ms      1.61      18MB     3.21
 ```
 
 <details>
@@ -244,9 +244,6 @@ outline
 #> 
 #> ── `R/outdated-pkgs.R`
 #> `i` All packages are up to date.
-#> `i` There is a new version of pak.
-#> `i` Update pak with `pak::pak_update()`
-#> `i` Restart R session then run `outdated_pkgs()` again.
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
 #> ── `R/outline-criteria.R`
@@ -271,9 +268,6 @@ outline
 #> `i` Setup
 #> `i` Capabilities.
 #> 
-#> ── `R/quarto-help.R`
-#> `i` FIXME when r-lib/pkgdown#2326 (<https://github.com/r-lib/pkgdown/issues/2326>) is done- `Done✔?`
-#> 
 #> ── `R/rename-files.R`
 #> `i` Use case
 #> `i` After here, we start doing some renaming real situations
@@ -282,7 +276,7 @@ outline
 #> `i` TODO measure of string proximity- `Done✔?`
 #> `i` Prevent renaming if something is going on
 #> `i` FIXME maybe not fail while testing- `Done✔?`
-#> `i` TODO Check that old- `Done✔?`
+#> `i` TODO Check that old file is more recent- `Done✔?`
 #> 
 #> ── `R/use-todo.R`
 #> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
@@ -300,6 +294,7 @@ outline
 #> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
 #> `i` Another title
 #> `i` Second level
+#> `i` TODO this is an item- `Done✔?`
 #> 
 #> ── `tests/testthat/_ref/my-analysis.md`  My doc title
 #> `i` A section
@@ -325,7 +320,6 @@ outline
 #> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
-#> `i` case_if_any basic work
 #> `i` wrong cases error
 #> 
 #> ── `tests/testthat/_snaps/dplyr-plus.md`
@@ -334,14 +328,12 @@ outline
 #> ── `tests/testthat/_snaps/eda-identity.md`
 #> `i` Side effects are what's intended in interactive sessions
 #> 
-#> ── `tests/testthat/_snaps/outline-criteria.md` 🕒
+#> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
-#> ── `tests/testthat/_snaps/outline.md` 🕒
-#> `i` Other arguments work
-#> 
-#> ── `tests/testthat/_snaps/quarto-help.md` 🕒
-#> `i` link_href works
+#> ── `tests/testthat/_snaps/outline.md`
+#> `i` alpha and work_only arguments work
+#> `i` regex_outline works as expected
 #> 
 #> ── `tests/testthat/_snaps/rename-files.md` 🕒
 #> `i` Helper files returns the expected input
@@ -350,14 +342,13 @@ outline
 #> `i` Marking a TODO item as done works
 #> 
 #> ── `tests/testthat/test-case-if-any.R`
-#> `i` case_if_any basic work
+#> `i` case_if_any() basic work
 #> `i` wrong cases error
-#> `i` case_if_any can use a newly created variable (#8)
+#> `i` case_if_any() can use a newly created variable (#8)
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
-#> `i` count_pct works as expected.
 #> `i` filter_if_any() errors correctly when using `by` instead of `.by`
-#> `i` `filter_if_any()` errors with `across()`
+#> `i` filter_if_any() errors with across()
 #> `i` TODO improve this error- `Done✔?`
 #> `i` adds rows in front, but warns the user
 #> `i` summarise_with_total() keeps factors
@@ -367,19 +358,23 @@ outline
 #> `i` Returns identity
 #> `i` Side effects are what's intended in interactive sessions
 #> 
+#> ── `tests/testthat/test-link-elements.R`
+#> `i` link_gh_issue() + markup_href() work
+#> 
 #> ── `tests/testthat/test-named.R`
-#> `i` Returns named output with max, unique
-#> `i` Consistent with base R with unnamed vectors
+#> `i` min/max/unique_named() return named output
+#> `i` max_named() and unique_named() work with unnamed vectors
 #> 
 #> ── `tests/testthat/test-open.R`
-#> `i` open errors
+#> `i` open_rs_doc() errors in non-interactive sessions
 #> 
-#> ── `tests/testthat/test-outline-criteria.R`  Test individual components of the outline
+#> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline.R`
-#> `i` Other arguments work
+#> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
+#> `i` TODO change tests for data frame size when stable (efficiency). As stil…- `Done✔?`
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
 #> `i` dir_outline() works with no error
@@ -389,7 +384,7 @@ outline
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`
-#> `i` `screenshot()` does nothing in non-interactive sessions
+#> `i` screenshot() does nothing in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-use-todo.R`
 #> `i` Marking TODO as done detects tags
@@ -397,36 +392,32 @@ outline
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
 #> 
-#> ── `TODO.R`
-#> `i` TODO [screenshot] make the behaviour different when vignettes vs articl…- `Done✔?`
-#> `i` TODO [screenshot] RStudio addin to insert the code directly in the qmd …- `Done✔?`
+#> ── `TODO.R` 🕒
+#> `i` TODO screenshotmake the behaviour different when vignettes vs articl…- `Done✔?`
+#> `i` TODO screenshotRStudio addin to insert the code directly in the qmd …- `Done✔?`
 #> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
-#> `i` TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
-#> `i` TODO [rename] if many matches, separate those with the exact path.- `Done✔?`
-#> `i` TODO [outline] make ggtitle work- `Done✔?`
-#> `i` TODO [outline] show extra msg only for some, but in file outline, not i…- `Done✔?`
-#> `i` TODO detect url automatically, like link_issue instead of needing <>- `Done✔?`
-#> `i` TODO [outline] detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
+#> `i` TODO renameif many matches, separate those with the exact path.- `Done✔?`
+#> `i` TODO outlinemake ggtitle work- `Done✔?`
+#> `i` TODO outlineshow extra msg only for some, but in file outline, not i…- `Done✔?`
+#> `i` TODO outlinedetect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
-#> `i` TODO [outline] avoid evaluating in current env.- `Done✔?`
+#> `i` TODO outlineavoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
-#> `i` TODO [outline] news heading should not all show by default.- `Done✔?`
-#> `i` TODO [outline] remove examples from outline. Sometimes commented code i…- `Done✔?`
-#> `i` TODO [outline] roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
-#> `i` TODO [outline] show key like `pak::pkg_deps_tree()` does.- `Done✔?`
-#> `i` TODO [outline] roxygen function title- `Done✔?`
-#> `i` TODO [outline] truncate other things, like graph title, comment section- `Done✔?`
-#> `i` TODO [outline] remove ggtext markup from plot title.- `Done✔?`
-#> `i` TODO outline comments are now interpreted as section- `Done✔?`
-#> `i` TODO outline doesn't go well if only a title :(- `Done✔?`
-#> `i` TODO exclude renv from rename_files + outline- `Done✔?`
-#> `i` TODO identity distinct, add a arrange arg- `Done✔?`
+#> `i` TODO outlinenews heading should not all show by default.- `Done✔?`
+#> `i` TODO outlineremove examples from outline. Sometimes commented code i…- `Done✔?`
+#> `i` TODO outlineroxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
+#> `i` TODO outlineshow key like `pak::pkg_deps_tree()` does.- `Done✔?`
+#> `i` TODO outlineroxygen function title- `Done✔?`
+#> `i` TODO outlinetruncate other things, like graph title, comment section- `Done✔?`
+#> `i` TODO outlineremove ggtext markup from plot title.- `Done✔?`
+#> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> 
-#> ── `NEWS.md`  reuseme (development version)
+#> ── `NEWS.md` 🕒 reuseme (development version)
 #> 
-#> ── `README.Rmd`
+#> ── `README.Rmd` 🕒
 #> `i` reuseme
 #> `i` Installation
 #> `i` Getting started

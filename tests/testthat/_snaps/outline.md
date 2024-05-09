@@ -20,7 +20,7 @@
       `i` A real one
       `i` A true one
       `i` TODO Create a new version- `Donev?`
-      `i` Read my streets data
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
       `i` Refer to google (<https://google.com>)
       `i` Roxygen section
       `i` Section title
@@ -33,6 +33,7 @@
     Output
       `i` Another title
       `i` Second level
+      `i` TODO this is an item- `Donev?`
     Message
       
       -- `single-title.md` 🕒 The title is the only outline element 
@@ -45,7 +46,7 @@
       
       -- `ref/my-analysis.R` 🕒 Analyse my streets 
     Output
-      `i` Read my streets data
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets
 
 # file_outline() is a data frame

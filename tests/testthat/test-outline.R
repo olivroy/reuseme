@@ -56,7 +56,8 @@ test_that("file_outline() with only title doesn't error", {
   expect_no_error({
     file <- file_outline(path = test_path("_ref", "many-titles.md"))
   })
-  expect_equal(nrow(file), 3L)
+  # Number of items in many-titles.md
+  expect_equal(nrow(file), 4L)
 })
 
 test_that("file_outline() contains function calls", {

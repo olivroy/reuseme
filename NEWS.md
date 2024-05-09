@@ -1,10 +1,31 @@
 # reuseme (development version)
 
+* `proj_outline()` and `dir_outline()` now excludes example files
+
+* `file_outline()` better support for TODO in md files
+
+* `file_outline()` should recognize and transform markdown links automatically with new `markup_href()` It is no longer needed to use `{.href}` in your outline headings to show a link.
+
+* `link_issue()` has been renamed `link_gh_issue()` and now only takes care of changing gh issues in markdown links.
+New `markup_href()` is more general and now in charge of creating cli links for all markdown URLs.
+
+```r
+str <- "rstudio/gt#120 and [md link](https://github.com)"
+# before
+
+link_issue(str)
+#> "{.href [rstudio/gt#120](https://github.com/rstudio/gt/issues/120)} and [md link](https://github.com)"
+
+# now
+link_gh_issue(str) |> markup_href()
+#> "{.href [rstudio/gt#120](https://github.com/rstudio/gt/issues/120)} and {.href [md link](https://github.com)}"
+```
+
 * `rename_files2()` should work better with Quarto books, avoiding to look in `_book` and `_execute`, and classifying `summary.qmd` as generic file name, hence not looking for this regexp when searching for conflicts.
 
 * `file_outline()` now get function calls, but doesn't print them by default.
 
-* `proj_outline()` truncates todo items to fit on a single line.
+* `file_outline()` truncates todo items to fit on a single line.
 
 * can now personalize recent file indicator with `options(reuseme.recent_indicator)`, by default, a clock.
 
