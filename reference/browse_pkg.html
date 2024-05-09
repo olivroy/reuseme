@@ -56,7 +56,7 @@ package website. It looks up for a link in DESCRIPTION.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">browse_pkg</span><span class="op">(</span></span>
 <span>  package <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  open <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">is_interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  news_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ref_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  vignettes_show <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -67,7 +67,8 @@ package website. It looks up for a link in DESCRIPTION.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>package</dt>
 <dd><p>Name of package. If <code>NULL</code>, the active project is targeted,
-regardless of whether it's an R package or not.</p></dd>
+regardless of whether it's an R package or not. If <code>"&lt;org&gt;/&lt;repo&gt;"</code> is
+supplied, will jump to GitHub homepage.</p></dd>
 
 
 <dt>open</dt>
