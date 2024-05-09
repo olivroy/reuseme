@@ -422,7 +422,8 @@ keep_outline_element <- function(.data) {
 # Removing quotes, etc.
 display_outline_element <- function(.data) {
   x <- .data
-  x$outline_el <- purrr::map_chr(x$content, link_issue) # to add link to GitHub.
+  x$outline_el <- purrr::map_chr(x$content, link_gh_issue) # to add link to GitHub.
+  x$outline_el <- purrr::map_chr(x$outline_el, markup_href)
   x <- dplyr::mutate(
     x,
     outline_el = dplyr::case_when(

@@ -5,7 +5,6 @@
 # TODO [rename] if many matches, separate those with the exact path.
 # TODO [outline] make ggtitle work
 # TODO [outline] show extra msg only for some, but in file outline, not in proj?
-# TODO detect url automatically, like link_issue instead of needing {.url }
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
 # TODO escape_markup doesn't work with complex operation {{x^2}} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
 # TODO [outline] avoid evaluating in current env.
@@ -18,6 +17,6 @@
 # TODO [outline] roxygen function title
 # TODO [outline] truncate other things, like graph title, comment section.
 # TODO [outline] remove ggtext markup from plot title.
-# TODO outline comments are now interpreted as section
+# FIXME outline comments are now interpreted as section
 # TODO outline todos in qmd file inside html comment
 # TODO reframe more than one issue. nw drive
