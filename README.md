@@ -414,7 +414,7 @@ outline
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> 
-#> ── `NEWS.md` 🕒 reuseme (development version)
+#> ── `NEWS.md` 🕒 reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
 #> `i` reuseme
