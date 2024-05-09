@@ -278,12 +278,22 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     glob = file_exts_regex,
     recurse = TRUE
   )
-  # TODO exclude example files (see pkgdown, usethis)
   file_list_to_outline <- fs::path_filter(
     file_list_to_outline,
     regexp = "vignette-dump|renv/",
     invert = TRUE
   )
+
+  if (!identical(Sys.getenv("TESTTHAT"), "true")) {
+    # Remove examples from outline and test example files to avoid clutter
+    # examples don't help understand a project.
+    file_list_to_outline <- fs::path_filter(
+      file_list_to_outline,
+      regexp = "testthat/_ref/|example-file",
+      invert = TRUE
+    )
+  }
+
   if (any(grepl("README.Rmd", file_list_to_outline))) {
     file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
   }
@@ -442,6 +452,7 @@ display_outline_element <- function(.data) {
     ),
     outline_el = dplyr::case_when(
       is_tab_or_plot_title ~ stringr::str_remove_all(outline_el, "(gt\\:\\:)?tab_header\\(|\\s*(sub)?title\\s\\=\\s['\"]|['\"],?$"),
+      is_md & is_todo_fixme ~ stringr::str_remove(outline_el, "\\s?-{2,}\\>.*"),
       .default = outline_el
     ),
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
