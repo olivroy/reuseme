@@ -46,16 +46,31 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="reuseme-development-version">reuseme (development version)<a class="anchor" aria-label="anchor" href="#reuseme-development-version"></a></h2>
+<ul><li><p><code><a href="../reference/outline.html">proj_outline()</a></code> and <code><a href="../reference/outline.html">dir_outline()</a></code> now excludes example files</p></li>
+<li><p><code><a href="../reference/outline.html">file_outline()</a></code> better support for TODO in md files</p></li>
+<li><p><code><a href="../reference/outline.html">file_outline()</a></code> should recognize and transform markdown links automatically with new <code><a href="../reference/markup_href.html">markup_href()</a></code> It is no longer needed to use <code>{.href}</code> in your outline headings to show a link.</p></li>
+<li><p><code>link_issue()</code> has been renamed <code><a href="../reference/link_gh_issue.html">link_gh_issue()</a></code> and now only takes care of changing gh issues in markdown links. New <code><a href="../reference/markup_href.html">markup_href()</a></code> is more general and now in charge of creating cli links for all markdown URLs.</p></li>
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">str</span> <span class="op">&lt;-</span> <span class="st">"rstudio/gt#120 and [md link](https://github.com)"</span></span>
+<span><span class="co"># before</span></span>
+<span></span>
+<span><span class="fu">link_issue</span><span class="op">(</span><span class="va">str</span><span class="op">)</span></span>
+<span><span class="co">#&gt; "{.href [rstudio/gt#120](https://github.com/rstudio/gt/issues/120)} and [md link](https://github.com)"</span></span>
+<span></span>
+<span><span class="co"># now</span></span>
+<span><span class="fu"><a href="../reference/link_gh_issue.html">link_gh_issue</a></span><span class="op">(</span><span class="va">str</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/markup_href.html">markup_href</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; "{.href [rstudio/gt#120](https://github.com/rstudio/gt/issues/120)} and {.href [md link](https://github.com)}"</span></span></code></pre></div>
 <ul><li><p><code><a href="../reference/rename_files2.html">rename_files2()</a></code> should work better with Quarto books, avoiding to look in <code>_book</code> and <code>_execute</code>, and classifying <code>summary.qmd</code> as generic file name, hence not looking for this regexp when searching for conflicts.</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> now get function calls, but doesn’t print them by default.</p></li>
-<li><p><code><a href="../reference/outline.html">proj_outline()</a></code> truncates todo items to fit on a single line.</p></li>
+<li><p><code><a href="../reference/outline.html">file_outline()</a></code> truncates todo items to fit on a single line.</p></li>
 <li><p>can now personalize recent file indicator with <code>options(reuseme.recent_indicator)</code>, by default, a clock.</p></li>
 <li><p>Simplified internal function from <code>mark_todo_as_complete()</code> to <code><a href="../reference/complete_todo.html">complete_todo()</a></code></p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> now prints the first outline element on the first line (to encourage to give an informative description as first line) (todos or tests excluded)</p></li>
 <li><p>Improved support for escaping inline markup.</p></li>
 <li><p>Add a print method to <code><a href="../reference/outline.html">file_outline()</a></code>.</p></li>
 </ul><p>To investigate what’s gone wrong, use</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/outline.html">proj_outline</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">f</span> <span class="op">|&gt;</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>

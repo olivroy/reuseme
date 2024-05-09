@@ -204,12 +204,12 @@ Open it
 <p>Due to the growing number of criteria, regex, <code><a href="reference/outline.html">file_outline()</a></code> is slowing down a bit. I will address that.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu">mark</span><span class="op">(</span></span>
-<span>  <span class="va">outline</span> <span class="op">&lt;-</span><span class="fu"><a href="reference/outline.html">proj_outline</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">outline</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/outline.html">proj_outline</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    553ms    553ms      1.81      18MB     1.81</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    623ms    623ms      1.61      18MB     3.21</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -284,9 +284,6 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outdated-pkgs.R`</span></span>
 <span><span class="co">#&gt; `i` All packages are up to date.</span></span>
-<span><span class="co">#&gt; `i` There is a new version of pak.</span></span>
-<span><span class="co">#&gt; `i` Update pak with `pak::pak_update()`</span></span>
-<span><span class="co">#&gt; `i` Restart R session then run `outdated_pkgs()` again.</span></span>
 <span><span class="co">#&gt; `i` TODO figure out pad :)- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outline-criteria.R`</span></span>
@@ -311,9 +308,6 @@ Example outline
 <span><span class="co">#&gt; `i` Setup</span></span>
 <span><span class="co">#&gt; `i` Capabilities.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/quarto-help.R`</span></span>
-<span><span class="co">#&gt; `i` FIXME when r-lib/pkgdown#2326 (&lt;https://github.com/r-lib/pkgdown/issues/2326&gt;) is done- `Done✔?`</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/rename-files.R`</span></span>
 <span><span class="co">#&gt; `i` Use case</span></span>
 <span><span class="co">#&gt; `i` After here, we start doing some renaming real situations</span></span>
@@ -322,7 +316,7 @@ Example outline
 <span><span class="co">#&gt; `i` TODO measure of string proximity- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` Prevent renaming if something is going on</span></span>
 <span><span class="co">#&gt; `i` FIXME maybe not fail while testing- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO Check that old- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO Check that old file is more recent- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/use-todo.R`</span></span>
 <span><span class="co">#&gt; `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`</span></span>
@@ -340,6 +334,7 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element</span></span>
 <span><span class="co">#&gt; `i` Another title</span></span>
 <span><span class="co">#&gt; `i` Second level</span></span>
+<span><span class="co">#&gt; `i` TODO this is an item- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_ref/my-analysis.md`  My doc title</span></span>
 <span><span class="co">#&gt; `i` A section</span></span>
@@ -365,7 +360,6 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/_ref/single-title.md`  The title is the only outline element</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/case-if-any.md`</span></span>
-<span><span class="co">#&gt; `i` case_if_any basic work</span></span>
 <span><span class="co">#&gt; `i` wrong cases error</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/dplyr-plus.md`</span></span>
@@ -374,14 +368,12 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/eda-identity.md`</span></span>
 <span><span class="co">#&gt; `i` Side effects are what's intended in interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline-criteria.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline-criteria.md`</span></span>
 <span><span class="co">#&gt; `i` No outline criteria are untested</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline.md` 🕒</span></span>
-<span><span class="co">#&gt; `i` Other arguments work</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/quarto-help.md` 🕒</span></span>
-<span><span class="co">#&gt; `i` link_href works</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline.md`</span></span>
+<span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
+<span><span class="co">#&gt; `i` regex_outline works as expected</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/rename-files.md` 🕒</span></span>
 <span><span class="co">#&gt; `i` Helper files returns the expected input</span></span>
@@ -390,14 +382,13 @@ Example outline
 <span><span class="co">#&gt; `i` Marking a TODO item as done works</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-case-if-any.R`</span></span>
-<span><span class="co">#&gt; `i` case_if_any basic work</span></span>
+<span><span class="co">#&gt; `i` case_if_any() basic work</span></span>
 <span><span class="co">#&gt; `i` wrong cases error</span></span>
-<span><span class="co">#&gt; `i` case_if_any can use a newly created variable (#8)</span></span>
+<span><span class="co">#&gt; `i` case_if_any() can use a newly created variable (#8)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-dplyr-plus.R`</span></span>
-<span><span class="co">#&gt; `i` count_pct works as expected.</span></span>
 <span><span class="co">#&gt; `i` filter_if_any() errors correctly when using `by` instead of `.by`</span></span>
-<span><span class="co">#&gt; `i` `filter_if_any()` errors with `across()`</span></span>
+<span><span class="co">#&gt; `i` filter_if_any() errors with across()</span></span>
 <span><span class="co">#&gt; `i` TODO improve this error- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` adds rows in front, but warns the user</span></span>
 <span><span class="co">#&gt; `i` summarise_with_total() keeps factors</span></span>
@@ -407,19 +398,23 @@ Example outline
 <span><span class="co">#&gt; `i` Returns identity</span></span>
 <span><span class="co">#&gt; `i` Side effects are what's intended in interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-link-elements.R`</span></span>
+<span><span class="co">#&gt; `i` link_gh_issue() + markup_href() work</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-named.R`</span></span>
-<span><span class="co">#&gt; `i` Returns named output with max, unique</span></span>
-<span><span class="co">#&gt; `i` Consistent with base R with unnamed vectors</span></span>
+<span><span class="co">#&gt; `i` min/max/unique_named() return named output</span></span>
+<span><span class="co">#&gt; `i` max_named() and unique_named() work with unnamed vectors</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-open.R`</span></span>
-<span><span class="co">#&gt; `i` open errors</span></span>
+<span><span class="co">#&gt; `i` open_rs_doc() errors in non-interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/test-outline-criteria.R`  Test individual components of the outline</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements</span></span>
 <span><span class="co">#&gt; `i` No outline criteria are untested</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-outline.R`</span></span>
-<span><span class="co">#&gt; `i` Other arguments work</span></span>
+<span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
 <span><span class="co">#&gt; `i` file_outline() is a data frame</span></span>
+<span><span class="co">#&gt; `i` TODO change tests for data frame size when stable (efficiency). As stil…- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` file_outline() with only title doesn't error</span></span>
 <span><span class="co">#&gt; `i` file_outline() contains function calls</span></span>
 <span><span class="co">#&gt; `i` dir_outline() works with no error</span></span>
@@ -429,7 +424,7 @@ Example outline
 <span><span class="co">#&gt; `i` force and action are deprecated</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-screenshot.R`</span></span>
-<span><span class="co">#&gt; `i` `screenshot()` does nothing in non-interactive sessions</span></span>
+<span><span class="co">#&gt; `i` screenshot() does nothing in non-interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-use-todo.R`</span></span>
 <span><span class="co">#&gt; `i` Marking TODO as done detects tags</span></span>
@@ -437,36 +432,32 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/test-utils.R`</span></span>
 <span><span class="co">#&gt; `i` Windows is recognized correctly.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `TODO.R`</span></span>
-<span><span class="co">#&gt; `i` TODO [screenshot] make the behaviour different when vignettes vs articl…- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [screenshot] RStudio addin to insert the code directly in the qmd …- `Done✔?`</span></span>
+<span><span class="co">#&gt; ── `TODO.R` 🕒</span></span>
+<span><span class="co">#&gt; `i` TODO screenshotmake the behaviour different when vignettes vs articl…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO screenshotRStudio addin to insert the code directly in the qmd …- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO mutate_identity would not be required if the focus pillar PR was merged. r-lib/pillar#585 (&lt;https://github.com/r-lib/pillar/issues/585&gt;)- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [rename] if many matches, separate those with the exact path.- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] make ggtitle work- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] show extra msg only for some, but in file outline, not i…- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO detect url automatically, like link_issue instead of needing &lt;&gt;- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (&lt;https://github.com/r-lib/pillar/issues/585&gt;)- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO renameif many matches, separate those with the exact path.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlinemake ggtitle work- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineshow extra msg only for some, but in file outline, not i…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlinedetect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] avoid evaluating in current env.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineavoid evaluating in current env.- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO wrap regexps in functions- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] news heading should not all show by default.- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] remove examples from outline. Sometimes commented code i…- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] show key like `pak::pkg_deps_tree()` does.- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] roxygen function title- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] truncate other things, like graph title, comment section- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO [outline] remove ggtext markup from plot title.- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO outline comments are now interpreted as section- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO outline doesn't go well if only a title :(- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO exclude renv from rename_files + outline- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO identity distinct, add a arrange arg- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlinenews heading should not all show by default.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineremove examples from outline. Sometimes commented code i…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineroxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineshow key like `pak::pkg_deps_tree()` does.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineroxygen function title- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlinetruncate other things, like graph title, comment section- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outlineremove ggtext markup from plot title.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` FIXME outline comments are now interpreted as section- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO outline todos in qmd file inside html comment- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO reframe more than one issue. nw drive- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `NEWS.md`  reuseme (development version)</span></span>
+<span><span class="co">#&gt; ── `NEWS.md` 🕒 reuseme (development version)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `README.Rmd`</span></span>
+<span><span class="co">#&gt; ── `README.Rmd` 🕒</span></span>
 <span><span class="co">#&gt; `i` reuseme</span></span>
 <span><span class="co">#&gt; `i` Installation</span></span>
 <span><span class="co">#&gt; `i` Getting started</span></span>
