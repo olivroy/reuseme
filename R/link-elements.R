@@ -18,11 +18,12 @@
 #' link_gh_issue(c("We really need rstudio/gt#1469 to be fixed."))
 link_gh_issue <- function(x) {
   # Return early if no issue pattern is detected.
-  regex_gh_issue <- "([:graph:]+/[^#\\s]+)#(\\d+)"
+  regex_gh_issue <- "([[:graph:]]+/[^#\\s]+)#(\\d+)"
 
-  has_gh_issue <- stringr::str_detect(
+  has_gh_issue <- grepl(
+    regex_gh_issue,
     x,
-    regex_gh_issue
+    perl = TRUE
   )
   if (!any(has_gh_issue)) {
     return(x)
@@ -56,9 +57,10 @@ markup_href <- function(x) {
   # only safe links for now
   regex_md_url <- "(?<!\\{\\.href\\s)(\\[.+\\])(\\(https.+\\))(?!\\})"
 
-  has_md_url <- stringr::str_detect(
+  has_md_url <- grepl(
+    regex_md_url,
     x,
-    regex_md_url
+    perl = TRUE
   )
   if (!any(has_md_url)) {
     return(x)

@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    434ms    453ms      2.21      19MB     4.42
+#> 1 outline <- proj_outline()    438ms    439ms      2.28    16.4MB     3.41
 ```
 
 <details>
@@ -260,6 +260,7 @@ outline
 #> `i` File outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
+#> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
 #> ── `R/proj-list.R`
 #> `i` TODO improve on this message- `Done✔?`
@@ -325,10 +326,10 @@ outline
 #> ── `tests/testthat/_snaps/dplyr-plus.md`
 #> `i` adds rows in front, but warns the user
 #> 
-#> ── `tests/testthat/_snaps/eda-identity.md`
+#> ── `tests/testthat/_snaps/eda-identity.md` 🕒
 #> `i` Side effects are what's intended in interactive sessions
 #> 
-#> ── `tests/testthat/_snaps/outline-criteria.md`
+#> ── `tests/testthat/_snaps/outline-criteria.md` 🕒
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/_snaps/outline.md` 🕒
@@ -369,6 +370,7 @@ outline
 #> `i` open_rs_doc() errors in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
+#> `i` o_is_cli_info() works
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline.R`
@@ -392,7 +394,7 @@ outline
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
 #> 
-#> ── `TODO.R` 🕒
+#> ── `TODO.R`
 #> `i` TODO screenshotmake the behaviour different when vignettes vs articl…- `Done✔?`
 #> `i` TODO screenshotRStudio addin to insert the code directly in the qmd …- `Done✔?`
 #> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
@@ -414,7 +416,8 @@ outline
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> 
-#> ── `NEWS.md` 🕒 reuseme 0.0.1
+#> ── `NEWS.md`  reuseme (development version)
+#> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
 #> `i` reuseme

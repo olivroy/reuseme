@@ -18,8 +18,8 @@ escape_markup <- function(x) {
   is_bracket <- is_left_bracket & is_right_bracket
 
   if (!any(is_bracket)) {
-    x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
-    x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
+    x[is_left_bracket & !is_bracket] <- gsub("{", "{{", x[is_left_bracket & !is_bracket], fixed = TRUE)
+    x[is_right_bracket & !is_bracket] <- gsub("}", "}}", x[is_right_bracket & !is_bracket], fixed = TRUE)
     return(x)
   }
 

@@ -98,7 +98,7 @@ file_outline <- function(pattern = NULL,
     dir_common <- get_dir_common_outline(dir_common, path)
 
     path <- stringr::str_sort(path)
-    file_content <- purrr::set_names(path)
+    file_content <- rlang::set_names(path)
     # Not warn
     file_content <- purrr::map(file_content, function(x) readLines(fs::path_real(x), encoding = "UTF-8", warn = FALSE))
     # Combine everything into a tibble that contains file, line_id, content
@@ -197,7 +197,7 @@ file_outline <- function(pattern = NULL,
     file_sections <- scrub_duplicate_outline(file_sections)
   }
   file_sections <- file_sections |> dplyr::relocate(
-    outline_el, title_el, title_el_line,
+    "outline_el", "title_el", "title_el_line",
     .after = content
   )
   class(file_sections) <- c("outline_report", class(file_sections))
@@ -320,7 +320,7 @@ print.outline_report <- function(x, ...) {
   # Make output faster with cli!
   withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
 
-  if (nrow(x) == 0) {
+  if (sum(!x$is_function_def) == 0) {
     cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
     return(invisible(x))
   }
@@ -340,7 +340,7 @@ print.outline_report <- function(x, ...) {
     dplyr::summarise(
       first_line = unique(title_el_line),
       first_line_el = unique(title_el),
-      link = list(purrr::set_names(
+      link = list(rlang::set_names(
         link_rs_api,
         purrr::map_chr(
           paste0("{.file ", file, ":", line_id, "}"),
@@ -349,7 +349,7 @@ print.outline_report <- function(x, ...) {
       )),
       .by = c("file_hl", "file")
     )
-  if (any(duplicated(summary_links_files$file))) {
+  if (anyDuplicated(summary_links_files$file) > 0) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
   }
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
@@ -364,7 +364,7 @@ print.outline_report <- function(x, ...) {
       )
   }
   dat <- tibble::deframe(summary_links_files[, c("file_hl", "link")])
-  # dat <- purrr::map_depth(dat, 1, \(x) purrr::set_names(x, "xd"))
+  # dat <- purrr::map_depth(dat, 1, \(x) rlang::set_names(x, "xd"))
   # browser()
   # current_time <- Sys.time()
   mod_date <- file.mtime(summary_links_files$file)
@@ -458,21 +458,21 @@ display_outline_element <- function(.data) {
       .default = outline_el
     ),
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
-    is_subtitle = (is_tab_or_plot_title | is_doc_title) & stringr::str_detect(content, "subt"),
+    is_subtitle = (is_tab_or_plot_title | is_doc_title) & grepl("subt", content, fixed = TRUE),
   )
 
   y <- dplyr::mutate(
     x,
     has_title_el =
       (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !stringr::str_detect(file, "NEWS"),
+        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !grepl("NEWS", file, fixed = TRUE),
     .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
       title_el_line = ifelse(has_title_el, line_id[
         (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !stringr::str_detect(file, "NEWS")
+          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !grepl("NEWS", file, fixed = TRUE)
       ][1], # take  the first element to avoid problems (may be the reason why problems occur)
       NA
       ),
@@ -506,7 +506,7 @@ display_outline_element <- function(.data) {
       y,
       title_el = na_if0(title_el[!is.na(title_el)]),
       title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
-      .by = c("file")
+      .by = "file"
     )
   }
   y
@@ -535,8 +535,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data <- dplyr::mutate(
     .data,
     condition_to_truncate = !is.na(outline_el) & !has_title_el & (is_todo_fixme) & is_saved_doc & !has_inline_markup,
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup,
-
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
@@ -623,8 +622,20 @@ scrub_duplicate_outline <- function(x) {
   x$order <- seq_len(nrow(x))
   # outline = NA (title)
   x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
+  #
   x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "outline_el_count")
+  if (FALSE) {
+    # TODO Improve performance with vctrs tidyverse/dplyr#6806
+    mtcars$vs
+    count <- vctrs::vec_count(mtcars$vs)
+    res <- vctrs::vec_match(mtcars$vs, count$key)
+    res[0]
 
+    count$count
+
+    factor(res, labels = c(count$key))
+    match
+  }
   x <- dplyr::mutate(
     x,
     # higher is better

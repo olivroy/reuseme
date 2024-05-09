@@ -44,4 +44,3 @@ href_name_url <- function(x) {
   links <- stringr::str_glue("{{.href [{names(x)}]({x})}}")
   cli::ansi_collapse(links)
 }
-

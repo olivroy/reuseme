@@ -111,7 +111,7 @@ proj_list <- function(dirs = getOption("reuseme.reposdir")) {
     invert = TRUE
   )
 
-  purrr::set_names(x = as.character(directories), nm = fs::path_file)
+  rlang::set_names(x = as.character(directories), nm = fs::path_file)
 }
 
 default_dirs <- function() {

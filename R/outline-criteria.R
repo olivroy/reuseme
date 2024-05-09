@@ -67,19 +67,46 @@ o_is_object_title <- function(x) {
 }
 
 o_is_section_title <- function(x) {
-  section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+  if (!any(is_section_title)) {
+    return(is_section_title)
+  }
+
   uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation"
-  section_title & !stringr::str_detect(x, uninteresting_headings) & !o_is_todo_fixme(x) & !o_is_commented_code(x)
+  # potential section titles
+  p_s_title <- which(is_section_title)
+  is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
+  is_section_title
 }
 
 o_is_commented_code <- function(x) {
   stringr::str_detect(x, "#.+\\(.+\\=.+[\\),\"']$")
 }
+
+o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
+  has_cli <- grepl("cli_", x, fixed = TRUE)
+
+  if (!any(has_cli)) {
+    return(has_cli)
+  }
+  # Potential cli
+  p_cli <- which(has_cli)
+
+  has_cli[p_cli] <-
+    stringr::str_detect(x[p_cli], "\\([\"']") &
+    !is_snap_file[p_cli] &
+    !grepl("outline.R", file[p_cli], fixed = TRUE) &
+    !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
+    !grepl("paste", x[p_cli], fixed = TRUE) &
+    !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
+  has_cli
+}
+
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {
   x <- .data
-  x$file_ext <- fs::path_ext(x$file)
+  x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
@@ -89,13 +116,7 @@ define_outline_criteria <- function(.data, print_todo) {
     # Problematic when looking inside functions
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
-    is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
-      stringr::str_detect(content, "\\([\"']") &
-      !is_snap_file &
-      !stringr::str_detect(content, "(text|inform|bullets|warn|abort|div)|c\\(\\s?$") &
-      !grepl("paste", content, fixed = TRUE) &
-      !grepl("outline.R", file, fixed = TRUE) &
-      !grepl("^", content, fixed = TRUE), # Detect UI messages and remove them
+    is_cli_info = o_is_cli_info(content, is_snap_file, file),
     is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),

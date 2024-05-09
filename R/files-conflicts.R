@@ -84,7 +84,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     cli::cli_abort("Don't know how to do this.")
   }
   bullets_df <- files |>
-    purrr::set_names() |>
+    rlang::set_names() |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::map(\(x) tibble::enframe(x, name = "line_number", value = "content")) |>
     dplyr::bind_rows(.id = "file")
@@ -168,5 +168,5 @@ get_referenced_files <- function(files) {
     stringr::str_subset(pattern = "\n", negate = TRUE) |> # remove things with line breaks
     stringr::str_subset(pattern = "^\\.[:alpha:]{1,4}$", negate = TRUE) |> # remove reference to only file extensions
     stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) |> # remove 0.000 type
-    purrr::set_names()
+    rlang::set_names()
 }

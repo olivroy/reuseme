@@ -65,7 +65,7 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     t(outdated_pkg_mat) |>
     as.data.frame(stringsAsFactors = FALSE) |>
     as.list() |>
-    purrr::map(function(x) purrr::set_names(x, fields_names))
+    purrr::map(function(x) rlang::set_names(x, fields_names))
 
   # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {

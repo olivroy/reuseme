@@ -12,12 +12,12 @@ test_that("o_is_roxygen_comment() works", {
 
 test_that("o_is_todo_fixme() works", {
   expect_true(o_is_todo_fixme("# TODO: go for it"))
-  # avoid finding comments.
-  expect_false(o_is_todo_fixme("# another TODO item"))
   expect_true(o_is_todo_fixme("  # WORK this out"))
   expect_true(o_is_todo_fixme("  # TODO this is important"))
   expect_true(o_is_todo_fixme("  # FIXME this is important"))
   expect_false(o_is_todo_fixme("  expect_true(o_is_todo_fixme(\"  # TODO this is important\"))"))
+  # avoid finding comments.
+  expect_false(o_is_todo_fixme("# another TODO item"))
 })
 
 test_that("o_is_work_item() works", {
@@ -38,8 +38,8 @@ test_that("o_is_object_title() works", {
 
 test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
-  expect_false(o_is_section_title("# TidyTuesday"))
   expect_true(o_is_section_title("  # section 1 ----"))
+  expect_false(o_is_section_title("# TidyTuesday"))
 })
 
 test_that("o_is_commented_code() works", {
@@ -49,6 +49,11 @@ test_that("o_is_commented_code() works", {
   expect_true(o_is_commented_code("# DiagrammeR(x = 1\""))
 
   expect_false(o_is_commented_code("# A new section {.unnumbered}"))
+})
+
+test_that("o_is_cli_info() works", {
+  expect_true(o_is_cli_info("cli::cli_ul('this')"))
+  expect_false(o_is_cli_info("\"cli::cli_ul('aa')"))
 })
 
 test_that("No outline criteria are untested", {
