@@ -1,4 +1,4 @@
-# Test individual components of the outline ------
+# Test individual outline elements ------
 test_that("o_is_roxygen_comment() works", {
   expect_true(o_is_roxygen_comment("#' @param"))
   expect_equal(

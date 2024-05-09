@@ -47,7 +47,7 @@ rename_files2 <- function(old,
   action <- rlang::arg_match(action)
 
   warn_conflicts <- rlang::arg_match(warn_conflicts)
-  check_logical(overwrite)
+  check_bool(overwrite)
 
   if (lifecycle::is_present(force)) {
     lifecycle::deprecate_warn(
@@ -349,7 +349,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
     if (anyNA(info$change_time)) {
       cli::cli_inform("One of the file doesn't exist. hint_acceptable_renaming() expects 2 existing files.", .internal = FALSE)
     }
-    # TODO Check that old
+    # TODO Check that old file is more recent
     if (info$change_time[1] > info$change_time[2]) {
       cli::cli_inform(c(
         "!" = "{.val {new}} was modified later than {.val {old}}",
