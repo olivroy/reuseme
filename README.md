@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    623ms    623ms      1.61      18MB     3.21
+#> 1 outline <- proj_outline()    434ms    453ms      2.21      19MB     4.42
 ```
 
 <details>
@@ -306,7 +306,7 @@ outline
 #> `i` A code section
 #> 
 #> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
-#> `i` Read my streets data
+#> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
 #> `i` data wrangling
 #> `i` Write my streets
 #> `i` TODO Create a new version- `Done✔?`
@@ -331,7 +331,7 @@ outline
 #> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
-#> ── `tests/testthat/_snaps/outline.md`
+#> ── `tests/testthat/_snaps/outline.md` 🕒
 #> `i` alpha and work_only arguments work
 #> `i` pattern works as expected
 #> 
@@ -409,7 +409,6 @@ outline
 #> `i` TODO outlineroxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
 #> `i` TODO outlineshow key like `pak::pkg_deps_tree()` does.- `Done✔?`
 #> `i` TODO outlineroxygen function title- `Done✔?`
-#> `i` TODO outlinetruncate other things, like graph title, comment section- `Done✔?`
 #> `i` TODO outlineremove ggtext markup from plot title.- `Done✔?`
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
@@ -417,7 +416,7 @@ outline
 #> 
 #> ── `NEWS.md` 🕒 reuseme (development version)
 #> 
-#> ── `README.Rmd` 🕒
+#> ── `README.Rmd`
 #> `i` reuseme
 #> `i` Installation
 #> `i` Getting started

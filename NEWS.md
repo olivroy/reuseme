@@ -4,7 +4,7 @@
 
 * `proj_outline()` and `dir_outline()` now excludes example files
 
-* `file_outline()` better support for TODO in md files
+* `file_outline()` better support for todo in md files
 
 * `file_outline()` should recognize and transform markdown links automatically with new `markup_href()` It is no longer needed to use `{.href}` in your outline headings to show a link.
 

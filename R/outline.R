@@ -445,7 +445,7 @@ display_outline_element <- function(.data) {
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title = [\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
-      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$"),
+      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}"), # strip cross-refs.
@@ -534,7 +534,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data$is_saved_doc <- is_saved_doc
   .data <- dplyr::mutate(
     .data,
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & is_todo_fixme & is_saved_doc & !has_inline_markup,
+    condition_to_truncate = !is.na(outline_el) & !has_title_el & (is_todo_fixme) & is_saved_doc & !has_inline_markup,
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup,
+
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
@@ -544,11 +546,18 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   # Not showing up are the longer items.
   # truncating to make sure the hyperlink shows up.
   .data$outline_el2[cn] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn], width)),
+    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
     .data$line_id[cn], ", '", .data$file[cn], "', '", stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
     .data$rs_version[cn]
+  )
+  # truncate other elements
+  cn2 <- .data$condition_to_truncate2
+  .data$outline_el2[cn2] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$rs_version[cn2]
   )
   .data <- dplyr::mutate(
     .data,
@@ -606,7 +615,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
 }
 trim_outline <- function(x, width) {
   # problematic in case_when
-  cli::ansi_strtrim(x, width = width - 8L)
+  cli::ansi_strtrim(x, width = width)
 }
 # Remove duplicated entries from outline
 # for example, snapshots will have priority and will not return both the snapshot and the original test

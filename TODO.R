@@ -15,7 +15,6 @@
 # TODO [outline] roxygen comments processing should be left to {.fn roxygen2::parse_file}
 # TODO [outline] show key like {.fn pak::pkg_deps_tree} does.
 # TODO [outline] roxygen function title
-# TODO [outline] truncate other things, like graph title, comment section.
 # TODO [outline] remove ggtext markup from plot title.
 # FIXME outline comments are now interpreted as section
 # TODO outline todos in qmd file inside html comment
