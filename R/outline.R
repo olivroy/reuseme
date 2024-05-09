@@ -36,7 +36,7 @@
 #'   the directory
 #' @param recent_only Show outline for recent files
 #' @param dir_common (Do not use it)
-#'
+#' @inheritParams fs::dir_ls
 #' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
 #'
@@ -223,7 +223,8 @@ proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = T
       work_only = work_only,
       dir_tree = dir_tree,
       alpha = alpha,
-      recent_only = recent_only
+      recent_only = recent_only,
+      recurse = TRUE
     ))
   }
 
@@ -267,7 +268,7 @@ proj_outline <- function(regex_outline = NULL, proj = proj_get2(), work_only = T
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -276,7 +277,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     path = dir,
     type = "file",
     glob = file_exts_regex,
-    recurse = TRUE
+    recurse = recurse
   )
   # TODO exclude example files (see pkgdown, usethis)
   file_list_to_outline <- fs::path_filter(
@@ -293,7 +294,7 @@ dir_outline <- function(regex_outline = NULL, path = ".", work_only = TRUE, dir_
     fs::dir_tree(
       path = dir,
       regexp = "R/.+|qmd|Rmd|_files|~\\$|*.Rd|_snaps|testthat.R|Rmarkdown|docs/",
-      recurse = TRUE,
+      recurse = recurse,
       invert = TRUE
     )
   }

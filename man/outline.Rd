@@ -32,7 +32,8 @@ dir_outline(
   work_only = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,
-  recent_only = FALSE
+  recent_only = FALSE,
+  recurse = FALSE
 )
 }
 \arguments{
@@ -58,6 +59,9 @@ print a less verbose output with sections.}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
 the directory}
+
+\item{recurse}{If \code{TRUE} recurse fully, if a positive number the number of levels
+to recurse.}
 }
 \value{
 A \code{outline_report} object that contains the information. Inherits
