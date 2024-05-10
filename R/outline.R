@@ -77,6 +77,9 @@ file_outline <- function(pattern = NULL,
   } else {
     is_active_doc <- FALSE
   }
+  if (length(path) == 0) {
+    cli::cli_abort("No path specified.")
+  }
 
   # active_rs_doc() returns `NULL` if the active document is unsaved.
   is_saved_doc <- !is.null(path)
@@ -286,7 +289,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
     invert = TRUE
   )
 
-  if (!identical(Sys.getenv("TESTTHAT"), "true")) {
+  if (recurse && !identical(Sys.getenv("TESTTHAT"), "true")) {
     # Remove examples from outline and test example files to avoid clutter
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
