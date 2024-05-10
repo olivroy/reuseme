@@ -13,7 +13,7 @@ markup_href(x)
 A character vector with substrings changed
 }
 \description{
-Transforms \href{url}{text} -> {.href \href{url}{text}}
+Transforms \verb{[text](url)} -> \code{{.href [text](url)}}
 }
 \examples{
 markup_href(c("[link](https://google.com)", "{.href [link](https://google.com)}"))

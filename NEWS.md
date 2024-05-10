@@ -1,5 +1,11 @@
 # reuseme (development version)
 
+* `file_outline()` works better with news files and headings at the end of files.
+
+* `file_outline()` gives a better error for empty paths.
+
+* `dir_outline()` no longer excludes files by default.
+
 * `browse_pkg()` no longer opens by default and also accepts `<org>/<repo>` shortcode to open GitHub repo.
 
 # reuseme 0.0.1

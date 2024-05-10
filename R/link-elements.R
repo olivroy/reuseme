@@ -43,7 +43,7 @@ link_gh_issue <- function(x) {
 
 #' Create a cli href with a markdown link
 #'
-#' Transforms [text](url) -> {.href [text](url)}
+#' Transforms `[text](url)` -> `{.href [text](url)}`
 #' @family inline markup internal helpers
 #' @param x A character vector
 #' @returns A character vector with substrings changed
