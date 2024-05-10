@@ -135,12 +135,16 @@ define_outline_criteria <- function(.data, print_todo) {
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
-    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
+  )
+  x <- dplyr::mutate(
+    x,
+    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+    .by = file
   )
   x
 }

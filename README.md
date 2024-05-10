@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    689ms    689ms      1.45    16.5MB     1.45
+#> 1 outline <- proj_outline()    519ms    519ms      1.93    16.8MB     3.86
 ```
 
 <details>
@@ -296,6 +296,7 @@ outline
 #> `i` Another title
 #> `i` Second level
 #> `i` TODO this is an item- `Done✔?`
+#> `i` Last title
 #> 
 #> ── `tests/testthat/_ref/my-analysis.md`  My doc title
 #> `i` A section
