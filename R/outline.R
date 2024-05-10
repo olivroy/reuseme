@@ -464,15 +464,15 @@ display_outline_element <- function(.data) {
   y <- dplyr::mutate(
     x,
     has_title_el =
-      (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !grepl("NEWS", file, fixed = TRUE),
+      ((line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !grepl("NEWS", file, fixed = TRUE),
     .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
       title_el_line = ifelse(has_title_el, line_id[
         (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more) & !grepl("NEWS", file, fixed = TRUE)
+          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
       ][1], # take  the first element to avoid problems (may be the reason why problems occur)
       NA
       ),
@@ -548,7 +548,8 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     as.character(trim_outline(.data$outline_el[cn], width - 8L)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
-    .data$line_id[cn], ", '", .data$file[cn], "', '", stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+    .data$line_id[cn], ", '", .data$file[cn], "', '",
+    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
     .data$rs_version[cn]
   )
   # truncate other elements
@@ -599,7 +600,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     link_rs_api = dplyr::case_when(
       is.na(outline_el2) ~ NA_character_,
       !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
-      rs_avail_file_link ~ paste0("{cli::style_hyperlink(cli::", style_fun, '("i"), "', paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2),
+      rs_avail_file_link ~ paste0(
+        "{cli::style_hyperlink(cli::", style_fun, '("i"), "',
+        paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
     ),
     file_hl = dplyr::case_when(

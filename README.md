@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    438ms    439ms      2.28    16.4MB     3.41
+#> 1 outline <- proj_outline()    613ms    613ms      1.63    16.4MB     1.63
 ```
 
 <details>
@@ -415,8 +415,11 @@ outline
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
+#> `i` TODO [proj file] should not suggest snaps and test if R exists. (rare t…- `Done✔?`
+#> `i` TODO don't show emoji if all have emojis- `Done✔?`
 #> 
-#> ── `NEWS.md`  reuseme (development version)
+#> ── `NEWS.md`
+#> `i` reuseme (development version)
 #> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
