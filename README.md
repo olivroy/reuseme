@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    613ms    613ms      1.63    16.4MB     1.63
+#> 1 outline <- proj_outline()    689ms    689ms      1.45    16.5MB     1.45
 ```
 
 <details>
@@ -326,20 +326,20 @@ outline
 #> ── `tests/testthat/_snaps/dplyr-plus.md`
 #> `i` adds rows in front, but warns the user
 #> 
-#> ── `tests/testthat/_snaps/eda-identity.md` 🕒
+#> ── `tests/testthat/_snaps/eda-identity.md`
 #> `i` Side effects are what's intended in interactive sessions
 #> 
-#> ── `tests/testthat/_snaps/outline-criteria.md` 🕒
+#> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
-#> ── `tests/testthat/_snaps/outline.md` 🕒
+#> ── `tests/testthat/_snaps/outline.md`
 #> `i` alpha and work_only arguments work
 #> `i` pattern works as expected
 #> 
-#> ── `tests/testthat/_snaps/rename-files.md` 🕒
+#> ── `tests/testthat/_snaps/rename-files.md`
 #> `i` Helper files returns the expected input
 #> 
-#> ── `tests/testthat/_snaps/use-todo.md` 🕒
+#> ── `tests/testthat/_snaps/use-todo.md`
 #> `i` Marking a TODO item as done works
 #> 
 #> ── `tests/testthat/test-case-if-any.R`

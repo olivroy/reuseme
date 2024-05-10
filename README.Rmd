@@ -121,6 +121,7 @@ With reuseme, just use the project name!
 #| output: false
 # For example purpose, show all to spot potential files.
 withr::local_envvar("TESTTHAT" = "true")
+withr::local_options("reuseme.recent_indicator" = "")
 ```
 
 Due to the growing number of criteria, regex, `file_outline()` is slowing down a bit. I will address that.
