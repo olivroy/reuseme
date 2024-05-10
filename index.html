@@ -209,7 +209,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    613ms    613ms      1.63    16.4MB     1.63</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    519ms    519ms      1.93    16.8MB     3.86</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -336,6 +336,7 @@ Example outline
 <span><span class="co">#&gt; `i` Another title</span></span>
 <span><span class="co">#&gt; `i` Second level</span></span>
 <span><span class="co">#&gt; `i` TODO this is an item- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` Last title</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_ref/my-analysis.md`  My doc title</span></span>
 <span><span class="co">#&gt; `i` A section</span></span>
@@ -366,20 +367,20 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/dplyr-plus.md`</span></span>
 <span><span class="co">#&gt; `i` adds rows in front, but warns the user</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/eda-identity.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/eda-identity.md`</span></span>
 <span><span class="co">#&gt; `i` Side effects are what's intended in interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline-criteria.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline-criteria.md`</span></span>
 <span><span class="co">#&gt; `i` No outline criteria are untested</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/outline.md`</span></span>
 <span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
 <span><span class="co">#&gt; `i` pattern works as expected</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/rename-files.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/rename-files.md`</span></span>
 <span><span class="co">#&gt; `i` Helper files returns the expected input</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/use-todo.md` 🕒</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/use-todo.md`</span></span>
 <span><span class="co">#&gt; `i` Marking a TODO item as done works</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-case-if-any.R`</span></span>
