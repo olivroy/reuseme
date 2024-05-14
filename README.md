@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    519ms    519ms      1.93    16.8MB     3.86
+#> 1 outline <- proj_outline()    433ms    454ms      2.20      17MB     4.40
 ```
 
 <details>
@@ -241,6 +241,7 @@ outline
 #> 
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
+#> `i` TODO structure and summarise information.- `Done✔?`
 #> 
 #> ── `R/outdated-pkgs.R`
 #> `i` All packages are up to date.
@@ -263,6 +264,7 @@ outline
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
 #> ── `R/proj-list.R`
+#> `i` TODO maybe add a max?- `Done✔?`
 #> `i` TODO improve on this message- `Done✔?`
 #> 
 #> ── `R/proj-reuseme.R`

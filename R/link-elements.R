@@ -18,7 +18,7 @@
 #' link_gh_issue(c("We really need rstudio/gt#1469 to be fixed."))
 link_gh_issue <- function(x) {
   # Return early if no issue pattern is detected.
-  regex_gh_issue <- "([[:graph:]]+/[^#\\s]+)#(\\d+)"
+  regex_gh_issue <- "([[:alpha:]][[:graph:]]+/[^#\\s]+)#(\\d+)"
 
   has_gh_issue <- grepl(
     regex_gh_issue,
@@ -55,7 +55,7 @@ link_gh_issue <- function(x) {
 markup_href <- function(x) {
   # already excluding markuped strings
   # only safe links for now
-  regex_md_url <- "(?<!\\{\\.href\\s)(\\[.+\\])(\\(https.+\\))(?!\\})"
+  regex_md_url <- "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\))(?!\\})"
 
   has_md_url <- grepl(
     regex_md_url,
@@ -66,6 +66,13 @@ markup_href <- function(x) {
     return(x)
   }
   x_to_change <- x[has_md_url]
+
+  # for debugging (delete when regex_md_url seems okay)
+  # print(stringr::str_extract(
+  #   x_to_change,
+  #   regex_md_url,
+  #   group = 1
+  # ))
   x_changed <- x_to_change |> stringr::str_replace_all(
     regex_md_url,
     paste0("{.href \\1\\2}")

@@ -10,6 +10,8 @@
 
 * `proj_list()` now takes care of matching project to project list.
 
+* `link_gh_issue()` and `markup_href()` are better.
+
 # reuseme 0.0.1
 
 * in `file/proj/dir_outline()` `regex_outline` is now `pattern`
