@@ -94,19 +94,30 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
   # Hack to ensure file/file.R will be correctly renamed.
   new_path <- stringr::str_replace(old, paste0(old_path_file, "\\."), paste0(new_name, "."))
 
-  file.copy(old, new_path, overwrite = FALSE)
-  cli::cli_inform(c(
-    v = "Copied {.file {old}}",
-    i = "Edit {.file {new_path}}"
-  ))
+  copied <- file.copy(old, new_path, overwrite = FALSE)
+  if (copied) {
+    cli::cli_inform(c(
+      v = "Copied {.file {old}}",
+      i = "Edit {.file {new_path}}"
+    ))
+  } else {
+    cli::cli_abort(c(
+      "Did not overwrite the file {.file {new_path}}.",
+      i = "Set {.arg new} explicitly or use {.fn fs::file_copy}."
+    ))
+  }
+  invisible(new_path)
 }
 
 #' Delete the active RStudio document safely
 #'
+#' @description
 #' `r lifecycle::badge('experimental')`
 #'
 #' Gathers informative summary about the document you are about to delete.
 #'
+#'
+#' Will delete more easily if file name starts with `temp-`, if file is untracked and recent.
 #' @return Called for side-effects. The document content invisibly if deleting and reason.
 #' @export
 #' @family document manipulation helpers
@@ -117,6 +128,9 @@ active_rs_doc_delete <- function() {
     cli::cli_abort(c("Can't delete files in non-interactive sessions."))
   }
   doc <- active_rs_doc()
+  reasons_deleting <- NULL
+  reasons_not_deleting <- NULL
+  will_delete <- NULL
   if (is.null(doc)) {
     cli::cli_abort(c("Can't delete an unsaved file.", i = "Save the file first."))
   }
@@ -124,41 +138,96 @@ active_rs_doc_delete <- function() {
   elems <- normalize_proj_and_path(doc)
 
   rstudioapi::documentSave()
-  if (!is_git(elems$project)) {
-    cli::cli_abort("Can't delete a file in non-git directory.")
+  cli::cli_inform(c(
+    "i" = "Checking if active file can be deleted safely."
+  ))
+  if (!is.na(elems$project)) {
+    is_git <- is_git(elems$project)
+    if (!is_git) {
+      cli::cli_abort("Can't delete a file in non-git directory.")
+    }
+  } else {
+    is_git <- FALSE
   }
 
-  rlang::check_installed("gert")
-  stat_files <- gert::git_stat_files(elems$rel_path, repo = elems$project)
+  if (is_git) {
+    rlang::check_installed("gert")
+    stat_files <- gert::git_stat_files(elems$rel_path, repo = elems$project)
+    is_untracked <- is.na(stat_files$modified)
+  } else {
+    stat_files <- data.frame(modified = NA)
+    is_untracked <- NA
+  }
+
   if (!is.na(stat_files$modified)) {
-    will_delete <- FALSE
+    will_delete <- append(will_delete, FALSE)
+    reasons_not_deleting <- c(reasons_not_deleting, "the file is tracked with git")
     print(stat_files)
     file_status <- gert::git_status(pathspec = elems$rel_path, repo = elems$project) |> print()
     file_info <- fs::file_info(elems$rel_path)
   } else {
-    will_delete <- TRUE
+    if (is_git) {
+      will_delete <- append(will_delete, TRUE)
+      reasons_deleting <- c(reasons_deleting, "file is untracked")
+    } else {
+      # ?
+    }
     file_status <- NULL
     outline <- file_outline(path = elems$full_path)
     if (!is.null(outline) && nrow(outline) > 0) {
-      print(outline)
-      will_delete <- NA # perhaps worth taking a look
+      print(utils::head(outline))
+      will_delete <- append(will_delete, FALSE) # perhaps worth taking a look
+      reasons_not_deleting <- c(reasons_not_deleting, "it has contents")
+    } else {
+      reasons_deleting <- append(reasons_deleting, "empty outline")
     }
-    file_info <- fs::file_info(elems$rel_path)
+    if (!is.na(elems$project)) {
+      file_info <- fs::file_info(elems$rel_path)
+    } else {
+      file_info <- fs::file_info(elems$full_path)
+    }
+  }
+
+  if (grepl("^temp", fs::path_file(elems$rel_path))) {
+    reasons_deleting <- c(reasons_deleting, "it has the temp- prefix.")
+    will_delete <- append(will_delete, TRUE)
+  }
+
+  if (isTRUE(is_untracked)) {
+    # file created in the last hour
+    creation_recent <-
+      difftime(Sys.time(), file_info$birth_time, units = "hours") < 1
+
+    if (creation_recent) {
+      reasons_deleting <- c(reasons_deleting, "very recent")
+
+      will_delete <- append(will_delete, TRUE)
+    } else {
+      reasons_not_deleting <- c(reasons_not_deleting, "older untracked file, better to look at outline to see if not important.")
+      will_delete <- append(will_delete, FALSE)
+    }
   }
 
   # TODO structure and summarise information.
   file_info <- dplyr::select(file_info, path, size, dplyr::ends_with("time"))
   file_info <- dplyr::select(file_info, !dplyr::where(\(x) all(is.na(x))))
   file_info <- dplyr::select(file_info, !any_of(rm_duplicate_columns(file_info)))
-  if (all(file_info$size == 0)) {
+  if (!is.null(file_info$size) && all(file_info$size == 0)) {
+    will_delete <- append(will_delete, TRUE)
+    reasons_deleting <- c(reasons_deleting, "file is empty")
     file_info$size <- NULL
   }
-  pillar::glimpse(file_info) |> print()
+  pillar::glimpse(file_info)
 
-  if (isTRUE(will_delete)) {
+  # defaults to FALSE if equality :)
+  # print(table(will_delete))
+  will_delete_decision <- as.logical(names(which.max(table(will_delete))))
+  # only true or false acceptable!
+  check_bool(will_delete_decision)
+  if (isTRUE(will_delete_decision)) {
     cli::cli_inform(c(
-      "v" = "Deleted the active document {.val {elems$rel_path}} because xyz",
-      "i" = cli::col_grey("The deleted file contents are returned invisibly in case you need them.")
+      "v" = "Deleted the active document {.val {elems$rel_path}} because {reasons_deleting}.",
+      "i" = cli::col_grey("The deleted file {.path {elems$full_path}} contents are returned invisibly in case you need them.")
     ))
     contents <- readLines(elems$full_path, encoding = "UTF-8")
     fs::file_delete(elems$full_path)
@@ -166,10 +235,30 @@ active_rs_doc_delete <- function() {
   }
 
   cli::cli_abort(c(
-    "Can't delete the active document {.path {elems$rel_path}}.",
-    "It seems important"
+    "Can't delete the active document {.path {elems$rel_path}}, because {reasons_not_deleting}.",
+    "It outweighs the reasons for deleting: {reasons_deleting}."
   ))
 }
+
+active_rs_doc_sitrep <- function() {
+  # The goal is to prepare it for action.
+  # print file outline
+  # git status (untracked, modified, staged, etc.)
+  # git history.
+  # git compare with previous state
+  # mod time
+  # git mod time
+  # print ssh short commit id..
+  list(
+    staged = NA,
+    # etc.
+  )
+}
+
+active_rs_doc_undo_local_changes <- function() {
+  # When active_rs_doc_delete is mature, create this one!
+}
+
 
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 rm_duplicate_columns <- function(x) {
@@ -212,7 +301,22 @@ normalize_proj_and_path <- function(path, call = caller_env()) {
   if (!fs::is_file(full_path)) {
     cli::cli_abort("{.path {path}} does not exist.", call = call)
   }
-  project <- rprojroot::find_root_file(criterion = rprojroot::is_rstudio_project, path = full_path)
+  project <-
+    tryCatch(
+      rprojroot::find_root_file(criterion = rprojroot::is_rstudio_project, path = full_path),
+      warning = function(e) NULL,
+      error = function(e) NULL,
+      message = function(e) NULL
+    )
+  if (is.null(project)) {
+    return(
+      list(
+        project = NA,
+        rel_path = fs::path_file(full_path),
+        full_path = full_path
+      )
+    )
+  }
 
   rel_path <- fs::path_rel(full_path, start = project)
 

@@ -11,9 +11,10 @@ Called for side-effects. The document content invisibly if deleting and reason.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-}
-\details{
+
 Gathers informative summary about the document you are about to delete.
+
+Will delete more easily if file name starts with \verb{temp-}, if file is untracked and recent.
 }
 \examples{
 \dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
