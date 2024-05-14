@@ -2,6 +2,8 @@
 
 S3method(print,outline_report)
 export(active_rs_doc)
+export(active_rs_doc_copy)
+export(active_rs_doc_delete)
 export(arrange_identity)
 export(browse_pkg)
 export(case_if_any)

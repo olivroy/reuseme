@@ -33,6 +33,7 @@ Imports:
 Suggests: 
     clipr,
     curl,
+    gert,
     gt,
     magick,
     testthat (>= 3.2.1),
