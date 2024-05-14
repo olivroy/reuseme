@@ -212,7 +212,7 @@ file_outline <- function(pattern = NULL,
 proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
 
-  if (is_active_proj && !is.null(pattern) && pattern %in% names(reuseme::proj_list())) {
+  if (is_active_proj && !is.null(pattern) && pattern %in% names(proj_list())) {
     # only throw warning if proj is supplied
     cli::cli_warn(c(
       "You specified {.arg pattern} = {.val {pattern}}",
@@ -232,9 +232,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, d
   }
 
   if (!fs::dir_exists(proj)) { # when referring to a project by name.
-    all_projects <- reuseme::proj_list()
-    rlang::arg_match0(proj, values = names(all_projects))
-    proj_dir <- all_projects[proj]
+    proj_dir <- proj_list(proj)
   } else {
     if (!is_active_proj) {
       cli::cli_warn("Use {.fn dir_outline} for that.")

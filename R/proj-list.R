@@ -13,20 +13,22 @@
 proj_switch <- function(proj = NULL, new_session = TRUE) {
   # This is my default places (reuseme.reposdir possibly)
   # See fs::path_home
-  all_projects <- proj_list()
+  project <- proj_list(proj)
 
-  if (!is.null(proj)) {
-    rlang::arg_match0(proj, values = names(all_projects))
+  if (rlang::has_length(project, 1)) {
+    # Doing the switch
     if (new_session) {
-      usethis::proj_activate(unname(all_projects[proj]))
+      usethis::proj_activate(unname(project))
     } else {
       # remove if https://github.com/r-lib/usethis/pull/1954 is implemented.
-      rstudioapi::openProject(path = unname(all_projects[proj]), newSession = FALSE)
+      rstudioapi::openProject(path = unname(project), newSession = FALSE)
     }
-    return(invisible(all_projects[proj]))
+    return(invisible(project))
   }
 
-  bullets <- paste0("Open {.run [", names(all_projects), "](usethis::proj_activate('", unname(all_projects), "'))}")
+  # Displaying possibilities
+  # TODO maybe add a max?
+  bullets <- paste0("Open {.run [", names(project), "](reuseme::proj_switch('", names(project), "', new_session = ", new_session, "))}")
   cli::cli_bullets(bullets)
 }
 
@@ -56,11 +58,7 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
     open_rs_doc(file)
   }
   proj <- proj %||% proj_get2()
-  if (fs::dir_exists(proj)) {
-    proj_path <- proj
-  } else {
-    proj_path <- proj_list()[proj]
-  }
+  proj_path <- proj_list(proj)
 
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -96,12 +94,25 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
 #'
 #' It peeks `options(reuseme.reposdir)` to find projects.
 #'
+#' @param proj A project path or name to match
 #' @param dirs The directories in which we want to list projects.
 #'
-#' @return A named character vector with the project name as
+#' @return A named character vector with the project name as name, and path as value.
+#'   If `proj` is supplied
 #' @export
 #' @family project management helpers
-proj_list <- function(dirs = getOption("reuseme.reposdir")) {
+proj_list <- function(proj = NULL, dirs = getOption("reuseme.reposdir")) {
+  check_string(proj, allow_null = TRUE)
+
+  if (!is.null(proj) && length(proj) == 1 && fs::dir_exists(proj)) {
+    return(
+      rlang::set_names(
+        proj,
+        fs::path_file(proj)
+      )
+    )
+  }
+
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
   directories <- fs::dir_ls(
     proj_location,
@@ -111,7 +122,21 @@ proj_list <- function(dirs = getOption("reuseme.reposdir")) {
     invert = TRUE
   )
 
-  rlang::set_names(x = as.character(directories), nm = fs::path_file)
+  projects <- rlang::set_names(x = as.character(directories), nm = fs::path_file)
+
+  if (!is.null(proj)) {
+    if (!grepl("~/", proj, fixed = TRUE)) {
+      # try to catch an invalid path
+      rlang::arg_match0(
+        proj,
+        names(projects)
+      )
+      projects <- projects[proj]
+    } else {
+      cli::cli_abort(c("Can't find the project location for {.val {proj}} using {.topic fs::path}."))
+    }
+  }
+  projects
 }
 
 default_dirs <- function() {

@@ -29,7 +29,8 @@ quarto_help <- function(subject = NULL) {
     "netlify" = "https://quarto.org/docs/publishing/netlify.html",
     "gallery" = "https://quarto.org/docs/gallery/",
     "news" = "https://quarto.org/docs/download/",
-    "shortcode" = "https://quarto.org/docs/extensions/shortcodes.html"
+    "shortcode" = "https://quarto.org/docs/extensions/shortcodes.html",
+    "content-hide" = "https://quarto.org/docs/authoring/conditional.html"
   )
   if (!is.null(subject)) {
     subject <- rlang::arg_match(subject, names(links_help), multiple = TRUE)

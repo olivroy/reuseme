@@ -212,19 +212,17 @@ compute_path_todo <- function(todo, proj) {
 
   # Handle special global and all syntax for todo items.
   if (proj %in% c("global", "all")) {
-    proj <- Sys.getenv("R_USER", Sys.getenv("HOME")) # ?base::path.expand
+    proj_path <- Sys.getenv("R_USER", Sys.getenv("HOME")) # ?base::path.expand
   } else if (!is_active_proj) {
     # in interactive session with options set
-    all_projects <- proj_list()
-    rlang::arg_match0(proj, values = names(all_projects))
-    proj <- unname(all_projects[proj])
+    proj_path <- proj_list(proj)
   }
 
-  if (!is_active_proj && !fs::dir_exists(proj)) {
+  if (!is_active_proj && !fs::dir_exists(proj_path)) {
     cli::cli_abort(
       c(
         "proj should be a valid path now.",
-        i = "Transformed proj to {.path {proj}}"
+        i = "Transformed proj to {.path {proj_path}}"
       ),
       .internal = TRUE,
       call = error_call
@@ -233,7 +231,7 @@ compute_path_todo <- function(todo, proj) {
   if (is_active_proj) {
     path_todo <- "TODO.R"
   } else {
-    path_todo <- fs::path(proj, "TODO.R")
+    path_todo <- fs::path(proj_path, "TODO.R")
   }
   list(path_todo = path_todo, todo = todo)
 }

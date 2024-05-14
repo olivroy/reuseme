@@ -8,6 +8,8 @@
 
 * `browse_pkg()` no longer opens by default and also accepts `<org>/<repo>` shortcode to open GitHub repo.
 
+* `proj_list()` now takes care of matching project to project list.
+
 # reuseme 0.0.1
 
 * in `file/proj/dir_outline()` `regex_outline` is now `pattern`
