@@ -152,7 +152,7 @@ They all share the \verb{*_identity} suffix, they are silent in non-interactive
 sessions. They are very handy to create clickable hyperlinks that do not
 modify the current state of the analysis.
 
-They are inspired by \link[pillar:glimpse]{pillar::glimpse}, \link[tibble:view]{tibble::view}.
+They are inspired by \code{\link[pillar:glimpse]{pillar::glimpse()}}, \code{\link[tibble:view]{tibble::view()}}.
 
 Look at the original functions for the other parameters.
 }

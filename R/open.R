@@ -211,7 +211,7 @@ active_rs_doc_delete <- function() {
   # TODO structure and summarise information.
   file_info <- dplyr::select(file_info, path, size, dplyr::ends_with("time"))
   file_info <- dplyr::select(file_info, !dplyr::where(\(x) all(is.na(x))))
-  file_info <- dplyr::select(file_info, !any_of(rm_duplicate_columns(file_info)))
+  file_info <- dplyr::select(file_info, !dplyr::any_of(rm_duplicate_columns(file_info)))
   if (!is.null(file_info$size) && all(file_info$size == 0)) {
     will_delete <- append(will_delete, TRUE)
     reasons_deleting <- c(reasons_deleting, "file is empty")

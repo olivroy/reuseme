@@ -6,7 +6,7 @@
 #' sessions. They are very handy to create clickable hyperlinks that do not
 #' modify the current state of the analysis.
 #'
-#' They are inspired by [pillar::glimpse], [tibble::view].
+#' They are inspired by [pillar::glimpse()], [tibble::view()].
 #'
 #' Look at the original functions for the other parameters.
 #'
