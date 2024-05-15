@@ -542,8 +542,8 @@ define_important_element <- function(.data) {
   dplyr::mutate(
     .data,
     importance = dplyr::case_when(
-      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "important",
-      .default = "not_important"
+      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
+      .default = "important"
     )
   )
 }
@@ -611,8 +611,8 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common)) |> stringr::str_remove("^/"),
     # decide which is important
     style_fun = dplyr::case_match(importance,
-      "important" ~ "style_italic", # cli::style_inverse for bullets
-      "not_important" ~ "style_inverse",
+      "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+      "important" ~ "cli::style_inverse('i')",
       .default = NA
     )
   )
@@ -627,7 +627,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
       is.na(outline_el2) ~ NA_character_,
       !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
       rs_avail_file_link ~ paste0(
-        "{cli::style_hyperlink(cli::", style_fun, '("i"), "',
+        "{cli::style_hyperlink(", style_fun, ', "',
         paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2
       ),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)

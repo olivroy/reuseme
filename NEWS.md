@@ -16,6 +16,8 @@
 
 * `proj_file()` is less noisy and is a shortcut for `file_outline()` with `proj`.
 
+* Indentation in `file_outline()` shortly possible.
+
 # reuseme 0.0.1
 
 * in `file/proj/dir_outline()` `regex_outline` is now `pattern`
