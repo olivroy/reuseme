@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    412ms    414ms      2.42    17.9MB     4.83
+#> 1 outline <- proj_outline()    1.07s    1.07s     0.938      18MB     1.88
 ```
 
 <details>
@@ -410,7 +410,6 @@ outline
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
 #> `i` TODO outline avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
-#> `i` TODO outline news heading should not all show by default.- `Done✔?`
 #> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
 #> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
 #> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
@@ -424,6 +423,7 @@ outline
 #> `i` TODO delete if in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`
 #> `i` TODO delete if file_outline fails for a reason or another, should not…- `Done✔?`
 #> `i` TODO delete generated files- `Done✔?`
+#> `i` TODO proj_file to accesss data (return the path in this case?)- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)

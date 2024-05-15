@@ -73,12 +73,12 @@ file_outline <- function(pattern = NULL,
                          recent_only = FALSE) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
 
-  if (length(path) == 1 && interactive() && rstudioapi::isAvailable()) {
+  if (length(path) == 1L && interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
     is_active_doc <- FALSE
   }
-  if (length(path) == 0) {
+  if (length(path) == 0L) {
     cli::cli_abort("No path specified.")
   }
 
