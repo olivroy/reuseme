@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    428ms    428ms      2.33    17.1MB     4.67
+#> 1 outline <- proj_outline()    412ms    414ms      2.42    17.9MB     4.83
 ```
 
 <details>
@@ -399,30 +399,30 @@ outline
 #> `i` Windows is recognized correctly.
 #> 
 #> ── `TODO.R`
-#> `i` TODO screenshotmake the behaviour different when vignettes vs articl…- `Done✔?`
-#> `i` TODO screenshotRStudio addin to insert the code directly in the qmd …- `Done✔?`
+#> `i` TODO screenshot make the behaviour different when vignettes vs articl…- `Done✔?`
+#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd …- `Done✔?`
 #> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
 #> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
-#> `i` TODO renameif many matches, separate those with the exact path.- `Done✔?`
-#> `i` TODO outlinemake ggtitle work- `Done✔?`
-#> `i` TODO outlineshow extra msg only for some, but in file outline, not i…- `Done✔?`
-#> `i` TODO outlinedetect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO rename if many matches, separate those with the exact path.- `Done✔?`
+#> `i` TODO outline make ggtitle work- `Done✔?`
+#> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
+#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
-#> `i` TODO outlineavoid evaluating in current env.- `Done✔?`
+#> `i` TODO outline avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
-#> `i` TODO outlinenews heading should not all show by default.- `Done✔?`
-#> `i` TODO outlineremove examples from outline. Sometimes commented code i…- `Done✔?`
-#> `i` TODO outlineroxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
-#> `i` TODO outlineshow key like `pak::pkg_deps_tree()` does.- `Done✔?`
-#> `i` TODO outlineroxygen function title- `Done✔?`
-#> `i` TODO outlineremove ggtext markup from plot title.- `Done✔?`
+#> `i` TODO outline news heading should not all show by default.- `Done✔?`
+#> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
+#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
+#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
+#> `i` TODO outline roxygen function title- `Done✔?`
+#> `i` TODO outline remove ggtext markup from plot title.- `Done✔?`
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> `i` TODO don't show emoji if all have emojis- `Done✔?`
-#> `i` TODO deleteaccept to delete test if not in tests/ folder- `Done✔?`
-#> `i` TODO deleteif in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`
-#> `i` TODO deleteif file_outline fails for a reason or another, should not…- `Done✔?`
+#> `i` TODO delete accept to delete test if not in tests/ folder- `Done✔?`
+#> `i` TODO delete if in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`
+#> `i` TODO delete if file_outline fails for a reason or another, should not…- `Done✔?`
 #> `i` TODO delete generated files- `Done✔?`
 #> 
 #> ── `NEWS.md`

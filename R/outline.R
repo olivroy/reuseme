@@ -331,7 +331,8 @@ print.outline_report <- function(x, ...) {
     # green todo
     "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
     "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}", # until complex markup is resolved.
-    "\\[([:alpha:]+)\\]\\s" = "{cli::bg_white('\\1')}"
+    # Workaround r-lib/cli#693
+    "\\[([[:alpha:]\\s]+)\\]\\s" = "{cli::bg_white(cli::col_black('\\1'))} "
   )
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
