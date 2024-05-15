@@ -32,7 +32,8 @@ link_gh_issue <- function(x) {
 
   x_to_change <- x[has_gh_issue]
   # x_changed <-
-  x_changed <- x_to_change |> stringr::str_replace_all(
+  x_changed <- stringr::str_replace_all(
+    x_to_change,
     regex_gh_issue,
     paste0("[\\1#\\2](https://github.com/\\1/issues/\\2)")
   )
@@ -73,7 +74,8 @@ markup_href <- function(x) {
   #   regex_md_url,
   #   group = 1
   # ))
-  x_changed <- x_to_change |> stringr::str_replace_all(
+  x_changed <- stringr::str_replace_all(
+    x_to_change,
     regex_md_url,
     paste0("{.href \\1\\2}")
   )
@@ -87,7 +89,6 @@ markup_href <- function(x) {
       x_changed[resolve_parens],
       c(
         "(\\.href[^\\}\\{]+)\\)\\)\\}" = "\\1)})"
-
       )
     )
   }
@@ -100,8 +101,6 @@ common_regex <- function(which) {
     # usage of double negation will make it work
     md_url = "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\)(?![^\\s,\\:;$\\)]))",
     gh_issue = "([[:alpha:]][[:graph:]]+/[^#\\s]+)#(\\d+)"
-
   )
   unname(x[which])
 }
-

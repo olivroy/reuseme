@@ -4,7 +4,7 @@
       file_outline(path = my_test_files, alpha = TRUE)
     Message
       
-      -- `my-analysis.md` 🕒 My doc title 
+      -- `my-analysis.md`  My doc title 
     Output
       `i` A section
       `i` A code section
@@ -15,7 +15,7 @@
       `i` Dashboard card
     Message
       
-      -- `my-analysis.R` 🕒 Analyse my streets 
+      -- `my-analysis.R`  Analyse my streets 
     Output
       `i` A real one
       `i` A true one
@@ -29,7 +29,7 @@
       `i` 'R/my-file.R'
     Message
       
-      -- `many-titles.md` 🕒 The title is the only outline element 
+      -- `many-titles.md`  The title is the only outline element 
     Output
       `i` Another title
       `i` Last title
@@ -37,7 +37,7 @@
       `i` TODO this is an item- `Donev?`
     Message
       
-      -- `single-title.md` 🕒 The title is the only outline element 
+      -- `single-title.md`  The title is the only outline element 
 
 # alpha and work_only arguments work
 
@@ -45,7 +45,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `ref/my-analysis.R` 🕒 Analyse my streets 
+      -- `ref/my-analysis.R`  Analyse my streets 
     Output
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets
@@ -56,7 +56,7 @@
       outline
     Message
       
-      -- `outline-script.R` 🕒 Example for `file_outline()` 
+      -- `outline-script.R`  Example for `file_outline()` 
     Output
       `i` Load packages
       `i` Wrangle + visualize data
@@ -77,7 +77,7 @@
       file_outline("Viz", path = file)
     Message
       
-      -- `outline-script.R` 🕒 Example for `file_outline()` 
+      -- `outline-script.R`  Example for `file_outline()` 
     Output
       `i` TODO improve this Viz!- `Donev?`
 
@@ -87,5 +87,5 @@
       file_outline("Example for", path = file)
     Message
       
-      -- `outline-script.R` 🕒 Example for `file_outline()` 
+      -- `outline-script.R`  Example for `file_outline()` 
 

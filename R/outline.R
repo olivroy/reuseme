@@ -191,16 +191,18 @@ file_outline <- function(pattern = NULL,
   }
 
   # take most important first!
-  file_sections <- file_sections |>
+  file_sections <-
     dplyr::arrange(
-      stringr::str_detect(file, "README|NEWS|vignettes")
+      file_sections,
+      grepl("README|NEWS|vignettes", file)
     )
   file_sections$recent_only <- recent_only
 
   if (any(duplicated(file_sections$outline_el))) {
     file_sections <- scrub_duplicate_outline(file_sections)
   }
-  file_sections <- file_sections |> dplyr::relocate(
+  file_sections <- dplyr::relocate(
+    file_sections,
     "outline_el", "title_el", "title_el_line",
     .after = content
   )
@@ -422,12 +424,12 @@ print.outline_report <- function(x, ...) {
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
   # could use filter_if_any?
-  .data$simplify_news <-  sum(!is.na(.data$pkg_version)) >= 10
+  .data$simplify_news <- sum(!is.na(.data$pkg_version)) >= 10
   if (any(.data$simplify_news)) {
     # only keep dev, latest and major versions of NEWS.md in outline.
     all_versions <- .data$pkg_version[!is.na(.data$pkg_version)]
     keep <- all_versions == max(all_versions, na.rm = TRUE) |
-              endsWith(all_versions, ".0")
+      endsWith(all_versions, ".0")
     versions_to_drop <- all_versions[!keep]
   } else {
     versions_to_drop <- character(0L)
@@ -438,10 +440,10 @@ keep_outline_element <- function(.data) {
       (!simplify_news & is_section_title & !is_a_comment_or_code & before_and_after_empty) |
         (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & !is_a_comment_or_code & before_and_after_empty)
     )) |
-    # still regular comments in .md files
-    # what to keep in .md docs
+      # still regular comments in .md files
+      # what to keep in .md docs
 
-    (is_md & (is_chunk_cap | is_doc_title)) |
+      (is_md & (is_chunk_cap | is_doc_title)) |
       (is_md & (is_section_title & before_and_after_empty & !is_a_comment_or_code)) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
@@ -626,7 +628,8 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
       !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
       rs_avail_file_link ~ paste0(
         "{cli::style_hyperlink(cli::", style_fun, '("i"), "',
-        paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2),
+        paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2
+      ),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
     ),
     file_hl = dplyr::case_when(
@@ -637,7 +640,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     rs_version = NULL,
     outline_el2 = NULL
   ) |>
-    dplyr::filter(is.na(outline_el) | tolower(outline_el) |> stringr::str_detect(tolower(pattern)))
+    dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }
 trim_outline <- function(x, width) {
   # problematic in case_when

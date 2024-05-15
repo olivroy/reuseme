@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.07s    1.07s     0.938      18MB     1.88
+#> 1 outline <- proj_outline()    481ms    483ms      2.07      18MB     4.14
 ```
 
 <details>
@@ -418,12 +418,8 @@ outline
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
-#> `i` TODO don't show emoji if all have emojis- `Done✔?`
-#> `i` TODO delete accept to delete test if not in tests/ folder- `Done✔?`
-#> `i` TODO delete if in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`
-#> `i` TODO delete if file_outline fails for a reason or another, should not…- `Done✔?`
 #> `i` TODO delete generated files- `Done✔?`
-#> `i` TODO proj_file to accesss data (return the path in this case?)- `Done✔?`
+#> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)

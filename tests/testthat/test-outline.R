@@ -35,16 +35,18 @@ test_that("pattern works as expected", {
   # The idea is to show doc title + regex outline match when relevant
   file <- fs::path_package("reuseme", "example-file", "outline-script.R")
   expect_snapshot(file_outline(pattern = "not found", path = file))
-  expect_snapshot({
-    file_outline("Viz", path = file)
-  },
-  transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
+  expect_snapshot(
+    {
+      file_outline("Viz", path = file)
+    },
+    transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
   )
   # will work also if the regex is only in title
-  expect_snapshot({
-    file_outline("Example for", path = file)
-  },
-  transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
+  expect_snapshot(
+    {
+      file_outline("Example for", path = file)
+    },
+    transform = ~ sub(" `[^`]+` ", " `outline-script.R` ", .x)
   )
 })
 

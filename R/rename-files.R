@@ -128,15 +128,16 @@ rename_files2 <- function(old,
 
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
-  n_file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    fs::path_filter(regexp = "_files|tests/testthat|_book/|_freeze/|renv/", invert = TRUE) |> # need to do elsewhere too
-    solve_file_name_conflict(
-      regex = regexp_to_search_for_in_files,
-      dir = ".",
-      extra_msg = extra_msg_if_file_conflict,
-      quiet = FALSE,
-      what = regex_friendly # either full path or basename.
-    )
+  files_to_look_into <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE)
+  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_freeze/|renv/", invert = TRUE) # need to do elsewhere too
+  n_file_names_conflicts <- solve_file_name_conflict(
+    files = files_to_look_into,
+    regex = regexp_to_search_for_in_files,
+    dir = ".",
+    extra_msg = extra_msg_if_file_conflict,
+    quiet = FALSE,
+    what = regex_friendly # either full path or basename.
+  )
 
   if (renaming_strategy != "free_for_all" && n_file_names_conflicts > 10) {
     cli::cli_bullets("You can use {.code warn_conflicts = 'exact'} to see only exact references of {.val {old}}.")

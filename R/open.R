@@ -82,7 +82,7 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
   if (!fs::path_ext(old) %in% c("R", "qmd", "Rmd")) {
     cli::cli_abort("Only R docs for now")
   }
-  old_path_file <- fs::path_file(old) |> fs::path_ext_remove()
+  old_path_file <- fs::path_ext_remove(fs::path_file(old))
   if (stringr::str_detect(old, "r-profile|Rprofile")) {
     cli::cli_abort("Attempting to copy Rprofile (focus on the document you want)")
   }
@@ -168,7 +168,10 @@ active_rs_doc_delete <- function() {
     will_delete <- append(will_delete, FALSE)
     reasons_not_deleting <- c(reasons_not_deleting, "the file is tracked with git")
     print(stat_files)
-    file_status <- gert::git_status(pathspec = elems$rel_path, repo = elems$project) |> print()
+    file_status <- gert::git_status(pathspec = elems$rel_path, repo = elems$project)
+    if (nrow(file_status) > 0) {
+      print(file_status)
+    }
     file_info <- fs::file_info(elems$rel_path)
   } else {
     if (is_git) {
@@ -191,7 +194,7 @@ active_rs_doc_delete <- function() {
         reasons_not_deleting, "couldn't explore the outline, worth taking a look."
       )
       outline <- NULL
-    } else  if (!is.null(outline) && nrow(outline) > 0) {
+    } else if (!is.null(outline) && nrow(outline) > 0) {
       print(utils::head(outline))
       will_delete <- append(will_delete, FALSE) # perhaps worth taking a look
       reasons_not_deleting <- c(reasons_not_deleting, "it has contents")
@@ -205,10 +208,10 @@ active_rs_doc_delete <- function() {
     }
   }
 
-  parent_dir <- fs::path_dir(elems$full_path) |> fs::path_file()
+  parent_dir <- fs::path_file(fs::path_dir(elems$full_path))
 
   if (grepl("^temp", fs::path_file(elems$rel_path)) ||
-      (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
+    (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
     reasons_deleting <- c(reasons_deleting, "it has the temp- prefix.")
     will_delete <- append(will_delete, TRUE)
   }
@@ -322,7 +325,7 @@ path_metadata <- function() {
 }
 
 normalize_proj_and_path <- function(path, call = caller_env()) {
-  full_path <- fs::path_expand_r(path) |> fs::path_real()
+  full_path <- fs::path_real(fs::path_expand_r(path))
   if (!fs::is_file(full_path)) {
     cli::cli_abort("{.path {path}} does not exist.", call = call)
   }

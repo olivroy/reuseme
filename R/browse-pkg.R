@@ -63,7 +63,7 @@ browse_pkg <- function(package = NULL,
   cran_home <- suppressMessages(usethis::browse_cran(package))
   withCallingHandlers(
     {
-    github_home <- suppressMessages(usethis::browse_github(package))
+      github_home <- suppressMessages(usethis::browse_github(package))
     },
     warning = function(cnd) {
       cli::cli_warn("Package {.pkg {package}} has no gh URLs, using CRAN mirror.")

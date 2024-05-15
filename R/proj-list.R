@@ -82,14 +82,13 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   }
 
   if (length(possible_files) == 1L) {
-      return(file_outline(pattern = pattern, path = possible_files))
+    return(file_outline(pattern = pattern, path = possible_files))
   }
 
   cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
   file_outline(pattern = pattern, path = possible_files)
-
 }
 
 #' Returns a named project list options

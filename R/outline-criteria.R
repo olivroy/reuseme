@@ -106,11 +106,11 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
   has_cli[p_cli] <-
     stringr::str_detect(x[p_cli], "\\([\"']") &
-    !is_snap_file[p_cli] &
-    !grepl("outline.R", file[p_cli], fixed = TRUE) &
-    !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
-    !grepl("paste", x[p_cli], fixed = TRUE) &
-    !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
+      !is_snap_file[p_cli] &
+      !grepl("outline.R", file[p_cli], fixed = TRUE) &
+      !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
+      !grepl("paste", x[p_cli], fixed = TRUE) &
+      !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
   has_cli
 }
 

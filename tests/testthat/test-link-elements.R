@@ -3,8 +3,7 @@ test_that("link_gh_issue() + markup_href() work", {
     # will under go fixup
     matches_regex("[franchise](https://en.wikipedia.org/wiki/Fallout_(franchise))", "md_url")
     matches_regex("([franchise](https://google.com))", "md_url")
-}
-  )
+  })
 
   expect_snapshot({
     lines <- c(
