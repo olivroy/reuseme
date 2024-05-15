@@ -137,6 +137,9 @@ active_rs_doc_delete <- function() {
 
   elems <- normalize_proj_and_path(doc)
 
+  if (fs::is_dir(elems$full_path)) {
+    cli::cli_abort("Must be a file", .internal = TRUE)
+  }
   if (interactive() && rstudioapi::isAvailable()) {
     rstudioapi::documentSave()
   }
@@ -175,8 +178,20 @@ active_rs_doc_delete <- function() {
       # ?
     }
     file_status <- NULL
-    outline <- file_outline(path = elems$full_path)
-    if (!is.null(outline) && nrow(outline) > 0) {
+    outline <- withCallingHandlers(
+      file_outline(path = elems$full_path),
+      error = function(e) {
+        cli::cli_warn("File outline failed somehow. Please report.", parent = e)
+        NA
+      }
+    )
+    if (!is.null(outline) && is.na(outline)) {
+      will_delete <- append(will_delete, FALSE)
+      reasons_not_deleting <- c(
+        reasons_not_deleting, "couldn't explore the outline, worth taking a look."
+      )
+      outline <- NULL
+    } else  if (!is.null(outline) && nrow(outline) > 0) {
       print(utils::head(outline))
       will_delete <- append(will_delete, FALSE) # perhaps worth taking a look
       reasons_not_deleting <- c(reasons_not_deleting, "it has contents")
@@ -190,9 +205,17 @@ active_rs_doc_delete <- function() {
     }
   }
 
-  if (grepl("^temp", fs::path_file(elems$rel_path))) {
+  parent_dir <- fs::path_dir(elems$full_path) |> fs::path_file()
+
+  if (grepl("^temp", fs::path_file(elems$rel_path)) ||
+      (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
     reasons_deleting <- c(reasons_deleting, "it has the temp- prefix.")
     will_delete <- append(will_delete, TRUE)
+  }
+  if (parent_dir %in% c("Downloads", "Desktop")) {
+    # Consider that files in the Downloads or Desktop are temp files.
+    will_delete <- append(will_delete, TRUE)
+    reasons_deleting <- c(reasons_deleting, "in the ~/Downloads or ~/Desktop folder.")
   }
 
   if (isTRUE(is_untracked)) {
