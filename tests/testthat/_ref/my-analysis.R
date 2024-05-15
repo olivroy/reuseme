@@ -14,6 +14,7 @@ utils::write.csv(new_dat, "data/my-streets-clean.csv", row.names = FALSE)
 
 file.path("data", "my-streets.csv") # TODO eventually detect file.path for check_referenced_files
 fs::path("data", "my-streets", ext = "csv")
+# system.file("file.R", package = "fs") # should not be listed.
 # TODO Create a new version
 
 #' ## Roxygen section

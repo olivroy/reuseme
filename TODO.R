@@ -20,3 +20,4 @@
 # TODO reframe more than one issue. nw drive
 # TODO [delete] generated files
 # TODO [proj_file] to accesss data (return the path in this case?)
+# TODO [check_referenced_files] doesn't check for {.file R/file.R}
