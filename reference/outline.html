@@ -174,7 +174,7 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_package.html" class="external-link">path_package</a></span><span class="op">(</span><span class="st">"reuseme"</span>, <span class="st">"example-file"</span>, <span class="st">"outline-script.R"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span> 🕒 Example for `file_outline()` </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span>  Example for `file_outline()` </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Load packages</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Wrangle + visualize data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` A great title</span>
@@ -183,7 +183,7 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-in"><span><span class="co"># Remove todo items</span></span></span>
 <span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span>, print_todo <span class="op">=</span> <span class="cn">FALSE</span>, alpha <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span> 🕒 Example for `file_outline()` </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span>  Example for `file_outline()` </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` A great title</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Load packages</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Wrangle + visualize data</span>
@@ -196,10 +196,10 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /home… <span style="color: #949494;">"</span># Exa… <span style="color: #BB0000;">NA</span>         Example…             1       1 TRUE         R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> /home… <span style="color: #949494;">"</span># Loa… Load pack… Example…             1       2 FALSE        R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> /home… <span style="color: #949494;">"</span># Wra… Wrangle +… Example…             1       5 FALSE        R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /home… <span style="color: #949494;">"</span>    t… A great t… Example…             1      10 FALSE        R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> /home… <span style="color: #949494;">"</span># TOD… TODO impr… Example…             1      12 FALSE        R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> /home… <span style="color: #949494;">"</span>f_exa… f_example  Example…             1      14 FALSE        R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> /home… <span style="color: #949494;">"</span>  f2_… f2_example Example…             1      18 FALSE        R       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> /home… <span style="color: #949494;">"</span>    t… A great t… Example…             1       9 FALSE        R       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> /home… <span style="color: #949494;">"</span># TOD… TODO impr… Example…             1      11 FALSE        R       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> /home… <span style="color: #949494;">"</span>f_exa… f_example  Example…             1      13 FALSE        R       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> /home… <span style="color: #949494;">"</span>  f2_… f2_example Example…             1      17 FALSE        R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 33 more variables: is_md &lt;lgl&gt;, is_news &lt;lgl&gt;, is_test_file &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_snap_file &lt;lgl&gt;, is_cli_info &lt;lgl&gt;, is_doc_title &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_chunk_cap &lt;lgl&gt;, is_chunk_cap_next &lt;lgl&gt;, is_test_name &lt;lgl&gt;,</span></span>
