@@ -61,6 +61,7 @@
 #' # Like proj_switch(), proj_outline() accepts a project
 #'
 NULL
+## `file_outline()` ------
 #' @export
 #' @rdname outline
 file_outline <- function(pattern = NULL,

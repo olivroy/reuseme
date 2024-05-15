@@ -19,9 +19,9 @@
 # FIXME outline comments are now interpreted as section
 # TODO outline todos in qmd file inside html comment
 # TODO reframe more than one issue. nw drive
-# TODO [proj file] should not suggest snaps and test if R exists. (rare that I want to modify tests from another project)
 # TODO don't show emoji if all have emojis
 # TODO [delete] accept to delete test if not in tests/ folder
 # TODO [delete] if in Downloads/ or Desktop/, this is a reason to delete
 # TODO [delete] if file_outline fails for a reason or another, should not throw error?
-# TODO delete generated files 
+# TODO delete generated files
+# TODO proj_file to accesss data (return the path in this case?)

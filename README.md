@@ -258,6 +258,7 @@ outline
 #> `i` interact with data frame
 #> `i` These all work on the active file / project or directory.
 #> `i` Like proj_switch(), proj_outline() accepts a project
+#> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
@@ -418,7 +419,6 @@ outline
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
-#> `i` TODO [proj file] should not suggest snaps and test if R exists. (rare t…- `Done✔?`
 #> `i` TODO don't show emoji if all have emojis- `Done✔?`
 #> `i` TODO deleteaccept to delete test if not in tests/ folder- `Done✔?`
 #> `i` TODO deleteif in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`

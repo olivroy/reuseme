@@ -33,7 +33,9 @@ proj_switch <- function(proj = NULL, new_session = TRUE) {
 }
 
 
-#' Active a file at location
+#' Access the file outline within other project
+#'
+#' It can be used as [file_outline()] + `proj`.
 #'
 #' @param file A filename or regexp to a file inside `proj`
 #' @param proj a project path or file [proj_list()]
@@ -53,7 +55,7 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
     )
   }
   file <- file %||% "A non-existent rubbish file placeholder"
-  if (fs::file_exists(file)) {
+  if (fs::is_file(file)) {
     file_outline(path = file)
     open_rs_doc(file)
   }
@@ -63,10 +65,12 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
   possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE)
-  possible_files <- fs::path_filter(possible_files, regexp = "_snaps", invert = TRUE)
   possible_files <- fs::path_filter(possible_files, regexp = file)
-
-  if (length(possible_files) == 0) {
+  if (length(possible_files) > 1L) {
+    # exclude these files if multiple matches
+    possible_files <- fs::path_filter(possible_files, regexp = "_snaps|testthat/test-", invert = TRUE)
+  }
+  if (length(possible_files) == 0L) {
     if (is.null(pattern)) {
       cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
     } else {
@@ -77,17 +81,15 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
     }
   }
 
-  if (length(possible_files) == 1) {
-    if (is.null(pattern)) {
-      open_rs_doc(possible_files)
-    } else {
-      file_outline(pattern = pattern, path = possible_files)
-    }
+  if (length(possible_files) == 1L) {
+      return(file_outline(pattern = pattern, path = possible_files))
   }
+
   cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
   file_outline(pattern = pattern, path = possible_files)
+
 }
 
 #' Returns a named project list options

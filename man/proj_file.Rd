@@ -2,7 +2,7 @@
 % Please edit documentation in R/proj-list.R
 \name{proj_file}
 \alias{proj_file}
-\title{Active a file at location}
+\title{Access the file outline within other project}
 \usage{
 proj_file(file = NULL, proj = NULL, pattern = NULL)
 }
@@ -17,7 +17,7 @@ proj_file(file = NULL, proj = NULL, pattern = NULL)
 The file outline if multiple matches are found
 }
 \description{
-Active a file at location
+It can be used as \code{\link[=file_outline]{file_outline()}} + \code{proj}.
 }
 \examples{
 try(proj_file("A non-existent file"))
