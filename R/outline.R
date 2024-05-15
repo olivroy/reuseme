@@ -377,11 +377,11 @@ print.outline_report <- function(x, ...) {
   if (length(mod_date) > 0) {
     suppressWarnings(is_recently_modified <- kit::topn(mod_date, n = 5))
   } else {
-    is_recently_modified <- character(0L)
+    is_recently_modified <- 1L
   }
-  if (length(is_recently_modified) == length(dat)) {
+  if (!recent_only && length(is_recently_modified) == length(dat)) {
     # don't show emojis if all are recently modified.
-    is_recently_modified <- character(0L)
+    is_recently_modified <- character(0)
   }
 
   for (i in seq_along(dat)) {
