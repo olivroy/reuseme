@@ -137,7 +137,9 @@ active_rs_doc_delete <- function() {
 
   elems <- normalize_proj_and_path(doc)
 
-  rstudioapi::documentSave()
+  if (interactive() && rstudioapi::isAvailable()) {
+    rstudioapi::documentSave()
+  }
   cli::cli_inform(c(
     "i" = "Checking if active file can be deleted safely."
   ))

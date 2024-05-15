@@ -21,6 +21,6 @@
       cat(markup_href(lines_with_md_link), sep = "\n")
     Output
       Go to {.href [rstudio/rstudio#120](https://github.com/rstudio/rstudio/issues/120)} and {.href [gh](https://github.com)} and {.href [gh](https://github.com)}.
-      For faster printing of message ({.href [r-lib/cli#607](https://github.com/r-lib/cli/issues/607))}, use withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
+      For faster printing of message ({.href [r-lib/cli#607](https://github.com/r-lib/cli/issues/607)}), use withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
       {.href [franchise](https://en.wikipedia.org/wiki/Fallout_(franchise))}
 

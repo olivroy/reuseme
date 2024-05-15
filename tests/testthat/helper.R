@@ -8,7 +8,7 @@ expect_complete_todo <- function(object, warn = FALSE) {
 }
 
 # to snapshot the exact match match of regex before running snapshots.
-matches_regex <- function(x, regex) {
+matches_regex <- function(x, regex, group = NULL) {
   regex <- common_regex(regex)
-  stringr::str_extract(x, regex)
+  stringr::str_extract(x, regex, group = group)
 }

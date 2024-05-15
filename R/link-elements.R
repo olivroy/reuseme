@@ -77,13 +77,28 @@ markup_href <- function(x) {
     regex_md_url,
     paste0("{.href \\1\\2}")
   )
+  resolve_parens <- grepl("({.href [", x_changed, fixed = TRUE) &
+    grepl("))}", x_changed, fixed = TRUE)
+
+  if (any(resolve_parens)) {
+    # resolve markdown links parsing in this case ([md](url)) to make sure parens
+    # are correct
+    x_changed[resolve_parens] <- stringr::str_replace_all(
+      x_changed[resolve_parens],
+      c(
+        "(\\.href[^\\}\\{]+)\\)\\)\\}" = "\\1)})"
+
+      )
+    )
+  }
 
   x[has_md_url] <- x_changed
   x
 }
 common_regex <- function(which) {
   x <- c(
-    md_url = "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\))(?!\\})",
+    # usage of double negation will make it work
+    md_url = "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\)(?![^\\s,\\:;$\\)]))",
     gh_issue = "([[:alpha:]][[:graph:]]+/[^#\\s]+)#(\\d+)"
 
   )

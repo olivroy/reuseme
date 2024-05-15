@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    433ms    454ms      2.20      17MB     4.40
+#> 1 outline <- proj_outline()    428ms    428ms      2.33    17.1MB     4.67
 ```
 
 <details>
@@ -420,6 +420,10 @@ outline
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> `i` TODO [proj file] should not suggest snaps and test if R exists. (rare t…- `Done✔?`
 #> `i` TODO don't show emoji if all have emojis- `Done✔?`
+#> `i` TODO deleteaccept to delete test if not in tests/ folder- `Done✔?`
+#> `i` TODO deleteif in Downloads/ or Desktop/, this is a reason to delete- `Done✔?`
+#> `i` TODO deleteif file_outline fails for a reason or another, should not…- `Done✔?`
+#> `i` TODO delete generated files- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
