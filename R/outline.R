@@ -418,10 +418,25 @@ print.outline_report <- function(x, ...) {
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
   # could use filter_if_any?
-  dplyr::filter(
+  .data$simplify_news <-  sum(!is.na(.data$pkg_version)) >= 10
+  if (any(.data$simplify_news)) {
+    # only keep dev, latest and major versions of NEWS.md in outline.
+    all_versions <- .data$pkg_version[!is.na(.data$pkg_version)]
+    keep <- all_versions == max(all_versions, na.rm = TRUE) |
+              endsWith(all_versions, ".0")
+    versions_to_drop <- all_versions[!keep]
+  } else {
+    versions_to_drop <- character(0L)
+  }
+  dat <- dplyr::filter(
     .data,
+    (is_news & (
+      (!simplify_news & is_section_title & !is_a_comment_or_code & before_and_after_empty) |
+        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & !is_a_comment_or_code & before_and_after_empty)
+    )) |
     # still regular comments in .md files
     # what to keep in .md docs
+
     (is_md & (is_chunk_cap | is_doc_title)) |
       (is_md & (is_section_title & before_and_after_empty & !is_a_comment_or_code)) |
       # What to keep in .R files
@@ -429,6 +444,8 @@ keep_outline_element <- function(.data) {
       # What to keep anywhere
       is_cli_info | is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def
   )
+  dat$simplify_news <- NULL
+  dat
 }
 
 #
@@ -468,7 +485,7 @@ display_outline_element <- function(.data) {
     x,
     has_title_el =
       ((line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !grepl("NEWS", file, fixed = TRUE),
+        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !is_news,
     .by = "file"
   )
   y <- withCallingHandlers(

@@ -12,6 +12,8 @@
 
 * `link_gh_issue()` and `markup_href()` are better.
 
+* `file_outline()` now simplifies the outline of NEWS.md. Only major versions are listed now.
+
 * `proj_file()` is less noisy and is a shortcut for `file_outline()` with `proj`.
 
 # reuseme 0.0.1

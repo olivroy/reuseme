@@ -1,3 +1,15 @@
+# Extract standard package version from NEWS.md
+extract_pkg_version <- function(x, is_news, is_heading) {
+  y <- rep(NA_character_, length.out = length(x))
+  if (!any(is_news)) {
+    return(y)
+  }
+  reg_pkg_version <- .standard_regexps()$valid_package_version
+
+  y[is_news & is_heading] <- stringr::str_extract(x[is_news & is_heading], reg_pkg_version)
+  y
+}
+
 #' outline_criteria
 #'
 #' * is test title
@@ -108,6 +120,8 @@ define_outline_criteria <- function(.data, print_todo) {
   x <- .data
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
+  x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
+  x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
 
@@ -131,6 +145,7 @@ define_outline_criteria <- function(.data, print_todo) {
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
+    pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),

@@ -114,3 +114,4 @@ Be careful for markdown vs non-markdown (i.e. section title not the same)
 
 6. Look at the result. Ideally, add to _ref/my-analysis.R, so it shows somehow in snapshots.
 
+NEWS.md is handled differently than other files.
