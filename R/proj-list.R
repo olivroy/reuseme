@@ -124,7 +124,17 @@ proj_list <- function(proj = NULL, dirs = getOption("reuseme.reposdir")) {
   )
 
   projects <- rlang::set_names(x = as.character(directories), nm = fs::path_file)
-
+  if (!is.null(proj) && anyDuplicated(names(projects)) > 0) {
+    which_duplicate <- names(projects)[duplicated(names(projects))]
+    if (proj %in% which_duplicate) {
+      # R only returns
+      duplicates_to_resolve <- projects[which(names(projects) == proj)]
+      cli::cli_abort(c(
+        "{which_duplicate} can be found in more than one location: {.file {duplicates_to_resolve}}.",
+        "i" = "Specify the full path to disambiguate." # ! (This may be improved in the future)
+      ))
+    }
+  }
   if (!is.null(proj)) {
     if (!grepl("~/", proj, fixed = TRUE)) {
       # try to catch an invalid path
