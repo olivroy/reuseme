@@ -10,6 +10,7 @@ ggplot(mtcars, aes(x = vs, y = mpg)) +
   )
 # TODO improve this Viz!
 
+# file_outline() is a workaround for rstudio/rstudioapi#153
 f_example <- function(x) {
   x ** 2
 }

@@ -21,7 +21,6 @@
       `i` A true one
       `i` TODO Create a new version- `Donev?`
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Refer to google (<https://google.com>)
       `i` Roxygen section
       `i` Section title
       `i` Write my streets

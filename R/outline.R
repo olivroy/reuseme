@@ -2,8 +2,23 @@
 #' Print interactive outline of file sections
 #'
 #' @description
-#' RStudio project, or directories
-#' This will fail if you are trying to map an unsaved file.
+#' THe outline functions return a data frame that contains details of file location.
+#'
+#' It also includes a print method that will provide a console output that will include [clickable hyperlinks](https://cli.r-lib.org/reference/links.html)
+#' in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
+#'
+#' Outline elements include
+#' * Any code section
+#' * function definition (not shown in console by default)
+#' * `TODO` items
+#' * Parse cli hyperlinks
+#' * Plot or table titles
+#' * FIgures caption in Quarto documents (limited support for multiline caption currently)
+#' * test names
+#' * Indicator of recent modification
+#' * Colored output for
+#' * URL and gh issue detection and link creation.
+#'
 #'
 #' If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #' in `path`. `work_only = TRUE` will have an effect on `pattern`.
@@ -17,10 +32,12 @@
 #' `proj_outline()` and `dir_outline()` are wrapper of `file_outline()`.
 #'
 #' The parser is very opinioneted and is not very robust as it is based on regexps.
-#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/), `{roxygen2}`
+#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/) for Quarto,  `{roxygen2}`
 #'
 #' Will show TODO items and will offer a link to [mark them as
-#' complete][complete_todo()]
+#' complete][complete_todo()].
+#'
+#'
 #' @param path,proj A character vector of file paths, a [project][proj_list()].
 #'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
 #' @param pattern A string or regex to search for in the outline. If
@@ -448,7 +465,7 @@ keep_outline_element <- function(.data) {
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-      is_cli_info | is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def
+       is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def # | is_cli_info # TODO reanable cli info
   )
   dat$simplify_news <- NULL
   dat

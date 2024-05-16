@@ -70,8 +70,24 @@ A \code{outline_report} object that contains the information. Inherits
 A symbol will show for recently modified files.
 }
 \description{
-RStudio project, or directories
-This will fail if you are trying to map an unsaved file.
+THe outline functions return a data frame that contains details of file location.
+
+It also includes a print method that will provide a console output that will include \href{https://cli.r-lib.org/reference/links.html}{clickable hyperlinks}
+in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
+
+Outline elements include
+\itemize{
+\item Any code section
+\item function definition (not shown in console by default)
+\item \code{TODO} items
+\item Parse cli hyperlinks
+\item Plot or table titles
+\item FIgures caption in Quarto documents (limited support for multiline caption currently)
+\item test names
+\item Indicator of recent modification
+\item Colored output for
+\item URL and gh issue detection and link creation.
+}
 
 If \code{work_only} is set to \code{TRUE}, the function will only return outline of the \verb{# WORK} comment
 in \code{path}. \code{work_only = TRUE} will have an effect on \code{pattern}.
@@ -87,9 +103,9 @@ By default
 \code{proj_outline()} and \code{dir_outline()} are wrapper of \code{file_outline()}.
 
 The parser is very opinioneted and is not very robust as it is based on regexps.
-For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser}, \code{{roxygen2}}
+For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
 
-Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}
+Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
 }
 \examples{
 file <- fs::path_package("reuseme", "example-file", "outline-script.R")

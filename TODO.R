@@ -6,6 +6,7 @@
 # TODO [outline] make ggtitle work
 # TODO [outline] show extra msg only for some, but in file outline, not in proj?
 # TODO [outline] detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
+# TODO [outline] renable cli info.
 # TODO escape_markup doesn't work with complex operation {{x^2}} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
 # TODO [outline] avoid evaluating in current env.
 # TODO wrap regexps in functions
@@ -21,3 +22,4 @@
 # TODO [delete] generated files
 # TODO [proj_file] to accesss data (return the path in this case?)
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
+# TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
