@@ -52,7 +52,7 @@ test_that("Marking a TODO item as done works", {
       file = tmp,
       regexp = "Explain what the next code does"
     ),
-    warn = TRUE
+    warn = FALSE
   )
   expect_equal(
     out,
@@ -70,11 +70,10 @@ test_that("Marking a TODO item as done works", {
     read_utf8(tmp),
     c(
       "# I Want this done",
-      "2^2 ",
+      "2^2",
       "2^2 # Explain what the next code does.",
       "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
-      "   ",
       "# TODO Check https://github.com/r-lib/usethis/issues/1890",
       "print('R code')",
       "# TODO Another TODO"

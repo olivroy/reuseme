@@ -133,10 +133,10 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     ))
   }
 
-  if (is.null(rm_line)) {
-    rm_line <- tag_type %in% c("TODO", "FIXME")
-  }
   line_content_before_comment <- stringr::str_extract(line_content, "([^#]+)#", group = 1)
+  if (is.null(rm_line)) {
+    rm_line <- tag_type %in% c("TODO", "FIXME") # && is.na(line_content_before_comment)
+  }
   line_content_todo <- stringr::str_extract(line_content, "#[^#]+")
   line_content_show <- stringr::str_squish(line_content)
 
@@ -152,9 +152,9 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     regex_new <- cli::style_strikethrough(regex)
     line_content_show <- stringr::str_replace(line_content_show, regex, regex_new)
   }
-
+  file_line <- paste0(file, ":", line_id)
   cli::cli_alert_success(
-    "Removed {.code {line_content_show}} from {.file {file}}!"
+    "Removed {.code {line_content_show}} from {.file {file_line}}!"
   )
 
   if (rm_line) {
@@ -162,9 +162,14 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
       file_content_new <- file_content[-line_id]
       line_content_new <- ""
     } else {
-      line_content_new <- line_content_before_comment
-      file_content[line_id] <- line_content_before_comment
-      file_content_new <- file_content
+      line_content_new <- stringr::str_trim(line_content_before_comment, side = "right")
+
+      if (nzchar(line_content_new)) {
+        file_content[line_id] <- line_content_new
+        file_content_new <- file_content
+      } else {
+        file_content_new <- file_content[-line_id]
+      }
     }
 
   } else {
@@ -173,9 +178,18 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
       replacement = "",
       line_content
     )
+    line_content_new <- stringr::str_trim(line_content_new, side = "right")
 
     file_content[line_id] <- line_content_new
     file_content_new <- file_content
+    file_content_new <- file_content[-line_id]
+
+    if (!nzchar(line_content_new)) {
+      # WIll remove this line eventually
+      # remove line if it ends up empty. not supposed to happen
+      cli::cli_abort("This should not happen. We were supposed not to remove lines", .internal = TRUE)
+    }
+
   }
   if (length(file_content_new) > 0) {
     usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE, quiet = TRUE)
