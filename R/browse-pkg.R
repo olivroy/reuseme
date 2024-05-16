@@ -4,7 +4,8 @@
 #' package website. It looks up for a link in DESCRIPTION.
 #'
 #' @param package Name of package. If `NULL`, the active project is targeted,
-#'   regardless of whether it's an R package or not.
+#'   regardless of whether it's an R package or not. If `"<org>/<repo>"` is
+#'   supplied, will jump to GitHub homepage.
 #' @param open Whether to open the pkgdown site in the browser.
 #' @param news_only Should only the news link be shown?
 #' @param ref_only Should only the reference index be show?
@@ -17,13 +18,19 @@
 #' browse_pkg("reuseme")
 #' browse_pkg()
 browse_pkg <- function(package = NULL,
-                       open = rlang::is_interactive(),
+                       open = FALSE,
                        news_only = FALSE,
                        ref_only = FALSE,
                        vignettes_show = TRUE) {
   # Using default package
   package <- package %||% fs::path_file(proj_get2())
   open <- open
+
+  if (grepl("/", package, fixed = TRUE)) {
+    # Opening gh repo
+    utils::browseURL(glue::glue("https://github.com/{package}"))
+    return(invisible())
+  }
 
   withr::local_options(
     list(
@@ -38,7 +45,7 @@ browse_pkg <- function(package = NULL,
   pkgdown <-
     stringr::str_subset(
       urls,
-      pattern = "github.com/.*/|cran\\.|contact.html",
+      pattern = "github.com/.*/|cran\\.|contact.html|-book",
       negate = TRUE
     )
 
@@ -55,7 +62,9 @@ browse_pkg <- function(package = NULL,
 
   cran_home <- suppressMessages(usethis::browse_cran(package))
   withCallingHandlers(
-    github_home <- suppressMessages(usethis::browse_github(package)),
+    {
+      github_home <- suppressMessages(usethis::browse_github(package))
+    },
     warning = function(cnd) {
       cli::cli_warn("Package {.pkg {package}} has no gh URLs, using CRAN mirror.")
       # https://stackoverflow.com/questions/77647149/how-to-overwrite-a-warning-in-r#77647281
@@ -81,13 +90,13 @@ browse_pkg <- function(package = NULL,
 
     pkgdown <- stringr::str_remove(pkgdown, "/$")
     pkgdown_tabs_url <- paste0(pkgdown, "/", pkgdown_tabs)
-
+    names(pkgdown_tabs_url) <- pkgdown_tabs
     if (news_only) {
-      return(cli::style_hyperlink("news", pkgdown_tabs_url[1]))
+      return(cli::style_hyperlink("news", pkgdown_tabs_url["news"]))
     }
 
     if (ref_only) {
-      return(pkgdown_tabs_url[4])
+      return(pkgdown_tabs_url["reference"])
     }
 
     bullets <- c(
@@ -97,6 +106,7 @@ browse_pkg <- function(package = NULL,
       ""
     )
     hrefs <- paste0("{.href [", package, "](", pkgdown, ")}")
+
     cli::cli_h2(hrefs)
     cli::cli_bullets(bullets)
 

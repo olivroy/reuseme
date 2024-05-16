@@ -1,4 +1,4 @@
-test_that("case_if_any basic work", {
+test_that("case_if_any() basic work", {
   expect_snapshot({
     case_if_any(
       mtcars$vs == 1 ~ "Woww",
@@ -21,7 +21,7 @@ test_that("wrong cases error", {
   })
 })
 
-test_that("case_if_any can use a newly created variable (#8)", {
+test_that("case_if_any() can use a newly created variable (#8)", {
   skip("Not ready")
   expect_snapshot({
     mtcars |>

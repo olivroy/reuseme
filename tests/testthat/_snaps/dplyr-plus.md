@@ -1,4 +1,4 @@
-# `filter_if_any()` errors with `across()`
+# filter_if_any() errors with across()
 
     Code
       filter_if_any(dplyr::starwars, dplyr::across(ends_with("color"), function(x)

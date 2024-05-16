@@ -118,6 +118,7 @@ test_that("file testing are working as expected", {
   expect_true(is_moving("R/my.R", "data/my.R"))
   expect_true(is_image("x.PNG"))
   expect_true(is_generic_file_name("data1.xlsx"))
+  expect_true(is_generic_file_name("summary.qmd"))
   expect_false(is_generic_file_name("my-data.csv"))
 })
 

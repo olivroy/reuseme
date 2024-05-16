@@ -6,7 +6,7 @@
 #' sessions. They are very handy to create clickable hyperlinks that do not
 #' modify the current state of the analysis.
 #'
-#' They are inspired by [pillar::glimpse], [tibble::view].
+#' They are inspired by [pillar::glimpse()], [tibble::view()].
 #'
 #' Look at the original functions for the other parameters.
 #'
@@ -228,15 +228,22 @@ arrange_identity <- function(x, ..., .by_group = FALSE, nrows = NULL, extra_msg 
   invisible(x)
 }
 #' @export
+#' @param .arrange Should arrange output?
 #' @rdname eda-identity
-distinct_identity <- function(x, ..., .keep_all = FALSE, nrows = NULL, extra_msg = NULL) {
+distinct_identity <- function(x, ..., .keep_all = FALSE, .arrange = FALSE, nrows = NULL, extra_msg = NULL) {
   if (!rlang::is_interactive()) {
     return(invisible(x))
   }
 
   res <- dplyr::distinct(.data = x, ..., .keep_all = .keep_all)
   if (nrow(res) > 0) {
-    print(res, n = nrows)
+    if (.arrange) res <- dplyr::arrange(res, ...)
+
+    if (inherits(res, "tbl_df")) {
+      print(res, n = nrows)
+    } else {
+      print(res)
+    }
     cli::cli_alert_info(extra_msg)
   }
   invisible(x)

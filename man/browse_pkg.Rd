@@ -6,7 +6,7 @@
 \usage{
 browse_pkg(
   package = NULL,
-  open = rlang::is_interactive(),
+  open = FALSE,
   news_only = FALSE,
   ref_only = FALSE,
   vignettes_show = TRUE
@@ -14,7 +14,8 @@ browse_pkg(
 }
 \arguments{
 \item{package}{Name of package. If \code{NULL}, the active project is targeted,
-regardless of whether it's an R package or not.}
+regardless of whether it's an R package or not. If \code{"<org>/<repo>"} is
+supplied, will jump to GitHub homepage.}
 
 \item{open}{Whether to open the pkgdown site in the browser.}
 

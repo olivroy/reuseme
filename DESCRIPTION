@@ -1,6 +1,6 @@
 Package: reuseme
 Title: Collections of Utility Functions to Work Across Projects
-Version: 0.0.0.9009
+Version: 0.0.1.9001
 Authors@R: 
     person("Olivier", "Roy", , "olivierroy71@hotmail.com", role = c("aut", "cre"))
 Description: Allows you to browse current projects, rename files safely,
@@ -33,7 +33,9 @@ Imports:
 Suggests: 
     clipr,
     curl,
+    gert,
     gt,
+    pillar,
     magick,
     testthat (>= 3.2.1),
     withr

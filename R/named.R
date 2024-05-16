@@ -70,7 +70,7 @@ unique_named <- function(x) {
   unique_names <- unique(names(x))
 
   if (length(unique_x) != length(unique_names)) {
-    cli::cli_abort(c("length of unique names is not the same as length x"))
+    cli::cli_abort("length of unique names is not the same as length x")
   }
 
   names(unique_x) <- unique_names

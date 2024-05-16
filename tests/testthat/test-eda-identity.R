@@ -43,6 +43,7 @@ test_that("Side effects are what's intended in interactive sessions", {
       distinct_identity(
         hair_color,
         sex,
+        .arrange = TRUE,
         extra_msg = c("Looking if there is association between `hair_color` and `sex`. ", "Printing 15 rows."),
         nrows = 4
       )

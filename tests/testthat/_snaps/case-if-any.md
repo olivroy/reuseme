@@ -1,4 +1,4 @@
-# case_if_any basic work
+# case_if_any() basic work
 
     Code
       case_if_any(mtcars$vs == 1 ~ "Woww", mtcars$mpg > 15 ~ "QW", mtcars$qsec > 18 ~

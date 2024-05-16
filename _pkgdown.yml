@@ -24,10 +24,9 @@ reference:
 - subtitle: Interact with documents
   contents:
   - use_todo
-  - open_rs_doc
   - screenshot
   - rename_files2
-
+  - starts_with("active_rs_doc")
 
 - title: Data analysis helpers / EDA
   desc: >

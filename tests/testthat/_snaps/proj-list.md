@@ -4,5 +4,5 @@
       proj_file()
     Condition
       Error in `proj_file()`:
-      ! One of `regex_outline` or `file` must exist.
+      ! One of `pattern` or `file` must exist.
 

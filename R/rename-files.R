@@ -47,7 +47,7 @@ rename_files2 <- function(old,
   action <- rlang::arg_match(action)
 
   warn_conflicts <- rlang::arg_match(warn_conflicts)
-  check_logical(overwrite)
+  check_bool(overwrite)
 
   if (lifecycle::is_present(force)) {
     lifecycle::deprecate_warn(
@@ -86,21 +86,23 @@ rename_files2 <- function(old,
 
   regexp_to_search_for_in_files <- compute_conflicts_regex(old, renaming_strategy)
 
-  # FIXME doesn't fit now.
+  # Warn if some related files are found. If I have file.R and file.csv,
+  # this will warn if I rename file.R, but not file.csv
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
+  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
   if (length(related_files) > 0) {
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",
       "No support yet for that yet.",
-      "Think about what triggers this and add new rules  in {.fn scope_rename}"
+      "Think about what triggers this and add new rules in {.fn scope_rename}"
     ))
   }
 
 
   if (renaming_strategy != "free_for_all") {
-    suggest_snake_case_change <- !is_moving(old, new) || !is_adding_a_suffix(old, new)
+    suggest_snake_case_change <- !is_moving(old, new) || !is_adding_a_suffix(old, new) # And found references?
     extra_msg_if_file_conflict <- c(
       "x" = "Did not rename files!",
       "!" = paste0("Found references to {.val ", old, "} in project"),
@@ -116,22 +118,26 @@ rename_files2 <- function(old,
   # Either the file name base or the full file name
 
   if (renaming_strategy == "object_names") {
-    regex_friendly <- paste0(basename_remove_ext(old), "/", stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    # Create regex = replace kebab-case by snake_case to verify object names
+    # Then the regex is the union of these.
+    regex_friendly <- c(basename_remove_ext(old), stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    regex_friendly <- paste0(unique(regex_friendly), collapse = "|")
   } else {
     regex_friendly <- ifelse(renaming_strategy %in% c("object_names"), basename_remove_ext(old), old)
   }
 
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
-  n_file_names_conflicts <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE) |>
-    fs::path_filter(regexp = "_files|tests/testthat", invert = TRUE) |> # need to do elsewhere too
-    solve_file_name_conflict(
-      regex = regexp_to_search_for_in_files,
-      dir = ".",
-      extra_msg = extra_msg_if_file_conflict,
-      quiet = FALSE,
-      what = regex_friendly # either full path or basename.
-    )
+  files_to_look_into <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE)
+  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_freeze/|renv/", invert = TRUE) # need to do elsewhere too
+  n_file_names_conflicts <- solve_file_name_conflict(
+    files = files_to_look_into,
+    regex = regexp_to_search_for_in_files,
+    dir = ".",
+    extra_msg = extra_msg_if_file_conflict,
+    quiet = FALSE,
+    what = regex_friendly # either full path or basename.
+  )
 
   if (renaming_strategy != "free_for_all" && n_file_names_conflicts > 10) {
     cli::cli_bullets("You can use {.code warn_conflicts = 'exact'} to see only exact references of {.val {old}}.")
@@ -145,7 +151,7 @@ rename_files2 <- function(old,
     # check_referenced_files(path = ".", quiet = !verbose)
     if (interactive() && action != "test") {
       cli::cli_inform(c(
-        i = "Call {.run reuseme::check_referenced_files()} to see if there are dead links in dir."
+        i = "Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files."
       ))
     }
     return(invisible(new))
@@ -272,7 +278,7 @@ is_short_file_name <- function(file, nchars) {
 
 # verifies short and contains certain keywords
 is_generic_file_name <- function(file) {
-  generic_words <- c("change", "temp", "dat", "data", "clipboard")
+  generic_words <- c("change", "temp", "dat", "data", "clipboard", "summary", "intro")
   regexp <- paste0(generic_words, collapse = "|")
   file_name <- basename_remove_ext(file)
   stringr::str_starts(file_name, regexp) &
@@ -344,7 +350,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
     if (anyNA(info$change_time)) {
       cli::cli_inform("One of the file doesn't exist. hint_acceptable_renaming() expects 2 existing files.", .internal = FALSE)
     }
-    # TODO Check that old
+    # TODO Check that old file is more recent
     if (info$change_time[1] > info$change_time[2]) {
       cli::cli_inform(c(
         "!" = "{.val {new}} was modified later than {.val {old}}",
@@ -359,7 +365,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
 
     cli::cli_inform(c(
       "!" = "{.val {old}} was modified later than {.val {new}}",
-      "It may be a good idea to view the diff it it makes sense.",
+      "It may be a good idea to view the diff it makes sense.",
       i = "Use {.run diffviewer::visual_diff('{old_chr}',  '{new_chr}')}."
     ))
     return(TRUE)

@@ -14,6 +14,15 @@ is_pkg <- function(base_path = proj_get()) {
   !is.null(res)
 }
 
+is_git <- function(base_path = proj_get()) {
+  res <- tryCatch(
+    rprojroot::find_root(criterion = rprojroot::is_vcs_root, path = base_path),
+    error = function(e) NULL
+  )
+
+  !is.null(res)
+}
+
 is_quarto_blog <- function(base_path = proj_get()) {
   is_quarto <- fs::file_exists(fs::path(base_path, "_quarto.yml"))
 
@@ -25,6 +34,14 @@ is_quarto_blog <- function(base_path = proj_get()) {
 }
 
 # Active project / document ----------------------------------------------------
+
+
+is_proj <- function(path) {
+  withCallingHandlers(
+    !is.null(rprojroot::find_root(criterion = rprojroot::criteria$is_rstudio_project, path = path)),
+    error = function(e) FALSE
+  )
+}
 
 proj_get <- function() {
   path <- rprojroot::find_root(criterion = rprojroot::is_rstudio_project)

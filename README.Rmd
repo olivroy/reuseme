@@ -112,3 +112,40 @@ With reuseme, just use the project name!
 <!--# Write about *_identity functions -->
 
 <!--# Write about _named functions -->
+
+
+# Outline speed
+
+```{r}
+#| echo: false
+#| output: false
+# For example purpose, show all to spot potential files.
+withr::local_envvar("TESTTHAT" = "true")
+withr::local_options("reuseme.recent_indicator" = "")
+```
+
+Due to the growing number of criteria, regex, `file_outline()` is slowing down a bit. I will address that.
+
+```{r}
+#| warning: false
+bench::mark(
+  outline <- proj_outline()
+)
+```
+
+<details>
+<summary>Example outline</summary>
+<p>
+
+```{r}
+outline
+```
+
+
+</p>
+</details>
+
+
+
+
+

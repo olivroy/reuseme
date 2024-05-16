@@ -13,95 +13,107 @@
 proj_switch <- function(proj = NULL, new_session = TRUE) {
   # This is my default places (reuseme.reposdir possibly)
   # See fs::path_home
-  all_projects <- proj_list()
+  project <- proj_list(proj)
 
-  if (!is.null(proj)) {
-    rlang::arg_match0(proj, values = names(all_projects))
+  if (rlang::has_length(project, 1)) {
+    # Doing the switch
     if (new_session) {
-      usethis::proj_activate(unname(all_projects[proj]))
+      usethis::proj_activate(unname(project))
     } else {
       # remove if https://github.com/r-lib/usethis/pull/1954 is implemented.
-      rstudioapi::openProject(path = unname(all_projects[proj]), newSession = FALSE)
+      rstudioapi::openProject(path = unname(project), newSession = FALSE)
     }
-    return(invisible(all_projects[proj]))
+    return(invisible(project))
   }
 
-  bullets <- paste0("Open {.run [", names(all_projects), "](usethis::proj_activate('", unname(all_projects), "'))}")
+  # Displaying possibilities
+  # TODO maybe add a max?
+  bullets <- paste0("Open {.run [", names(project), "](reuseme::proj_switch('", names(project), "', new_session = ", new_session, "))}")
   cli::cli_bullets(bullets)
 }
 
 
-#' Active a file at location
+#' Access the file outline within other project
+#'
+#' It can be used as [file_outline()] + `proj`.
 #'
 #' @param file A filename or regexp to a file inside `proj`
 #' @param proj a project path or file [proj_list()]
-#' @param regex_outline A regular expression to look for
+#' @param pattern A regular expression to look for
 #' @return The file outline if multiple matches are found
 #' @export
 #'
 #' @examples
 #' try(proj_file("A non-existent file"))
 #' @family project management helpers
-proj_file <- function(file = NULL, proj = NULL, regex_outline = NULL) {
+proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   rlang::check_required(file)
-  # search will only be conducted with regex_outline
-  if (is.null(regex_outline) && is.null(file)) {
+  # search will only be conducted with pattern
+  if (is.null(pattern) && is.null(file)) {
     cli::cli_abort(
-      "One of {.arg regex_outline} or {.arg file} must exist."
+      "One of {.arg pattern} or {.arg file} must exist."
     )
   }
   file <- file %||% "A non-existent rubbish file placeholder"
-  if (fs::file_exists(file)) {
+  if (fs::is_file(file)) {
     file_outline(path = file)
     open_rs_doc(file)
   }
   proj <- proj %||% proj_get2()
-  if (fs::dir_exists(proj)) {
-    proj_path <- proj
-  } else {
-    proj_path <- proj_list()[proj]
-  }
+  proj_path <- proj_list(proj)
 
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
   possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE)
-  possible_files <- fs::path_filter(possible_files, regexp = "_snaps", invert = TRUE)
   possible_files <- fs::path_filter(possible_files, regexp = file)
-
-  if (length(possible_files) == 0) {
-    if (is.null(regex_outline)) {
+  if (length(possible_files) > 1L) {
+    # exclude these files if multiple matches
+    possible_files <- fs::path_filter(possible_files, regexp = "_snaps|testthat/test-", invert = TRUE)
+  }
+  if (length(possible_files) == 0L) {
+    if (is.null(pattern)) {
       cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
     } else {
       return(proj_outline(
-        regex_outline = regex_outline,
+        pattern = pattern,
         proj = proj
       ))
     }
   }
 
-  if (length(possible_files) == 1) {
-    if (is.null(regex_outline)) {
-      open_rs_doc(possible_files)
-    } else {
-      file_outline(regex_outline = regex_outline, path = possible_files)
-    }
+  if (length(possible_files) == 1L) {
+    return(file_outline(pattern = pattern, path = possible_files))
   }
+
   cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
-  file_outline(regex_outline = regex_outline, path = possible_files)
+  file_outline(pattern = pattern, path = possible_files)
 }
 
 #' Returns a named project list options
 #'
 #' It peeks `options(reuseme.reposdir)` to find projects.
 #'
+#' @param proj A project path or name to match
 #' @param dirs The directories in which we want to list projects.
 #'
-#' @return A named character vector with the project name as
+#' @return A named character vector with the project name as name, and path as value.
+#'   If `proj` is supplied
 #' @export
 #' @family project management helpers
-proj_list <- function(dirs = getOption("reuseme.reposdir")) {
+proj_list <- function(proj = NULL, dirs = getOption("reuseme.reposdir")) {
+  check_string(proj, allow_null = TRUE)
+
+  if (!is.null(proj) && length(proj) == 1 && fs::dir_exists(proj)) {
+    return(
+      rlang::set_names(
+        proj,
+        fs::path_file(proj)
+      )
+    )
+  }
+
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
   directories <- fs::dir_ls(
     proj_location,
@@ -111,7 +123,31 @@ proj_list <- function(dirs = getOption("reuseme.reposdir")) {
     invert = TRUE
   )
 
-  purrr::set_names(x = as.character(directories), nm = fs::path_file)
+  projects <- rlang::set_names(x = as.character(directories), nm = fs::path_file)
+  if (!is.null(proj) && anyDuplicated(names(projects)) > 0) {
+    which_duplicate <- names(projects)[duplicated(names(projects))]
+    if (proj %in% which_duplicate) {
+      # R only returns
+      duplicates_to_resolve <- projects[which(names(projects) == proj)]
+      cli::cli_abort(c(
+        "{which_duplicate} can be found in more than one location: {.file {duplicates_to_resolve}}.",
+        "i" = "Specify the full path to disambiguate." # ! (This may be improved in the future)
+      ))
+    }
+  }
+  if (!is.null(proj)) {
+    if (!grepl("~/", proj, fixed = TRUE)) {
+      # try to catch an invalid path
+      rlang::arg_match0(
+        proj,
+        names(projects)
+      )
+      projects <- projects[proj]
+    } else {
+      cli::cli_abort(c("Can't find the project location for {.val {proj}} using {.topic fs::path}."))
+    }
+  }
+  projects
 }
 
 default_dirs <- function() {

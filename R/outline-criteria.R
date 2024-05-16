@@ -1,3 +1,15 @@
+# Extract standard package version from NEWS.md
+extract_pkg_version <- function(x, is_news, is_heading) {
+  y <- rep(NA_character_, length.out = length(x))
+  if (!any(is_news)) {
+    return(y)
+  }
+  reg_pkg_version <- .standard_regexps()$valid_package_version
+
+  y[is_news & is_heading] <- stringr::str_extract(x[is_news & is_heading], reg_pkg_version)
+  y
+}
+
 #' outline_criteria
 #'
 #' * is test title
@@ -21,19 +33,33 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
 }
 
 o_is_todo_fixme <- function(x) {
-  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])") &
-    !o_is_test_that(x) &
-    !stringr::str_starts(x, "\\s*\"\\s*") &
-    !stringr::str_detect(x, "extract_tag_in_text") &
-    !o_is_roxygen_comment(x) & # don't put these tags in documentation :)
-    !stringr::str_detect(x, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|regex_outline\\s|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-    !stringr::str_detect(x, "[:upper:]\"|[:upper:]{4,} item") # eliminate false positives
+  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])")
 
-  has_todo & !stringr::str_detect(x, "\".*(TODO|FIXME|WORK)") # remove some true negs for now.
+  if (!any(has_todo)) {
+    return(has_todo)
+  }
+  # only check for potential candidates
+  p <- which(has_todo)
+  candidates <- x[has_todo]
+  # Eliminate candidates
+  has_todo[p] <-
+    !o_is_test_that(candidates) &
+      !stringr::str_starts(candidates, "\\s*\"\\s*") &
+      !stringr::str_detect(candidates, "extract_tag_in_text") &
+      !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
+      !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+      !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
+      !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
+  has_todo
 }
 
 o_is_work_item <- function(x) {
-  o_is_todo_fixme(x) & stringr::str_detect(x, "(?<!\")# WORK")
+  res <- stringr::str_detect(x, "(?<!\")# WORK")
+  if (!any(res)) {
+    return(res)
+  }
+  res[which(res)] <- o_is_todo_fixme(x[which(res)])
+  res
 }
 
 o_is_test_that <- function(x) {
@@ -53,17 +79,49 @@ o_is_object_title <- function(x) {
 }
 
 o_is_section_title <- function(x) {
-  section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle)$"
-  section_title & !stringr::str_detect(x, uninteresting_headings) & !o_is_todo_fixme(x)
+  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+  if (!any(is_section_title)) {
+    return(is_section_title)
+  }
+
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation"
+  # potential section titles
+  p_s_title <- which(is_section_title)
+  is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
+  is_section_title
+}
+
+o_is_commented_code <- function(x) {
+  stringr::str_detect(x, "#.+\\(.+\\=.+[\\),\"']$")
+}
+
+o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
+  has_cli <- grepl("cli_", x, fixed = TRUE)
+
+  if (!any(has_cli)) {
+    return(has_cli)
+  }
+  # Potential cli
+  p_cli <- which(has_cli)
+
+  has_cli[p_cli] <-
+    stringr::str_detect(x[p_cli], "\\([\"']") &
+      !is_snap_file[p_cli] &
+      !grepl("outline.R", file[p_cli], fixed = TRUE) &
+      !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
+      !grepl("paste", x[p_cli], fixed = TRUE) &
+      !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
+  has_cli
 }
 
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {
   x <- .data
-  x$file_ext <- fs::path_ext(x$file)
+  x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
+  x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
+  x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
 
@@ -72,14 +130,9 @@ define_outline_criteria <- function(.data, print_todo) {
     # Problematic when looking inside functions
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
-    is_cli_info = stringr::str_detect(content, "(^cli_)|([^_]cli_)") &
-      stringr::str_detect(content, "\\([\"']") &
-      !is_snap_file &
-      !stringr::str_detect(content, "(text|inform|bullets|warn|abort|div)|c\\(\\s?$") &
-      !grepl("paste", content, fixed = TRUE) &
-      !grepl("outline.R", file, fixed = TRUE) &
-      !grepl("^", content, fixed = TRUE), # Detect UI messages and remove them
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)])title\\:") & !stringr::str_detect(content, "Ttitle|Subtitle"),
+    is_cli_info = o_is_cli_info(content, is_snap_file, file),
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
+      !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap
     # FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe {.pkg lightparser}.
@@ -92,15 +145,21 @@ define_outline_criteria <- function(.data, print_todo) {
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
+    pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
     is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
-    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content)) & !nzchar(dplyr::lag(content)),
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\.")
+    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
+  )
+  x <- dplyr::mutate(
+    x,
+    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+    .by = file
   )
   x
 }

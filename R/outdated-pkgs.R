@@ -45,7 +45,14 @@ outdated_pkgs <- function(type = c("binary", "source")) {
   # similar to install.packages default
   outdated_pkg_mat <- utils::old.packages(type = type, lib.loc = .libPaths()[1])
 
-  if (rlang::has_length(outdated_pkg_mat, 0)) {
+  if (rlang::has_length(outdated_pkg_mat) && !is.null(getOption("reuseme.ignore_update"))) {
+    indices_to_discard <- which(rownames(outdated_pkg_mat) %in% getOption("reuseme.ignore_update"))
+    if (rlang::has_length(indices_to_discard)) { # because matrix[-character(0), ] destroys |>  the matrix?
+      outdated_pkg_mat <- outdated_pkg_mat[-indices_to_discard, , drop = FALSE]
+    }
+  }
+
+  if (rlang::has_length(rownames(outdated_pkg_mat), 0)) {
     cli::cli_alert_success("All packages are up to date.")
     return(invisible())
   }
@@ -58,16 +65,15 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     t(outdated_pkg_mat) |>
     as.data.frame(stringsAsFactors = FALSE) |>
     as.list() |>
-    purrr::map(function(x) purrr::set_names(x, fields_names))
+    purrr::map(function(x) rlang::set_names(x, fields_names))
 
-  if (!is.null(getOption("reuseme.ignore_update"))) {
-    outdated_pkg <- outdated_pkg[!getOption("reuseme.ignore_update")]
-  }
   # Stop early for pak update before
   if (rlang::has_name(outdated_pkg, "pak")) {
-    cli::cli_alert_success("There is a new version of pak.")
-    cli::cli_alert_info("Update pak with {.run pak::pak_update()}")
-    cli::cli_alert_info("Restart R session then run `outdated_pkgs()` again.")
+    cli::cli_inform(c(
+      "v" = "There is a new version of pak.",
+      "i" = "Update pak with {.run pak::pak_update()}",
+      "i" = "Restart R session then run `outdated_pkgs()` again."
+    ))
     return(invisible())
   }
 

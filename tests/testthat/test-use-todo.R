@@ -81,10 +81,10 @@ test_that("Marking a TODO item as done works", {
     )
   )
   unlink(tmp)
-  skip("complete_todo fails if changing lines + regexp match in many places. Many add a condition like closest")
+  skip("complete_todo() fails if changing lines + regexp match in many places. Many add a condition like closest")
 })
 
-test_that("use_todo global works", {
+test_that("use_todo() global works", {
   skip_on_cran()
   skip_on_ci()
   expect_no_error(

@@ -1,4 +1,4 @@
-# `screenshot()` does nothing in non-interactive sessions
+# screenshot() does nothing in non-interactive sessions
 
     Code
       screenshot(proj = NULL)

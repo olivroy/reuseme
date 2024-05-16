@@ -2,22 +2,22 @@
 % Please edit documentation in R/proj-list.R
 \name{proj_file}
 \alias{proj_file}
-\title{Active a file at location}
+\title{Access the file outline within other project}
 \usage{
-proj_file(file = NULL, proj = NULL, regex_outline = NULL)
+proj_file(file = NULL, proj = NULL, pattern = NULL)
 }
 \arguments{
 \item{file}{A filename or regexp to a file inside \code{proj}}
 
 \item{proj}{a project path or file \code{\link[=proj_list]{proj_list()}}}
 
-\item{regex_outline}{A regular expression to look for}
+\item{pattern}{A regular expression to look for}
 }
 \value{
 The file outline if multiple matches are found
 }
 \description{
-Active a file at location
+It can be used as \code{\link[=file_outline]{file_outline()}} + \code{proj}.
 }
 \examples{
 try(proj_file("A non-existent file"))

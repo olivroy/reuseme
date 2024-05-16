@@ -22,9 +22,8 @@ gt_help <- quarto_help() |>
   tibble::enframe() |>
   gt::gt() |>
   gt::fmt_url(value)
-
-\dontshow{
-gt_help |> gt::as_raw_html()
-}
+\dontshow{\}) # examplesIf}
+\dontshow{if (rlang::is_installed("pkgdown (>= 2.0.9.900)")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+gt_help
 \dontshow{\}) # examplesIf}
 }

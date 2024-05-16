@@ -21,7 +21,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
   if (path == "." || fs::is_dir(path)) {
     path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ml)$")
-    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat", invert = TRUE) # need to do this in 2 places
+    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze", invert = TRUE) # need to do this in 2 places
   } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown")) {
     path <- path
   } else {
@@ -34,7 +34,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   files_detected <- unique(referenced_files)
   references_a_non_existent_file <- !(fs::file_exists(files_detected) | file.exists(files_detected)) # to avoid burden for now.
   if (!any(references_a_non_existent_file)) {
-    if (!quiet) cli::cli_inform(c("v" = "Did not find references to non-existent files."))
+    if (!quiet) cli::cli_inform(c("v" = "All referenced files in current dir exist."))
     return(invisible())
   }
   # maybe order (so link to location) isn't quite right when many are found?
@@ -83,8 +83,8 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
   if (dir != ".") {
     cli::cli_abort("Don't know how to do this.")
   }
-  bullets_df <- files |>
-    purrr::set_names() |>
+  bullets_df <-
+    rlang::set_names(files) |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
     purrr::map(\(x) tibble::enframe(x, name = "line_number", value = "content")) |>
     dplyr::bind_rows(.id = "file")
@@ -145,11 +145,10 @@ get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
-  files |>
-    purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
+  purrr::map(files, \(x) readLines(x, encoding = "UTF-8")) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
-    stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
+    stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(|path_package|system.file", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
     stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
     stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
     stringr::str_subset(pattern = "grepl?\\(|stringr|g?sub\\(", negate = TRUE) |> # avoid regexp
@@ -168,5 +167,5 @@ get_referenced_files <- function(files) {
     stringr::str_subset(pattern = "\n", negate = TRUE) |> # remove things with line breaks
     stringr::str_subset(pattern = "^\\.[:alpha:]{1,4}$", negate = TRUE) |> # remove reference to only file extensions
     stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) |> # remove 0.000 type
-    purrr::set_names()
+    rlang::set_names()
 }

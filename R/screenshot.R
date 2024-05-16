@@ -46,14 +46,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   check_string(file, allow_null = TRUE)
   is_active_proj <- identical(proj, proj_get2())
 
-  if (fs::dir_exists(proj)) {
-    proj_path <- proj
-  } else {
-    # when referring to a project by name.
-    all_projects <- proj_list()
-    rlang::arg_match0(proj, values = names(all_projects))
-    proj_path <- unname(all_projects[proj])
-  }
+  proj_path <- proj_list(proj)
 
 
   if (!rstudioapi::isAvailable()) {
