@@ -517,7 +517,7 @@ display_outline_element <- function(.data) {
         (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
           (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
       ][1], # take  the first element to avoid problems (may be the reason why problems occur)
-      NA
+      NA_integer_
       ),
       title_el = outline_el[line_id == title_el_line],
       .by = "file"
@@ -535,9 +535,13 @@ display_outline_element <- function(.data) {
 
 
   y$outline_el <- ifelse(y$has_title_el, NA_character_, y$outline_el)
-  na_if0 <- function(x) {
+  na_if0 <- function(x, which) {
     if (length(x) == 0) {
-      x <- NA
+      if (which == "title") {
+        x <- NA_character_
+      } else {
+        NA_integer_
+      }
     }
     if (length(x) != 1) {
       cli::cli_inform("{x} are detected as document title. Internal error")
@@ -547,8 +551,8 @@ display_outline_element <- function(.data) {
   if (!all(is.na(y$title_el))) {
     y <- dplyr::mutate(
       y,
-      title_el = na_if0(title_el[!is.na(title_el)]),
-      title_el_line = na_if0(title_el_line[!is.na(title_el_line)]),
+      title_el = na_if0(title_el[!is.na(title_el)], "title"),
+      title_el_line = na_if0(title_el_line[!is.na(title_el_line)], "line"),
       .by = "file"
     )
   }
@@ -658,7 +662,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
       .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
     ),
     rs_version = NULL,
-    outline_el2 = NULL
+    outline_el2 = NULL,
+    condition_to_truncate = NULL,
+    condition_to_truncate2 = NULL
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }

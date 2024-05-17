@@ -23,3 +23,4 @@
 # TODO [proj_file] to accesss data (return the path in this case?)
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
+# TODO [outline] Show function call if exported + not internal + bonus if has family tagf
