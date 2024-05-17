@@ -29,7 +29,7 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
     return(FALSE)
   }
 
-  ifelse(rep(is_r_file, length.out = length(x)), stringr::str_starts(x, "#'\\s"), FALSE)
+  ifelse(rep(is_r_file, length.out = length(x)), stringr::str_detect(x, "^#'\\s|^#'$"), FALSE)
 }
 
 o_is_todo_fixme <- function(x) {
@@ -121,20 +121,21 @@ define_outline_criteria <- function(.data, print_todo) {
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
-  x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
+  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
+  x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
-  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
-
   if (any(x$is_roxygen_comment)) {
     rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
     files_with_roxy_comments <- unique(x[x$is_roxygen_comment, "file", drop = TRUE])
     files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
     parsed_files <- suppressMessages( # roxygen2 messages
-      purrr::map(files_with_roxy_comments, purrr::safely(roxygen2::parse_file))
+      # TRICK purrr::safely creates an error object, while possible is better.
+      purrr::map(files_with_roxy_comments, purrr::possibly(roxygen2::parse_file))
     )
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
+    # browser()
     if (length(unparsed_files) > 0) {
       cli::cli_inform("Could not parse roxygen comments in {.file {unparsed_files}}")
     }
@@ -175,11 +176,19 @@ define_outline_criteria <- function(.data, print_todo) {
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
   )
+  if (!"before_and_after_empty" %in% names(x)) {
+    x$before_and_after_empty <- NA
+  }
   x <- dplyr::mutate(
     x,
-    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+    before_and_after_empty = ifelse(
+      !is.na(before_and_after_empty),
+      line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+      before_and_after_empty
+      ),
     .by = file
   )
+  #browser()
   x
 }
 

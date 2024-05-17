@@ -195,8 +195,8 @@ join_roxy_fun <- function(file) {
     )
   roxy_parsed |>
     dplyr::mutate(
-      file = fs::path_real(file) |> as.character(),
-      file_line = paste0(file, ":", line)
+      #file = fs::path_real(file) |> as.character(),
+      #file_line = paste0(file, ":", line)
     ) |>
     dplyr::relocate(
       file, topic, content, line, tag
@@ -205,6 +205,7 @@ join_roxy_fun <- function(file) {
       is_md = tag %in% c("subsection", "details", "description", "section"),
       # content = paste0("#' ", outline_el),
       is_object_title = tag == "title",
+      line = as.integer(line),
       file_ext = "R",
       tile_el = NA_character_,
       title_el_line = NA_integer_,
@@ -212,8 +213,22 @@ join_roxy_fun <- function(file) {
       is_roxygen_comment = TRUE,
       is_test_file = FALSE,
       is_snap_file = FALSE,
-      is_section_title = tag %in% c("section", "subsection") | tag %in% c("details", "description"),
+      before_and_after_empty = TRUE,
+      is_section_title = TRUE,
+      is_section_title_source = TRUE,
       is_saved_doc = TRUE,
       has_inline_markup = FALSE # let's not mess with inline markup
+    ) |>
+    dplyr::filter(
+      content != "NULL"
     )
+}
+
+# helper for interactive checking -----------
+
+
+active_doc_parse <- function(doc = active_rs_doc()) {
+  doc <- purrr::set_names(doc)
+  parsed <- purrr::map(doc, roxygen2::parse_file)
+  parsed |> join_roxy_fun()
 }

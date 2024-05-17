@@ -51,6 +51,7 @@ test_that("pattern works as expected", {
 })
 
 test_that("file_outline() with only title doesn't error", {
+  # broken by change to before_and_after_empty
   expect_no_error({
     file <- file_outline(path = test_path("_ref", "single-title.md"))
   })
