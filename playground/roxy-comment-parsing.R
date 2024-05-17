@@ -178,7 +178,7 @@ roxy_parsed <- parsed_files |>
   join_roxy_fun() |>
   tidyr::separate_wider_delim(
     cols = name,
-    names = c("file", "tag"),
+    names = c("file_line", "tag"),
     delim = "____"
   )
 roxy_parsed |>
@@ -188,13 +188,28 @@ roxy_parsed |>
     names = c("outline_el", "topic"),
   ) |>
   tidyr::separate_wider_delim(
-    file,
+    file_line,
     delim = ":",
     names = c("file", "line")
   ) |>
+  dplyr::mutate(
+    file = fs::path_real(file) |> as.character(),
+    file_line = paste0(file, ":", line)
+  ) |>
   dplyr::relocate(
-    topic, outline_el, file, line, tag
+    file, topic, outline_el, , line, tag
   ) |>
   dplyr::mutate(
-    is_md = tag %in% c("subsection", "details", "description", "section")
+    is_md = tag %in% c("subsection", "details", "description", "section"),
+    is_object_title = tag == "title",
+    file_ext = "R",
+    tile_el = NA_character_,
+    title_el_line = NA_integer_,
+    is_news = FALSE,
+    is_test_file = FALSE,
+    is_snap_file = FALSE,
+    is_section_title = tag %in% c("section", "subsection") | tag %in% c("details", "description"),
+    is_saved_doc = TRUE,
+    has_inline_markup = FALSE # let's not mess with inline markup
+
   )
