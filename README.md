@@ -187,27 +187,10 @@ outline
 #> 
 #> ── `playground/roxygen2-test.R`
 #> `i` Section to extract
-#> 
-#> ── `R/browse-pkg.R`
-#> `i` {package}
-#> `i` Vignettes
-#> 
 #> ── `R/dplyr-plus.R`  dplyr extra
-#> `i` in the presence of ties.
-#> `i` Use with_ties = FALSE to return exactly n matches
-#> `i` Use each = FALSE to have n divided in each place
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
-#> `i` with dplyr::filter
-#> `i` extract the skin_color for C-3PO
-#> `i` will return a named vector of mpg (as mtcars has rownames.)
-#> `i` Extract hair color for all people
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
-#> `i` works with `.by`
-#> `i` works with `group_by()`
-#> `i` NA all 2s
-#> `i` You can actually use dplyr::na_if() in this case
-#> `i` NA all 1 and 2
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
 #> `i` Use cases / advantages
@@ -218,10 +201,6 @@ outline
 #> `i` dplyr identity without tweaks
 #> `i` dplyr extensions identity
 #> `i` helpers
-#> 
-#> ── `R/escape-inline-markup.R`
-#> `i` example code
-#> `i` last instance taken care of with escape_markup with a different strategy
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file- `Done✔?`
@@ -244,7 +223,6 @@ outline
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> 
 #> ── `R/outdated-pkgs.R`
-#> `i` All packages are up to date.
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
 #> ── `R/outline-criteria.R`
@@ -254,14 +232,11 @@ outline
 #> `i` it is 'R/outline.R'
 #> 
 #> ── `R/outline.R`  `proj_outline()`
-#> `i` Remove todo items
-#> `i` interact with data frame
-#> `i` These all work on the active file / project or directory.
-#> `i` Like proj_switch(), proj_outline() accepts a project
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
+#> `i` TODO reanable cli info- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
 #> ── `R/proj-list.R`
@@ -289,9 +264,6 @@ outline
 #> 
 #> ── `R/utils-proj.R`  usethis adaptions utils
 #> `i` Active project / document
-#> 
-#> ── `R/utils-write.R`
-#> `i` Creating <path>
 #> 
 #> ── `R/utils.R`  OS utils
 #> 
@@ -374,7 +346,6 @@ outline
 #> `i` open_rs_doc() errors in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
-#> `i` o_is_cli_info() works
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline.R`
@@ -394,6 +365,7 @@ outline
 #> 
 #> ── `tests/testthat/test-use-todo.R`
 #> `i` Marking TODO as done detects tags
+#> `i` todo items are correctly stripped
 #> 
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
@@ -407,6 +379,7 @@ outline
 #> `i` TODO outline make ggtitle work- `Done✔?`
 #> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
 #> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO outline renable cli info.- `Done✔?`
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
 #> `i` TODO outline avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
