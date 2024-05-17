@@ -92,6 +92,7 @@ rename_files2 <- function(old,
   related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
   if (length(related_files) > 0) {
+    # maybe would need to normalize path.
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",
@@ -151,7 +152,7 @@ rename_files2 <- function(old,
     # check_referenced_files(path = ".", quiet = !verbose)
     if (interactive() && action != "test") {
       cli::cli_inform(c(
-        i = "Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files."
+        i = cli::col_grey("Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files.")
       ))
     }
     return(invisible(new))
