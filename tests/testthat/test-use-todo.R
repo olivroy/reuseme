@@ -17,12 +17,23 @@ test_that("Marking TODO as done detects tags", {
   )
 })
 
+test_that("todo items are correctly stripped", {
+  expect_equal(
+    strip_todo_line("2^2 # TODO this"),
+    "2^2"
+  )
+  expect_equal(
+    strip_todo_line("2^2 # TODO this", only_rm_tag = TRUE),
+    "2^2 # this"
+  )
+})
+
 test_that("Marking a TODO item as done works", {
   tmp <- tempfile(fileext = "R")
   content <- c(
     "# I Want this done",
-    "# TODO item to delete",
-    "# WORK Explain what the next code does.",
+    "2^2 # TODO item to delete",
+    "2^2 # WORK Explain what the next code does.",
     "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
     "# FIXME Repair this function",
     "   # TODO Check r-lib/usethis#1890",
@@ -48,7 +59,7 @@ test_that("Marking a TODO item as done works", {
 
   expect_complete_todo(
     out <- complete_todo(
-      line_id = 3,
+      line_id = 4,
       file = tmp,
       regexp = "Explain what the next code does"
     ),
@@ -56,7 +67,7 @@ test_that("Marking a TODO item as done works", {
   )
   expect_equal(
     out,
-    "# Explain what the next code does."
+    "2^2 # Explain what the next code does."
   )
   expect_complete_todo(
     out <- complete_todo(
@@ -70,7 +81,8 @@ test_that("Marking a TODO item as done works", {
     read_utf8(tmp),
     c(
       "# I Want this done",
-      "# Explain what the next code does.",
+      "2^2",
+      "2^2 # Explain what the next code does.",
       "# TODO with {.href [cli hyperlinks](https://cli.r-lib.org/reference/links.html)}",
       "# FIXME Repair this function",
       "# TODO Check https://github.com/r-lib/usethis/issues/1890",

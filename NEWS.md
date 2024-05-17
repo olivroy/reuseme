@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).
+
 * `file_outline()` works better with news files and headings at the end of files.
 
 * `file_outline()` gives a better error for empty paths.

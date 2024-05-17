@@ -133,37 +133,44 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     ))
   }
 
+  line_content_before_comment <- stringr::str_extract(line_content, "([^#]+)#", group = 1)
   if (is.null(rm_line)) {
-    rm_line <- tag_type %in% c("TODO", "FIXME")
+    rm_line <- tag_type %in% c("TODO", "FIXME") # && is.na(line_content_before_comment)
   }
+  line_content_todo <- stringr::str_extract(line_content, "#[^#]+")
   line_content_show <- stringr::str_squish(line_content)
 
   if (rm_line) {
-    line_content_show <- cli::style_strikethrough(line_content_show)
+    if (is.na(line_content_before_comment)) {
+      line_content_show <- cli::style_strikethrough(line_content_show)
+    } else {
+      line_content_show <- paste(line_content_before_comment, cli::style_strikethrough(line_content_todo))
+    }
   } else {
     # Only strikethrough the tag
-    regex <- paste0("\\s", tag_type)
+    regex <- paste0(" ", tag_type)
     regex_new <- cli::style_strikethrough(regex)
     line_content_show <- stringr::str_replace(line_content_show, regex, regex_new)
   }
-
+  file_line <- paste0(file, ":", line_id)
   cli::cli_alert_success(
-    "Removed {.code {line_content_show}} from {.file {file}}!"
+    "Removed {.code {line_content_show}} from {.file {file_line}}!"
   )
+  # Rem
+  line_content_new <- strip_todo_line(line_content, only_rm_tag = !rm_line)
 
-  if (rm_line) {
-    file_content_new <- file_content[-line_id]
-    line_content_new <- ""
-  } else {
-    line_content_new <- sub(
-      pattern = paste0(tag_type, "\\s+"),
-      replacement = "",
-      line_content
-    )
-
+  if (nzchar(line_content_new)) {
     file_content[line_id] <- line_content_new
     file_content_new <- file_content
+  } else {
+    file_content_new <- file_content[-line_id]
+    if (!rm_line) {
+      # WIll remove this line eventually
+      # remove line if it ends up empty. not supposed to happen
+      cli::cli_abort("This should not happen. We were supposed not to remove lines", .internal = TRUE)
+    }
   }
+
   if (length(file_content_new) > 0) {
     usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE, quiet = TRUE)
   } else {
@@ -236,3 +243,25 @@ compute_path_todo <- function(todo, proj) {
   list(path_todo = path_todo, todo = todo)
 }
 # this doesn't work
+
+# accepts a single line
+strip_todo_line <- function(x, only_rm_tag = FALSE) {
+  check_string(x)
+  if (!stringr::str_detect(x, "TODO|WORK|FIXME")) {
+    cli::cli_abort("Could not detect a todo tag in x")
+  }
+  if (only_rm_tag) {
+    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
+  } else {
+    x_new <- stringr::str_extract(x, "([^#]+)\\#+", group = 1)
+    if (is.na(x_new)) {
+      x_new <- ""
+      # cli::cli_abort("Could not extract content before tag")
+    }
+  }
+  if (x_new == x) {
+    cli::cli_abort("Could not make any change to x = {.val {x}}")
+  }
+  x_new <- stringr::str_trim(x_new, "right")
+  x_new
+}

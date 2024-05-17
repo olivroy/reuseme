@@ -592,7 +592,8 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
     .data$line_id[cn], ", '", .data$file[cn], "', '",
-    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+    # modify regex twice if needed (see below)
+    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
     .data$rs_version[cn]
   )
   # truncate other elements
@@ -610,7 +611,9 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+
+        # modify regex twice if needed (see above)
+        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
         rs_version
       ),
       outline_el2
