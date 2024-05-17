@@ -63,10 +63,10 @@ use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
 
 #' Remove a TODO/WORK/FIXME item from a file
 #'
-#' Function meant to be wrapped as `{.run}` hyperlinks with [file_outline()].
+#' Function meant to be wrapped as `{.run }` hyperlinks with [file_outline()].
 #' It basically removes a line from a file.
 #'
-#' @param line_id The line number (a single integer)
+#' @param line The line number (a single integer)
 #' @param file Path to a file
 #' @param regexp A regexp to assess that the file content has not changed.
 #' @param rm_line A logical If `NULL` will remove the full line in the file
@@ -77,10 +77,10 @@ use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
 #'   content invisibly.
 #' @export
 #' @keywords internal
-complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
+complete_todo <- function(line, file, regexp, rm_line = NULL) {
   check_string(regexp)
-  check_number_whole(line_id)
-  line_id_original <- line_id
+  check_number_whole(line)
+  line_original <- line
   # to defer warning.
   if (interactive() && rstudioapi::isAvailable()) {
     rstudioapi::documentSaveAll()
@@ -88,7 +88,7 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   warn_change_of_line <- FALSE
 
   file_content <- readLines(file, encoding = "UTF-8")
-  line_content <- file_content[line_id]
+  line_content <- file_content[line]
 
   # Special case for issues (probably need to opt out at some point)
   # patch that will likely not work for many cases.
@@ -105,8 +105,8 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     warn_change_of_line <- TRUE
 
     if (length(regexp_detection) == 1) {
-      line_id <- regexp_detection
-      line_content <- line_content <- file_content[line_id]
+      line <- regexp_detection
+      line_content <- line_content <- file_content[line]
       detect_regexp_in_line <- grepl(pattern = regexp, x = line_content)
     } else if (length(regexp_detection) > 1) {
       cli::cli_abort(c(
@@ -121,12 +121,12 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     }
   }
 
-  tag_type <- extract_tag_in_text(text = line_content, line_id)
+  tag_type <- extract_tag_in_text(text = line_content, line)
 
   if (warn_change_of_line) {
     cli::cli_warn(c(
       x = "Could not find {.arg regexp} as expected",
-      "Could not find {.val {regexp}} at line {line_id_original}.",
+      "Could not find {.val {regexp}} at line {line_original}.",
       i = "Has the file content changed since you ran this code?",
       # needs qty for cli pluralization, but no printing
       "`regexp` was detected in {cli::qty(length(regexp_detection))} line{?s} {regexp_detection}."
@@ -152,7 +152,7 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     regex_new <- cli::style_strikethrough(regex)
     line_content_show <- stringr::str_replace(line_content_show, regex, regex_new)
   }
-  file_line <- paste0(file, ":", line_id)
+  file_line <- paste0(file, ":", line)
   cli::cli_alert_success(
     "Removed {.code {line_content_show}} from {.file {file_line}}!"
   )
@@ -160,10 +160,10 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   line_content_new <- strip_todo_line(line_content, only_rm_tag = !rm_line)
 
   if (nzchar(line_content_new)) {
-    file_content[line_id] <- line_content_new
+    file_content[line] <- line_content_new
     file_content_new <- file_content
   } else {
-    file_content_new <- file_content[-line_id]
+    file_content_new <- file_content[-line]
     if (!rm_line) {
       # WIll remove this line eventually
       # remove line if it ends up empty. not supposed to happen

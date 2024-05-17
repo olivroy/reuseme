@@ -118,8 +118,9 @@ replace_r_var <- function(x) {
 #'
 #' @examples
 #' replace_r_var("i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
-#' # last instance taken care of with escape_markup with a different strategy
 #' #> "{{gt_var}} in {{gt_var}} in gt_var in {.file {gt_var}}."
+#' # last instance taken care of with escape_markup with a different strategy
 #' escape_markup("{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
 #' #> "{{gt_var}} in {{gt_var}} in gt_var in {.file gt_var}."
+#'
 NULL
