@@ -17,6 +17,17 @@ test_that("Marking TODO as done detects tags", {
   )
 })
 
+test_that("todo items are correctly stripped", {
+  expect_equal(
+    strip_todo_line("2^2 # TODO this"),
+    "2^2"
+  )
+  expect_equal(
+    strip_todo_line("2^2 # TODO this", only_rm_tag = TRUE),
+    "2^2 # this"
+  )
+})
+
 test_that("Marking a TODO item as done works", {
   tmp <- tempfile(fileext = "R")
   content <- c(
@@ -48,11 +59,11 @@ test_that("Marking a TODO item as done works", {
 
   expect_complete_todo(
     out <- complete_todo(
-      line_id = 3,
+      line_id = 4,
       file = tmp,
       regexp = "Explain what the next code does"
     ),
-    warn = FALSE
+    warn = TRUE
   )
   expect_equal(
     out,

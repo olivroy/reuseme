@@ -157,7 +157,7 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
     "Removed {.code {line_content_show}} from {.file {file_line}}!"
   )
   # Rem
-  line_content_new <- strip_todo_line(line_content, rm_tag = rm_line)
+  line_content_new <- strip_todo_line(line_content, only_rm_tag = !rm_line)
 
   if (nzchar(line_content_new)) {
     file_content[line_id] <- line_content_new
@@ -245,19 +245,19 @@ compute_path_todo <- function(todo, proj) {
 # this doesn't work
 
 # accepts a single line
-strip_todo_line <- function(x, rm_tag = TRUE) {
+strip_todo_line <- function(x, only_rm_tag = FALSE) {
   check_string(x)
   if (!stringr::str_detect(x, "TODO|WORK|FIXME")) {
     cli::cli_abort("Could not detect a todo tag in x")
   }
-  if (rm_tag) {
+  if (only_rm_tag) {
+    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
+  } else {
     x_new <- stringr::str_extract(x, "([^#]+)\\#+", group = 1)
     if (is.na(x_new)) {
       x_new <- ""
       # cli::cli_abort("Could not extract content before tag")
     }
-  } else {
-    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
   }
   if (x_new == x) {
     cli::cli_abort("Could not make any change to x = {.val {x}}")
