@@ -1,5 +1,3 @@
-# pkgload::load_all()
-
 #' Extract roxygen tag
 #'
 #' Tell me what this does
@@ -8,19 +6,22 @@
 #'
 #' Well this is a section
 #'
-#' @md
-#' @param file A file
+#' @noRd
+#' @param file A list of roxy blocks
 #' @returns A named list with name = file:line, and element is the section title
-extract_roxygen_tag_location <- function(file = roxygen2::parse_file(testthat::test_path("_ref", "test-roxygen.R")), tag) {
+#' @examples
+#' extract_roxygen_tag_location(tag = "title")
+
+extract_roxygen_tag_location <- function(file, tag) {
   # suppressMessages(aa <- roxygen2::parse_file(file))
   # browser()
   aa <- file
   pos <- purrr::map(aa, \(x) roxygen2::block_get_tags(x, tags = tag))
   # browser()
-  if (all(lengths(pos) == 0)) {
-    return(character(0))
+  if (all(lengths(pos) == 0L)) {
+    return(character(0L))
   }
-  aa <- aa[lengths(pos) > 0]
+  aa <- aa[lengths(pos) > 0L]
   pos <- purrr::list_flatten(pos)
   objects <- purrr::map(
     aa,
@@ -130,15 +131,6 @@ extract_roxygen_tag_location <- function(file = roxygen2::parse_file(testthat::t
   val
 }
 
-extract_roxygen_tag_location(tag = "title")
-
-if (!exists("parsed_files")) {
-  # This is what takes the longest.
-  # only need to run this once.
-  parsed_files <- purrr::map(fs::dir_ls("R"), roxygen2::parse_file)
-}
-
-
 join_roxy_fun <- function(file) {
   # don't parse noRd tags
   parsed_files <- purrr::discard(file, \(x) roxygen2::block_has_tags(x, "noRd"))
@@ -146,6 +138,12 @@ join_roxy_fun <- function(file) {
   if (length(parsed_files) == 0) {
     return(character(0L))
   }
+  if (is.null(names(parsed_files))) {
+     # browser()
+    parsed_files <- parsed_files |> purrr::set_names(purrr::map_chr(parsed_files, \(x) x$file))
+    # cli::cli_abort("parsed files must be named at this point.")
+  }
+  # parsed_files <- set_names(parsed_files, \(x))
   titles_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "title"))
 
   section_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "section"))
@@ -160,56 +158,62 @@ join_roxy_fun <- function(file) {
   roxy_parsed <- vctrs::vec_c(
     titles_list,
     section_list,
+    subsection_list,
     desc_list,
     details_list,
     family_list,
-    concept_list,
-    .name_spec = "{outer}:{inner}",
+    concept_list#,
+    #.name_spec = "{outer}:::::{inner}",
   ) |>
     vctrs::list_unchop(
-      name_spec = "{outer}:{inner}"
+      name_spec = "{outer}.....{inner}"
     ) |>
-    tibble::enframe()
-  roxy_parsed
+    tibble::enframe() |>
+    tidyr::separate_wider_delim(
+      cols = name,
+      names = c("file_line", "tag"),
+      delim = "____"
+    )
+
+  roxy_parsed <- roxy_parsed |>
+    tidyr::separate_wider_delim(
+      cols = value,
+      delim = "____",
+      names = c("content", "topic"),
+    )
+  if (!all(grepl("\\.{5}", roxy_parsed$file_line, fixed = F))) {
+    problems <- which(!grepl("\\.{5}", roxy_parsed$file_line, fixed = F))
+    #rowser()
+    # roxy_parsed
+    cli::cli_abort("Malformed file line at {problems}.")
+  }
+  roxy_parsed <- roxy_parsed |>
+    tidyr::separate_wider_delim(
+      file_line,
+      delim = ".....",
+      names = c("file", "line")
+    )
+  roxy_parsed |>
+    dplyr::mutate(
+      file = fs::path_real(file) |> as.character(),
+      file_line = paste0(file, ":", line)
+    ) |>
+    dplyr::relocate(
+      file, topic, content, line, tag
+    ) |>
+    dplyr::mutate(
+      is_md = tag %in% c("subsection", "details", "description", "section"),
+      # content = paste0("#' ", outline_el),
+      is_object_title = tag == "title",
+      file_ext = "R",
+      tile_el = NA_character_,
+      title_el_line = NA_integer_,
+      is_news = FALSE,
+      is_roxygen_comment = TRUE,
+      is_test_file = FALSE,
+      is_snap_file = FALSE,
+      is_section_title = tag %in% c("section", "subsection") | tag %in% c("details", "description"),
+      is_saved_doc = TRUE,
+      has_inline_markup = FALSE # let's not mess with inline markup
+    )
 }
-
-
-roxy_parsed <- parsed_files |>
-  join_roxy_fun() |>
-  tidyr::separate_wider_delim(
-    cols = name,
-    names = c("file_line", "tag"),
-    delim = "____"
-  )
-roxy_parsed |>
-  tidyr::separate_wider_delim(
-    cols = value,
-    delim = "____",
-    names = c("outline_el", "topic"),
-  ) |>
-  tidyr::separate_wider_delim(
-    file_line,
-    delim = ":",
-    names = c("file", "line")
-  ) |>
-  dplyr::mutate(
-    file = fs::path_real(file) |> as.character(),
-    file_line = paste0(file, ":", line)
-  ) |>
-  dplyr::relocate(
-    file, topic, outline_el, , line, tag
-  ) |>
-  dplyr::mutate(
-    is_md = tag %in% c("subsection", "details", "description", "section"),
-    is_object_title = tag == "title",
-    file_ext = "R",
-    tile_el = NA_character_,
-    title_el_line = NA_integer_,
-    is_news = FALSE,
-    is_test_file = FALSE,
-    is_snap_file = FALSE,
-    is_section_title = tag %in% c("section", "subsection") | tag %in% c("details", "description"),
-    is_saved_doc = TRUE,
-    has_inline_markup = FALSE # let's not mess with inline markup
-
-  )

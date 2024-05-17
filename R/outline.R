@@ -540,7 +540,7 @@ display_outline_element <- function(.data) {
       if (which == "title") {
         x <- NA_character_
       } else {
-        NA_integer_
+        x <- NA_integer_
       }
     }
     if (length(x) != 1) {
@@ -549,6 +549,7 @@ display_outline_element <- function(.data) {
     x
   }
   if (!all(is.na(y$title_el))) {
+    #browser()
     y <- dplyr::mutate(
       y,
       title_el = na_if0(title_el[!is.na(title_el)], "title"),

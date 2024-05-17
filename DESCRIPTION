@@ -37,7 +37,9 @@ Suggests:
     gt,
     magick,
     pillar,
+    roxygen2,
     testthat (>= 3.2.1),
+    tidyr,
     withr
 Config/testthat/edition: 3
 Encoding: UTF-8

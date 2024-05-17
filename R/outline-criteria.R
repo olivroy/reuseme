@@ -124,12 +124,31 @@ define_outline_criteria <- function(.data, print_todo) {
   x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
+  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
+
+  if (any(x$is_roxygen_comment)) {
+    rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
+    files_with_roxy_comments <- unique(x[x$is_roxygen_comment, "file", drop = TRUE])
+    files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
+    parsed_files <- suppressMessages( # roxygen2 messages
+      purrr::map(files_with_roxy_comments, purrr::safely(roxygen2::parse_file))
+    )
+    # if roxygen2 cannot parse a file, let's just forget about it.
+    unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
+    if (length(unparsed_files) > 0) {
+      cli::cli_inform("Could not parse roxygen comments in {.file {unparsed_files}}")
+    }
+    parsed_files <- purrr::compact(parsed_files)
+    outline_roxy <- join_roxy_fun(parsed_files)
+  } else {
+    outline_roxy <- NULL
+  }
 
   x <- dplyr::mutate(
-    x,
+    x |> dplyr::filter(!is_roxygen_comment) |> dplyr::bind_rows(outline_roxy),
     # Problematic when looking inside functions
     # maybe force no leading space.
-    # TODO strip is_cli_info in Package? only valid for EDA
+    # TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
     is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
