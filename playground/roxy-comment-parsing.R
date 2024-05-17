@@ -11,17 +11,12 @@
 #' @md
 #' @param file A file
 #' @returns A named list with name = file:line, and element is the section title
-extract_roxygen_tag_location <- function(file = testthat::test_path("_ref", "test-roxygen.R"), tag) {
-  suppressMessages(aa <- roxygen2::parse_file(file))
+extract_roxygen_tag_location <- function(file = roxygen2::parse_file(testthat::test_path("_ref", "test-roxygen.R")), tag) {
+  # suppressMessages(aa <- roxygen2::parse_file(file))
   # browser()
-  # don't parse noRd tags
-  aa <- purrr::discard(aa, \(x) roxygen2::block_has_tags(x, "noRd"))
-  # Return early if no roxy tags
-  if (length(aa) == 0) {
-    return(character(0L))
-  }
-  # browser()
+  aa <- file
   pos <- purrr::map(aa, \(x) roxygen2::block_get_tags(x, tags = tag))
+  # browser()
   if (all(lengths(pos) == 0)) {
     return(character(0))
   }
@@ -53,7 +48,7 @@ extract_roxygen_tag_location <- function(file = testthat::test_path("_ref", "tes
 
 
   # browser()
-  pos <- purrr::set_names(pos, file)
+  pos <- purrr::set_names(pos, pos$file)
 
   # browser()
   val <- withCallingHandlers(
@@ -135,30 +130,52 @@ extract_roxygen_tag_location <- function(file = testthat::test_path("_ref", "tes
   val
 }
 
-titles_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "title"))
+extract_roxygen_tag_location(tag = "title")
 
-section_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "section"))
-subsection_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "subsection"))
+if (!exists("parsed_files")) {
+  # This is what takes the longest.
+  # only need to run this once.
+  parsed_files <- purrr::map(fs::dir_ls("R"), roxygen2::parse_file)
+}
 
-desc_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "description"))
 
-details_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "details"))
+join_roxy_fun <- function(file) {
+  # don't parse noRd tags
+  parsed_files <- purrr::discard(file, \(x) roxygen2::block_has_tags(x, "noRd"))
+  # Return early if no roxy tags
+  if (length(parsed_files) == 0) {
+    return(character(0L))
+  }
+  titles_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "title"))
 
-family_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "family"))
-concept_list <- purrr::map(fs::dir_ls("R"), \(x) extract_roxygen_tag_location(x, tag = "concept"))
-roxy_parsed <- vctrs::vec_c(
-  titles_list,
-  section_list,
-  desc_list,
-  details_list,
-  family_list,
-  concept_list,
-  .name_spec = "{outer}:{inner}",
-) |>
-  vctrs::list_unchop(
-    name_spec = "{inner}"
+  section_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "section"))
+  subsection_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "subsection"))
+
+  desc_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "description"))
+
+  details_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "details"))
+
+  family_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "family"))
+  concept_list <- purrr::map(parsed_files, \(x) extract_roxygen_tag_location(x, tag = "concept"))
+  roxy_parsed <- vctrs::vec_c(
+    titles_list,
+    section_list,
+    desc_list,
+    details_list,
+    family_list,
+    concept_list,
+    .name_spec = "{outer}:{inner}",
   ) |>
-  tibble::enframe() |>
+    vctrs::list_unchop(
+      name_spec = "{outer}:{inner}"
+    ) |>
+    tibble::enframe()
+  roxy_parsed
+}
+
+
+roxy_parsed <- parsed_files |>
+  join_roxy_fun() |>
   tidyr::separate_wider_delim(
     cols = name,
     names = c("file", "tag"),
