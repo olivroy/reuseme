@@ -156,41 +156,21 @@ complete_todo <- function(line_id, file, regexp, rm_line = NULL) {
   cli::cli_alert_success(
     "Removed {.code {line_content_show}} from {.file {file_line}}!"
   )
+  # Rem
+  line_content_new <- strip_todo_line(line_content, rm_tag = rm_line)
 
-  if (rm_line) {
-    if (is.na(line_content_before_comment)) {
-      file_content_new <- file_content[-line_id]
-      line_content_new <- ""
-    } else {
-      line_content_new <- stringr::str_trim(line_content_before_comment, side = "right")
-
-      if (nzchar(line_content_new)) {
-        file_content[line_id] <- line_content_new
-        file_content_new <- file_content
-      } else {
-        file_content_new <- file_content[-line_id]
-      }
-    }
-
-  } else {
-    line_content_new <- sub(
-      pattern = paste0(tag_type, "\\s+"),
-      replacement = "",
-      line_content
-    )
-    line_content_new <- stringr::str_trim(line_content_new, side = "right")
-
+  if (nzchar(line_content_new)) {
     file_content[line_id] <- line_content_new
     file_content_new <- file_content
+  } else {
     file_content_new <- file_content[-line_id]
-
-    if (!nzchar(line_content_new)) {
+    if (!rm_line) {
       # WIll remove this line eventually
       # remove line if it ends up empty. not supposed to happen
       cli::cli_abort("This should not happen. We were supposed not to remove lines", .internal = TRUE)
     }
-
   }
+
   if (length(file_content_new) > 0) {
     usethis::write_over(path = file, lines = file_content_new, overwrite = TRUE, quiet = TRUE)
   } else {
@@ -263,3 +243,25 @@ compute_path_todo <- function(todo, proj) {
   list(path_todo = path_todo, todo = todo)
 }
 # this doesn't work
+
+# accepts a single line
+strip_todo_line <- function(x, rm_tag = TRUE) {
+  check_string(x)
+  if (!stringr::str_detect(x, "TODO|WORK|FIXME")) {
+    cli::cli_abort("Could not detect a todo tag in x")
+  }
+  if (rm_tag) {
+    x_new <- stringr::str_extract(x, "([^#]+)\\#+", group = 1)
+    if (is.na(x_new)) {
+      x_new <- ""
+      # cli::cli_abort("Could not extract content before tag")
+    }
+  } else {
+    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
+  }
+  if (x_new == x) {
+    cli::cli_abort("Could not make any change to x = {.val {x}}")
+  }
+  x_new <- stringr::str_trim(x_new, "right")
+  x_new
+}
