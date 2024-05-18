@@ -209,7 +209,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    481ms    483ms      2.07      18MB     4.14</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    559ms    559ms      1.79      18MB     3.58</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -227,10 +227,6 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `playground/roxygen2-test.R`</span></span>
 <span><span class="co">#&gt; `i` Section to extract</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/browse-pkg.R`</span></span>
-<span><span class="co">#&gt; `i` {package}</span></span>
-<span><span class="co">#&gt; `i` Vignettes</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/dplyr-plus.R`  dplyr extra</span></span>
 <span><span class="co">#&gt; `i` in the presence of ties.</span></span>
@@ -282,9 +278,9 @@ Example outline
 <span><span class="co">#&gt; ── `R/open.R`</span></span>
 <span><span class="co">#&gt; `i` FIXME why is this code like this?- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO structure and summarise information.- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (&lt;https://github.com/r-lib/cli/issues/694&gt;)- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outdated-pkgs.R`</span></span>
-<span><span class="co">#&gt; `i` All packages are up to date.</span></span>
 <span><span class="co">#&gt; `i` TODO figure out pad :)- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outline-criteria.R`</span></span>
@@ -302,6 +298,7 @@ Example outline
 <span><span class="co">#&gt; `i` File outline</span></span>
 <span><span class="co">#&gt; `i` Print method</span></span>
 <span><span class="co">#&gt; `i` Step: tweak outline look as they show</span></span>
+<span><span class="co">#&gt; `i` TODO reanable cli info- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (&lt;https://github.com/tidyverse/dplyr/issues/6806&gt;)- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/proj-list.R`</span></span>
@@ -330,9 +327,6 @@ Example outline
 <span><span class="co">#&gt; ── `R/utils-proj.R`  usethis adaptions utils</span></span>
 <span><span class="co">#&gt; `i` Active project / document</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/utils-write.R`</span></span>
-<span><span class="co">#&gt; `i` Creating &lt;path&gt;</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/utils.R`  OS utils</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element</span></span>
@@ -359,7 +353,6 @@ Example outline
 <span><span class="co">#&gt; `i` A real one</span></span>
 <span><span class="co">#&gt; `i` A true one</span></span>
 <span><span class="co">#&gt; `i` 'R/my-file.R'</span></span>
-<span><span class="co">#&gt; `i` Refer to google (&lt;https://google.com&gt;)</span></span>
 <span><span class="co">#&gt; `i` Section title</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_ref/single-title.md`  The title is the only outline element</span></span>
@@ -414,7 +407,6 @@ Example outline
 <span><span class="co">#&gt; `i` open_rs_doc() errors in non-interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements</span></span>
-<span><span class="co">#&gt; `i` o_is_cli_info() works</span></span>
 <span><span class="co">#&gt; `i` No outline criteria are untested</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-outline.R`</span></span>
@@ -434,6 +426,7 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-use-todo.R`</span></span>
 <span><span class="co">#&gt; `i` Marking TODO as done detects tags</span></span>
+<span><span class="co">#&gt; `i` todo items are correctly stripped</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-utils.R`</span></span>
 <span><span class="co">#&gt; `i` Windows is recognized correctly.</span></span>
@@ -447,6 +440,7 @@ Example outline
 <span><span class="co">#&gt; `i` TODO outline make ggtitle work- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outline renable cli info.- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO outline avoid evaluating in current env.- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO wrap regexps in functions- `Done✔?`</span></span>
@@ -460,9 +454,13 @@ Example outline
 <span><span class="co">#&gt; `i` TODO reframe more than one issue. nw drive- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO delete generated files- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `NEWS.md`</span></span>
 <span><span class="co">#&gt; `i` reuseme (development version)</span></span>
+<span><span class="co">#&gt; `i` reuseme 0.0.2</span></span>
 <span><span class="co">#&gt; `i` reuseme 0.0.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `README.Rmd`</span></span>
