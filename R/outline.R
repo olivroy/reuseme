@@ -122,14 +122,14 @@ file_outline <- function(pattern = NULL,
     file_content <- rlang::set_names(path)
     # Not warn
     file_content <- purrr::map(file_content, function(x) readLines(fs::path_real(x), encoding = "UTF-8", warn = FALSE))
-    # Combine everything into a tibble that contains file, line_id, content
-    file_content <- purrr::map(file_content, function(x) tibble::enframe(x, name = "line_id", value = "content"))
+    # Combine everything into a tibble that contains file, line, content
+    file_content <- purrr::map(file_content, function(x) tibble::enframe(x, name = "line", value = "content"))
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   } else {
     file_content <-
       purrr::map(
         .x = list("unsaved-doc.R" = rstudioapi::getSourceEditorContext()$contents),
-        .f = function(x) tibble::enframe(x, name = "line_id", value = "content")
+        .f = function(x) tibble::enframe(x, name = "line", value = "content")
       )
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
@@ -365,7 +365,7 @@ print.outline_report <- function(x, ...) {
       link = list(rlang::set_names(
         link_rs_api,
         purrr::map_chr(
-          paste0("{.file ", file, ":", line_id, "}"),
+          paste0("{.file ", file, ":", line, "}"),
           cli::format_inline
         )
       )),
@@ -507,19 +507,19 @@ display_outline_element <- function(.data) {
   y <- dplyr::mutate(
     x,
     has_title_el =
-      ((line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+      ((line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
         (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !is_news,
     .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
-      title_el_line = ifelse(has_title_el, line_id[
-        (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+      title_el_line = ifelse(has_title_el, line[
+        (line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
           (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
       ][1], # take  the first element to avoid problems (may be the reason why problems occur)
       NA_integer_
       ),
-      title_el = outline_el[line_id == title_el_line],
+      title_el = outline_el[line == title_el_line],
       .by = "file"
     ),
     error = function(e) {
@@ -529,7 +529,7 @@ display_outline_element <- function(.data) {
   )
   y <- dplyr::relocate(
     y,
-    "outline_el", "line_id", "title_el", "title_el_line", "has_title_el",
+    "outline_el", "line", "title_el", "title_el_line", "has_title_el",
     .after = "content"
   )
 
@@ -595,7 +595,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     as.character(trim_outline(.data$outline_el[cn], width - 8L)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
-    .data$line_id[cn], ", '", .data$file[cn], "', '",
+    .data$line[cn], ", '", .data$file[cn], "', '",
     # modify regex twice if needed (see below)
     stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
     .data$rs_version[cn]
@@ -617,7 +617,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
         # Removed ending dot. (possibly will fail with older versions)
 
         # modify regex twice if needed (see above)
-        line_id, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+        line, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
         rs_version
       ),
       outline_el2
@@ -626,7 +626,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   )
 
   .data <- dplyr::mutate(.data,
-    link = paste0(outline_el2, " {.path ", file, ":", line_id, "}"),
+    link = paste0(outline_el2, " {.path ", file, ":", line, "}"),
     # rstudioapi::documentOpen works in the visual mode!! but not fully.
     file_path = .data$file,
     is_saved_doc = .env$is_saved_doc,
@@ -646,15 +646,15 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   }
 
   dplyr::mutate(.data,
-    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
+    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
     link_rs_api = dplyr::case_when(
       is.na(outline_el2) ~ NA_character_,
-      !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
+      !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
       rs_avail_file_link ~ paste0(
         "{cli::style_hyperlink(", style_fun, ', "',
-        paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2
+        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
       ),
-      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
+      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
     ),
     file_hl = dplyr::case_when(
       !is_saved_doc ~ file_path,

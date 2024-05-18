@@ -158,7 +158,7 @@ define_outline_criteria <- function(.data, print_todo) {
   )
   x <- dplyr::mutate(
     x,
-    before_and_after_empty = line_id == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+    before_and_after_empty = line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
     .by = file
   )
   x
