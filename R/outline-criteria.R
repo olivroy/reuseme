@@ -186,7 +186,7 @@ define_outline_criteria <- function(.data, print_todo) {
       line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
       before_and_after_empty
       ),
-    .by = file
+    .by = "file"
   )
   #browser()
   x
