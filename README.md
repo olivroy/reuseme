@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    481ms    483ms      2.07      18MB     4.14
+#> 1 outline <- proj_outline()    559ms    559ms      1.79      18MB     3.58
 ```
 
 <details>
@@ -187,10 +187,23 @@ outline
 #> 
 #> ── `playground/roxygen2-test.R`
 #> `i` Section to extract
+#> 
 #> ── `R/dplyr-plus.R`  dplyr extra
+#> `i` in the presence of ties.
+#> `i` Use with_ties = FALSE to return exactly n matches
+#> `i` Use each = FALSE to have n divided in each place
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
+#> `i` with dplyr::filter
+#> `i` extract the skin_color for C-3PO
+#> `i` will return a named vector of mpg (as mtcars has rownames.)
+#> `i` Extract hair color for all people
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
+#> `i` works with `.by`
+#> `i` works with `group_by()`
+#> `i` NA all 2s
+#> `i` You can actually use dplyr::na_if() in this case
+#> `i` NA all 1 and 2
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
 #> `i` Use cases / advantages
@@ -201,6 +214,10 @@ outline
 #> `i` dplyr identity without tweaks
 #> `i` dplyr extensions identity
 #> `i` helpers
+#> 
+#> ── `R/escape-inline-markup.R`
+#> `i` example code
+#> `i` last instance taken care of with escape_markup with a different strategy
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file- `Done✔?`
@@ -221,6 +238,7 @@ outline
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
 #> `i` TODO structure and summarise information.- `Done✔?`
+#> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
 #> 
 #> ── `R/outdated-pkgs.R`
 #> `i` TODO figure out pad :)- `Done✔?`
@@ -232,6 +250,10 @@ outline
 #> `i` it is 'R/outline.R'
 #> 
 #> ── `R/outline.R`  `proj_outline()`
+#> `i` Remove todo items
+#> `i` interact with data frame
+#> `i` These all work on the active file / project or directory.
+#> `i` Like proj_switch(), proj_outline() accepts a project
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
@@ -291,7 +313,6 @@ outline
 #> `i` A real one
 #> `i` A true one
 #> `i` 'R/my-file.R'
-#> `i` Refer to google (<https://google.com>)
 #> `i` Section title
 #> 
 #> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
@@ -393,9 +414,13 @@ outline
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> `i` TODO delete generated files- `Done✔?`
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
+#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
+#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
+#> `i` reuseme 0.0.2
 #> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`

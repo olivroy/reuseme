@@ -540,7 +540,7 @@ display_outline_element <- function(.data) {
       if (which == "title") {
         x <- NA_character_
       } else {
-        NA_integer_
+        x <- NA_integer_
       }
     }
     if (length(x) != 1) {
