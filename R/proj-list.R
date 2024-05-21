@@ -105,13 +105,19 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
 proj_list <- function(proj = NULL, dirs = getOption("reuseme.reposdir")) {
   check_string(proj, allow_null = TRUE)
 
-  if (!is.null(proj) && length(proj) == 1 && fs::dir_exists(proj)) {
-    return(
-      rlang::set_names(
-        proj,
-        fs::path_file(proj)
-      )
-    )
+  if (!is.null(proj) && length(proj) == 1) {
+    # avoid creating a nested project.
+    # known direct
+    if (!proj %in% c("pkgdown", "testthat", "R", "man", "tests", "inst", "src")) {
+      if (fs::dir_exists(proj)) {
+        return(
+          rlang::set_names(
+            proj,
+            fs::path_file(proj)
+          )
+        )
+      }
+    }
   }
 
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")
