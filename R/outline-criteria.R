@@ -140,13 +140,14 @@ define_outline_criteria <- function(.data, print_todo) {
       cli::cli_inform("Could not parse roxygen comments in {.file {unparsed_files}}")
     }
     parsed_files <- purrr::compact(parsed_files)
-    outline_roxy <- join_roxy_fun(parsed_files)
+    processed_roxy <- join_roxy_fun(parsed_files)
+    outline_roxy <- define_outline_criteria_roxy(processed_roxy)
   } else {
     outline_roxy <- NULL
   }
 
   x <- dplyr::mutate(
-    x |> dplyr::filter(!is_roxygen_comment) |> dplyr::bind_rows(outline_roxy),
+    x |> dplyr::filter(!is_roxygen_comment),
     # Problematic when looking inside functions
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
@@ -168,6 +169,10 @@ define_outline_criteria <- function(.data, print_todo) {
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title,
+    # roxygen2 title block
+    is_object_title = FALSE,
+    tag = NA_character_,
+    topic = NA_character_,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
@@ -176,20 +181,66 @@ define_outline_criteria <- function(.data, print_todo) {
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
   )
-  if (!"before_and_after_empty" %in% names(x)) {
-    x$before_and_after_empty <- NA
-  }
   x <- dplyr::mutate(
     x,
-    before_and_after_empty = ifelse(
-      !is.na(before_and_after_empty),
+    before_and_after_empty =
       line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
-      before_and_after_empty
-      ),
     .by = "file"
   )
   #browser()
-  x
+  x |> dplyr::bind_rows(outline_roxy)
 }
 
-# it is {.file R/outline.R} ------
+
+define_outline_criteria_roxy <- function(x) {
+  # TODO merge with define_outline_criteria
+  x$is_md <- x$tag %in% c("subsection", "details", "description", "section")
+  x$is_object_title <- x$tag == "title"
+  x$line <- as.integer(x$line)
+  x$file_ext <- "R"
+  #x$content <- paste0("#' ", x$content) # maybe not?
+  x$title_el <- NA_character_
+  x$title_el_line <- NA_integer_
+  x$is_news <- FALSE
+  x$is_roxygen_comment <- TRUE
+  x$is_test_file <- FALSE
+  x$is_snap_file <- FALSE
+  x$before_and_after_empty <- TRUE
+  x$is_section_title <- (x$tag %in% c("section", "subsection") &  stringr::str_ends(x$content, ":")) |
+    (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
+  x$is_section_title_source <- x$is_section_title
+  x$is_saved_doc <- TRUE
+  x$is_chunk_cap <- FALSE
+  x$is_chunk_cap_next = FALSE
+  x$is_test_name = FALSE
+  x$pkg_version = NA_character_
+  # a family or concept can be seen as a plot subtitle?
+  x$is_tab_or_plot_title <- x$tag %in% c("family", "concept")
+  x$is_cli_info <- FALSE
+  x$is_cross_ref = FALSE
+  x$is_function_def = FALSE
+  x$is_todo_fixme <- FALSE
+  x$is_a_comment_or_code <- FALSE
+  x$is_doc_title <- x$line == 1 & x$tag == "title"
+  x$n_leading_hash = nchar(stringr::str_extract(x$content, "\\#+"))
+  x$n_leading_hash <- dplyr::case_when(
+    x$n_leading_hash > 0 ~ x$n_leading_hash,
+    x$tag == "section" & x$is_section_title_source ~ 1,
+    x$tag == "subsection" & x$is_section_title_source ~ 2,
+    .default = 0
+  )
+  x$content <- dplyr::case_when(
+    !x$is_section_title ~ x$content,
+    x$tag == "section" ~ paste0("# ", stringr::str_remove(x$content, ":")),
+    x$tag == "subsection" ~ paste0("## ", stringr::str_remove(x$content, ":")),
+    .default = x$content
+  )
+  x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)
+  x$has_inline_markup = FALSE # let's not mess with inline markup
+  dplyr::filter(
+    x,
+    content != "NULL"
+  )
+}
+
+# it is {.file R/outline.R} or {.file R/outline-roxy.R} ------

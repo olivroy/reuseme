@@ -207,28 +207,12 @@ join_roxy_fun <- function(file) {
     ) |>
     dplyr::relocate(
       file, topic, content, line, tag
-    ) |>
-    dplyr::mutate(
-      is_md = tag %in% c("subsection", "details", "description", "section"),
-      # content = paste0("#' ", outline_el),
-      is_object_title = tag == "title",
-      line = as.integer(line),
-      file_ext = "R",
-      tile_el = NA_character_,
-      title_el_line = NA_integer_,
-      is_news = FALSE,
-      is_roxygen_comment = TRUE,
-      is_test_file = FALSE,
-      is_snap_file = FALSE,
-      before_and_after_empty = TRUE,
-      is_section_title = TRUE,
-      is_section_title_source = TRUE,
-      is_saved_doc = TRUE,
-      has_inline_markup = FALSE # let's not mess with inline markup
-    ) |>
-    dplyr::filter(
-      content != "NULL"
-    )
+    ) |> dplyr::mutate(id = dplyr::row_number()) |>
+    tidyr::separate_longer_delim(content, delim = "\n") |>
+    dplyr::mutate(n = dplyr::n() ,
+                  line = seq(from = line[1], length.out = n[1], by = 1),
+                  .by = id) |>
+    dplyr::filter(nzchar(content)) |> dplyr::select(-id, -n)
 }
 
 # helper for interactive checking -----------
