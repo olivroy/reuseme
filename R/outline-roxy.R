@@ -215,7 +215,12 @@ join_roxy_fun <- function(file) {
       n = dplyr::n(),
       # error if something is length 0.
       line = seq(from = line[1], length.out = n[1], by = 1),
-      .by = id
+      .by = id,
+      content = dplyr::case_when(
+        # remove markup.
+        tag == "title" ~ stringr::str_remove_all(content, "\\}+|\\\\+[:alpha:]+\\{+"),
+        .default = content
+      )
     ) |>
     dplyr::filter(nzchar(content)) |>
     dplyr::select(-id, -n)

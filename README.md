@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.78s    1.78s     0.561      69MB     4.49
+#> 1 outline <- proj_outline()    2.01s    2.01s     0.497    69.2MB     2.48
 ```
 
 <details>
@@ -237,6 +237,7 @@ outline
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
 #> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
+#> `i` TODO long enough to be meanignful?- `Done✔?`
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
 #> `i` TODO merge with define_outline_criteria- `Done✔?`
 #> `i` it is 'R/outline.R' or 'R/outline-roxy.R'
@@ -358,7 +359,7 @@ outline
 #> 
 #> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_ref/test-roxygen.R' for output testing
-#> `i` Title
+#> `i` Title with `_things`
 #> `i` a family to include
 #> `i` An S3 method not to be include
 #> 

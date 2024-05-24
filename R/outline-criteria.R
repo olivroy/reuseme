@@ -75,7 +75,7 @@ o_is_generic_test <- function(x) {
 o_is_tab_plot_title <- function(x) {
   stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']|tab_header") &
     !grepl("[", x, fixed = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
+    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"")
 }
 
 o_is_section_title <- function(x) {
@@ -152,7 +152,8 @@ define_outline_criteria <- function(.data, print_todo) {
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
+    # TODO long enough to be meanignful?
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$") &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap
@@ -167,7 +168,7 @@ define_outline_criteria <- function(.data, print_todo) {
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
-    is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
+    is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & stringr::str_detect(content, "[:alpha:]"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title,
     # roxygen2 title block
     is_object_title = FALSE,
@@ -200,7 +201,8 @@ define_outline_criteria <- function(.data, print_todo) {
 define_outline_criteria_roxy <- function(x) {
   # TODO merge with define_outline_criteria
   x$is_md <- x$tag %in% c("subsection", "details", "description", "section")
-  x$is_object_title <- x$tag == "title"
+  # short topics are likely placeholders.
+  x$is_object_title <- x$tag == "title" & nchar(x$content) > 4
   x$line <- as.integer(x$line)
   x$file_ext <- "R"
   #x$content <- paste0("#' ", x$content) # maybe not?
@@ -212,7 +214,6 @@ define_outline_criteria_roxy <- function(x) {
   x$is_section_title <- (x$tag %in% c("section", "subsection") &  stringr::str_ends(x$content, ":")) |
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
-  x$is_saved_doc <- TRUE
   x$is_chunk_cap <- FALSE
   x$is_chunk_cap_next = FALSE
   x$is_test_name = FALSE
@@ -239,7 +240,7 @@ define_outline_criteria_roxy <- function(x) {
     .default = x$content
   )
   x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)
-  x$has_inline_markup <- FALSE # let's not mess with inline markup
+  #x$has_inline_markup <- FALSE # let's not mess with inline markup
   x
 }
 

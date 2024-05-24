@@ -3,7 +3,7 @@
 # Dump of other things to test for expect_no_error (not necessary to verify)
 # Mostly cases inspired by testing in the wild.
 
-#' Title
+#' Title with `_things`
 #'
 #' @examples
 #' # Commented code not included
@@ -23,6 +23,14 @@ f_to_be_index_in_outline <- function() {
 #' content
 #' @export
 f_not_to_index.xml <- function() {
+
+}
+
+#' A
+#'
+#' Very short title.
+#' @export
+f_not_to_index <- function() {
 
 }
 

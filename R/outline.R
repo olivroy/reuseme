@@ -312,7 +312,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
-      regexp = "testthat/_ref/|example-file",
+      regexp = "testthat/_ref/|testthat/assets|example-file|vignettes/test/",
       invert = TRUE
     )
   }
@@ -415,11 +415,23 @@ print.outline_report <- function(x, ...) {
     # add first line to title and remove
     has_title <- !is.na(summary_links_files$first_line[[i]])
     if (has_title) {
-      title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
+      title_el <- withCallingHandlers(
+        cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]])),
+        error = function(e) {
+          thing <- summary_links_files$first_line_el[[i]]
+          print(thing)
+          print(escape_markup(thing))
+          cli::cli_abort("failed to parse in first line of file {.file {summary_links_files$file[[i]]}}.", parent = e)
+        })
       base_name <- c(base_name, " ", title_el)
     }
 
-    cli::cli_h3(base_name)
+    withCallingHandlers(
+      cli::cli_h3(base_name),
+      error = function(e) {
+        print(base_name)
+        rlang::abort("Could not parse by cli")
+      })
 
     if (recent_only) {
       if (i %in% is_recently_modified) {
