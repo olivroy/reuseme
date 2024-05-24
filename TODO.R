@@ -24,5 +24,23 @@
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
 # TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
-# TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
 # TODO exclude _files from `proj_list()`
+# TODO escape_markup doesn't work with complex operation {{x^2}} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
+# TODO [outline] avoid evaluating in current env.
+# TODO wrap regexps in functions
+# TODO items should not truncate leading code when marking as complte trunc-todo-code
+# TODO [outline] remove examples from outline. Sometimes commented code is caught.
+# TODO [outline] roxygen comments processing should be left to {.fn roxygen2::parse_file}
+# TODO [outline] show key like {.fn pak::pkg_deps_tree} does.
+# TODO [outline] roxygen function title
+# TODO [outline] remove ggtext markup from plot title.
+# FIXME [outline] comments are now interpreted as section
+# TODO [outline] todos in qmd file inside html comment
+# TODO reframe more than one issue. nw drive
+# TODO [delete] generated files
+# TODO [proj_file] to accesss data (return the path in this case?)
+# TODO [check_referenced_files] doesn't check for {.file R/file.R}
+# TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
+# TODO [outline] Show function call if exported + not internal + bonus if has family tagf
+# TODO rename_files should be less noisy about project name file
+# TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)

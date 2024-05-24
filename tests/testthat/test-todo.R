@@ -46,20 +46,20 @@ test_that("Marking a TODO item as done works", {
   # tmp still has 7 lines
   expect_snapshot(error = TRUE, {
     # Can't delete the first line as it doesn't contain a TODO item
-    complete_todo(line_id = 1, file = tmp, regexp = "I Want this done")
+    complete_todo(line = 1, file = tmp, regexp = "I Want this done")
     # Try to delete TODO item at line 2 without providing the regexp for safeguard
-    complete_todo(line_id = 2, file = tmp)
+    complete_todo(line = 2, file = tmp)
   })
   # Deleting the TODO item line completely (tmp now has 4 lines)
   expect_complete_todo(
-    complete_todo(line_id = 2, file = tmp, regexp = "item to delete")
+    complete_todo(line = 2, file = tmp, regexp = "item to delete")
   )
   # Deleting the work tag (on new line 2), but keeping the comment.
   # Will throw a warning for now.
 
   expect_complete_todo(
     out <- complete_todo(
-      line_id = 4,
+      line = 4,
       file = tmp,
       regexp = "Explain what the next code does"
     ),
@@ -71,7 +71,7 @@ test_that("Marking a TODO item as done works", {
   )
   expect_complete_todo(
     out <- complete_todo(
-      line_id = 4,
+      line = 4,
       file = tmp,
       regexp = "ethisissues1890"
     ),
@@ -100,6 +100,6 @@ test_that("use_todo() global works", {
   expect_no_error(
     suppressMessages(path <- use_todo("global::it is time"))
   )
-  line_to_delete <- length(readLines(path, encoding = "UTF-8"))
-  suppressMessages(complete_todo(file = path, regexp = "it is time", line_id = line_to_delete, rm_line = TRUE))
+  line_to_delete <- length(readLines(path, encoding = "UTF-8", warn = FALSE))
+  suppressMessages(complete_todo(file = path, regexp = "it is time", line = line_to_delete, rm_line = TRUE))
 })

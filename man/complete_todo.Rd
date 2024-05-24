@@ -4,10 +4,10 @@
 \alias{complete_todo}
 \title{Remove a TODO/WORK/FIXME item from a file}
 \usage{
-complete_todo(line_id, file, regexp, rm_line = NULL)
+complete_todo(line, file, regexp, rm_line = NULL)
 }
 \arguments{
-\item{line_id}{The line number (a single integer)}
+\item{line}{The line number (a single integer)}
 
 \item{file}{Path to a file}
 

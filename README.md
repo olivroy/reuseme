@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    481ms    483ms      2.07      18MB     4.14
+#> 1 outline <- proj_outline()    559ms    559ms      1.79      18MB     3.58
 ```
 
 <details>
@@ -187,10 +187,6 @@ outline
 #> 
 #> ── `playground/roxygen2-test.R`
 #> `i` Section to extract
-#> 
-#> ── `R/browse-pkg.R`
-#> `i` {package}
-#> `i` Vignettes
 #> 
 #> ── `R/dplyr-plus.R`  dplyr extra
 #> `i` in the presence of ties.
@@ -242,9 +238,9 @@ outline
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
 #> `i` TODO structure and summarise information.- `Done✔?`
+#> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
 #> 
 #> ── `R/outdated-pkgs.R`
-#> `i` All packages are up to date.
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
 #> ── `R/outline-criteria.R`
@@ -262,6 +258,7 @@ outline
 #> `i` File outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
+#> `i` TODO reanable cli info- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
 #> ── `R/proj-list.R`
@@ -290,9 +287,6 @@ outline
 #> ── `R/utils-proj.R`  usethis adaptions utils
 #> `i` Active project / document
 #> 
-#> ── `R/utils-write.R`
-#> `i` Creating <path>
-#> 
 #> ── `R/utils.R`  OS utils
 #> 
 #> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
@@ -319,7 +313,6 @@ outline
 #> `i` A real one
 #> `i` A true one
 #> `i` 'R/my-file.R'
-#> `i` Refer to google (<https://google.com>)
 #> `i` Section title
 #> 
 #> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
@@ -374,7 +367,6 @@ outline
 #> `i` open_rs_doc() errors in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
-#> `i` o_is_cli_info() works
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline.R`
@@ -394,6 +386,7 @@ outline
 #> 
 #> ── `tests/testthat/test-use-todo.R`
 #> `i` Marking TODO as done detects tags
+#> `i` todo items are correctly stripped
 #> 
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
@@ -407,6 +400,7 @@ outline
 #> `i` TODO outline make ggtitle work- `Done✔?`
 #> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
 #> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO outline renable cli info.- `Done✔?`
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
 #> `i` TODO outline avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
@@ -420,9 +414,13 @@ outline
 #> `i` TODO reframe more than one issue. nw drive- `Done✔?`
 #> `i` TODO delete generated files- `Done✔?`
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
+#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
+#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
+#> `i` reuseme 0.0.2
 #> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
