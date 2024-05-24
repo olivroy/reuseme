@@ -15,25 +15,22 @@
       `i` Dashboard card
     Message
       
-      -- `my-analysis.R`  Analyse my streets 
-    Output
-      `i` A real one
-      `i` A true one
-      `i` TODO Create a new version- `Donev?`
-      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Roxygen section
-      `i` Section title
-      `i` Write my streets
-      `i` data wrangling
-      `i` 'R/my-file.R'
-    Message
-      
       -- `many-titles.md`  The title is the only outline element 
     Output
       `i` Another title
       `i` Last title
       `i` Second level
       `i` TODO this is an item- `Donev?`
+    Message
+      
+      -- `my-analysis.R`  Analyse my streets 
+    Output
+      `i` TODO Create a new version- `Donev?`
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+      `i` Section title
+      `i` Write my streets
+      `i` data wrangling
+      `i` 'R/my-file.R'
     Message
       
       -- `single-title.md`  The title is the only outline element 
