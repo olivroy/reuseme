@@ -162,7 +162,7 @@ file_outline <- function(pattern = NULL,
 
   check_string(pattern, arg = "You may have specified path Internal error")
 
-  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
+  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo, roxy)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
@@ -197,7 +197,7 @@ file_outline <- function(pattern = NULL,
   }
   # File outline ===================
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
-  file_sections1 <- display_outline_element(file_sections0)
+  file_sections1 <- display_outline_element(file_sections0, dir_common)
 
   # Create hyperlink in console
   file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, pattern)
@@ -490,9 +490,15 @@ keep_outline_element <- function(.data) {
 # Includes removing headings comments
 # Remove title =
 # Removing quotes, etc.
-display_outline_element <- function(.data) {
+display_outline_element <- function(.data, dir_common) {
   x <- .data
-  x$outline_el <- purrr::map_chr(x$content, link_gh_issue) # to add link to GitHub.
+  org_repo <- find_pkg_org_repo(dir_common, unique(x$file))
+  if (!is.null(org_repo)) {
+    x$outline_el <- link_local_gh_issue(x$content, org_repo)
+  } else {
+    x$outline_el <- x$content
+  }
+  x$outline_el <- purrr::map_chr(x$outline_el, \(x) link_gh_issue(x, org_repo)) # to add link to GitHub.
   x$outline_el <- purrr::map_chr(x$outline_el, markup_href)
   x <- dplyr::mutate(
     x,

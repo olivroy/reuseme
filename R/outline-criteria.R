@@ -124,7 +124,11 @@ define_outline_criteria <- function(.data, print_todo) {
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
-  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext, x$is_test_file)
+  # TODO Would have to look for notebooks that don't contain notebook in their name
+  # Like roxy comments and first line = --, 2nd title.
+  x$is_notebook <- grepl("notebook.*\\.R", x$file)
+  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext, x$is_test_file | x$is_notebook)
+  x$content[x$is_notebook] <- sub("^#' ", "", x$content[x$is_notebook])
   x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
   if (any(x$is_roxygen_comment)) {

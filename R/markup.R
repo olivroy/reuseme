@@ -60,10 +60,10 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
   rlang::local_interactive(FALSE)
   withr::local_options("usethis.quiet" = TRUE)
   if (!is.null(dir_common)) {
-    pkg_path <- withCallingHandlers(
+    pkg_path <- tryCatch(
       rprojroot::find_package_root_file(path = dir_common),
       error = function(e) {
-        cli::cli_inform("Could not detect path.")
+        # cli::cli_inform("Could not detect path.")
         NULL
       })
     if (is.null(pkg_path)) {
@@ -83,7 +83,7 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
     pkg_path <- withCallingHandlers(
       rprojroot::find_package_root_file(path = file),
       error = function(e) {
-        cli::cli_inform("Could not detect path.")
+        # cli::cli_inform("Could not detect path.")
         NULL
       }
     )
