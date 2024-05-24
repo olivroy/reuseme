@@ -100,6 +100,6 @@ test_that("use_todo() global works", {
   expect_no_error(
     suppressMessages(path <- use_todo("global::it is time"))
   )
-  line_to_delete <- length(readLines(path, encoding = "UTF-8"))
+  line_to_delete <- length(readLines(path, encoding = "UTF-8", warn = FALSE))
   suppressMessages(complete_todo(file = path, regexp = "it is time", line = line_to_delete, rm_line = TRUE))
 })
