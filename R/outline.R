@@ -461,12 +461,12 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_chunk_cap | is_doc_title)) |
+      (is_md & (is_chunk_cap | is_doc_title | is_object_title)) |
       (is_md & (is_section_title & before_and_after_empty & !is_a_comment_or_code)) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-       is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def # | is_cli_info # TODO reanable cli info
+       is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title # | is_cli_info # TODO reanable cli info
   )
 
   dat$simplify_news <- NULL

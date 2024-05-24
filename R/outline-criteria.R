@@ -189,7 +189,11 @@ define_outline_criteria <- function(.data, print_todo) {
   )
   #browser()
   res <- dplyr::bind_rows(x, outline_roxy)
-  res <- dplyr::arrange(x, .data$file, .data$line)
+  res <- dplyr::filter(
+    res,
+    content != "NULL"
+  )
+  res <- dplyr::arrange(res, .data$file, .data$line)
 }
 
 
@@ -200,8 +204,6 @@ define_outline_criteria_roxy <- function(x) {
   x$line <- as.integer(x$line)
   x$file_ext <- "R"
   #x$content <- paste0("#' ", x$content) # maybe not?
-  x$title_el <- NA_character_
-  x$title_el_line <- NA_integer_
   x$is_news <- FALSE
   x$is_roxygen_comment <- TRUE
   x$is_test_file <- FALSE
@@ -237,11 +239,8 @@ define_outline_criteria_roxy <- function(x) {
     .default = x$content
   )
   x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)
-  x$has_inline_markup = FALSE # let's not mess with inline markup
-  dplyr::filter(
-    x,
-    content != "NULL"
-  )
+  x$has_inline_markup <- FALSE # let's not mess with inline markup
+  x
 }
 
 # it is {.file R/outline.R} or {.file R/outline-roxy.R} ------
