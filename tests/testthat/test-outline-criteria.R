@@ -34,6 +34,8 @@ test_that("o_is_generic_test() works", {
 
 test_that("o_is_tab_plot_title() works", {
   expect_true(o_is_tab_plot_title("title = 'A great'"))
+  expect_false(o_is_tab_plot_title("tab_header()"))
+  expect_false(o_is_tab_plot_title("```{r tab_header}"))
 })
 
 test_that("o_is_section_title() works", {

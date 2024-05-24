@@ -9,14 +9,14 @@
 #'
 #' Afterwards, we use [markup_href()] to create a cli link
 #' @param x A string, usually lines of files that contains issue numbers.
-#'
+#' @param home_repo Optional, but if supplied, will be stripped.
 #' @return A markdown link linked issue to GitHub issue
 #' @export
 #' @keywords internal
 #' @family inline markup internal helpers
 #' @examples
 #' link_gh_issue(c("We really need rstudio/gt#1469 to be fixed."))
-link_gh_issue <- function(x) {
+link_gh_issue <- function(x, home_repo = NULL) {
   # Return early if no issue pattern is detected.
   regex_gh_issue <- common_regex("gh_issue")
 
@@ -37,11 +37,67 @@ link_gh_issue <- function(x) {
     regex_gh_issue,
     paste0("[\\1#\\2](https://github.com/\\1/issues/\\2)")
   )
+  if (!is.null(home_repo))
+  x_changed <- gsub(
+    paste0(home_repo,"#"),
+    "#",
+    x_changed
+  )
 
   x[has_gh_issue] <- x_changed
   x
 }
+# transforms (#xx) to (org/repo#xx)
+link_local_gh_issue <- function(x, repo_home) {
+  gsub(
+    # max 99999 issues.
+    pattern =  "\\((#\\d{1,5})\\)",
+    paste0("(", repo_home, "\\1)"),
+    x
+  )
+}
+find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
+  rlang::local_interactive(FALSE)
+  withr::local_options("usethis.quiet" = TRUE)
+  if (!is.null(dir_common)) {
+    pkg_path <- withCallingHandlers(
+      rprojroot::find_package_root_file(path = dir_common),
+      error = function(e) {
+        cli::cli_inform("Could not detect path.")
+        NULL
+      })
+    if (is.null(pkg_path)) {
+      return(NULL)
+    }
+    gh_url <- withCallingHandlers(
+      usethis::browse_github(basename(pkg_path)),
+      error = function(e) {
+        cli::cli_abort("didn't find a way to do what is required.")
+      }
+    )
+    org_repo_found <- stringr::str_remove(gh_url, ".+github.com/|.+gitlab.com/")
+    return(org_repo_found)
+  }
 
+  if (!is.null(file)) {
+    pkg_path <- withCallingHandlers(
+      rprojroot::find_package_root_file(path = file),
+      error = function(e) {
+        cli::cli_inform("Could not detect path.")
+        NULL
+      }
+    )
+
+    gh_url <- usethis::browse_github(basename(pkg_path))
+    org_repo_found <- stringr::str_remove(gh_url, ".+github.com/|.+gitlab.com/")
+  } else {
+    org_repo_found <- NULL
+  }
+  if (is.null(org_repo) && is.null(org_repo_found)) {
+    cli::cli_abort("No way to discover URL.")
+  }
+
+}
 #' Create a cli href with a markdown link
 #'
 #' Transforms `[text](url)` -> `{.href [text](url)}`

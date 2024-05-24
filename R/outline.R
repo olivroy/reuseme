@@ -312,7 +312,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
-      regexp = "testthat/_ref/|testthat/assets|example-file|vignettes/test/",
+      regexp = "testthat/_ref/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples",
       invert = TRUE
     )
   }
@@ -457,8 +457,9 @@ keep_outline_element <- function(.data) {
   if (any(.data$simplify_news)) {
     # only keep dev, latest and major versions of NEWS.md in outline.
     all_versions <- .data$pkg_version[!is.na(.data$pkg_version)]
-    keep <- all_versions == max(all_versions, na.rm = TRUE) |
-      endsWith(all_versions, ".0")
+    all_versions_norm <- package_version(all_versions)
+    keep <- all_versions_norm == max(all_versions_norm, na.rm = TRUE) |
+      endsWith(all_versions, "-0") | endsWith(all_versions, ".0")
     versions_to_drop <- all_versions[!keep]
   } else {
     versions_to_drop <- character(0L)
@@ -497,11 +498,11 @@ display_outline_element <- function(.data) {
     x,
     outline_el = dplyr::case_when(
       is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)"),
-      is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"]", group = 1),
+      is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"],\\s?\\{", group = 1),
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
       # family or concept!
       is_tab_or_plot_title & !is.na(tag) ~ outline_el,
-      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title = [\"']([^\"]{5,})[\"']", group = 1),
+      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "(title = )?[\"']([^\"]{5,})[\"']", group = 2),
       is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),

@@ -4,10 +4,12 @@
 \alias{link_gh_issue}
 \title{Create a markdown link to a GitHub issue}
 \usage{
-link_gh_issue(x)
+link_gh_issue(x, home_repo = NULL)
 }
 \arguments{
 \item{x}{A string, usually lines of files that contains issue numbers.}
+
+\item{home_repo}{Optional, but if supplied, will be stripped.}
 }
 \value{
 A markdown link linked issue to GitHub issue
