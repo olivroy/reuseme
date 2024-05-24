@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.56s    1.56s     0.642    66.8MB     5.78
+#> 1 outline <- proj_outline()    1.52s    1.52s     0.659    67.7MB     5.93
 ```
 
 <details>
@@ -177,22 +177,12 @@ Example outline
 ``` r
 outline
 #> 
-#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
-#> `i` Load packages
-#> `i` Wrangle + visualize data
-#> `i` A great title
-#> `i` TODO improve this Viz!- `Done✔?`
-#> 
 #> ── `LICENSE.md`  MIT License
 #> 
 #> ── `R/dplyr-plus.R`  dplyr extra
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
-#> `i` with dplyr::filter
-#> `i` dplyr extensions
-#> `i` dplyr extensions
-#> `i` family dplyr extensions
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
 #> `i` base identity functions
@@ -200,8 +190,6 @@ outline
 #> `i` dplyr identity without tweaks
 #> `i` dplyr extensions identity
 #> `i` helpers
-#> `i` Use cases / advantages
-#> `i` Caution
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file- `Done✔?`
@@ -218,8 +206,6 @@ outline
 #> `i` FIXME why is this code like this?- `Done✔?`
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
-#> `i` document manipulation helpers
-#> `i` document manipulation helpers
 #> 
 #> ── `R/outdated-pkgs.R`
 #> `i` TODO figure out pad :)- `Done✔?`
@@ -228,7 +214,8 @@ outline
 #> `i` Add variable to outline data frame
 #> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
-#> `i` it is 'R/outline.R'
+#> `i` TODO merge with define_outline_criteria- `Done✔?`
+#> `i` it is 'R/outline.R' or 'R/outline-roxy.R'
 #> 
 #> ── `R/outline-roxy.R`
 #> `i` TODO when stable delete- `Done✔?`
@@ -244,14 +231,10 @@ outline
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
-#> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> 
 #> ── `R/proj-list.R`
 #> `i` TODO maybe add a max?- `Done✔?`
 #> `i` TODO improve on this message- `Done✔?`
-#> `i` project management helpers
-#> `i` project management helpers
-#> `i` project management helpers
 #> 
 #> ── `R/rename.R`
 #> `i` After here, we start doing some renaming real situations
@@ -261,7 +244,6 @@ outline
 #> `i` Prevent renaming if something is going on
 #> `i` FIXME maybe not fail while testing- `Done✔?`
 #> `i` TODO Check that old file is more recent- `Done✔?`
-#> `i` Use case
 #> 
 #> ── `R/todo.R`
 #> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
@@ -273,11 +255,54 @@ outline
 #> 
 #> ── `R/utils.R`  OS utils
 #> 
+#> ── `TODO.R`
+#> `i` TODO screenshot make the behaviour different when vignettes vs articl…- `Done✔?`
+#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd …- `Done✔?`
+#> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
+#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
+#> `i` TODO rename if many matches, separate those with the exact path.- `Done✔?`
+#> `i` TODO outline make ggtitle work- `Done✔?`
+#> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
+#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
+#> `i` TODO outline renable cli info.- `Done✔?`
+#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
+#> `i` TODO outline avoid evaluating in current env.- `Done✔?`
+#> `i` TODO wrap regexps in functions- `Done✔?`
+#> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
+#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
+#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
+#> `i` TODO outline roxygen function title- `Done✔?`
+#> `i` TODO outline remove ggtext markup from plot title.- `Done✔?`
+#> `i` FIXME outline comments are now interpreted as section- `Done✔?`
+#> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
+#> `i` TODO reframe more than one issue. nw drive- `Done✔?`
+#> `i` TODO delete generated files- `Done✔?`
+#> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
+#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
+#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
+#> `i` TODO title of file could be function title if it is first element [proj…- `Done✔?`
+#> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
+#> 
+#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
+#> `i` Load packages
+#> `i` Wrangle + visualize data
+#> `i` A great title
+#> `i` TODO improve this Viz!- `Done✔?`
+#> 
 #> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
 #> `i` Another title
 #> `i` Second level
 #> `i` TODO this is an item- `Done✔?`
 #> `i` Last title
+#> 
+#> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
+#> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+#> `i` data wrangling
+#> `i` Write my streets
+#> `i` TODO Create a new version- `Done✔?`
+#> `i` 'R/my-file.R'
+#> `i` Section title
 #> 
 #> ── `tests/testthat/_ref/my-analysis.md`  My doc title
 #> `i` A section
@@ -288,19 +313,10 @@ outline
 #> `i` A long ggplot2 title
 #> `i` A code section
 #> 
-#> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
-#> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-#> `i` data wrangling
-#> `i` Write my streets
-#> `i` TODO Create a new version- `Done✔?`
-#> `i` 'R/my-file.R'
-#> `i` Section title
-#> 
 #> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
 #> 
 #> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_ref/test-roxygen.R' for output testing
-#> `i` a family to include
 #> 
 #> ── `tests/testthat/_ref/test-roxygen.R`
 #> `i` Use 'tests/testthat/_ref/test-roxygen-safeguard.R' for output testing
@@ -309,16 +325,6 @@ outline
 #> `i` Topic to index
 #> `i` data to index
 #> `i` TODO add data block example to index- `Done✔?`
-#> `i` First to be included
-#> `i` A second-level heading in description to be included?
-#> `i` A detail first level-heading to be included
-#> `i` A detail second-level heading to be included
-#> `i` A second-level heading in description to be included?
-#> `i` A detail first level-heading to be included
-#> `i` A detail second-level heading to be included
-#> `i` First to be included
-#> `i` a family to include
-#> `i` a family to include
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
 #> `i` wrong cases error
@@ -396,40 +402,6 @@ outline
 #> 
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
-#> 
-#> ── `TODO.R`
-#> `i` TODO screenshot make the behaviour different when vignettes vs articl…- `Done✔?`
-#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd …- `Done✔?`
-#> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
-#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
-#> `i` TODO rename if many matches, separate those with the exact path.- `Done✔?`
-#> `i` TODO outline make ggtitle work- `Done✔?`
-#> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
-#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
-#> `i` TODO outline renable cli info.- `Done✔?`
-#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
-#> `i` TODO outline avoid evaluating in current env.- `Done✔?`
-#> `i` TODO wrap regexps in functions- `Done✔?`
-#> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
-#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
-#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
-#> `i` TODO outline roxygen function title- `Done✔?`
-#> `i` TODO outline remove ggtext markup from plot title.- `Done✔?`
-#> `i` FIXME outline comments are now interpreted as section- `Done✔?`
-#> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
-#> `i` TODO reframe more than one issue. nw drive- `Done✔?`
-#> `i` TODO delete generated files- `Done✔?`
-#> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
-#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
-#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
-#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
-#> `i` TODO title of file could be function title if it is first element [proj…- `Done✔?`
-#> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
-#> 
-#> ── `R/proj-reuseme.R`
-#> `i` Setup
-#> `i` Capabilities.
-#> `i` project management helpers
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)

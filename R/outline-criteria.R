@@ -188,7 +188,8 @@ define_outline_criteria <- function(.data, print_todo) {
     .by = "file"
   )
   #browser()
-  x |> dplyr::bind_rows(outline_roxy)
+  res <- dplyr::bind_rows(x, outline_roxy)
+  res <- dplyr::arrange(x, .data$file, .data$line)
 }
 
 

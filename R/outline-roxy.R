@@ -11,7 +11,6 @@
 #' @returns A named list with name = file:line, and element is the section title
 #' @examples
 #' extract_roxygen_tag_location(tag = "title")
-
 extract_roxygen_tag_location <- function(file, tag) {
   # suppressMessages(aa <- roxygen2::parse_file(file))
   # browser()
@@ -54,53 +53,53 @@ extract_roxygen_tag_location <- function(file, tag) {
   # browser()
   val <- withCallingHandlers(
     purrr::map2(pos, objects, \(x, obj_name) {
-    el <- x$val
-    el_has_names <- !is.null(names(el))
+      el <- x$val
+      el_has_names <- !is.null(names(el))
 
-    if (length(el) == 1 && !el_has_names) {
-      el <- paste0(
-        el, "____", obj_name
+      if (length(el) == 1 && !el_has_names) {
+        el <- paste0(
+          el, "____", obj_name
+        )
+        names(el) <- x$line
+        return(el)
+      }
+      if (tag %in% c("description", "details") && !el_has_names) {
+        # TODO when stable delete
+        # print(x$val)
+        # print(el_has_names)
+        # cli::cli_inform("return early (no headings)")
+        return(NULL)
+      }
+      # use raw instead
+      lines <- stringr::str_split_1(x$raw, "\n")
+      # browser()
+      keep <- which(o_is_section_title(lines))
+
+      if (length(keep) == 0L) {
+        # TODO Delete when stable debugging
+        # cli::cli_inform(" No section title detected")
+        return(NULL)
+      }
+      # line position.
+      line_pos <- x$line + seq_along(lines) - 1L
+      final_lines_to_include <- lines[keep]
+      # Will not make this transformation and will consider roxygen comments to be
+      # final_lines_to_include <- stringr::str_remove(final_lines_to_include, "^#+\\s")
+
+      final_lines_to_include <- paste0(final_lines_to_include, "____", obj_name)
+      names(final_lines_to_include) <- line_pos[keep]
+      # TODO Delete when stable for debugging
+      # if (length(final_lines_to_include) != 1) {
+      #   cli::cli_warn("el resulted to {.val {final_lines_to_include}}", "using first element for now")
+      # }
+      final_lines_to_include
+    }),
+    error = function(e) {
+      cli::cli_abort(
+        "For tag = {tag}, obj_name = {objects}, wrong size, should be {length(pos)}"
       )
-      names(el) <- x$line
-      return(el)
     }
-    if (tag %in% c("description", "details") && !el_has_names) {
-      # TODO when stable delete
-      # print(x$val)
-      # print(el_has_names)
-      # cli::cli_inform("return early (no headings)")
-      return(NULL)
-    }
-    # use raw instead
-    lines <- stringr::str_split_1(x$raw, "\n")
-    # browser()
-    keep <- which(o_is_section_title(lines))
-
-    if (length(keep) == 0L) {
-      # TODO Delete when stable debugging
-      # cli::cli_inform(" No section title detected")
-      return(NULL)
-    }
-    # line position.
-    line_pos <- x$line + seq_along(lines) - 1L
-    final_lines_to_include <- lines[keep]
-    # Will not make this transformation and will consider roxygen comments to be
-    # final_lines_to_include <- stringr::str_remove(final_lines_to_include, "^#+\\s")
-
-    final_lines_to_include <- paste0(final_lines_to_include, "____", obj_name)
-    names(final_lines_to_include) <- line_pos[keep]
-    # TODO Delete when stable for debugging
-    # if (length(final_lines_to_include) != 1) {
-    #   cli::cli_warn("el resulted to {.val {final_lines_to_include}}", "using first element for now")
-    # }
-    final_lines_to_include
-  }),
-  error = function(e) {
-    cli::cli_abort(
-      "For tag = {tag}, obj_name = {objects}, wrong size, should be {length(pos)}"
-    )
-
-  })
+  )
 
   # rlang::set_names(val, nam)
   # merge line number and file name
@@ -146,7 +145,7 @@ join_roxy_fun <- function(file) {
     return(character(0L))
   }
   if (is.null(names(parsed_files))) {
-     # browser()
+    # browser()
     parsed_files <- parsed_files |> purrr::set_names(purrr::map_chr(parsed_files, \(x) x$file))
     # cli::cli_abort("parsed files must be named at this point.")
   }
@@ -169,8 +168,8 @@ join_roxy_fun <- function(file) {
     desc_list,
     details_list,
     family_list,
-    concept_list#,
-    #.name_spec = "{outer}:::::{inner}",
+    concept_list # ,
+    # .name_spec = "{outer}:::::{inner}",
   ) |>
     vctrs::list_unchop(
       name_spec = "{outer}.....{inner}"
@@ -188,9 +187,9 @@ join_roxy_fun <- function(file) {
       delim = "____",
       names = c("content", "topic"),
     )
-  if (!all(grepl("\\.{5}", roxy_parsed$file_line, fixed = F))) {
-    problems <- which(!grepl("\\.{5}", roxy_parsed$file_line, fixed = F))
-    #rowser()
+  if (!all(grepl("\\.{5}", roxy_parsed$file_line, fixed = FALSE))) {
+    problems <- which(!grepl("\\.{5}", roxy_parsed$file_line, fixed = FALSE))
+    # rowser()
     # roxy_parsed
     cli::cli_abort("Malformed file line at {problems}.")
   }
@@ -200,19 +199,26 @@ join_roxy_fun <- function(file) {
       delim = ".....",
       names = c("file", "line")
     )
-  roxy_parsed |>
-    dplyr::mutate(
-      #file = fs::path_real(file) |> as.character(),
-      #file_line = paste0(file, ":", line)
-    ) |>
+
+  if (nrow(roxy_parsed) == 0) {
+    return(roxy_parsed)
+  }
+  roxy_parsed1 <- roxy_parsed |>
     dplyr::relocate(
       file, topic, content, line, tag
-    ) |> dplyr::mutate(id = dplyr::row_number()) |>
-    tidyr::separate_longer_delim(content, delim = "\n") |>
-    dplyr::mutate(n = dplyr::n() ,
-                  line = seq(from = line[1], length.out = n[1], by = 1),
-                  .by = id) |>
-    dplyr::filter(nzchar(content)) |> dplyr::select(-id, -n)
+    ) |>
+    dplyr::mutate(id = dplyr::row_number()) |>
+    tidyr::separate_longer_delim(content, delim = "\n")
+
+  roxy_parsed1 |>
+    dplyr::mutate(
+      n = dplyr::n(),
+      # error if something is length 0.
+      line = seq(from = line[1], length.out = n[1], by = 1),
+      .by = id
+    ) |>
+    dplyr::filter(nzchar(content)) |>
+    dplyr::select(-id, -n)
 }
 
 # helper for interactive checking -----------
