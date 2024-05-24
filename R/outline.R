@@ -162,7 +162,7 @@ file_outline <- function(pattern = NULL,
 
   check_string(pattern, arg = "You may have specified path Internal error")
 
-  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo, roxy)
+  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
