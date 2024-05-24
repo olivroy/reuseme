@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.52s    1.52s     0.659    67.7MB     5.93
+#> 1 outline <- proj_outline()    1.78s    1.78s     0.561      69MB     4.49
 ```
 
 <details>
@@ -179,12 +179,30 @@ outline
 #> 
 #> ── `LICENSE.md`  MIT License
 #> 
+#> ── `R/browse-pkg.R`  Browse pkgdown site if it exists
+#> 
+#> ── `R/case-if-any.R`  case-when, but checks for all matches, returns a character
+#> 
 #> ── `R/dplyr-plus.R`  dplyr extra
+#> `i` Count observations by group and compute percentage
+#> `i` dplyr extensions
+#> `i` Subset rows using their positions
+#> `i` dplyr extensions
+#> `i` Explore all rows in a random group
+#> `i` family dplyr extensions
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
+#> `i` Keep rows that match one of the conditions
+#> `i` with dplyr::filter
+#> `i` Elegant wrapper around filter and pull
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
+#> `i` Compute a summary for one group with the total included.
+#> `i` Transform to NA any of the condition
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
+#> `i` Helpers that return the same value
+#> `i` Use cases / advantages
+#> `i` Caution
 #> `i` base identity functions
 #> `i` dplyr identity functions with small tweaks
 #> `i` dplyr identity without tweaks
@@ -202,12 +220,18 @@ outline
 #> `i` Scalars
 #> `i` Vectors
 #> 
-#> ── `R/open.R`
+#> ── `R/named.R`  Helpers that can return a named vector
+#> 
+#> ── `R/open.R`  Open a Document in RStudio
 #> `i` FIXME why is this code like this?- `Done✔?`
+#> `i` Copy the active document to the same location
+#> `i` document manipulation helpers
+#> `i` Delete the active RStudio document safely
+#> `i` document manipulation helpers
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
 #> 
-#> ── `R/outdated-pkgs.R`
+#> ── `R/outdated-pkgs.R`  Looks for outdated packages
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
 #> ── `R/outline-criteria.R`
@@ -225,6 +249,8 @@ outline
 #> `i` helper for interactive checking
 #> 
 #> ── `R/outline.R`  `proj_outline()`
+#> `i` Print interactive outline of file sections
+#> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
@@ -232,11 +258,24 @@ outline
 #> `i` TODO reanable cli info- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
-#> ── `R/proj-list.R`
+#> ── `R/proj-list.R`  Opens a RStudio project in a new session
+#> `i` project management helpers
 #> `i` TODO maybe add a max?- `Done✔?`
+#> `i` Access the file outline within other project
+#> `i` project management helpers
 #> `i` TODO improve on this message- `Done✔?`
+#> `i` Returns a named project list options
+#> `i` project management helpers
 #> 
-#> ── `R/rename.R`
+#> ── `R/proj-reuseme.R`  Interact with different RStudio projects
+#> `i` Setup
+#> `i` Capabilities.
+#> `i` project management helpers
+#> 
+#> ── `R/quarto-help.R`  Show links to Quarto documentation of interest
+#> 
+#> ── `R/rename.R`  Rename an output or a data file and watch for references
+#> `i` Use case
 #> `i` After here, we start doing some renaming real situations
 #> `i` Helpers
 #> `i` helpers for computing scope of renaming
@@ -245,7 +284,9 @@ outline
 #> `i` FIXME maybe not fail while testing- `Done✔?`
 #> `i` TODO Check that old file is more recent- `Done✔?`
 #> 
-#> ── `R/todo.R`
+#> ── `R/screenshot.R`  Save the current image in clipboard to png in your active directory
+#> 
+#> ── `R/todo.R`  Add a TODO list by project to a TODO.R file in the base directory
 #> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
 #> `i` TODO nice to have, but would need to extract duplicates- `Done✔?`
 #> `i` Helpers
@@ -317,12 +358,27 @@ outline
 #> 
 #> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_ref/test-roxygen.R' for output testing
+#> `i` Title
+#> `i` a family to include
+#> `i` An S3 method not to be include
 #> 
 #> ── `tests/testthat/_ref/test-roxygen.R`
 #> `i` Use 'tests/testthat/_ref/test-roxygen-safeguard.R' for output testing
 #> `i` Complete block for exported function with headings
+#> `i` A title to be included
+#> `i` A second-level heading in description to be included?
+#> `i` A detail first level-heading to be included
+#> `i` A detail second-level heading to be included
+#> `i` First to be included
+#> `i` a family to include
 #> `i` block not to index
 #> `i` Topic to index
+#> `i` A title to be included
+#> `i` A second-level heading in description to be included?
+#> `i` A detail first level-heading to be included
+#> `i` A detail second-level heading to be included
+#> `i` First to be included
+#> `i` a family to include
 #> `i` data to index
 #> `i` TODO add data block example to index- `Done✔?`
 #> 
