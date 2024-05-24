@@ -132,8 +132,15 @@ extract_roxygen_tag_location <- function(file, tag) {
 }
 
 join_roxy_fun <- function(file) {
-  # don't parse noRd tags
-  parsed_files <- purrr::discard(file, \(x) roxygen2::block_has_tags(x, "noRd"))
+  # Assuming that only @keywords internal is used, when keywords is specified.
+  # Will probably have to handle other cases, but this is not recommended.
+  # https://roxygen2.r-lib.org/reference/tags-index-crossref.html
+  parsed_files <- purrr::map(
+    file,
+    # discard if noRd or has keywords.
+    \(x) purrr::discard(x, \(y) roxygen2::block_has_tags(y, c("keywords", "noRd")))
+  )
+  # TODO exclude S3 methods
   # Return early if no roxy tags
   if (length(parsed_files) == 0) {
     return(character(0L))

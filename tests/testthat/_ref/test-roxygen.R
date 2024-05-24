@@ -37,9 +37,9 @@ f_to_be_index_in_outline <- function() {
 # block not to index -----------------------------------------------------------
 #' A title not to be included (internal function)
 #'
-#' A description not to include
+#' An internal description not to include
 #'
-#' # heading not to be included
+#' # Internal heading not to be included
 #'
 #' content
 #' @keywords internal
