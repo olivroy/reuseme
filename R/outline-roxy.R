@@ -96,7 +96,7 @@ extract_roxygen_tag_location <- function(file, tag) {
     }),
     error = function(e) {
       cli::cli_abort(
-        "For tag = {tag}, obj_name = {objects}, wrong size, should be {length(pos)}"
+        "For tag = {tag}, obj_name = {objects}, wrong size, should be {length(pos)}, not {length(objects)}."
       )
     }
   )

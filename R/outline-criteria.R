@@ -18,11 +18,11 @@ extract_pkg_version <- function(x, is_news, is_heading) {
 #' * is_tab_plot_title
 #'
 #' @noRd
-o_is_roxygen_comment <- function(x, file_ext = NULL) {
+o_is_roxygen_comment <- function(x, file_ext = NULL, is_test_file = FALSE) {
   if (!is.null(file_ext)) {
-    is_r_file <- tolower(file_ext) == "r"
+    is_r_file <- tolower(file_ext) == "r" & !is_test_file
   } else {
-    is_r_file <- TRUE
+    is_r_file <- !is_test_file
   }
 
   if (!any(is_r_file)) {
@@ -121,9 +121,9 @@ define_outline_criteria <- function(.data, print_todo) {
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
-  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
-  x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
+  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext, x$is_test_file)
+  x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
   if (any(x$is_roxygen_comment)) {
     rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
