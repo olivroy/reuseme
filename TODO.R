@@ -24,3 +24,5 @@
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
 # TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
+# TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+# TODO exclude _files from `proj_list()`
