@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).
