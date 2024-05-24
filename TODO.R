@@ -24,3 +24,4 @@
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
 # TODO [outline] Show function call if exported + not internal + bonus if has family tagf
+# TODO rename_files should be less noisy about project name file

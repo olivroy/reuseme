@@ -87,7 +87,7 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   }
   warn_change_of_line <- FALSE
 
-  file_content <- readLines(file, encoding = "UTF-8")
+  file_content <- readLines(file, encoding = "UTF-8", warn = FALSE)
   line_content <- file_content[line]
 
   # Special case for issues (probably need to opt out at some point)

@@ -75,6 +75,7 @@ rename_files2 <- function(old,
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
+  proj_name <- proj_get2()
   if (interactive() && !is_git && !identical(Sys.getenv("TESTTHAT"), "true")) {
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
@@ -91,6 +92,8 @@ rename_files2 <- function(old,
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
   related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
+  # remove project name from conflicts.
+  related_files <- stringr::str_subset(related_files, proj_name, negate = TRUE)
   if (length(related_files) > 0) {
     # maybe would need to normalize path.
     cli::cli_warn(c(
@@ -359,7 +362,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
       ))
       return(FALSE)
     }
-    # r-lib/cli#683
+    # Delete when fixed r-lib/cli#683
     old_chr <- as.character(old)
     new_chr <- as.character(new)
 
