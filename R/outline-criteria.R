@@ -15,7 +15,7 @@ extract_pkg_version <- function(x, is_news, is_heading) {
 #' * is test title
 #' * is a todo item
 #' * is_roxygen_line
-#' * is_tab_title
+#' * is_tab_plot_title
 #'
 #' @noRd
 o_is_roxygen_comment <- function(x, file_ext = NULL) {
@@ -72,7 +72,7 @@ o_is_generic_test <- function(x) {
 }
 
 # Returns table or plot titles.
-o_is_object_title <- function(x) {
+o_is_tab_plot_title <- function(x) {
   stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']|tab_header") &
     !grepl("[", x, fixed = TRUE) &
     !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
@@ -167,7 +167,7 @@ define_outline_criteria <- function(.data, print_todo) {
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
-    is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
+    is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),

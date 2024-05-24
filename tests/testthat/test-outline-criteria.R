@@ -32,8 +32,8 @@ test_that("o_is_generic_test() works", {
   expect_true(o_is_generic_test('test_that("Serious things work properly"'))
 })
 
-test_that("o_is_object_title() works", {
-  expect_true(o_is_object_title("title = 'A great'"))
+test_that("o_is_tab_plot_title() works", {
+  expect_true(o_is_tab_plot_title("title = 'A great'"))
 })
 
 test_that("o_is_section_title() works", {
