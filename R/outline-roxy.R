@@ -232,6 +232,6 @@ join_roxy_fun <- function(file) {
 
 active_doc_parse <- function(doc = active_rs_doc()) {
   doc <- purrr::set_names(doc)
-  parsed <- purrr::map(doc, roxygen2::parse_file)
-  parsed |> join_roxy_fun()
+  parsed <- purrr::map(doc, \(x) roxygen2::parse_file(x, env = NULL))
+  parsed |> join_roxy_fun() |> define_outline_criteria_roxy()
 }

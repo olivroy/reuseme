@@ -137,7 +137,7 @@ define_outline_criteria <- function(.data, print_todo) {
     files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
     parsed_files <- suppressMessages( # roxygen2 messages
       # TRICK purrr::safely creates an error object, while possible is better.
-      purrr::map(files_with_roxy_comments, purrr::possibly(roxygen2::parse_file))
+      purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL)))
     )
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
