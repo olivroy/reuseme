@@ -218,7 +218,7 @@ join_roxy_fun <- function(file) {
       .by = id,
       content = dplyr::case_when(
         # remove markup.
-        tag == "title" ~ stringr::str_remove_all(content, "\\}+|\\\\+[:alpha:]+\\{+"),
+        tag == "title" ~ stringr::str_remove_all(content, "\\}+|\\\\+[:alpha:]+\\{+|\\{$"),
         .default = content
       )
     ) |>

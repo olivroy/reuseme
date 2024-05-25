@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    2.01s    2.01s     0.497    69.2MB     2.48
+#> 1 outline <- proj_outline()    1.55s    1.55s     0.647    68.6MB     5.17
 ```
 
 <details>
@@ -236,6 +236,7 @@ outline
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
+#> `i` TODO Would have to look for notebooks that don't contain notebook in th…- `Done✔?`
 #> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
 #> `i` TODO long enough to be meanignful?- `Done✔?`
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
@@ -322,9 +323,12 @@ outline
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
 #> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
+#> `i` TODO browse_pkg should open by default if no vignettes are found, becau…- `Done✔?`
+#> `i` TODO exclude _files from `proj_list()`- `Done✔?`
 #> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
 #> `i` TODO title of file could be function title if it is first element [proj…- `Done✔?`
 #> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
+#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`
 #> 
 #> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
 #> `i` Load packages
@@ -359,27 +363,29 @@ outline
 #> 
 #> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_ref/test-roxygen.R' for output testing
-#> `i` Title with `_things`
-#> `i` a family to include
-#> `i` An S3 method not to be include
+#> `i` Commented code not included
+#> `i` A title not to be included
 #> 
 #> ── `tests/testthat/_ref/test-roxygen.R`
 #> `i` Use 'tests/testthat/_ref/test-roxygen-safeguard.R' for output testing
 #> `i` Complete block for exported function with headings
-#> `i` A title to be included
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
-#> `i` First to be included
-#> `i` a family to include
+#> `i` Commented code not included
+#> `i` A title not to be included
 #> `i` block not to index
+#> `i` Internal heading not to be included
 #> `i` Topic to index
-#> `i` A title to be included
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
 #> `i` First to be included
-#> `i` a family to include
+#> `i` Commented code not included
+#> `i` A title not to be included
+#> `i` second-level heading in desc
+#> `i` Details + 2nd level heading
+#> `i` second heading
 #> `i` data to index
 #> `i` TODO add data block example to index- `Done✔?`
 #> 
@@ -408,7 +414,7 @@ outline
 #> ── `tests/testthat/test-case-if-any.R`
 #> `i` case_if_any() basic work
 #> `i` wrong cases error
-#> `i` case_if_any() can use a newly created variable (#8)
+#> `i` case_if_any() can use a newly created variable (#8 (<https://github.com/olivroy/reuseme/issues/8>))
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
 #> `i` filter_if_any() errors correctly when using `by` instead of `.by`
