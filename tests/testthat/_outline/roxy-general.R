@@ -94,9 +94,14 @@ NULL
 #'
 #' Content
 #'
+NULL
 # data to index ----------------------------------------------------------------
 
-# TODO add data block example to index
 # I think I'd want the outline to show as "outline": title (but Ctrl + . does a good job for this) (maybe document this)
+
+#' My data
+#'
+#' Another dataset
+"dataset"
 
 # Keep this line last: content to test for edge cases should be put in {.file tests/testthat/_outline/roxy-general2.R}

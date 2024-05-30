@@ -23,7 +23,19 @@ extract_roxygen_tag_location <- function(file, tag) {
   aa <- aa[lengths(pos) > 0L]
   objects <- purrr::map(
     aa,
-    \(x) x$object$topic
+    \(x) {
+      if (!is.null(x$object$topic)) {
+        return(x$object$topic)
+      }
+      object_call <- as.character(x$call)
+      if (length(object_call) == 1) {
+        return(object_call)
+      }
+      if (length(object_call) > 1) {
+        return(object_call[2])
+      }
+      NULL
+    }
   )
   if (any(lengths(objects) == 0)) {
     name_tag <- purrr::map(

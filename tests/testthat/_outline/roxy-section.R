@@ -21,4 +21,3 @@ NULL
 #' # A detail first level-heading to be included
 #' @name yyy
 NULL
-
