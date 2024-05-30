@@ -31,7 +31,7 @@ dir_outline(
   pattern = NULL,
   path = ".",
   work_only = TRUE,
-  exclude_tests = TRUE,
+  exclude_tests = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE,
