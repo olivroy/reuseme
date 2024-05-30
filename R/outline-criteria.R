@@ -133,14 +133,18 @@ define_outline_criteria <- function(.data, print_todo) {
   x$content[x$is_notebook] <- sub("^#' ", "", x$content[x$is_notebook])
   x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
-  if (any(x$is_roxygen_comment)) {
+
+  should_parse_roxy_comments <-
+    !isFALSE(getOption("reuseme.roxy_parse", default = TRUE)) && # will not parse if option is set to FALSE
+    any(x$is_roxygen_comment)
+  if (should_parse_roxy_comments) {
     rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
     files_with_roxy_comments <- unique(x[x$is_roxygen_comment, "file", drop = TRUE])
     files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
-    parsed_files <- suppressMessages( # roxygen2 messages
+      # roxygen2 messages
       # TRICK purrr::safely creates an error object, while possible is better.
-      purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL)))
-    )
+       invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL)))
+    )) |> suppressMessages()
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
     # browser()

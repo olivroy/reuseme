@@ -48,6 +48,10 @@ proj_switch <- function(proj = NULL, new_session = TRUE) {
 #' @family project management helpers
 proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   rlang::check_required(file)
+  # avoid indexing roxy comments.
+  withr::local_options(
+    "reuseme.roxy_parse" = FALSE
+  )
   # search will only be conducted with pattern
   if (is.null(pattern) && is.null(file)) {
     cli::cli_abort(
