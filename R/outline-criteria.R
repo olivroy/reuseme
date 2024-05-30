@@ -80,13 +80,15 @@ o_is_tab_plot_title <- function(x) {
     !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{")
 }
 
-o_is_section_title <- function(x) {
-  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+o_is_section_title <- function(x, roxy_section = FALSE) {
+  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") | roxy_section # remove commented  add roxygen
   if (!any(is_section_title)) {
     return(is_section_title)
   }
-
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation"
+  if (roxy_section) {
+    x <- stringr::str_remove(x, ":$")
+  }
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$"
   # potential section titles
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
@@ -217,7 +219,7 @@ define_outline_criteria_roxy <- function(x) {
   x$is_test_file <- FALSE
   x$is_snap_file <- FALSE
   x$before_and_after_empty <- TRUE
-  x$is_section_title <- (x$tag %in% c("section", "subsection") &  stringr::str_ends(x$content, ":")) |
+  x$is_section_title <- (x$tag %in% c("section", "subsection") & stringr::str_ends(x$content, ":") & o_is_section_title(x$content, roxy_section = TRUE)) |
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
   x$is_chunk_cap <- FALSE
