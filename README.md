@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.55s    1.55s     0.647    68.6MB     5.17
+#> 1 outline <- proj_outline()    1.57s    1.57s     0.636    68.8MB     4.45
 ```
 
 <details>
@@ -230,6 +230,7 @@ outline
 #> `i` document manipulation helpers
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
+#> `i` Navigate to Files Pane
 #> 
 #> ── `R/outdated-pkgs.R`  Looks for outdated packages
 #> `i` TODO figure out pad :)- `Done✔?`
@@ -359,6 +360,10 @@ outline
 #> `i` A long ggplot2 title
 #> `i` A code section
 #> 
+#> ── `tests/testthat/_ref/roxy-section.R`  multiple tags + name parsing issue
+#> `i` A detail first level-heading to be included
+#> `i` A detail first level-heading to be included
+#> 
 #> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
 #> 
 #> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
@@ -443,6 +448,7 @@ outline
 #> 
 #> ── `tests/testthat/test-outline-roxy.R`
 #> `i` roxy tags don't error
+#> `i` multiple roxy tags don't error.
 #> 
 #> ── `tests/testthat/test-outline.R`
 #> `i` alpha and work_only arguments work

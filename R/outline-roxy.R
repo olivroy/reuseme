@@ -21,7 +21,6 @@ extract_roxygen_tag_location <- function(file, tag) {
     return(character(0L))
   }
   aa <- aa[lengths(pos) > 0L]
-  pos <- purrr::list_flatten(pos)
   objects <- purrr::map(
     aa,
     \(x) x$object$topic
@@ -46,11 +45,30 @@ extract_roxygen_tag_location <- function(file, tag) {
     }
   }
 
+  # double object name
+  for (i in seq_along(pos)) {
+    l <- length(pos[[i]])
+    if (l > 1) {
+      # to repeat object name to be same length as `pos`
+      objects[[i]] <- as.list(rep(objects[[i]][1], length.out = l))
+    }
+  }
+  # Unnest to make it easier.
+  pos <- purrr::list_flatten(pos)
+  objects <- purrr::list_flatten(objects)
+  if (length(objects) != length(pos)) {
+    print(objects)
+    print(pos)
+    cli::cli_abort(c(
+      "Could not resolve pos and objects to be the same length.",
+      "pos = {length(pos)}, objects = {length(objects)}."
+      ),
+      .internal = TRUE
+    )
+  }
 
-  # browser()
   pos <- purrr::set_names(pos, pos$file)
 
-  # browser()
   val <- withCallingHandlers(
     purrr::map2(pos, objects, \(x, obj_name) {
       el <- x$val

@@ -22,12 +22,9 @@ test_that("roxy tags don't error", {
 
 })
 
-
 test_that("multiple roxy tags don't error.", {
-  skip("not yet working.")
   file_to_map <- testthat::test_path("_ref", "roxy-section.R")
   names(file_to_map) <- file_to_map
   example_parsed <- purrr::map(file_to_map,  roxygen2::parse_file)
   expect_no_error(join_roxy_fun(example_parsed))
-
 })
