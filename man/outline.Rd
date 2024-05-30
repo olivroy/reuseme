@@ -86,7 +86,7 @@ Outline elements include
 \item \code{TODO} items
 \item Parse cli hyperlinks
 \item Plot or table titles
-\item FIgures caption in Quarto documents (limited support for multiline caption currently)
+\item FIgures caption in Quarto documents
 \item test names
 \item Indicator of recent modification
 \item Colored output for
@@ -106,8 +106,7 @@ By default
 \details{
 \code{proj_outline()} and \code{dir_outline()} are wrapper of \code{file_outline()}.
 
-The parser is very opinioneted and is not very robust as it is based on regexps.
-For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
+The parser is very opinionated and based on lightparser, roxygen2 and regexps.
 
 Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
 }

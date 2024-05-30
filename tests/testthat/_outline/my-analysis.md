@@ -6,9 +6,6 @@ title: My doc title
 
 ```{r}
 #| title: Dashboard card
-
-# A code section ----
-
 ```
 
 ## A subsection
@@ -25,3 +22,10 @@ Some text with TODO.
 # A code section ----
 
 ```
+
+```{r}
+#| fig-cap: > 
+#|   A long ggplot2 title
+#|   with more details
+```
+

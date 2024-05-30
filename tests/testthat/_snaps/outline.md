@@ -4,25 +4,14 @@
       file_outline(path = my_test_files, alpha = TRUE)
     Message
       
-      -- `my-analysis.R`  Analyse my streets 
-    Output
-      `i` **A table title**
-      `i` TODO Create a new version- `Donev?`
-      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Section title
-      `i` Write my streets
-      `i` data wrangling
-      `i` 'R/my-file.R'
-    Message
-      
       -- `my-analysis.md`  My doc title 
     Output
       `i` A section
-      `i` A code section
       `i` A subsection
       `i` A section2
       `i` A long ggplot2 title
       `i` A code section
+      `i` A long ggplot2 title with more details
       `i` Dashboard card
     Message
       
@@ -32,6 +21,16 @@
       `i` Last title
       `i` Second level
       `i` TODO this is an item- `Donev?`
+    Message
+      
+      -- `my-analysis.R`  Analyse my streets 
+    Output
+      `i` TODO Create a new version- `Donev?`
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+      `i` Section title
+      `i` Write my streets
+      `i` data wrangling
+      `i` 'R/my-file.R'
     Message
       
       -- `title.md`  The title is the only outline element 
@@ -85,4 +84,19 @@
     Message
       
       -- `outline-script.R`  Example for `file_outline()` 
+
+# file_outline() works well with figure captions
+
+    Code
+      file_outline(path = test_path("_outline", "quarto-caps.md"))
+    Message
+      
+      -- `quarto-caps.md`  title 
+    Output
+      `i` A long ggplot2 title with more details
+      `i` Heading
+      `i` A long ggplot2 title with more details
+      `i` Heading2
+      `i` Dashboard link
+      `i` Dashboard link
 

@@ -13,7 +13,7 @@
 #' * `TODO` items
 #' * Parse cli hyperlinks
 #' * Plot or table titles
-#' * FIgures caption in Quarto documents (limited support for multiline caption currently)
+#' * FIgures caption in Quarto documents
 #' * test names
 #' * Indicator of recent modification
 #' * Colored output for
@@ -31,8 +31,7 @@
 #' @details
 #' `proj_outline()` and `dir_outline()` are wrapper of `file_outline()`.
 #'
-#' The parser is very opinioneted and is not very robust as it is based on regexps.
-#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/) for Quarto,  `{roxygen2}`
+#' The parser is very opinionated and based on lightparser, roxygen2 and regexps.
 #'
 #' Will show TODO items and will offer a link to [mark them as
 #' complete][complete_todo()].
@@ -511,6 +510,9 @@ display_outline_element <- function(.data, dir_common) {
   }
   x$outline_el <- purrr::map_chr(x$outline_el, \(x) link_gh_issue(x, org_repo)) # to add link to GitHub.
   x$outline_el <- purrr::map_chr(x$outline_el, markup_href)
+  if (any(x$is_chunk_cap)) {
+    x$outline_el[x$is_chunk_cap] <- get_chunk_cap(x$file[x$is_chunk_cap])
+  }
   x <- dplyr::mutate(
     x,
     outline_el = dplyr::case_when(
@@ -520,8 +522,6 @@ display_outline_element <- function(.data, dir_common) {
       # family or concept!
       is_tab_or_plot_title & !is.na(tag) ~ outline_el,
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1),
-      is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
-      is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
@@ -564,6 +564,7 @@ display_outline_element <- function(.data, dir_common) {
     }
     cli::cli_abort(c(
       "Internal error, outline elements can't be NA. Please review.", msg,
+      paste0("{.file ",zz$file, ":",zz$line, "}"),
       "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
                      `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."
     ))
@@ -623,6 +624,26 @@ display_outline_element <- function(.data, dir_common) {
     )
   }
   y
+}
+
+get_chunk_cap <- function(file) {
+  rlang::check_installed("lightparser", "to parse qmd files add chunk caption to outline.")
+  # we want fig-cap, tbl-cap and title
+  caps <- NULL
+  unique_file <- unique(file)
+  # ThinkR-open/lightparser#8
+  for (i in seq_along(unique_file)) {
+    # FIXME find a way to be as consistent as lightparser, but faster.
+    dat <- (lightparser::split_to_tbl(unique_file[i]) |> dplyr::filter(type == "block"))$params
+    # tidyverse/purrr#1081
+      caps <- c(caps, dat |> purrr::map_chr( \(x) x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))
+  }
+  caps <- caps[caps != "USELESS THING"]
+  if (length(caps) != length(file)) {
+    cli::cli_abort("error! :(, caps = {length(caps)}, file = {length(file)} in file {.file {unique_file}}")
+  }
+  #  used to make sure purrr doesn't complain
+  caps |> stringr::str_replace_all("\n", " ")
 }
 
 define_important_element <- function(.data) {
@@ -730,7 +751,16 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     rs_version = NULL,
     outline_el2 = NULL,
     condition_to_truncate = NULL,
-    condition_to_truncate2 = NULL
+    condition_to_truncate2 = NULL,
+    style_fun = NULL,
+    is_saved_doc = NULL,
+    # I may put it back...
+    importance = NULL,
+    # may be useful for debugging.
+    before_and_after_empty = NULL,
+    # may be useful for debugging
+    has_inline_markup = NULL,
+    n_leading_hash = NULL
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }

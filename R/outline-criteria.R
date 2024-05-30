@@ -77,7 +77,7 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
-  stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']|tab_header") &
+  stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']") &
     !grepl("[", x, fixed = TRUE) &
     !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"") &
     !stringr::str_ends(x, "\\(") &
@@ -173,16 +173,7 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     # TODO long enough to be meanignful?
     is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$") &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
-    is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
-    # deal with chunk cap
-    # FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe {.pkg lightparser}.
-    is_chunk_cap_next = is_chunk_cap & stringr::str_detect(content, "\\s*[\\>\\|]$"),
-    is_chunk_cap = dplyr::case_when(
-      is_chunk_cap & is_chunk_cap_next ~ FALSE,
-      dplyr::lag(is_chunk_cap_next, default = FALSE) ~ TRUE,
-      .default = is_chunk_cap
-    ),
-    is_chunk_cap_next = is_chunk_cap,
+    is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):|```\\{r.*cap\\s?\\="),
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
@@ -194,7 +185,7 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     topic = NA_character_,
     is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
-    n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
+    n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
@@ -233,7 +224,6 @@ define_outline_criteria_roxy <- function(x) {
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
   x$is_chunk_cap <- FALSE
-  x$is_chunk_cap_next <- FALSE
   x$is_test_name <- FALSE
   x$pkg_version <- NA_character_
   # a family or concept can be seen as a plot subtitle?

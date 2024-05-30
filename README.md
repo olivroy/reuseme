@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.45s    1.45s     0.688    71.1MB     4.82
+#> 1 outline <- proj_outline()    8.76s    8.76s     0.114    76.1MB     1.03
 ```
 
 <details>
@@ -176,8 +176,6 @@ Example outline
 
 ``` r
 outline
-#> 
-#> ── `LICENSE.md`  MIT License
 #> 
 #> ── `R/browse-pkg.R`  Browse pkgdown site if it exists
 #> 
@@ -240,7 +238,6 @@ outline
 #> `i` TODO Would have to look for notebooks that don't contain notebook in th…- `Done✔?`
 #> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
 #> `i` TODO long enough to be meanignful?- `Done✔?`
-#> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.- `Done✔?`
 #> `i` TODO merge with define_outline_criteria- `Done✔?`
 #> `i` it is 'R/outline.R' or 'R/outline-roxy.R'
 #> 
@@ -343,17 +340,24 @@ outline
 #> `i` Write my streets
 #> `i` TODO Create a new version- `Done✔?`
 #> `i` 'R/my-file.R'
-#> `i` **A table title**
 #> `i` Section title
 #> 
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
 #> `i` Dashboard card
-#> `i` A code section
 #> `i` A subsection
 #> `i` A section2
 #> `i` A long ggplot2 title
 #> `i` A code section
+#> `i` A long ggplot2 title with more details
+#> 
+#> ── `tests/testthat/_outline/quarto-caps.md`  title
+#> `i` A long ggplot2 title with more details
+#> `i` Heading
+#> `i` A long ggplot2 title with more details
+#> `i` Heading2
+#> `i` Dashboard link
+#> `i` Dashboard link
 #> 
 #> ── `tests/testthat/_outline/roxy-general.R`
 #> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
@@ -444,6 +448,7 @@ outline
 #> `i` open_rs_doc() errors in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
+#> `i` TODO figure out if this is still needed?- `Done✔?`
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline-roxy.R`
@@ -458,6 +463,7 @@ outline
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
 #> `i` dir_outline() works with no error
+#> `i` file_outline() works well with figure captions
 #> 
 #> ── `tests/testthat/test-rename.R`
 #> `i` Helper files returns the expected input
