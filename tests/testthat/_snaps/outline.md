@@ -11,8 +11,8 @@
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
       `i` Section title
       `i` Write my streets
+      `i` data wrangling
       `i` 'R/my-file.R'
-      `i` problem
     Message
       
       -- `my-analysis.md`  My doc title 

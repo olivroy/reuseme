@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    2.32s    2.32s     0.431      69MB     3.02
+#> 1 outline <- proj_outline()    1.45s    1.45s     0.688    71.1MB     4.82
 ```
 
 <details>
@@ -343,6 +343,7 @@ outline
 #> `i` Write my streets
 #> `i` TODO Create a new version- `Done✔?`
 #> `i` 'R/my-file.R'
+#> `i` **A table title**
 #> `i` Section title
 #> 
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
@@ -375,7 +376,6 @@ outline
 #> `i` Details + 2nd level heading
 #> `i` second heading
 #> `i` data to index
-#> `i` TODO add data block example to index- `Done✔?`
 #> 
 #> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_outline/ex-outline-roxy.R' for output testing
@@ -407,10 +407,6 @@ outline
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
-#> `i` alpha and work_only arguments work
-#> `i` pattern works as expected
-#> 
-#> ── `tests/testthat/_snaps/outline.new.md`
 #> `i` alpha and work_only arguments work
 #> `i` pattern works as expected
 #> 
@@ -451,6 +447,7 @@ outline
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline-roxy.R`
+#> `i` roxy tags are parsed properly + object names are correct
 #> `i` roxy tags don't error
 #> `i` multiple roxy tags don't error.
 #> 
