@@ -361,3 +361,36 @@ normalize_proj_and_path <- function(path, call = caller_env()) {
     full_path = full_path
   )
 }
+
+#' Open Files Pane at current document location
+#'
+#' Easily navigate to active file document.
+#'
+#' Wrapper around [executeCommand("activateFiles")][rstudioapi::executeCommand()] +
+#' [rstudioapi::filesPaneNavigate()] + [rstudioapi::getActiveDocumentContext()]
+#'
+#' @param path A path to file to navigate to (default active document).
+#'
+#' @returns NULL, called for its side effects.
+#' @export
+active_rs_doc_nav <- function(path = active_rs_doc()) {
+  if (!rstudioapi::isAvailable() || !interactive()) {
+    cli::cli_abort("Must use in RStudio interactive sessions.")
+  }
+  if (is.null(path)) {
+    cli::cli_abort("Can't navigate to an unsaved file!")
+  }
+  if (fs::is_file(path)) {
+    dir <- fs::path_dir(path)
+  } else if (fs::is_dir(path)) {
+    dir <- path
+  } else {
+    cli::cli_abort("{.arg path} must be an existing file or directory.")
+  }
+  rstudioapi::executeCommand("activateFiles")
+  rstudioapi::filesPaneNavigate(dir)
+  cli::cli_inform(c(
+    "v" = "Navigated to {.path {dir}} in RStudio Files Pane."
+  ))
+  invisible()
+}
