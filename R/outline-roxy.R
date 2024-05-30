@@ -21,6 +21,7 @@ extract_roxygen_tag_location <- function(file, tag) {
     return(character(0L))
   }
   aa <- aa[lengths(pos) > 0L]
+  pos <- pos[lengths(pos) > 0L]
   objects <- purrr::map(
     aa,
     \(x) {
