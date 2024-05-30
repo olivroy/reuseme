@@ -64,7 +64,11 @@ o_is_work_item <- function(x) {
 
 o_is_test_that <- function(x) {
   # avoid generic like f works.
-  stringr::str_detect(x, "(?<!['\"])test_that\\(\"")
+  potential_test <- grepl("{", x, fixed = TRUE)
+  if (!any(potential_test)) {
+    return(potential_test)
+  }
+  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"")
 }
 
 o_is_generic_test <- function(x) {
