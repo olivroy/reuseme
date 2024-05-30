@@ -239,6 +239,11 @@ join_roxy_fun <- function(file) {
       file, topic, content, line, tag
     ) |>
     dplyr::mutate(id = dplyr::row_number()) |>
+    dplyr::mutate(content = dplyr::case_when(
+      # only keep the first line of family and concept tags.
+      tag %in% c("family", "concept") ~ stringr::str_extract(content, "^(.+)(\n)?"),
+      .default = content
+    )) |>
     tidyr::separate_longer_delim(content, delim = "\n")
 
   roxy_parsed1 |>
@@ -253,7 +258,7 @@ join_roxy_fun <- function(file) {
         .default = content
       )
     ) |>
-    dplyr::filter(nzchar(content)) |>
+    dplyr::filter(nzchar(content), !stringr::str_detect(content, "`r\\s")) |>
     dplyr::select(-id, -n)
 }
 

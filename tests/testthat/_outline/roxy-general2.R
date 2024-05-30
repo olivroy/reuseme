@@ -14,6 +14,8 @@
 #'  )
 #' @export
 #' @family a family to include
+#' if {
+#' }
 f_to_be_index_in_outline <- function() {
 
 }

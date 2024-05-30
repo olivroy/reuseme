@@ -4,6 +4,17 @@
       file_outline(path = my_test_files, alpha = TRUE)
     Message
       
+      -- `my-analysis.R`  Analyse my streets 
+    Output
+      `i` **A table title**
+      `i` TODO Create a new version- `Donev?`
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+      `i` Section title
+      `i` Write my streets
+      `i` 'R/my-file.R'
+      `i` problem
+    Message
+      
       -- `my-analysis.md`  My doc title 
     Output
       `i` A section
@@ -21,16 +32,6 @@
       `i` Last title
       `i` Second level
       `i` TODO this is an item- `Donev?`
-    Message
-      
-      -- `my-analysis.R`  Analyse my streets 
-    Output
-      `i` TODO Create a new version- `Donev?`
-      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Section title
-      `i` Write my streets
-      `i` data wrangling
-      `i` 'R/my-file.R'
     Message
       
       -- `title.md`  The title is the only outline element 

@@ -508,7 +508,7 @@ display_outline_element <- function(.data, dir_common) {
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
       # family or concept!
       is_tab_or_plot_title & !is.na(tag) ~ outline_el,
-      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title = [\"']([^\"]{5,})[\"']", group = 1),
+      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =.*[\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
@@ -530,6 +530,7 @@ display_outline_element <- function(.data, dir_common) {
   )
 
   if (anyNA(x$outline_el)) {
+    zz <<- x |> dplyr::filter(is.na(outline_el))
     indices <- which(is.na(x$outline_el))
     all_na <- x |> dplyr::select(!dplyr::where(\(x) !is.logical(x) & all(is.na(x)))) |> dplyr::slice(dplyr::all_of(indices)) |>  dplyr::select(dplyr::where(\(x) all(is.na(x)))) |> names()
     all_true_or_single_value <- x |> dplyr::slice(dplyr::all_of(indices)) |> dplyr::select(dplyr::where(\(x)dplyr::n_distinct(x) == 1)) |> dplyr::select(!dplyr::where(\(x) all(is.na(x)))) |>
@@ -544,7 +545,7 @@ display_outline_element <- function(.data, dir_common) {
     }
     cli::cli_abort(c("Internal error, outline elements can't be NA. Please review.", msg,
                      "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
-                     `outline_el` is defined in {.fn display_outline_element}."))
+                     `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."))
   }
 
   y <- dplyr::mutate(

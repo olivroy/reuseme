@@ -1,6 +1,6 @@
 # Analyse my streets ---------------
 ## Read my [streets](https://https://en.wikipedia.org/wiki/Street_art) data -------
-my_streets <- read.csv("data/my-streets.csv"), silent = TRUE)
+my_streets <- read.csv("data/my-streets.csv", silent = TRUE)
 new_dat <- my_streets |>
   dplyr::mutate(
     title = "data wrangling", # "problem"
@@ -18,7 +18,7 @@ fs::path("data", "my-streets", ext = "csv")
 # TODO Create a new version
 
 # {.file R/my-file.R} ---
-
+tab_header(title = md("**A table title**"))
 cli::cli_ul("Refer to {.href [google](https://google.com)}")
 # ## a commented section title -----
 
