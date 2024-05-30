@@ -1,5 +1,5 @@
 # Test for roxygen parsing for no error ----------------------------------------
-## Use {.file tests/testthat/_ref/test-roxygen.R} for output testing -----------
+## Use {.file tests/testthat/_outline/ex-outline-roxy.R} for output testing -----------
 # Dump of other things to test for expect_no_error (not necessary to verify)
 # Mostly cases inspired by testing in the wild.
 
@@ -34,4 +34,4 @@ f_not_to_index <- function() {
 
 }
 
-# Keep this line last: content to test for new roxygen output should be put in test-roxygen.R
+# Keep this line last: content to test for new roxygen output should be put in ex-outline-roxy.R

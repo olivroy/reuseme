@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.57s    1.57s     0.636    68.8MB     4.45
+#> 1 outline <- proj_outline()    2.32s    2.32s     0.431      69MB     3.02
 ```
 
 <details>
@@ -230,7 +230,7 @@ outline
 #> `i` document manipulation helpers
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
-#> `i` Navigate to Files Pane
+#> `i` Open Files Pane at current document location
 #> 
 #> ── `R/outdated-pkgs.R`  Looks for outdated packages
 #> `i` TODO figure out pad :)- `Done✔?`
@@ -337,13 +337,7 @@ outline
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
 #> 
-#> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
-#> `i` Another title
-#> `i` Second level
-#> `i` TODO this is an item- `Done✔?`
-#> `i` Last title
-#> 
-#> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
+#> ── `tests/testthat/_outline/my-analysis.R`  Analyse my streets
 #> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
 #> `i` data wrangling
 #> `i` Write my streets
@@ -351,7 +345,7 @@ outline
 #> `i` 'R/my-file.R'
 #> `i` Section title
 #> 
-#> ── `tests/testthat/_ref/my-analysis.md`  My doc title
+#> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
 #> `i` Dashboard card
 #> `i` A code section
@@ -360,19 +354,8 @@ outline
 #> `i` A long ggplot2 title
 #> `i` A code section
 #> 
-#> ── `tests/testthat/_ref/roxy-section.R`  multiple tags + name parsing issue
-#> `i` A detail first level-heading to be included
-#> `i` A detail first level-heading to be included
-#> 
-#> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
-#> 
-#> ── `tests/testthat/_ref/test-roxygen-safeguard.R`  Test for roxygen parsing for no error
-#> `i` Use 'tests/testthat/_ref/test-roxygen.R' for output testing
-#> `i` Commented code not included
-#> `i` A title not to be included
-#> 
-#> ── `tests/testthat/_ref/test-roxygen.R`
-#> `i` Use 'tests/testthat/_ref/test-roxygen-safeguard.R' for output testing
+#> ── `tests/testthat/_outline/roxy-general.R`
+#> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
 #> `i` Complete block for exported function with headings
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
@@ -394,6 +377,23 @@ outline
 #> `i` data to index
 #> `i` TODO add data block example to index- `Done✔?`
 #> 
+#> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
+#> `i` Use 'tests/testthat/_outline/ex-outline-roxy.R' for output testing
+#> `i` Commented code not included
+#> `i` A title not to be included
+#> 
+#> ── `tests/testthat/_outline/roxy-section.R`  multiple tags + name parsing issue
+#> `i` A detail first level-heading to be included
+#> `i` A detail first level-heading to be included
+#> 
+#> ── `tests/testthat/_outline/title.md`  The title is the only outline element
+#> 
+#> ── `tests/testthat/_outline/titles.md`  The title is the only outline element
+#> `i` Another title
+#> `i` Second level
+#> `i` TODO this is an item- `Done✔?`
+#> `i` Last title
+#> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
 #> `i` wrong cases error
 #> 
@@ -407,6 +407,10 @@ outline
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
+#> `i` alpha and work_only arguments work
+#> `i` pattern works as expected
+#> 
+#> ── `tests/testthat/_snaps/outline.new.md`
 #> `i` alpha and work_only arguments work
 #> `i` pattern works as expected
 #> 

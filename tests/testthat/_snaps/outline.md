@@ -15,7 +15,7 @@
       `i` Dashboard card
     Message
       
-      -- `many-titles.md`  The title is the only outline element 
+      -- `titles.md`  The title is the only outline element 
     Output
       `i` Another title
       `i` Last title
@@ -33,7 +33,7 @@
       `i` 'R/my-file.R'
     Message
       
-      -- `single-title.md`  The title is the only outline element 
+      -- `title.md`  The title is the only outline element 
 
 # alpha and work_only arguments work
 
@@ -41,7 +41,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `ref/my-analysis.R`  Analyse my streets 
+      -- `outline/my-analysis.R`  Analyse my streets 
     Output
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets

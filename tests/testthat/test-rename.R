@@ -1,5 +1,5 @@
 describe("rename_files2()", {
-  og_file <- fs::path_real(test_path("_ref", "my-analysis.R"))
+  og_file <- fs::path_real(test_path("_outline", "my-analysis.R"))
   # temp dir + change working directory
   tmp_dir <- withr::local_tempdir()
   fs::dir_create(

@@ -312,7 +312,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
-      regexp = "testthat/_ref/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples",
+      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples",
       invert = TRUE
     )
   }

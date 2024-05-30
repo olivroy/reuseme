@@ -1,5 +1,5 @@
 # This file is for roxygen comments parsing
-## Use {.file tests/testthat/_ref/test-roxygen-safeguard.R} for output testing -----------
+## Use {.file tests/testthat/_outline/roxy-general2.R} for output testing -----------
 
 ## Complete block for exported function with headings --------------------------
 # Mix md and `@section`
@@ -97,6 +97,6 @@ NULL
 # data to index ----------------------------------------------------------------
 
 # TODO add data block example to index
-# I think I'd want the outline to show as "outline": title (but ctrl + . does a good job for this) (maybe document this)
+# I think I'd want the outline to show as "outline": title (but Ctrl + . does a good job for this) (maybe document this)
 
-# Keep this line last: content to test for edge cases should be put in test-roxygen-safeguard.R
+# Keep this line last: content to test for edge cases should be put in {.file tests/testthat/_outline/roxy-general2.R}
