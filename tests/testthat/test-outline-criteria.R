@@ -25,7 +25,7 @@ test_that("o_is_work_item() works", {
 })
 
 test_that("o_is_test_that() works", {
-  expect_true(o_is_test_that('test_that("Serious things are happening"'))
+  expect_true(o_is_test_that('test_that("Serious things are happening", {'))
 })
 
 test_that("o_is_generic_test() works", {
@@ -42,7 +42,7 @@ test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
-  expect_false(o_is_section_title("Function ID:",roxy_section = TRUE))
+  expect_false(o_is_section_title("Function ID:", roxy_section = TRUE))
 })
 
 # TODO figure out if this is still needed?

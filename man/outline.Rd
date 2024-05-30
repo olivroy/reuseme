@@ -21,6 +21,7 @@ proj_outline(
   pattern = NULL,
   proj = proj_get2(),
   work_only = TRUE,
+  exclude_tests = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE
@@ -30,6 +31,7 @@ dir_outline(
   pattern = NULL,
   path = ".",
   work_only = TRUE,
+  exclude_tests = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE,
@@ -39,7 +41,7 @@ dir_outline(
 \arguments{
 \item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
-The print method will show the document title for context. Previously \code{regex_outline}}
+The print method will show the document title for context. Previously \code{regex_outline}.}
 
 \item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
 Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
@@ -56,6 +58,8 @@ combine with \code{pattern}}
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
+
+\item{exclude_tests}{Should tests be displayed? (Not sure if this argument will stay, Will have to think)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
 the directory}

@@ -256,7 +256,7 @@ active_rs_doc_delete <- function() {
     cli::cli_inform(c(
       "v" = "Deleted the active document {.val {elems$rel_path}} because {reasons_deleting}.",
       # FIXME (upstream) the color div doesn't go all the way r-lib/cli#694
-      "i" = paste(cli::col_grey("The deleted file"),  "{.path {elems$full_path}}", cli::col_grey("contents are returned invisibly in case you need them."))
+      "i" = paste(cli::col_grey("The deleted file"), "{.path {elems$full_path}}", cli::col_grey("contents are returned invisibly in case you need them."))
     ))
     contents <- readLines(elems$full_path, encoding = "UTF-8")
     fs::file_delete(elems$full_path)

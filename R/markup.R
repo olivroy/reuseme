@@ -37,12 +37,13 @@ link_gh_issue <- function(x, home_repo = NULL) {
     regex_gh_issue,
     paste0("[\\1#\\2](https://github.com/\\1/issues/\\2)")
   )
-  if (!is.null(home_repo))
-  x_changed <- gsub(
-    paste0(home_repo,"#"),
-    "#",
-    x_changed
-  )
+  if (!is.null(home_repo)) {
+    x_changed <- gsub(
+      paste0(home_repo, "#"),
+      "#",
+      x_changed
+    )
+  }
 
   x[has_gh_issue] <- x_changed
   x
@@ -51,7 +52,7 @@ link_gh_issue <- function(x, home_repo = NULL) {
 link_local_gh_issue <- function(x, repo_home) {
   gsub(
     # max 99999 issues.
-    pattern =  "\\((#\\d{1,5})\\)",
+    pattern = "\\((#\\d{1,5})\\)",
     paste0("(", repo_home, "\\1)"),
     x
   )
@@ -65,7 +66,8 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
       error = function(e) {
         # cli::cli_inform("Could not detect path.")
         NULL
-      })
+      }
+    )
     if (is.null(pkg_path)) {
       return(NULL)
     }
@@ -96,7 +98,6 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
   if (is.null(org_repo) && is.null(org_repo_found)) {
     cli::cli_abort("No way to discover URL.")
   }
-
 }
 #' Create a cli href with a markdown link
 #'

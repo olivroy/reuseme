@@ -10,8 +10,8 @@
 #'
 #' ggplot2::ggplot(mtcars) +
 #'   labs(
-#'    title = "A title not to be included"
-#'  )
+#'     title = "A title not to be included"
+#'   )
 #' @export
 #' @family a family to include
 #' if {

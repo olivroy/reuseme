@@ -92,7 +92,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   if (roxy_section) {
     x <- stringr::str_remove(x, ":$")
   }
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$"
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|^Newly broken|^In both|^Installation$|MIT License|nocov"
   # potential section titles
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
@@ -124,7 +124,7 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
 # Add variable to outline data frame --------------------
 
-define_outline_criteria <- function(.data, print_todo) {
+define_outline_criteria <- function(.data, print_todo, dir_common) {
   x <- .data
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
@@ -140,15 +140,17 @@ define_outline_criteria <- function(.data, print_todo) {
 
   should_parse_roxy_comments <-
     !isFALSE(getOption("reuseme.roxy_parse", default = TRUE)) && # will not parse if option is set to FALSE
-    any(x$is_roxygen_comment)
+      any(x$is_roxygen_comment)
   if (should_parse_roxy_comments) {
+    if (!is.null(dir_common)) {
+      withr::local_dir(dir_common)
+    }
     rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
     files_with_roxy_comments <- unique(x[x$is_roxygen_comment, "file", drop = TRUE])
     files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
-      # roxygen2 messages
-      # TRICK purrr::safely creates an error object, while possible is better.
-       invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL)))
-    )) |> suppressMessages()
+    # roxygen2 messages
+    # TRICK purrr::safely creates an error object, while possible is better.
+    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |> suppressMessages()
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
     # browser()
@@ -204,7 +206,7 @@ define_outline_criteria <- function(.data, print_todo) {
       line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
     .by = "file"
   )
-  #browser()
+  # browser()
   res <- dplyr::bind_rows(x, outline_roxy)
   res <- dplyr::filter(
     res,
@@ -221,7 +223,7 @@ define_outline_criteria_roxy <- function(x) {
   x$is_object_title <- x$tag == "title" & nchar(x$content) > 4
   x$line <- as.integer(x$line)
   x$file_ext <- "R"
-  #x$content <- paste0("#' ", x$content) # maybe not?
+  # x$content <- paste0("#' ", x$content) # maybe not?
   x$is_news <- FALSE
   x$is_roxygen_comment <- TRUE
   x$is_test_file <- FALSE
@@ -231,18 +233,18 @@ define_outline_criteria_roxy <- function(x) {
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
   x$is_chunk_cap <- FALSE
-  x$is_chunk_cap_next = FALSE
-  x$is_test_name = FALSE
-  x$pkg_version = NA_character_
+  x$is_chunk_cap_next <- FALSE
+  x$is_test_name <- FALSE
+  x$pkg_version <- NA_character_
   # a family or concept can be seen as a plot subtitle?
   x$is_tab_or_plot_title <- x$tag %in% c("family", "concept")
   x$is_cli_info <- FALSE
-  x$is_cross_ref = FALSE
-  x$is_function_def = FALSE
+  x$is_cross_ref <- FALSE
+  x$is_function_def <- FALSE
   x$is_todo_fixme <- FALSE
   x$is_a_comment_or_code <- FALSE
   x$is_doc_title <- x$line == 1 & x$tag == "title"
-  x$n_leading_hash = nchar(stringr::str_extract(x$content, "\\#+"))
+  x$n_leading_hash <- nchar(stringr::str_extract(x$content, "\\#+"))
   x$n_leading_hash <- dplyr::case_when(
     x$n_leading_hash > 0 ~ x$n_leading_hash,
     x$tag == "section" & x$is_section_title_source ~ 1,
@@ -256,7 +258,7 @@ define_outline_criteria_roxy <- function(x) {
     .default = x$content
   )
   x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)
-  #x$has_inline_markup <- FALSE # let's not mess with inline markup
+  # x$has_inline_markup <- FALSE # let's not mess with inline markup
   x
 }
 

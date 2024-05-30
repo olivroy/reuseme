@@ -42,7 +42,8 @@
 #'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
 #' @param pattern A string or regex to search for in the outline. If
 #'   specified, will search only for elements matching this regular expression.
-#'   The print method will show the document title for context. Previously `regex_outline`
+#'   The print method will show the document title for context. Previously `regex_outline`.
+#' @param exclude_tests Should tests be displayed? (Not sure if this argument will stay, Will have to think)
 #' @param work_only If `TRUE`, (the default), will only show you work items
 #'   first. Set to `FALSE` if you want to see the full outline. `WORK` will
 #'   combine with `pattern`
@@ -162,7 +163,7 @@ file_outline <- function(pattern = NULL,
 
   check_string(pattern, arg = "You may have specified path Internal error")
 
-  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
+  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo, dir_common)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
@@ -229,7 +230,7 @@ file_outline <- function(pattern = NULL,
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, exclude_tests = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
 
   if (is_active_proj && !is.null(pattern) && pattern %in% names(proj_list())) {
@@ -244,6 +245,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, d
     return(dir_outline(
       pattern = pattern,
       work_only = work_only,
+      exclude_tests = exclude_tests,
       dir_tree = dir_tree,
       alpha = alpha,
       recent_only = recent_only,
@@ -283,6 +285,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, d
     pattern = pattern,
     path = proj_dir,
     work_only = work_only,
+    exclude_tests = exclude_tests,
     dir_tree = dir_tree,
     alpha = alpha,
     recurse = TRUE
@@ -290,7 +293,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, d
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_tests = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -316,7 +319,13 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
       invert = TRUE
     )
   }
-
+  if (exclude_tests) {
+    file_list_to_outline <- fs::path_filter(
+      file_list_to_outline,
+      regexp = "tests/",
+      invert = TRUE
+    )
+  }
   if (any(grepl("README.Rmd", file_list_to_outline))) {
     file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
   }
@@ -422,7 +431,8 @@ print.outline_report <- function(x, ...) {
           print(thing)
           print(escape_markup(thing))
           cli::cli_abort("failed to parse in first line of file {.file {summary_links_files$file[[i]]}}.", parent = e)
-        })
+        }
+      )
       base_name <- c(base_name, " ", title_el)
     }
 
@@ -431,7 +441,8 @@ print.outline_report <- function(x, ...) {
       error = function(e) {
         print(base_name)
         rlang::abort("Could not parse by cli")
-      })
+      }
+    )
 
     if (recent_only) {
       if (i %in% is_recently_modified) {
@@ -479,7 +490,7 @@ keep_outline_element <- function(.data) {
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-       is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title # | is_cli_info # TODO reanable cli info
+      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title # | is_cli_info # TODO reanable cli info
   )
 
   dat$simplify_news <- NULL
@@ -514,7 +525,7 @@ display_outline_element <- function(.data, dir_common) {
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
-      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}"), # strip cross-refs.
+      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}|<a href.+$"), # strip cross-refs.
       is_function_def ~ stringr::str_extract(outline_el, "(.+)\\<-", group = 1) |> stringr::str_trim(),
       .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
@@ -532,9 +543,17 @@ display_outline_element <- function(.data, dir_common) {
   if (anyNA(x$outline_el)) {
     zz <<- x |> dplyr::filter(is.na(outline_el))
     indices <- which(is.na(x$outline_el))
-    all_na <- x |> dplyr::select(!dplyr::where(\(x) !is.logical(x) & all(is.na(x)))) |> dplyr::slice(dplyr::all_of(indices)) |>  dplyr::select(dplyr::where(\(x) all(is.na(x)))) |> names()
-    all_true_or_single_value <- x |> dplyr::slice(dplyr::all_of(indices)) |> dplyr::select(dplyr::where(\(x)dplyr::n_distinct(x) == 1)) |> dplyr::select(!dplyr::where(\(x) all(is.na(x)))) |>
-      dplyr::select(!dplyr::where(\(x) is.logical(x) & !suppressWarnings(any(x, na.rm = FALSE)))) |> names()
+    all_na <- x |>
+      dplyr::select(!dplyr::where(\(x) !is.logical(x) & all(is.na(x)))) |>
+      dplyr::slice(dplyr::all_of(indices)) |>
+      dplyr::select(dplyr::where(\(x) all(is.na(x)))) |>
+      names()
+    all_true_or_single_value <- x |>
+      dplyr::slice(dplyr::all_of(indices)) |>
+      dplyr::select(dplyr::where(\(x)dplyr::n_distinct(x) == 1)) |>
+      dplyr::select(!dplyr::where(\(x) all(is.na(x)))) |>
+      dplyr::select(!dplyr::where(\(x) is.logical(x) & !suppressWarnings(any(x, na.rm = FALSE)))) |>
+      names()
     if (length(all_na) > 0) {
       msg <- c("The following places have all NAs {.var {all_na}}")
     } else {
@@ -543,9 +562,11 @@ display_outline_element <- function(.data, dir_common) {
     if (length(all_true_or_single_value) > 0) {
       msg <- c(msg, "Likely problems in creating or displaying {.var {all_true_or_single_value}}.")
     }
-    cli::cli_abort(c("Internal error, outline elements can't be NA. Please review.", msg,
-                     "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
-                     `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."))
+    cli::cli_abort(c(
+      "Internal error, outline elements can't be NA. Please review.", msg,
+      "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
+                     `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."
+    ))
   }
 
   y <- dplyr::mutate(
@@ -593,7 +614,7 @@ display_outline_element <- function(.data, dir_common) {
     x
   }
   if (!all(is.na(y$title_el))) {
-    #browser()
+    # browser()
     y <- dplyr::mutate(
       y,
       title_el = na_if0(title_el[!is.na(title_el)], "title"),

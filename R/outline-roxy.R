@@ -72,9 +72,10 @@ extract_roxygen_tag_location <- function(file, tag) {
   if (length(objects) != length(pos)) {
     print(objects)
     print(pos)
-    cli::cli_abort(c(
-      "Could not resolve pos and objects to be the same length.",
-      "pos = {length(pos)}, objects = {length(objects)}."
+    cli::cli_abort(
+      c(
+        "Could not resolve pos and objects to be the same length.",
+        "pos = {length(pos)}, objects = {length(objects)}."
       ),
       .internal = TRUE
     )
@@ -269,5 +270,7 @@ join_roxy_fun <- function(file) {
 active_doc_parse <- function(doc = active_rs_doc()) {
   doc <- purrr::set_names(doc)
   parsed <- purrr::map(doc, \(x) roxygen2::parse_file(x, env = NULL))
-  parsed |> join_roxy_fun() |> define_outline_criteria_roxy()
+  parsed |>
+    join_roxy_fun() |>
+    define_outline_criteria_roxy()
 }

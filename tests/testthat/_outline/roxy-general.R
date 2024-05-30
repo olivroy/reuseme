@@ -26,8 +26,8 @@
 #'
 #' ggplot2::ggplot(mtcars) +
 #'   labs(
-#'    title = "A title not to be included"
-#'  )
+#'     title = "A title not to be included"
+#'   )
 #' @export
 #' @family a family to include
 f_to_be_index_in_outline <- function() {
@@ -72,8 +72,8 @@ f_not_to_index <- function() {
 #'
 #' ggplot2::ggplot(mtcars) +
 #'   labs(
-#'    title = "A title not to be included"
-#'  )
+#'     title = "A title not to be included"
+#'   )
 #' @name topic-name-to-include
 #' @family a family to include
 NULL
