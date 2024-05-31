@@ -92,7 +92,7 @@ file_outline <- function(pattern = NULL,
                          print_todo = deprecated()) {
   # To contribute to this function, take a look at .github/CONTRIBUTING.md
 
-  if (length(path) == 1L && interactive() && rstudioapi::isAvailable()) {
+  if (length(path) == 1L && rlang::is_interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
     is_active_doc <- FALSE
@@ -342,7 +342,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
 
     fs::dir_tree(
       path = dir,
-      regexp = "R/.+|qmd|Rmd|_files|~\\$|*.Rd|_snaps|testthat.R|Rmarkdown|docs/",
+      regexp = "R/.+|qmd|Rmd|_files|~\\$|*.Rd|_snaps|tests/testthat.R|Rmarkdown|docs/",
       recurse = recurse,
       invert = TRUE
     )

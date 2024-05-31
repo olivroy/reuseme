@@ -16,10 +16,10 @@ test_that("roxy tags are parsed properly + object names are correct", {
   res_order <- dplyr::arrange(res, line)
   expect_setequal(
     res$topic,
-    c("f_to_be_index_in_outline", "topic-name-to-include", NA_character_, "dataset")
+    c("f_to_be_index_in_outline()", "topic-name-to-include", NA_character_, "dataset")
   )
   # strip code from roxygen2 tag
-  expect_contains(res$content, "First code to be included")
+  expect_contains(res$content, "`First code` to be included")
 })
 
 test_that("roxy tags don't error", {
@@ -36,10 +36,25 @@ test_that("multiple roxy tags don't error.", {
   expect_no_error(join_roxy_fun(example_parsed))
 })
 
-test_that("cli escaping goes well...", {
-  skip("Not ready :(")
-  file_to_map <- testthat::test_path("_outline", "roxy-cli.R")
-  expect_no_error(file_outline(path = file_to_map))
+test_that("testing and not should not give different results", {
+  skip_on_cran()
+  withr::local_options("reuseme.roxy_parse" =TRUE)
+  expect_no_warning(
+    file_outline(path = file_to_map, dir_common = "tests/testthat/_outline")
+  )
+  expect_equal(
+    nrow(file_outline(path = testthat::test_path("_outline", "roxy-cli.R"))),
+    nrow(file_outline(path = normalizePath(testthat::test_path("_outline", "roxy-cli.R"))))
+  )
+})
+
+test_that("cli escaping goes well", {
+  rlang::local_interactive(FALSE)
+  # The fact that I need to do this is bizzare.
+  file_to_map <- normalizePath(testthat::test_path("_outline", "roxy-cli.R"))
+  expect_snapshot(
+   file_outline(path = file_to_map)
+  )
   names(file_to_map) <- file_to_map
   example_parsed <- purrr::map(file_to_map, \(x) roxygen2::parse_file(x, env = NULL))
   expect_no_error(join_roxy_fun(example_parsed))
