@@ -667,7 +667,10 @@ get_chunk_cap <- function(file) {
 
     # tidyverse/purrr#1081
     if (length(dat) > 0) {
-      caps <- c(caps, dat |> purrr::map_chr(\(x) x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))
+      # We use `format()` in case a variable is used to name the caption.
+      tryCatch(caps <- c(caps, dat |> purrr::map_chr(\(x) format(x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))), error = function(e) {
+        cli::cli_abort("Error in {.file {unique_file[i]}}", parent = e)
+      })
     }
   }
   caps <- caps[caps != "USELESS THING"]

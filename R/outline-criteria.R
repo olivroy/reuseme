@@ -33,7 +33,7 @@ o_is_roxygen_comment <- function(x, file_ext = NULL, is_test_file = FALSE) {
 }
 
 o_is_todo_fixme <- function(x) {
-  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])")
+  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME\\s|BOOK|(?<!\")WORK[^I``])")
 
   if (!any(has_todo)) {
     return(has_todo)
@@ -93,7 +93,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   if (roxy_section) {
     x <- stringr::str_remove(x, ":$")
   }
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$"
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode"
   # potential section titles
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
