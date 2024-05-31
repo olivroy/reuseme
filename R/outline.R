@@ -315,7 +315,8 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
       # TODO for usethis, add inst/templates/ but I may leave them for now....
-      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/|inst/templates/license-",
+      # styler tests examples may not work..
+      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/|inst/templates/license-|tests/testthat/scope-",
       invert = TRUE
     )
   }

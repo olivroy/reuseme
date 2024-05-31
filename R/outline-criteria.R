@@ -151,7 +151,8 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     files_with_roxy_comments <- rlang::set_names(files_with_roxy_comments, files_with_roxy_comments)
     # roxygen2 messages
     # TRICK purrr::safely creates an error object, while possible is better.
-    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |> suppressMessages()
+    # Suppresss roxygen2 message, suppress callr output, suppress asciicast warnings.
+    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |> suppressMessages() |> suppressWarnings()
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
     # browser()

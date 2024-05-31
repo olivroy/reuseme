@@ -3,7 +3,8 @@ test_that("escape_markup() works", {
   expect_equal(escape_markup(c("gt", "y {", "{gt}")), c("gt", "y {{", "{{gt}}"))
   expect_equal(escape_markup("{gt}"), "{{gt}}")
   expect_equal(escape_markup("{.file {here}}"), "{.file {.url here}}")
-
+  expect_equal(escape_markup("{"), "{{")
+  expect_equal(escape_markup("{.email}"), "{{.email}}")
   input <- "multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}"
   exp_str <- "multi problems {{gt}} to {{gt}} to {.file gt} to {.file {.url gt}}"
   expect_equal(escape_markup(input), exp_str)
