@@ -189,7 +189,7 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     # TRICK purrr::safely creates an error object, while possible is better.
     # Suppresss roxygen2 message, suppress callr output, suppress asciicast warnings.
     invisible(
-      capture.output(
+      utils::capture.output(
         parsed_files <- purrr::map(
           files_with_roxy_comments,
           purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))

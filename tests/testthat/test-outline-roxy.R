@@ -50,12 +50,14 @@ test_that("file_outline() works outside RStudio)", {
   )
 })
 
-test_that("cli escaping goes well", {
+test_that("cli escaping goes well in roxy comments", {
   rlang::local_interactive(FALSE)
   # The fact that I need to do this is bizzare.
-  file_to_map <- normalizePath(testthat::test_path("_outline", "roxy-cli.R"))
+  file_to_map <- testthat::test_path("_outline", "roxy-cli.R")
   expect_snapshot(
-   file_outline(path = file_to_map)
+   file_outline(path = file_to_map),
+   transform = ~ sub(" `[^`]+` ", " `roxy-cli.R` ", .x)
+
   )
   names(file_to_map) <- file_to_map
   example_parsed <- purrr::map(file_to_map, \(x) roxygen2::parse_file(x, env = NULL))
