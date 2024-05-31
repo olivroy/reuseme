@@ -564,7 +564,7 @@ display_outline_element <- function(.data, dir_common) {
     }
     cli::cli_abort(c(
       "Internal error, outline elements can't be NA. Please review.", msg,
-      paste0("{.file ",zz$file, ":",zz$line, "}"),
+      paste0("{.file ", zz$file, ":", zz$line, "}"),
       "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
                      `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."
     ))
@@ -634,28 +634,26 @@ get_chunk_cap <- function(file) {
   # ThinkR-open/lightparser#8
   for (i in seq_along(unique_file)) {
     # FIXME find a way to be as consistent as lightparser, but faster.
-    # If ThinkR-open/lightparser#11 gets fixed, no more fiddling?
-    dat <- tryCatch( (lightparser::split_to_tbl(unique_file[i]) |> dplyr::filter(type == "block"))$params,
-             error = function(e) {
-               # workaround https://github.com/ThinkR-open/lightparser/issues/11
-               tmp <- withr::local_tempfile(
-                 lines = c(
-                   "---",
-                   "title: dummy",
-                   "---",
-                   readLines(unique_file[i])
-               ))
-               (lightparser::split_to_tbl(tmp) |> dplyr::filter(type == "block"))$params
-               # list(`1` = list(`fig-cap` = "Wrong caption"))
-               # cli::cli_abort(
-               #   c("{.file {unique_file[i]}} is incorrect."),
-               #   parent = e
-               # )
-             })
+    dat <- tryCatch(
+      lightparser::split_to_tbl(unique_file[i]),
+      error = function(e) {
+        # workaround ThinkR-open/lightparser#11
+        tmp <- withr::local_tempfile(
+          lines = c(
+            "---",
+            "title: dummy",
+            "---",
+            readLines(unique_file[i], warn = FALSE)
+          )
+        )
+        lightparser::split_to_tbl(tmp)
+      }
+    )
+    dat <- dplyr::filter(dat, type == "block")$params
 
     # tidyverse/purrr#1081
     if (length(dat) > 0) {
-      caps <- c(caps, dat |> purrr::map_chr( \(x) x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))
+      caps <- c(caps, dat |> purrr::map_chr(\(x) x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))
     }
   }
   caps <- caps[caps != "USELESS THING"]
