@@ -95,10 +95,10 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
-  generic_title_regex <- paste0(
+  generic_title_regex <- paste(
     "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
     "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
-    collapse = "|"
+    sep = "|"
   )
 
   stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
@@ -110,18 +110,18 @@ o_is_tab_plot_title <- function(x) {
 }
 
 o_is_section_title <- function(x, roxy_section = FALSE) {
-  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") | roxy_section # remove commented  add roxygen
+  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)") | roxy_section # remove commented  add roxygen
   if (!any(is_section_title)) {
     return(is_section_title)
   }
   if (roxy_section) {
     x <- sub(":$", "", x)
   }
-  uninteresting_headings <- paste0(
+  uninteresting_headings <- paste(
     "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE",
-    "url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$",
-    "^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
-    collapse = "|"
+    "url\\{|Error before installation|unreleased|Function ID$|Function Introduced",
+    "Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
+    sep = "|"
   )
   # potential section titles
   p_s_title <- which(is_section_title)

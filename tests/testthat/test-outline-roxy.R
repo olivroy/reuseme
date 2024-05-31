@@ -19,7 +19,7 @@ test_that("roxy tags are parsed properly + object names are correct", {
     c("f_to_be_index_in_outline", "topic-name-to-include", "no-topic", "dataset")
   )
   # strip code from roxygen2 tag
-  expect_contains(res$content, "`First code` to be included:")
+  expect_contains(res$content, "`First code` to be included")
 })
 
 test_that("roxy tags don't error", {

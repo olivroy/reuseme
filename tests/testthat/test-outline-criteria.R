@@ -57,6 +57,7 @@ test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
   expect_false(o_is_section_title("Function ID:", roxy_section = TRUE))
+  expect_false(o_is_section_title("#' @section Function ID:", roxy_section = TRUE))
 })
 
 # TODO figure out if this is still needed?

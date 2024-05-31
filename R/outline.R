@@ -354,12 +354,12 @@ exclude_example_files <- function(path) {
   # TODO for usethis, add inst/templates/ but I may leave them for now....
   # styler tests examples may not work..
 
-  regexp_exclude <- paste0(
+  regexp_exclude <- paste(
     "vignettes/test/", # test vignettes
     "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
     "inst/(templates/license-|example-file/)", # license templates in usethis
     "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
-    collapse = "|"
+    sep = "|"
   )
 
   fs::path_filter(

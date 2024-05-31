@@ -243,8 +243,9 @@ join_roxy_fun <- function(file) {
     dplyr::mutate(id = dplyr::row_number()) |>
     dplyr::mutate(content = dplyr::case_when(
       # only keep the first line of section, subsection, family and concept tags.
+      tag %in% c("family", "concept") ~ stringr::str_extract(content, "^(.+)(\n)?", group = 1),
       # Also remove : from section
-      tag %in% c("family", "concept", "section", "subsection") ~ stringr::str_extract(content, "^(.+):?(\n)?"),
+      tag %in% c("section", "subsection") ~ stringr::str_extract(content, "^(.+)\\s?\\:\\s?\n?", group = 1),
       .default = content
     )) |>
     tidyr::separate_longer_delim(content, delim = "\n")
