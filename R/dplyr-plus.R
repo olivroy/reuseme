@@ -240,10 +240,10 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
   if (all(purrr::map_lgl(variables[, 1:n_var], is.logical))) {
     res <- dplyr::filter(variables, dplyr::if_any(.cols = seq_len(n_var)), .by = {{ .by }})
 
-    if (!.keep_new_var) {
-      res <- res[-seq_len(n_var)]
-    } else {
+    if (.keep_new_var) {
       cli::cli_warn("You have modified the original data")
+    } else {
+      res <- res[-seq_len(n_var)]
     }
 
     return(res)
@@ -310,14 +310,13 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
   if (unique) {
     res2 <- unique_named(res2)
   }
-  if (!is.null(length)) {
+
+  if (!is.null(length) && !rlang::has_length(res2, length)) {
     # TODO use `check_length()` when implemented. r-lib/rlang#1618
-    if (!rlang::has_length(res2, length)) {
-      cli::cli_abort(c(
-        "Expected an output of {length}",
-        "Got an output of {length(res2)}"
-      ))
-    }
+    cli::cli_abort(c(
+      "Expected an output of {length}",
+      "Got an output of {length(res2)}"
+    ))
   }
 
   res2

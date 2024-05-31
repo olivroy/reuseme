@@ -123,7 +123,7 @@ test_that("file testing are working as expected", {
 })
 
 test_that("force and action are deprecated", {
-  file <- withr::local_tempfile(fileext = ".R", lines = c("# x1"))
+  file <- withr::local_tempfile(fileext = ".R", lines = "# x1")
   file2 <- withr::local_tempfile(fileext = ".R")
   unlink(file2)
   lifecycle::expect_deprecated(

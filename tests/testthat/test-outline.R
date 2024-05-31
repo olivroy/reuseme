@@ -1,4 +1,5 @@
 test_that("file_outline() works", {
+  skip_if_not_installed("lightparser")
   my_test_files <- test_path("_outline", c("my-analysis.R", "my-analysis.md", "title.md", "titles.md"))
   rlang::local_interactive(TRUE)
   expect_snapshot(
@@ -72,6 +73,7 @@ test_that("file_outline() contains function calls", {
 })
 
 test_that("dir_outline() works with no error", {
+  skip_if_not_installed("lightparser")
   expect_no_error(dir_outline(pattern = ".+", path = test_path("_outline")))
 })
 

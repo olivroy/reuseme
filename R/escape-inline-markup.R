@@ -28,8 +28,8 @@ escape_markup <- function(x) {
   is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !local_var_ref_in_markup & !is_markup_incorrect(x)
 
   if (all(is_markup_okay) && !any(local_var_ref_in_markup)) {
-    x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
-    x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
+    x[is_left_bracket & !is_bracket] <- gsub("{", "{{", x[is_left_bracket & !is_bracket], fixed = TRUE)
+    x[is_right_bracket & !is_bracket] <- gsub("}", "}}", x[is_right_bracket & !is_bracket], fixed = TRUE)
     return(x)
   }
   # replace fn arg {fn}(arg) -> fn({arg})
@@ -61,8 +61,8 @@ escape_markup <- function(x) {
 
   x <- replace_r_var(x)
 
-  x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
-  x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
+  x[is_left_bracket & !is_bracket] <- gsub("{", "{{", x[is_left_bracket & !is_bracket], fixed = TRUE)
+  x[is_right_bracket & !is_bracket] <- gsub("}", "}}", x[is_right_bracket & !is_bracket], fixed = TRUE)
 
   # whisker replacement {{{ vignette_title }}} in usethis by vignette_title
   x <- stringr::str_replace_all(x, "\\{\\{?\\{?(\\s?[^\\}]+) \\}?\\}?\\}", "\\1")

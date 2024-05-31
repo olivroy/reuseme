@@ -14,7 +14,8 @@ file_outline(
   alpha = FALSE,
   dir_common = NULL,
   exclude_todos = FALSE,
-  recent_only = FALSE
+  recent_only = FALSE,
+  print_todo = deprecated()
 )
 
 proj_outline(
@@ -60,6 +61,8 @@ combine with \code{pattern}}
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
+
+\item{print_todo}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}. Use \code{exclude_todos} instead.}
 
 \item{exclude_tests}{Should tests be displayed? (Not sure if this argument will stay, Will have to think)}
 

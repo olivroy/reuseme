@@ -91,7 +91,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
     return(is_section_title)
   }
   if (roxy_section) {
-    x <- stringr::str_remove(x, ":$")
+    x <- sub(":$", "", x)
   }
   uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode"
   # potential section titles
@@ -152,7 +152,9 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     # roxygen2 messages
     # TRICK purrr::safely creates an error object, while possible is better.
     # Suppresss roxygen2 message, suppress callr output, suppress asciicast warnings.
-    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |> suppressMessages() |> suppressWarnings()
+    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |>
+      suppressMessages() |>
+      suppressWarnings()
     # if roxygen2 cannot parse a file, let's just forget about it.
     unparsed_files <- files_with_roxy_comments[which(is.null(parsed_files))]
     # browser()
@@ -245,8 +247,8 @@ define_outline_criteria_roxy <- function(x) {
   )
   x$content <- dplyr::case_when(
     !x$is_section_title ~ x$content,
-    x$tag == "section" ~ paste0("# ", stringr::str_remove(x$content, ":")),
-    x$tag == "subsection" ~ paste0("## ", stringr::str_remove(x$content, ":")),
+    x$tag == "section" ~ paste0("# ", sub(":", "", x$content, fixed = TRUE)),
+    x$tag == "subsection" ~ paste0("## ", sub(":", "", x$content, fixed = TRUE)),
     .default = x$content
   )
   x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)

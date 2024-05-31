@@ -79,20 +79,21 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
     cli::cli_abort("Unsaved document, focus on the saved doc you want to save.")
   }
 
-  if (!fs::path_ext(old) %in% c("md","R", "qmd", "Rmd")) {
+  if (!fs::path_ext(old) %in% c("md", "R", "qmd", "Rmd")) {
     cli::cli_abort("Only R and md docs for now")
   }
   old_path_file <- fs::path_ext_remove(fs::path_file(old))
-  if (stringr::str_detect(old, "r-profile|Rprofile")) {
+
+  if (grepl("r-profile|Rprofile", old)) {
     cli::cli_abort("Attempting to copy Rprofile (focus on the document you want)")
   }
   if (is.null(new)) {
     new_name <- paste0(old_path_file, "-new")
   } else {
-    new_name <- stringr::str_remove(new, "\\.R|\\.[Rq]?md$")
+    new_name <- sub("\\.R|\\.[Rq]?md$", "", new)
   }
   # Hack to ensure file/file.R will be correctly renamed.
-  new_path <- stringr::str_replace(old, paste0(old_path_file, "\\."), paste0(new_name, "."))
+  new_path <- sub(paste0(old_path_file, "\\."), paste0(new_name, "."), old)
 
   copied <- file.copy(old, new_path, overwrite = FALSE)
   if (copied) {

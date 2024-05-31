@@ -71,7 +71,7 @@ rename_files2 <- function(old,
 
   # renaming should only happen in tests or interactive sessions
   if (action == "rename" && !(rlang::is_interactive() || identical(Sys.getenv("TESTTHAT"), "true"))) {
-    cli::cli_abort(c("Should only rename files in interactive sessions (or in tests)"))
+    cli::cli_abort("Should only rename files in interactive sessions.")
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
@@ -124,7 +124,7 @@ rename_files2 <- function(old,
   if (renaming_strategy == "object_names") {
     # Create regex = replace kebab-case by snake_case to verify object names
     # Then the regex is the union of these.
-    regex_friendly <- c(basename_remove_ext(old), stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    regex_friendly <- c(basename_remove_ext(old), gsub("-", "_", basename_remove_ext(old), fixed = TRUE))
     regex_friendly <- paste0(unique(regex_friendly), collapse = "|")
   } else {
     regex_friendly <- ifelse(renaming_strategy %in% c("object_names"), basename_remove_ext(old), old)
@@ -216,7 +216,7 @@ compute_conflicts_regex <- function(file, renaming_strategy) {
 
   file_name_base <- basename_remove_ext(file)
 
-  object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
+  object_snake_from_file_kebab <- gsub("-", "_", file_name_base, fixed = TRUE)
 
   if (renaming_strategy == "object_names") {
     # dat/file-name.csv|file_name

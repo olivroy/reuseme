@@ -75,14 +75,14 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
       usethis::browse_github(basename(pkg_path)),
       error = function(e) {
         # TODO possibly look into checking desc::desc_get("BugReports", "~/path/to/DESCRIPTION")
-       # cli::cli_abort("didn't find a way to do what is required.", parent = e)
+        # cli::cli_abort("didn't find a way to do what is required.", parent = e)
         NULL
       }
     )
     if (is.null(gh_url)) {
       return(NULL)
     }
-    org_repo_found <- stringr::str_remove(gh_url, ".+github.com/|.+gitlab.com/")
+    org_repo_found <- sub(".+github.com/|.+gitlab.com/", "", gh_url)
     return(org_repo_found)
   }
 
@@ -96,7 +96,7 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
     )
 
     gh_url <- usethis::browse_github(basename(pkg_path))
-    org_repo_found <- stringr::str_remove(gh_url, ".+github.com/|.+gitlab.com/")
+    org_repo_found <- sub(".+github.com/|.+gitlab.com/", "", gh_url)
   } else {
     org_repo_found <- NULL
   }

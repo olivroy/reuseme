@@ -209,7 +209,7 @@ compute_path_todo <- function(todo, proj) {
   if (!is.na(proj_name_in_todo)) {
     proj <- proj_name_in_todo
     regex_proj_in_todo <- paste0(proj_name_in_todo, "\\:\\:", "\\s?")
-    todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
+    todo[1] <- sub(regex_proj_in_todo, "", todo[1])
   }
 
   is_active_proj <- tryCatch(
@@ -247,11 +247,11 @@ compute_path_todo <- function(todo, proj) {
 # accepts a single line
 strip_todo_line <- function(x, only_rm_tag = FALSE) {
   check_string(x)
-  if (!stringr::str_detect(x, "TODO|WORK|FIXME")) {
+  if (!grepl("TODO|WORK|FIXME", x)) {
     cli::cli_abort("Could not detect a todo tag in x")
   }
   if (only_rm_tag) {
-    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
+    x_new <- sub("\\s(TODO|WORK|FIXME)", "", x)
   } else {
     x_new <- stringr::str_extract(x, "([^#]+)\\#+", group = 1)
     if (is.na(x_new)) {

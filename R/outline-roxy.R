@@ -116,7 +116,7 @@ extract_roxygen_tag_location <- function(file, tag) {
       line_pos <- x$line + seq_along(lines) - 1L
       final_lines_to_include <- lines[keep]
       # Will not make this transformation and will consider roxygen comments to be
-      # final_lines_to_include <- stringr::str_remove(final_lines_to_include, "^#+\\s")
+      # final_lines_to_include <- sub("^#+\\s", "", final_lines_to_include)
 
       final_lines_to_include <- paste0(final_lines_to_include, "____", obj_name)
       names(final_lines_to_include) <- line_pos[keep]

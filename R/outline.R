@@ -53,6 +53,7 @@
 #'   the directory
 #' @param recent_only Show outline for recent files
 #' @param dir_common (Do not use it)
+#' @param print_todo `r lifecycle::badge("deprecated")`. Use `exclude_todos` instead.
 #' @inheritParams fs::dir_ls
 #' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
@@ -88,8 +89,8 @@ file_outline <- function(pattern = NULL,
                          dir_common = NULL,
                          exclude_todos = FALSE,
                          recent_only = FALSE,
-                         print_todo = deprecated()){
-  # To contribute to this function, take a look at .github/CONTRIBUTING
+                         print_todo = deprecated()) {
+  # To contribute to this function, take a look at .github/CONTRIBUTING.md
 
   if (length(path) == 1L && interactive() && rstudioapi::isAvailable()) {
     is_active_doc <- identical(path, active_rs_doc())
@@ -144,8 +145,8 @@ file_outline <- function(pattern = NULL,
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  suppressMessages(
-    in_active_project <- tryCatch(
+  in_active_project <- suppressMessages(
+    tryCatch(
       identical(suppressWarnings(proj_get2()), dir_common),
       error = function(e) FALSE
     )
@@ -225,7 +226,7 @@ file_outline <- function(pattern = NULL,
     )
   file_sections$recent_only <- recent_only
 
-  if (any(duplicated(file_sections$outline_el))) {
+  if (anyDuplicated(file_sections$outline_el) > 0L) {
     file_sections <- scrub_duplicate_outline(file_sections)
   }
   file_sections <- dplyr::relocate(
@@ -263,14 +264,14 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, e
     ))
   }
 
-  if (!fs::dir_exists(proj)) { # when referring to a project by name.
-    proj_dir <- proj_list(proj)
-  } else {
+  if (fs::dir_exists(proj)) {
     if (!is_active_proj) {
       cli::cli_warn("Use {.fn dir_outline} for that.")
     }
-
     proj_dir <- proj
+  } else {
+    # when referring to a project by name.
+    proj_dir <- proj_list(proj)
   }
 
   if (!rlang::has_length(proj_dir, 1)) {
@@ -352,7 +353,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern,  exclude_todos = exclude_todos, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern, exclude_todos = exclude_todos, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
 # Print method -------------------
@@ -564,7 +565,7 @@ display_outline_element <- function(.data, dir_common) {
       names()
     all_true_or_single_value <- x |>
       dplyr::slice(dplyr::all_of(indices)) |>
-      dplyr::select(dplyr::where(\(x)dplyr::n_distinct(x) == 1)) |>
+      dplyr::select(dplyr::where(\(x) dplyr::n_distinct(x) == 1)) |>
       dplyr::select(!dplyr::where(\(x) all(is.na(x)))) |>
       dplyr::select(!dplyr::where(\(x) is.logical(x) & !suppressWarnings(any(x, na.rm = FALSE)))) |>
       names()
@@ -747,20 +748,17 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     outline_el2 = dplyr::coalesce(outline_el2, outline_el)
   )
 
-  .data <- dplyr::mutate(.data,
-    link = paste0(outline_el2, " {.path ", file, ":", line, "}"),
-    # rstudioapi::documentOpen works in the visual mode!! but not fully.
-    file_path = .data$file,
-    is_saved_doc = .env$is_saved_doc,
-
-    # May have caused CI failure
-    text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common)) |> stringr::str_remove("^/"),
-    # decide which is important
-    style_fun = dplyr::case_match(importance,
-      "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
-      "important" ~ "cli::style_inverse('i')",
-      .default = NA
-    )
+  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
+  # rstudioapi::documentOpen works in the visual mode!! but not fully.
+  .data$file_path <- .data$file
+  .data$is_saved_doc <- is_saved_doc
+  # May have caused CI failure
+  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
+  .data$text_in_link <- sub("^/", "", .data$text_in_link)
+  .data$style_fun <- dplyr::case_match(.data$importance,
+    "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+    "important" ~ "cli::style_inverse('i')",
+    .default = NA_character_
   )
 
   if (anyNA(.data$style_fun)) {
