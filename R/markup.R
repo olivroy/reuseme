@@ -71,12 +71,17 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
     if (is.null(pkg_path)) {
       return(NULL)
     }
-    gh_url <- withCallingHandlers(
+    gh_url <- tryCatch(
       usethis::browse_github(basename(pkg_path)),
       error = function(e) {
-        cli::cli_abort("didn't find a way to do what is required.")
+        # TODO possibly look into checking desc::desc_get("BugReports", "~/path/to/DESCRIPTION")
+       # cli::cli_abort("didn't find a way to do what is required.", parent = e)
+        NULL
       }
     )
+    if (is.null(gh_url)) {
+      return(NULL)
+    }
     org_repo_found <- stringr::str_remove(gh_url, ".+github.com/|.+gitlab.com/")
     return(org_repo_found)
   }
