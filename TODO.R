@@ -30,3 +30,5 @@
 # TODO [outline] just create an `exclude` argument that will take an option? (exclude can be files or expressionsm, or elements.)
 # TODO [outline] remove snaps from outline and add a link in the test file instead?
 # TODO [outline] family should be displayed differently..
+# TODO [outline] find a way to make print bookmarks..
+# TODO [outline] escape some content in headings see {.file tests/testthat/_outline/quarto-caps.md} for examples.

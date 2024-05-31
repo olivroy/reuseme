@@ -25,7 +25,7 @@
       `i` TODO this is an item- `Donev?`
     Message
       
-      -- `my-analysis.R`  Analyse my streets 
+      -- `my-analysis.R`  Analyse my {streets} 
     Output
       `i` TODO Create a new version- `Donev?`
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
@@ -43,7 +43,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `outline/my-analysis.R`  Analyse my streets 
+      -- `outline/my-analysis.R`  Analyse my {streets} 
     Output
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets
@@ -96,9 +96,9 @@
       -- `quarto-caps.md`  title 
     Output
       `i` A long ggplot2 title with more details
-      `i` Heading
+      `i` Heading  <i class="cheatsheet-icon fa-solid fa-tags"></i>
       `i` A long ggplot2 title with more details
-      `i` Heading2
+      `i` Heading2\_done
       `i` Dashboard link
       `i` Dashboard link
 

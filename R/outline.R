@@ -466,12 +466,14 @@ print.outline_report <- function(x, ...) {
       )
       base_name <- c(base_name, " ", title_el)
     }
-
-    withCallingHandlers(
+    # TRICK need tryCatch when doing something, withCallingHandlers when only rethrowing?
+    tryCatch(
       cli::cli_h3(base_name),
       error = function(e) {
-        print(base_name)
-        rlang::abort("Could not parse by cli")
+        #browser()
+        cli::cli_h3(escape_markup(base_name))
+        #print(base_name)
+        #rlang::abort("Could not parse by cli", parent = e)
       }
     )
 
@@ -557,7 +559,7 @@ display_outline_element <- function(.data, dir_common) {
   x <- dplyr::mutate(
     x,
     outline_el = dplyr::case_when(
-      is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)"),
+      is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)|(BOOK.+)"),
       is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"],\\s?\\{", group = 1),
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
       # Add related topic if available
@@ -699,7 +701,7 @@ extract_object_captions <- function(file) {
     # tidyverse/purrr#1081
     if (length(dat) > 0) {
       # We use `format()` in case a variable is used to name the caption.
-      tryCatch(caps <- c(caps, dat |> purrr::map_chr(\(x) format(x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))), error = function(e) {
+      tryCatch(caps <- c(caps, dat |> purrr::map_chr(\(x) format(x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% x[["tab.cap"]] %||% x[["cap"]] %||% "USELESS THING"))), error = function(e) {
         cli::cli_abort("Error in {.file {unique_file[i]}}", parent = e)
       })
     }

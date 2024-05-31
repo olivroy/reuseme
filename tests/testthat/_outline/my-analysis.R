@@ -1,4 +1,4 @@
-# Analyse my streets ---------------
+# Analyse my {streets} ---------------
 ## Read my [streets](https://https://en.wikipedia.org/wiki/Street_art) data -------
 my_streets <- read.csv("data/my-streets.csv", silent = TRUE)
 new_dat <- my_streets |>
