@@ -126,8 +126,8 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   if (warn_change_of_line) {
     cli::cli_warn(c(
       x = "Could not find {.arg regexp} as expected",
-      "Could not find {.val {regexp}} at line {line_original}.",
-      i = "Has the file content changed since you ran this code?",
+      "The expected pattern {.val {regexp}} was not found at line {line_original}.",
+      i = "Please verify if the file content has changed or if the pattern needs adjustment.",
       # needs qty for cli pluralization, but no printing
       "`regexp` was detected in {cli::qty(length(regexp_detection))} line{?s} {regexp_detection}."
     ))

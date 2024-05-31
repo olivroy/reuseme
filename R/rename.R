@@ -95,7 +95,7 @@ rename_files2 <- function(old,
   # remove project name from conflicts.
   related_files <- stringr::str_subset(related_files, proj_name, negate = TRUE)
   if (length(related_files) > 0) {
-    # maybe would need to normalize path.
+    # TODO verify if path should be normalized.
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",

@@ -25,6 +25,8 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of reuseme is to provide utility functions for project management across RStudio projects.
+Sometimes, managing multiple projects can be challenging. reuseme also aims to simplify project management on Windows.
+
 Sometimes, you have to manage multiple things at once, but don't have the time to do edits.
 You may need to switch quickly to a project, add things or browse a certain file if you have some replications across projects.
 Sometimes, it is hard to do that.
@@ -49,9 +51,8 @@ reuseme is adapted for a standard workflow, recommended in (find resources)
 -   Anyone working in RStudio (recent version for hyperlink support)
 -   Work with RStudio projects
 -   Your RStudio projects are organized in a centralized location on your computer
--   Your RStudio projects are Version controlled with git (optional, but recommended to avoid surprises! No need to be hosted on repositories like GitLab or GitHub)
--   You are working on Windows (macOS is supported, but some things were designed on Windows)
--   You use machine and human readable paths (i.e. no spaces, special characters) (Tip: don't hesitate to rename your files, it can take away the pain in the long run!
+-   Your RStudio projects are Version controlled with git (optional, but recommended for avoiding surprises! No need to be hosted on repositories like GitLab or GitHub)
+-   You use machine and human-readable paths (i.e. no spaces, special characters) (Tip: don't hesitate to rename your files (`reuseme::rename_files2()`), your future self will thank you!
 
 To take advantage of reuseme, it is highly recommended to set the following option in your `.Rprofile`
 
@@ -59,7 +60,7 @@ To take advantage of reuseme, it is highly recommended to set the following opti
 options(reuseme.reposdir = c("~/rrr", "any-other-directories-that-contain-rstudio-projects"))
 ```
 
-This will enable functions like `proj_switch()`, `proj_list()`, `use_todo()` to be optimized.
+This will enable functions like `proj_switch()`, `proj_list()`, `reuseme::use_todo()` to be optimized.
 
 ## Example
 
@@ -95,7 +96,7 @@ With reuseme, just use the project name!
 +================================================================================+==================================================================================+======================================================================================================================================+
 | Switch to project "cool-project"                                               | `proj_switch(proj = "cool-project")`                                             | `proj_activate(path = "C:/users/long/path/to/cool-project")`                                                                         |
 +--------------------------------------------------------------------------------+----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
-| Write a TODO item in project "cooler-project", while working in "cool-project" | `use_todo(todo = "I need to do this ASAP as possible", proj = "cooler-project")` | `usethis::write_union(path = "C:/Users/I/do/not/want/to/type/cooler-project/TODO.R", lines = "I need to do this ASAP as possible.")` |
+| Write a TODO item in project "cooler-project", while working in "cool-project" | `reuseme::use_todo(todo = "I need to do this ASAP as possible", proj = "cooler-project")` | `usethis::write_union(path = "C:/Users/I/do/not/want/to/type/cooler-project/TODO.R", lines = "I need to do this ASAP as possible.")` |
 +--------------------------------------------------------------------------------+----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------+
 | Open pkgdown site link and see vignettes                                       | 1.  \`browse_pkg("usethis")                                                      | 1.  `browse_package("usethis")`                                                                                                      |
 |                                                                                | 2.  Click on the hyperlinks that correspond to your query                        | 2.  Type the correct number that corresponds                                                                                         |

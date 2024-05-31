@@ -91,7 +91,7 @@ Outline elements include
 \item \code{TODO} items
 \item Parse cli hyperlinks
 \item Plot or table titles
-\item FIgures caption in Quarto documents
+\item Figures caption in Quarto documents
 \item test names
 \item Indicator of recent modification
 \item Colored output for
