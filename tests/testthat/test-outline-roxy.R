@@ -36,11 +36,13 @@ test_that("multiple roxy tags don't error.", {
   expect_no_error(join_roxy_fun(example_parsed))
 })
 
-test_that("testing and not should not give different results", {
+test_that("file_outline() works outside RStudio)", {
   skip_on_cran()
-  withr::local_options("reuseme.roxy_parse" =TRUE)
+  local_mocked_bindings(
+    is_rstudio = function(...) FALSE
+  )
   expect_no_warning(
-    file_outline(path = file_to_map, dir_common = "tests/testthat/_outline")
+    file_outline(path = testthat::test_path("_outline", "roxy-cli.R"))
   )
   expect_equal(
     nrow(file_outline(path = testthat::test_path("_outline", "roxy-cli.R"))),

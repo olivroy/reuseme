@@ -173,8 +173,14 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     !isFALSE(getOption("reuseme.roxy_parse", default = TRUE)) && # will not parse if option is set to FALSE
       any(x$is_roxygen_comment)
   if (should_parse_roxy_comments) {
-    if (interactive() && !is.null(dir_common)) {
+    # doing this created problems in tests?
+    if (interactive() && !is.null(dir_common) && is_rstudio()) {
+      # The idea is that roxygen2 may be better at getting objects if directory is changed.
+      # but don't bother doing this outside RStudio for now...
       withr::local_dir(dir_common)
+      if (!fs::file_exists(x$file[1])) {
+        cli::cli_abort("Wrong dir done. file = {.file {x$file[1]}. dir = {.path {dir_common}}", .internal = TRUE)
+      }
     }
     rlang::check_installed(c("roxygen2", "tidyr"), "to create roxygen2 comments outline.")
     files_with_roxy_comments <- unique(x[x$is_roxygen_comment, "file", drop = TRUE])

@@ -82,7 +82,7 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   check_number_whole(line)
   line_original <- line
   # to defer warning.
-  if (interactive() && rstudioapi::isAvailable()) {
+  if (interactive() && is_rstudio()) {
     rstudioapi::documentSaveAll()
   }
   warn_change_of_line <- FALSE

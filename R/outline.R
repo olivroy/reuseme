@@ -92,7 +92,7 @@ file_outline <- function(pattern = NULL,
                          print_todo = deprecated()) {
   # To contribute to this function, take a look at .github/CONTRIBUTING.md
 
-  if (length(path) == 1L && rlang::is_interactive() && rstudioapi::isAvailable()) {
+  if (length(path) == 1L && rlang::is_interactive() && is_rstudio()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
     is_active_doc <- FALSE
@@ -718,13 +718,13 @@ define_important_element <- function(.data) {
 }
 
 construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
-  rs_avail_file_link <- rstudioapi::isAvailable("2023.09.0.375") # better handling after
+  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
-  .data$rs_version <- ifelse(!rstudioapi::isAvailable("2023.12.0.274") && rstudioapi::isAvailable(), ".", "")
+  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
   .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
   .data <- dplyr::mutate(

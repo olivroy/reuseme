@@ -49,7 +49,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   proj_path <- proj_list(proj)
 
 
-  if (!rstudioapi::isAvailable()) {
+  if (!is_rstudio()) {
     cli::cli_warn("This feature may not work as excepted outside RStudio.")
   }
 

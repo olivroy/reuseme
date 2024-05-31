@@ -39,10 +39,10 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
 #' @name open_rs_doc
 #' @export
 active_rs_doc <- function() {
-  if (!interactive() && !rstudioapi::isAvailable()) {
+  if (!interactive() && !is_rstudio()) {
     return("Non-existing doc")
   }
-  if (!rstudioapi::isAvailable()) {
+  if (!is_rstudio()) {
     cli::cli_abort("Not in RStudio.")
   }
   unsaved_doc <- tryCatch(rstudioapi::documentPath(), error = function(e) TRUE)
@@ -125,7 +125,7 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
 #' @examplesIf FALSE
 #' active_rs_doc_delete()
 active_rs_doc_delete <- function() {
-  if (!rlang::is_interactive() || !rstudioapi::isAvailable()) {
+  if (!rlang::is_interactive() || !is_rstudio()) {
     cli::cli_abort(c("Can't delete files in non-interactive sessions."))
   }
   doc <- active_rs_doc()
@@ -141,7 +141,7 @@ active_rs_doc_delete <- function() {
   if (fs::is_dir(elems$full_path)) {
     cli::cli_abort("Must be a file", .internal = TRUE)
   }
-  if (interactive() && rstudioapi::isAvailable()) {
+  if (interactive() && is_rstudio()) {
     rstudioapi::documentSave()
   }
   cli::cli_inform(c(
@@ -375,7 +375,7 @@ normalize_proj_and_path <- function(path, call = caller_env()) {
 #' @returns NULL, called for its side effects.
 #' @export
 active_rs_doc_nav <- function(path = active_rs_doc()) {
-  if (!rstudioapi::isAvailable() || !interactive()) {
+  if (!is_rstudio() || !interactive()) {
     cli::cli_abort("Must use in RStudio interactive sessions.")
   }
   if (is.null(path)) {
