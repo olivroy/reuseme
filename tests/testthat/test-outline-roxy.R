@@ -35,3 +35,12 @@ test_that("multiple roxy tags don't error.", {
   example_parsed <- purrr::map(file_to_map, \(x) roxygen2::parse_file(x, env = NULL))
   expect_no_error(join_roxy_fun(example_parsed))
 })
+
+test_that("cli escaping goes well...", {
+  skip("Not ready :(")
+  file_to_map <- testthat::test_path("_outline", "roxy-cli.R")
+  expect_no_error(file_outline(path = file_to_map))
+  names(file_to_map) <- file_to_map
+  example_parsed <- purrr::map(file_to_map, \(x) roxygen2::parse_file(x, env = NULL))
+  expect_no_error(join_roxy_fun(example_parsed))
+})

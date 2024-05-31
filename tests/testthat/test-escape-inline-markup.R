@@ -5,6 +5,11 @@ test_that("escape_markup() works", {
   expect_equal(escape_markup("{.file {here}}"), "{.file {.url here}}")
   expect_equal(escape_markup("{"), "{{")
   expect_equal(escape_markup("{.email}"), "{{.email}}")
+  expect_equal(escape_markup("This `}` and `{`"), "This `}}` and `{{`")
+  expect_equal(escape_markup("This `{` and `}`"), "This `{{` and `}}`")
+
+  # TODO could probably be {{. }} works?
+  expect_equal(escape_markup("{. } works"), ". works")
   input <- "multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}"
   exp_str <- "multi problems {{gt}} to {{gt}} to {.file gt} to {.file {.url gt}}"
   expect_equal(escape_markup(input), exp_str)

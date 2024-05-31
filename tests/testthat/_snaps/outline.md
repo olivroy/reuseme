@@ -20,6 +20,7 @@
       `i` Another title
       `i` Last title
       `i` Second level
+      `i` `function_name()` title
       `i` TODO this is an item- `Donev?`
     Message
       

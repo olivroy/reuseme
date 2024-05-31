@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()     5.2s     5.2s     0.192    76.3MB     1.73
+#> 1 outline <- proj_outline()    6.94s    6.94s     0.144    78.1MB     1.15
 ```
 
 <details>
@@ -246,6 +246,7 @@ outline
 #> `i` TODO Delete when stable debugging- `Done✔?`
 #> `i` TODO Delete when stable for debugging- `Done✔?`
 #> `i` TODO exclude S3 methods- `Done✔?`
+#> `i` FIXME escape markup see next line- `Done✔?`
 #> `i` helper for interactive checking
 #> 
 #> ── `R/outline.R`  `proj_outline()`
@@ -253,6 +254,7 @@ outline
 #> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> `i` `file_outline()`
 #> `i` File outline
+#> `i` TODO for usethis, add inst/templates/ but I may leave them for now....- `Done✔?`
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info- `Done✔?`
@@ -360,6 +362,8 @@ outline
 #> `i` Dashboard link
 #> `i` Dashboard link
 #> 
+#> ── `tests/testthat/_outline/roxy-cli.R`  outline
+#> 
 #> ── `tests/testthat/_outline/roxy-general.R`
 #> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
 #> `i` Complete block for exported function with headings
@@ -398,25 +402,62 @@ outline
 #> `i` Second level
 #> `i` TODO this is an item- `Done✔?`
 #> `i` Last title
+#> `i` `function_name()` title
+#> 
+#> ── `tests/testthat/_snaps/browse-pkg.md`
+#> `i` browse_pkg() works
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
+#> `i` case_if_any() basic work
 #> `i` wrong cases error
 #> 
 #> ── `tests/testthat/_snaps/dplyr-plus.md`
+#> `i` filter_if_any() errors with across()
 #> `i` adds rows in front, but warns the user
+#> `i` summarise_with_total() works
+#> `i` slice_min_max() works
+#> `i` na_if2() works with expr and values
 #> 
 #> ── `tests/testthat/_snaps/eda-identity.md`
 #> `i` Side effects are what's intended in interactive sessions
+#> 
+#> ── `tests/testthat/_snaps/escape-inline-markup.md`
+#> `i` escape_markup() works
+#> `i` replace_r_var() works
+#> 
+#> ── `tests/testthat/_snaps/markup.md`
+#> `i` link_gh_issue() + markup_href() work
 #> 
 #> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
+#> `i` file_outline() works
 #> `i` alpha and work_only arguments work
+#> `i` file_outline() is a data frame
 #> `i` pattern works as expected
+#> `i` file_outline() works well with figure captions
+#> 
+#> ── `tests/testthat/_snaps/proj-list.md`
+#> `i` proj_file() works
+#> 
+#> ── `tests/testthat/_snaps/quarto-help.md`
+#> `i` href_name_url() works
+#> `i` quarto_help() works
 #> 
 #> ── `tests/testthat/_snaps/rename.md`
+#> `i` rename_files2(): prevents file renaming if conflicts
+#> `i` rename_files2(): is easier to test messages with no action
+#> `i` rename_files2(): renames files if forced to do so
+#> `i` rename_files2(): doesn't check for references if file name is short
+#> `i` rename_files2(): priorizes references if name is generic or widely used in files
+#> `i` rename_files2(): can accept overridden preferences
+#> `i` rename_files2(): relaxes its conditions for figures
+#> `i` rename_files2(): calls check_referenced_files()
 #> `i` Helper files returns the expected input
+#> 
+#> ── `tests/testthat/_snaps/screenshot.md`
+#> `i` screenshot() does nothing in non-interactive sessions
 #> 
 #> ── `tests/testthat/_snaps/todo.md`
 #> `i` Marking a TODO item as done works
@@ -438,6 +479,9 @@ outline
 #> `i` Returns identity
 #> `i` Side effects are what's intended in interactive sessions
 #> 
+#> ── `tests/testthat/test-escape-inline-markup.R`
+#> `i` TODO could probably be {. } works?- `Done✔?`
+#> 
 #> ── `tests/testthat/test-markup.R`
 #> `i` link_gh_issue() + markup_href() work
 #> 
@@ -456,6 +500,7 @@ outline
 #> `i` roxy tags are parsed properly + object names are correct
 #> `i` roxy tags don't error
 #> `i` multiple roxy tags don't error.
+#> `i` cli escaping goes well...
 #> 
 #> ── `tests/testthat/test-outline.R`
 #> `i` alpha and work_only arguments work

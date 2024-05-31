@@ -186,7 +186,6 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     is_object_title = FALSE,
     tag = NA_character_,
     topic = NA_character_,
-    is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
@@ -236,7 +235,6 @@ define_outline_criteria_roxy <- function(x) {
   x$is_cross_ref <- FALSE
   x$is_function_def <- FALSE
   x$is_todo_fixme <- FALSE
-  x$is_a_comment_or_code <- FALSE
   x$is_doc_title <- x$line == 1 & x$tag == "title"
   x$n_leading_hash <- nchar(stringr::str_extract(x$content, "\\#+"))
   x$n_leading_hash <- dplyr::case_when(

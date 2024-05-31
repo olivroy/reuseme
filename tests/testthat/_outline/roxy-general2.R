@@ -36,4 +36,4 @@ f_not_to_index <- function() {
 
 }
 
-# Keep this line last: content to test for new roxygen output should be put in ex-outline-roxy.R
+# Keep this line last: content to test for new roxygen output should be put in roxy-general.R

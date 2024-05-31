@@ -480,14 +480,14 @@ keep_outline_element <- function(.data) {
   dat <- dplyr::filter(
     .data,
     (is_news & (
-      (!simplify_news & is_section_title & !is_a_comment_or_code & before_and_after_empty) |
-        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & !is_a_comment_or_code & before_and_after_empty)
+      (!simplify_news & is_section_title & before_and_after_empty) |
+        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & before_and_after_empty)
     )) |
       # still regular comments in .md files
       # what to keep in .md docs
 
       (is_md & (is_chunk_cap | is_doc_title | is_object_title)) |
-      (is_md & (is_section_title & before_and_after_empty & !is_a_comment_or_code)) |
+      (is_md & (is_section_title & before_and_after_empty)) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere

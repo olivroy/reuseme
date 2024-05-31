@@ -248,7 +248,7 @@ join_roxy_fun <- function(file) {
     )) |>
     tidyr::separate_longer_delim(content, delim = "\n")
 
-  roxy_parsed1 |>
+  r <- roxy_parsed1 |>
     dplyr::mutate(
       n = dplyr::n(),
       # error if something is length 0.
@@ -263,6 +263,12 @@ join_roxy_fun <- function(file) {
     ) |>
     dplyr::filter(nzchar(content), !stringr::str_detect(content, "`r\\s")) |>
     dplyr::select(-id, -n)
+  # remove link...
+  r$content <- stringr::str_remove_all(r$content, "\\\\[^\\\\]+\\]\\{")
+  # FIXME escape markup see next line
+  # To test it add a fix tag to next line and try to figure it out...
+  # to fix figure out why #' @section Escaping `{` and  `}` : isn't parsing. Workaround to remove it.
+  r |> dplyr::filter(!grepl("^Escaping", content))
 }
 
 # helper for interactive checking -----------
