@@ -350,6 +350,25 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
   file_outline(path = file_list_to_outline, pattern = pattern, exclude_todos = exclude_todos, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
+exclude_example_files <- function(path) {
+  # TODO for usethis, add inst/templates/ but I may leave them for now....
+  # styler tests examples may not work..
+
+  regexp_exclude <- paste0(
+    "vignettes/test/", # test vignettes
+    "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
+    "inst/(templates/license-|example-file/)", # license templates in usethis
+    "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
+    collapse = "|"
+  )
+
+  fs::path_filter(
+    path,
+    regexp = regexp_exclude,
+    invert = TRUE
+  )
+}
+
 # Print method -------------------
 
 #' @export
