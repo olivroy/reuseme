@@ -33,7 +33,7 @@ extract_roxygen_tag_location <- function(file, tag) {
         return(object_call)
       }
       if (length(object_call) > 1) {
-        return(object_call[2])
+        return(paste0(object_call[2], "()"))
       }
       NULL
     }
@@ -48,12 +48,12 @@ extract_roxygen_tag_location <- function(file, tag) {
         if (!is.null(name_tag[[i]])) {
           objects[[i]] <- name_tag[[i]]
         } else {
-          objects[[i]] <- "no-topic"
+          objects[[i]] <- NA_character_
         }
       }
     }
     if (any(lengths(objects) == 0)) {
-      # should not happen. I chose "no-topic" instead.
+      # should not happen. I chose NA instead.
       cli::cli_abort("Could not resolve object or topic names.")
     }
   }
@@ -250,6 +250,7 @@ join_roxy_fun <- function(file) {
     )) |>
     tidyr::separate_longer_delim(content, delim = "\n")
 
+  roxy_parsed1$topic <- dplyr::na_if(roxy_parsed1$topic, "NA")
   r <- roxy_parsed1 |>
     dplyr::mutate(
       n = dplyr::n(),

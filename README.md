@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    6.22s    6.22s     0.161    86.9MB    0.643
+#> 1 outline <- proj_outline()    4.63s    4.63s     0.216      87MB    0.865
 ```
 
 <details>
@@ -177,28 +177,28 @@ Example outline
 ``` r
 outline
 #> 
-#> ── `R/browse-pkg.R`  Browse pkgdown site if it exists
+#> ── `R/browse-pkg.R`  Browse pkgdown site if it exists [browse_pkg()]
 #> 
-#> ── `R/case-if-any.R`  case-when, but checks for all matches, returns a character
+#> ── `R/case-if-any.R`  case-when, but checks for all matches, returns a character [case_if_any()]
 #> 
 #> ── `R/dplyr-plus.R`  dplyr extra
-#> `i` Count observations by group and compute percentage
+#> `i` Count observations by group and compute percentage [count_pct()]
 #> `i` dplyr extensions
-#> `i` Subset rows using their positions
+#> `i` Subset rows using their positions [slice_min_max()]
 #> `i` dplyr extensions
-#> `i` Explore all rows in a random group
+#> `i` Explore all rows in a random group [slice_group_sample()]
 #> `i` family dplyr extensions
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
-#> `i` Keep rows that match one of the conditions
+#> `i` Keep rows that match one of the conditions [filter_if_any()]
 #> `i` with dplyr::filter
-#> `i` Elegant wrapper around filter and pull
+#> `i` Elegant wrapper around filter and pull [extract_cell_value()]
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
-#> `i` Compute a summary for one group with the total included.
-#> `i` Transform to NA any of the condition
+#> `i` Compute a summary for one group with the total included. [summarise_with_total()]
+#> `i` Transform to NA any of the condition [na_if2()]
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
-#> `i` Helpers that return the same value
+#> `i` Helpers that return the same value [eda-identity]
 #> `i` Use cases / advantages
 #> `i` Caution
 #> `i` base identity functions
@@ -218,19 +218,19 @@ outline
 #> `i` Scalars
 #> `i` Vectors
 #> 
-#> ── `R/named.R`  Helpers that can return a named vector
+#> ── `R/named.R`  Helpers that can return a named vector [named-base]
 #> 
-#> ── `R/open.R`  Open a Document in RStudio
+#> ── `R/open.R`  Open a Document in RStudio [open_rs_doc()]
 #> `i` FIXME why is this code like this?- `Done✔?`
-#> `i` Copy the active document to the same location
+#> `i` Copy the active document to the same location [active_rs_doc_copy()]
 #> `i` document manipulation helpers
-#> `i` Delete the active RStudio document safely
+#> `i` Delete the active RStudio document safely [active_rs_doc_delete()]
 #> `i` document manipulation helpers
 #> `i` TODO structure and summarise information.- `Done✔?`
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
-#> `i` Open Files Pane at current document location
+#> `i` Open Files Pane at current document location [active_rs_doc_nav()]
 #> 
-#> ── `R/outdated-pkgs.R`  Looks for outdated packages
+#> ── `R/outdated-pkgs.R`  Looks for outdated packages [outdated_pkgs()]
 #> `i` TODO figure out pad :)- `Done✔?`
 #> 
 #> ── `R/outline-criteria.R`
@@ -249,7 +249,7 @@ outline
 #> `i` helper for interactive checking
 #> 
 #> ── `R/outline.R`  `proj_outline()`
-#> `i` Print interactive outline of file sections
+#> `i` Print interactive outline of file sections [outline]
 #> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> `i` `file_outline()`
 #> `i` File outline
@@ -260,23 +260,23 @@ outline
 #> `i` FIXME find a way to be as consistent as lightparser, but faster.- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
-#> ── `R/proj-list.R`  Opens a RStudio project in a new session
+#> ── `R/proj-list.R`  Opens a RStudio project in a new session [proj_switch()]
 #> `i` project management helpers
 #> `i` TODO maybe add a max?- `Done✔?`
-#> `i` Access the file outline within other project
+#> `i` Access the file outline within other project [proj_file()]
 #> `i` project management helpers
 #> `i` TODO improve on this message- `Done✔?`
-#> `i` Returns a named project list options
+#> `i` Returns a named project list options [proj_list()]
 #> `i` project management helpers
 #> 
-#> ── `R/proj-reuseme.R`  Interact with different RStudio projects
+#> ── `R/proj-reuseme.R`  Interact with different RStudio projects [proj-reuseme]
 #> `i` Setup
 #> `i` Capabilities.
 #> `i` project management helpers
 #> 
-#> ── `R/quarto-help.R`  Show links to Quarto documentation of interest
+#> ── `R/quarto-help.R`  Show links to Quarto documentation of interest [quarto_help()]
 #> 
-#> ── `R/rename.R`  Rename an output or a data file and watch for references
+#> ── `R/rename.R`  Rename an output or a data file and watch for references [rename_files2()]
 #> `i` Use case
 #> `i` After here, we start doing some renaming real situations
 #> `i` Helpers
@@ -286,9 +286,9 @@ outline
 #> `i` FIXME maybe not fail while testing- `Done✔?`
 #> `i` TODO Check that old file is more recent- `Done✔?`
 #> 
-#> ── `R/screenshot.R`  Save the current image in clipboard to png in your active directory
+#> ── `R/screenshot.R`  Save the current image in clipboard to png in your active directory [screenshot()]
 #> 
-#> ── `R/todo.R`  Add a TODO list by project to a TODO.R file in the base directory
+#> ── `R/todo.R`  Add a TODO list by project to a TODO.R file in the base directory [use_todo()]
 #> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
 #> `i` TODO nice to have, but would need to extract duplicates- `Done✔?`
 #> `i` Helpers
@@ -366,20 +366,20 @@ outline
 #> `i` Dashboard link
 #> 
 #> ── `tests/testthat/_outline/roxy-cli.R`  outline
-#> `i` Like [base::grep()] but [grepl()] for ANSI strings
+#> `i` Like [base::grep()] but [grepl()] for ANSI strings [f2()]
 #> 
 #> ── `tests/testthat/_outline/roxy-general.R`
 #> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
 #> `i` Complete block for exported function with headings
-#> `i` A title to be included
+#> `i` A title to be included [f_to_be_index_in_outline()]
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
-#> `i` `First code` to be included:
+#> `i` `First code` to be included
 #> `i` a family to include
 #> `i` block not to index
 #> `i` Topic to index
-#> `i` A title to be included
+#> `i` A title to be included [topic-name-to-include]
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
@@ -390,20 +390,20 @@ outline
 #> `i` Details + 2nd level heading
 #> `i` second heading
 #> `i` data to index
-#> `i` My data
+#> `i` My data [dataset]
 #> 
 #> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_outline/roxy-general.R' for output testing
-#> `i` Title with `_things`
+#> `i` Title with `_things` [f_to_be_index_in_outline()]
 #> `i` a family to include
-#> `i` An S3 method not to be include
-#> `i` section AA REQUIRED:
+#> `i` An S3 method not to be include [f_not_to_index.xml()]
+#> `i` section AA REQUIRED
 #> 
 #> ── `tests/testthat/_outline/roxy-section.R`  multiple tags + name parsing issue
-#> `i` A title to be included
-#> `i` a section:
-#> `i` another section:
-#> `i` another sectio2n:
+#> `i` A title to be included [xxx]
+#> `i` a section
+#> `i` another section
+#> `i` another sectio2n
 #> 
 #> ── `tests/testthat/_outline/title.md`  The title is the only outline element
 #> 

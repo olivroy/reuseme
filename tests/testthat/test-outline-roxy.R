@@ -16,10 +16,10 @@ test_that("roxy tags are parsed properly + object names are correct", {
   res_order <- dplyr::arrange(res, line)
   expect_setequal(
     res$topic,
-    c("f_to_be_index_in_outline", "topic-name-to-include", "no-topic", "dataset")
+    c("f_to_be_index_in_outline", "topic-name-to-include", NA_character_, "dataset")
   )
   # strip code from roxygen2 tag
-  expect_contains(res$content, "`First code` to be included")
+  expect_contains(res$content, "First code to be included")
 })
 
 test_that("roxy tags don't error", {

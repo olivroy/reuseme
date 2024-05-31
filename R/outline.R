@@ -556,6 +556,8 @@ display_outline_element <- function(.data, dir_common) {
       is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)"),
       is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"],\\s?\\{", group = 1),
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
+      # Add related topic if available
+      tag == "title" & !is.na(topic) ~ paste0(outline_el, " [", topic, "]"),
       # family or concept!
       is_tab_or_plot_title & !is.na(tag) ~ outline_el,
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1),
