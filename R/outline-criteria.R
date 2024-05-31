@@ -125,7 +125,7 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
 # Add variable to outline data frame --------------------
 
-define_outline_criteria <- function(.data, print_todo, dir_common) {
+define_outline_criteria <- function(.data, exclude_todos, dir_common) {
   x <- .data
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
@@ -186,7 +186,7 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     is_object_title = FALSE,
     tag = NA_character_,
     topic = NA_character_,
-    is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
+    is_todo_fixme = !exclude_todos & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     # Make sure everything is second level in revdep/.

@@ -46,7 +46,7 @@
 #' @param work_only If `TRUE`, (the default), will only show you work items
 #'   first. Set to `FALSE` if you want to see the full outline. `WORK` will
 #'   combine with `pattern`
-#' @param print_todo Should include TODOs in the file outline? If `FALSE`, will
+#' @param exclude_todos Should include TODOs in the file outline? If `FALSE`, will
 #'   print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in
@@ -64,7 +64,7 @@
 #' file_outline(path = file)
 #'
 #' # Remove todo items
-#' file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+#' file_outline(path = file, exclude_todos = TRUE, alpha = TRUE)
 #'
 #' # interact with data frame
 #' file_outline(path = file) |> dplyr::as_tibble()
@@ -86,8 +86,9 @@ file_outline <- function(pattern = NULL,
                          work_only = TRUE,
                          alpha = FALSE,
                          dir_common = NULL,
-                         print_todo = TRUE,
-                         recent_only = FALSE) {
+                         exclude_todos = FALSE,
+                         recent_only = FALSE,
+                         print_todo = deprecated()){
   # To contribute to this function, take a look at .github/CONTRIBUTING
 
   if (length(path) == 1L && interactive() && rstudioapi::isAvailable()) {
@@ -97,6 +98,15 @@ file_outline <- function(pattern = NULL,
   }
   if (length(path) == 0L) {
     cli::cli_abort("No path specified.")
+  }
+
+  if (lifecycle::is_present(print_todo)) {
+    exclude_todos <- !print_todo
+    lifecycle::deprecate_warn(
+      when = "0.0.3",
+      what = "file_outline(print_todo)",
+      with = "file_outline(exclude_todos)"
+    )
   }
 
   # active_rs_doc() returns `NULL` if the active document is unsaved.
@@ -162,7 +172,7 @@ file_outline <- function(pattern = NULL,
 
   check_string(pattern, arg = "You may have specified path Internal error")
 
-  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo, dir_common)
+  file_sections00 <- define_outline_criteria(file_content, exclude_todos = exclude_todos, dir_common)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
@@ -229,7 +239,7 @@ file_outline <- function(pattern = NULL,
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, exclude_tests = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, exclude_tests = FALSE, exclude_todos = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
 
   if (is_active_proj && !is.null(pattern) && pattern %in% names(proj_list())) {
@@ -245,6 +255,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, e
       pattern = pattern,
       work_only = work_only,
       exclude_tests = exclude_tests,
+      exclude_todos = exclude_todos,
       dir_tree = dir_tree,
       alpha = alpha,
       recent_only = recent_only,
@@ -285,6 +296,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, e
     path = proj_dir,
     work_only = work_only,
     exclude_tests = exclude_tests,
+    exclude_todos = exclude_todos,
     dir_tree = dir_tree,
     alpha = alpha,
     recurse = TRUE
@@ -292,7 +304,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, e
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_tests = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_tests = FALSE, exclude_todos = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -340,7 +352,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern,  exclude_todos = exclude_todos, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
 # Print method -------------------

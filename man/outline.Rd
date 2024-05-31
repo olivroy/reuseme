@@ -13,7 +13,7 @@ file_outline(
   work_only = TRUE,
   alpha = FALSE,
   dir_common = NULL,
-  print_todo = TRUE,
+  exclude_todos = FALSE,
   recent_only = FALSE
 )
 
@@ -22,6 +22,7 @@ proj_outline(
   proj = proj_get2(),
   work_only = TRUE,
   exclude_tests = FALSE,
+  exclude_todos = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE
@@ -32,6 +33,7 @@ dir_outline(
   path = ".",
   work_only = TRUE,
   exclude_tests = FALSE,
+  exclude_todos = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE,
@@ -54,7 +56,7 @@ combine with \code{pattern}}
 
 \item{dir_common}{(Do not use it)}
 
-\item{print_todo}{Should include TODOs in the file outline? If \code{FALSE}, will
+\item{exclude_todos}{Should include TODOs in the file outline? If \code{FALSE}, will
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
@@ -115,7 +117,7 @@ file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 file_outline(path = file)
 
 # Remove todo items
-file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+file_outline(path = file, exclude_todos = TRUE, alpha = TRUE)
 
 # interact with data frame
 file_outline(path = file) |> dplyr::as_tibble()
