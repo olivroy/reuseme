@@ -177,7 +177,7 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     # TODO long enough to be meanignful?
     is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
-    is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):|```\\{r.*cap\\s?\\="),
+    is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title)[:(\\s*=)]|```\\{r.*cap\\s?\\="),
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),

@@ -26,6 +26,11 @@ Some text with TODO.
 ```{r}
 #| fig-cap: > 
 #|   A long ggplot2 title
-#|   with more details
+#|   with more details2
 ```
 
+```{r}
+#| fig.cap = " 
+#| A long ggplot2 title
+#|   with more details3."
+```

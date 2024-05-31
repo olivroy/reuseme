@@ -11,7 +11,8 @@
       `i` A section2
       `i` A long ggplot2 title
       `i` A code section
-      `i` A long ggplot2 title with more details
+      `i` A long ggplot2 title with more details2
+      `i` A long ggplot2 title with more details3.
       `i` Dashboard card
     Message
       

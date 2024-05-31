@@ -674,12 +674,12 @@ get_chunk_cap <- function(file) {
       })
     }
   }
+  # used as a default to make sure purrr doesn't complain
   caps <- caps[caps != "USELESS THING"]
   if (length(caps) != length(file)) {
     cli::cli_abort("error! :(, caps = {length(caps)}, file = {length(file)} in file {.file {unique_file}}")
   }
-  #  used to make sure purrr doesn't complain
-  caps |> stringr::str_replace_all("\n", " ")
+  caps |> stringr::str_squish()
 }
 
 define_important_element <- function(.data) {
