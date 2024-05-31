@@ -66,6 +66,9 @@ escape_markup <- function(x) {
   x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
   x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
 
+  # whisker replacement {{{ vignette_title }}} in usethis by vignette_title
+  x <- stringr::str_replace_all(x, "\\{\\{?\\{? ([^\\}]+) \\}?\\}?\\}", "\\1")
+
   if (any(stringr::str_detect(x, "\\{{3,10}"))) {
     # more than 3 {
     cli::cli_abort("internal errror. Did not transform string correctly.")

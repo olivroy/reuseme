@@ -26,6 +26,7 @@ test_that("o_is_work_item() works", {
 
 test_that("o_is_test_that() works", {
   expect_true(o_is_test_that('test_that("Serious things are happening", {'))
+  expect_false(o_is_test_that('test_that("", {'))
 })
 
 test_that("o_is_generic_test() works", {
@@ -39,6 +40,8 @@ test_that("o_is_tab_plot_title() works", {
   expect_false(o_is_tab_plot_title("fwd_title = 'Family'"))
   expect_false(o_is_tab_plot_title("guide_legend(title = 'Family'"))
   expect_false(o_is_tab_plot_title("title = ''"))
+  expect_false(o_is_tab_plot_title("title = '', symbol = 'x'"))
+
   expect_false(o_is_tab_plot_title('title = ".+", " +\\(",")'))
 })
 

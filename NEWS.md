@@ -2,6 +2,16 @@
 
 * `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
 
+* `proj_outline()` was improved to work with roxygen2 and lightparser to parse file contents more consistenly. This means a slowdown, but the increased accuracy is worth it! Parsing a single file should still be pretty fast!
+
+* `proj_outline()` gains `exclude_tests` to exclude tests from outline
+
+* `doc_title`, `is_plot_or_tab_title` is better detected now.
+
+* `proj_outline()` now detects legacy `fig.cap` in the chunk header. See `knitr::convert_chunk_headers()` for the newer approach. 
+
+* `proj_outline()` now autolinks GitHub issuea inside the repo.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).

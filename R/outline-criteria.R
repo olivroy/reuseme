@@ -68,7 +68,7 @@ o_is_test_that <- function(x) {
   if (!any(potential_test)) {
     return(potential_test)
   }
-  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"")
+  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"(?!\")")
 }
 
 o_is_generic_test <- function(x) {
@@ -77,9 +77,9 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
-  stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"']") &
+  stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
     !grepl("[", x, fixed = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"|\", \"") &
+    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(") &
     !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &
     # not guide_*(title = ) as this is not a title.
     !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{|guide_")

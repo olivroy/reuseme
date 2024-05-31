@@ -314,7 +314,8 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
-      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/",
+      # TODO for usethis, add inst/templates/ but I may leave them for now....
+      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/|inst/templates/license-",
       invert = TRUE
     )
   }
@@ -429,7 +430,7 @@ print.outline_report <- function(x, ...) {
           thing <- summary_links_files$first_line_el[[i]]
           print(thing)
           print(escape_markup(thing))
-          cli::cli_abort("failed to parse in first line of file {.file {summary_links_files$file[[i]]}}.", parent = e)
+          cli::cli_abort("Failed to parse in first line of file {.file {summary_links_files$file[[i]]}}.", parent = e)
         }
       )
       base_name <- c(base_name, " ", title_el)

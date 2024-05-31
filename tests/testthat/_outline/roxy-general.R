@@ -17,7 +17,7 @@
 #'
 #' Content not to be included2
 #'
-#' @section First to be included:
+#' @section `First code` to be included:
 #'
 #' Content not to be included
 #'
