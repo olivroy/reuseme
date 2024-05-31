@@ -10,7 +10,9 @@
 
 * `proj_outline()` now detects legacy `fig.cap` in the chunk header. See `knitr::convert_chunk_headers()` for the newer approach. 
 
-* `proj_outline()` now autolinks GitHub issuea inside the repo.
+* `proj_outline()` now autolinks GitHub issue inside the repo.
+
+* `file_outline()` now supports [R reports](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) (basic)
 
 # reuseme 0.0.2
 

@@ -1,4 +1,11 @@
 # Test individual outline elements ------
+test_that("o_is_notebook() works", {
+  expect_true(o_is_notebook("#' ---", "file.R", file_ext = "R", line = 1))
+  expect_false(o_is_notebook("#' ---", "file.R", file_ext = "qmd", line = 1))
+  expect_false(o_is_notebook("#' Fn title", "file.R", file_ext = "qmd", line = 1))
+
+})
+
 test_that("o_is_roxygen_comment() works", {
   expect_true(o_is_roxygen_comment("#' @param"))
   expect_equal(

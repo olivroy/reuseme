@@ -503,6 +503,9 @@ keep_outline_element <- function(.data) {
     versions_to_drop <- character(0L)
   }
   # browser()
+  # For debugging.
+  needed_elements <- which(grepl("REQUIRED", .data$content, fixed = TRUE) & !grepl("grep|keyword", .data$content, fixed = FALSE))
+
   dat <- dplyr::filter(
     .data,
     (is_news & (
@@ -521,6 +524,12 @@ keep_outline_element <- function(.data) {
   )
 
   dat$simplify_news <- NULL
+  if (length(needed_elements) != length(grep("REQUIRED", dat$content, fixed = TRUE))) {
+    zz <<- dplyr::slice(.data, needed_elements)
+    cli::cli_abort(
+      "Debugging mode. An important element is absent from the outline. Review filters, regex detection etc."
+    )
+  }
   dat
 }
 

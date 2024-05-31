@@ -18,11 +18,25 @@ extract_pkg_version <- function(x, is_news, is_heading) {
 #' * is_tab_plot_title
 #'
 #' @noRd
-o_is_roxygen_comment <- function(x, file_ext = NULL, is_test_file = FALSE) {
-  if (!is.null(file_ext)) {
-    is_r_file <- tolower(file_ext) == "r" & !is_test_file
+o_is_notebook <- function(x, file, file_ext, line) {
+  # Like roxy comments and first line = --, 2nd title.
+  # x$is_notebook <- grepl("notebook.*\\.R", x$file)
+  # Detect #' ---
+  any_notebooks <- grep("^#' ---", x[line == 1 & file_ext == "R"], fixed = FALSE)
+  if (length(any_notebooks) > 0L) {
+    is_notebook <- file %in% file[line == 1 & file_ext == "R"][any_notebooks]
   } else {
-    is_r_file <- !is_test_file
+    is_notebook <- FALSE
+  }
+  is_notebook
+}
+
+
+o_is_roxygen_comment <- function(x, file_ext = NULL, is_notebook = FALSE) {
+  if (!is.null(file_ext)) {
+    is_r_file <- tolower(file_ext) == "r" & !is_notebook
+  } else {
+    is_r_file <- !is_notebook
   }
 
   if (!any(is_r_file)) {
@@ -106,7 +120,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   uninteresting_headings <- paste0(
     "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE",
     "url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$",
-    "^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode",
+    "^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
     collapse = "|"
   )
   # potential section titles
@@ -149,12 +163,10 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
   x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
-  # TODO Would have to look for notebooks that don't contain notebook in their name
-  # Like roxy comments and first line = --, 2nd title.
-  x$is_notebook <- grepl("notebook.*\\.R", x$file)
-  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext, x$is_test_file | x$is_notebook)
-  x$content[x$is_notebook] <- sub("^#' ", "", x$content[x$is_notebook])
-  x$is_md <- (x$is_md | x$is_roxygen_comment) & !x$is_news # treating news and other md files differently.
+  x$is_notebook <- o_is_notebook(x = x$content, x$file, x$file_ext, x$line)
+  x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext, x$is_notebook)
+  x$content[x$is_notebook] <- sub("^#'\\s?", "", x$content[x$is_notebook])
+  x$is_md <- (x$is_md | x$is_roxygen_comment | x$is_notebook) & !x$is_news # treating news and other md files differently.
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
 
   should_parse_roxy_comments <-
@@ -252,7 +264,8 @@ define_outline_criteria_roxy <- function(x) {
   x$is_test_file <- FALSE
   x$is_snap_file <- FALSE
   x$before_and_after_empty <- TRUE
-  x$is_section_title <- (x$tag %in% c("section", "subsection") & stringr::str_ends(x$content, ":") & o_is_section_title(x$content, roxy_section = TRUE)) |
+  x$is_section_title <-
+    (x$tag %in% c("section", "subsection") & o_is_section_title(x$content, roxy_section = TRUE)) |
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
   x$is_obj_caption <- FALSE
@@ -268,14 +281,17 @@ define_outline_criteria_roxy <- function(x) {
   x$n_leading_hash <- nchar(stringr::str_extract(x$content, "\\#+"))
   x$n_leading_hash <- dplyr::case_when(
     x$n_leading_hash > 0 ~ x$n_leading_hash,
-    x$tag == "section" & x$is_section_title_source ~ 1,
-    x$tag == "subsection" & x$is_section_title_source ~ 2,
+    # give second importance to doc sections..
+    x$tag == "section" & x$is_section_title_source ~ 2,
+    x$tag == "subsection" & x$is_section_title_source ~ 3,
     .default = 0
   )
   x$content <- dplyr::case_when(
     !x$is_section_title ~ x$content,
-    x$tag == "section" ~ paste0("# ", sub(":", "", x$content, fixed = TRUE)),
-    x$tag == "subsection" ~ paste0("## ", sub(":", "", x$content, fixed = TRUE)),
+    # : removed from section tag in join_roxy_fun()
+    # code section may not be that interesting..
+    x$tag == "section" ~ paste0("## ", x$content),
+    x$tag == "subsection" ~ paste0("### ", x$content),
     .default = x$content
   )
   x$is_second_level_heading_or_more <- ((x$is_section_title_source | x$is_section_title) & x$n_leading_hash > 1)

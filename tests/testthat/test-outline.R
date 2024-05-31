@@ -84,3 +84,10 @@ test_that("file_outline() works well with figure captions", {
     transform = ~ sub(" `[^`]+` ", " `quarto-caps.md` ", .x)
   )
 })
+
+test_that("file_outline() detects correctly knitr notebooks", {
+  expect_snapshot(
+    file_outline(path = test_path("_outline", "knitr-notebook.R")),
+    transform = ~ sub(" `[^`]+` ", " `knitr-notebook.R` ", .x)
+  )
+})

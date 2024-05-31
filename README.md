@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    6.94s    6.94s     0.144    78.1MB     1.15
+#> 1 outline <- proj_outline()    6.22s    6.22s     0.161    86.9MB    0.643
 ```
 
 <details>
@@ -235,7 +235,6 @@ outline
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
-#> `i` TODO Would have to look for notebooks that don't contain notebook in th…- `Done✔?`
 #> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
 #> `i` TODO long enough to be meanignful?- `Done✔?`
 #> `i` TODO merge with define_outline_criteria- `Done✔?`
@@ -308,14 +307,12 @@ outline
 #> `i` TODO outline make ggtitle work- `Done✔?`
 #> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
 #> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
-#> `i` TODO outline renable cli info.- `Done✔?`
 #> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
 #> `i` TODO outline avoid evaluating in current env.- `Done✔?`
 #> `i` TODO wrap regexps in functions- `Done✔?`
 #> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
 #> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
 #> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
-#> `i` TODO outline roxygen function title- `Done✔?`
 #> `i` TODO outline remove ggtext markup from plot title.- `Done✔?`
 #> `i` FIXME outline comments are now interpreted as section- `Done✔?`
 #> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
@@ -326,16 +323,21 @@ outline
 #> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
 #> `i` TODO browse_pkg should open by default if no vignettes are found, becau…- `Done✔?`
 #> `i` TODO exclude _files from `proj_list()`- `Done✔?`
-#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
+#> `i` TODO outline Show function call if exported + not internal + bonus if has family tag! rstudio/rstudio#14766 (<https://github.com/rstudio/rstudio/issues/14766>)- `Done✔?`
 #> `i` TODO title of file could be function title if it is first element [proj…- `Done✔?`
 #> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
 #> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`
+#> `i` TODO outline just create an `exclude` argument that will take an opti…- `Done✔?`
+#> `i` TODO outline remove snaps from outline and add a link in the test fil…- `Done✔?`
 #> 
 #> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
 #> `i` Load packages
 #> `i` Wrangle + visualize data
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
+#> 
+#> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
+#> `i` A great section
 #> 
 #> ── `tests/testthat/_outline/my-analysis.R`  Analyse my streets
 #> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
@@ -352,7 +354,8 @@ outline
 #> `i` A section2
 #> `i` A long ggplot2 title
 #> `i` A code section
-#> `i` A long ggplot2 title with more details
+#> `i` A long ggplot2 title with more details2
+#> `i` A long ggplot2 title with more details3.
 #> 
 #> ── `tests/testthat/_outline/quarto-caps.md`  title
 #> `i` A long ggplot2 title with more details
@@ -363,37 +366,44 @@ outline
 #> `i` Dashboard link
 #> 
 #> ── `tests/testthat/_outline/roxy-cli.R`  outline
+#> `i` Like [base::grep()] but [grepl()] for ANSI strings
 #> 
 #> ── `tests/testthat/_outline/roxy-general.R`
 #> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
 #> `i` Complete block for exported function with headings
+#> `i` A title to be included
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
-#> `i` Commented code not included
-#> `i` A title not to be included
+#> `i` `First code` to be included:
+#> `i` a family to include
 #> `i` block not to index
-#> `i` Internal heading not to be included
 #> `i` Topic to index
+#> `i` A title to be included
 #> `i` A second-level heading in description to be included?
 #> `i` A detail first level-heading to be included
 #> `i` A detail second-level heading to be included
 #> `i` First to be included
-#> `i` Commented code not included
-#> `i` A title not to be included
+#> `i` a family to include
+#> `i` Opens a RStudio project in a new session
 #> `i` second-level heading in desc
 #> `i` Details + 2nd level heading
 #> `i` second heading
 #> `i` data to index
+#> `i` My data
 #> 
 #> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
-#> `i` Use 'tests/testthat/_outline/ex-outline-roxy.R' for output testing
-#> `i` Commented code not included
-#> `i` A title not to be included
+#> `i` Use 'tests/testthat/_outline/roxy-general.R' for output testing
+#> `i` Title with `_things`
+#> `i` a family to include
+#> `i` An S3 method not to be include
+#> `i` section AA REQUIRED:
 #> 
 #> ── `tests/testthat/_outline/roxy-section.R`  multiple tags + name parsing issue
-#> `i` A detail first level-heading to be included
-#> `i` A detail first level-heading to be included
+#> `i` A title to be included
+#> `i` a section:
+#> `i` another section:
+#> `i` another sectio2n:
 #> 
 #> ── `tests/testthat/_outline/title.md`  The title is the only outline element
 #> 
@@ -437,6 +447,7 @@ outline
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
 #> `i` file_outline() works well with figure captions
+#> `i` file_outline() detects correctly knitr notebooks
 #> 
 #> ── `tests/testthat/_snaps/proj-list.md`
 #> `i` proj_file() works
@@ -510,6 +521,7 @@ outline
 #> `i` file_outline() contains function calls
 #> `i` dir_outline() works with no error
 #> `i` file_outline() works well with figure captions
+#> `i` file_outline() detects correctly knitr notebooks
 #> 
 #> ── `tests/testthat/test-rename.R`
 #> `i` Helper files returns the expected input
