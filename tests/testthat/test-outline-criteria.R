@@ -36,6 +36,10 @@ test_that("o_is_tab_plot_title() works", {
   expect_true(o_is_tab_plot_title("title = 'A great'"))
   expect_false(o_is_tab_plot_title("tab_header()"))
   expect_false(o_is_tab_plot_title("```{r tab_header}"))
+  expect_false(o_is_tab_plot_title("fwd_title = 'Family'"))
+  expect_false(o_is_tab_plot_title("guide_legend(title = 'Family'"))
+  expect_false(o_is_tab_plot_title("title = ''"))
+  expect_false(o_is_tab_plot_title('title = ".+", " +\\(",")'))
 })
 
 test_that("o_is_section_title() works", {

@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    8.76s    8.76s     0.114    76.1MB     1.03
+#> 1 outline <- proj_outline()     5.2s     5.2s     0.192    76.3MB     1.73
 ```
 
 <details>
@@ -256,6 +256,7 @@ outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info- `Done✔?`
+#> `i` FIXME find a way to be as consistent as lightparser, but faster.- `Done✔?`
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
 #> 
 #> ── `R/proj-list.R`  Opens a RStudio project in a new session

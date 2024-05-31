@@ -77,11 +77,12 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
-  stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']") &
+  stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"']") &
     !grepl("[", x, fixed = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"") &
-    !stringr::str_ends(x, "\\(") &
-    !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{")
+    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"|\", \"") &
+    !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &
+    # not guide_*(title = ) as this is not a title.
+    !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{|guide_")
 }
 
 o_is_section_title <- function(x, roxy_section = FALSE) {
@@ -92,7 +93,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   if (roxy_section) {
     x <- stringr::str_remove(x, ":$")
   }
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|^Newly broken|^In both|^Installation$|MIT License|nocov"
+  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov"
   # potential section titles
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
@@ -171,14 +172,15 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     # TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
     # TODO long enough to be meanignful?
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$") &
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):|```\\{r.*cap\\s?\\="),
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & stringr::str_detect(content, "[:alpha:]"),
-    is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title,
+    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
+    is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
     # roxygen2 title block
     is_object_title = FALSE,
     tag = NA_character_,
@@ -187,9 +189,10 @@ define_outline_criteria <- function(.data, print_todo, dir_common) {
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
+    # Make sure everything is second level in revdep/.
+    n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
-    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
   )
   x <- dplyr::mutate(
     x,

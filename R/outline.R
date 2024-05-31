@@ -314,7 +314,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
     # examples don't help understand a project.
     file_list_to_outline <- fs::path_filter(
       file_list_to_outline,
-      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples",
+      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/",
       invert = TRUE
     )
   }
@@ -525,7 +525,7 @@ display_outline_element <- function(.data, dir_common) {
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
-      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}|<a href.+$"), # strip cross-refs.
+      is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}|<(a href|img src).+$"), # strip cross-refs.
       is_function_def ~ stringr::str_extract(outline_el, "(.+)\\<-", group = 1) |> stringr::str_trim(),
       .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
@@ -634,9 +634,29 @@ get_chunk_cap <- function(file) {
   # ThinkR-open/lightparser#8
   for (i in seq_along(unique_file)) {
     # FIXME find a way to be as consistent as lightparser, but faster.
-    dat <- (lightparser::split_to_tbl(unique_file[i]) |> dplyr::filter(type == "block"))$params
+    # If ThinkR-open/lightparser#11 gets fixed, no more fiddling?
+    dat <- tryCatch( (lightparser::split_to_tbl(unique_file[i]) |> dplyr::filter(type == "block"))$params,
+             error = function(e) {
+               # workaround https://github.com/ThinkR-open/lightparser/issues/11
+               tmp <- withr::local_tempfile(
+                 lines = c(
+                   "---",
+                   "title: dummy",
+                   "---",
+                   readLines(unique_file[i])
+               ))
+               (lightparser::split_to_tbl(tmp) |> dplyr::filter(type == "block"))$params
+               # list(`1` = list(`fig-cap` = "Wrong caption"))
+               # cli::cli_abort(
+               #   c("{.file {unique_file[i]}} is incorrect."),
+               #   parent = e
+               # )
+             })
+
     # tidyverse/purrr#1081
+    if (length(dat) > 0) {
       caps <- c(caps, dat |> purrr::map_chr( \(x) x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% "USELESS THING"))
+    }
   }
   caps <- caps[caps != "USELESS THING"]
   if (length(caps) != length(file)) {
@@ -669,7 +689,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data <- dplyr::mutate(
     .data,
     condition_to_truncate = !is.na(outline_el) & !has_title_el & (is_todo_fixme) & is_saved_doc & !has_inline_markup,
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle | is_chunk_cap) & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
