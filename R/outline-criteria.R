@@ -101,7 +101,7 @@ o_is_tab_plot_title <- function(x) {
     sep = "|"
   )
 
-  stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
+  stringr::str_detect(x, "(?<!(_|:|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
     !grepl("[", x, fixed = TRUE) &
     !grepl(generic_title_regex, x) &
     !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &
@@ -128,7 +128,9 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   is_section_title[p_s_title] <-
     !grepl(uninteresting_headings, x[p_s_title]) &
     !o_is_todo_fixme(x[p_s_title]) &
-    !o_is_commented_code(x[p_s_title])
+    !o_is_commented_code(x[p_s_title]) &
+    # to exclude md tables from outline
+    stringr::str_count(x[p_s_title], "\\|") < 4
   is_section_title
 }
 

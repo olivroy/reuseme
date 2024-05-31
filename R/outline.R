@@ -356,9 +356,13 @@ exclude_example_files <- function(path) {
 
   regexp_exclude <- paste(
     "vignettes/test/", # test vignettes
-    "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
-    "inst/(templates/license-|example-file/)", # license templates in usethis
+    "LICENSE.md", # avoid indexing this.
+    "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/|testthat/test-parallel/|testthat/test-list-reporter/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
+    "inst/(templates/license-|example-file/|examples/rmd/)", # license templates in usethis
     "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
+    "themes/hugo-theme-console/", # protect blogdown
+    "vignettes/.+\\.R$", # generated files
+    "RcppExports.R",
     sep = "|"
   )
 
@@ -504,7 +508,7 @@ keep_outline_element <- function(.data) {
   }
   # browser()
   # For debugging.
-  needed_elements <- which(grepl("REQUIRED", .data$content, fixed = TRUE) & !grepl("grep|keyword", .data$content, fixed = FALSE))
+  needed_elements <- which(grepl("REQUIRED ELEMENT", .data$content, fixed = TRUE) & !grepl("grep|keyword", .data$content, fixed = FALSE))
 
   dat <- dplyr::filter(
     .data,
@@ -524,7 +528,7 @@ keep_outline_element <- function(.data) {
   )
 
   dat$simplify_news <- NULL
-  if (length(needed_elements) != length(grep("REQUIRED", dat$content, fixed = TRUE))) {
+  if (length(needed_elements) != length(grep("REQUIRED ELEMENT", dat$content, fixed = TRUE))) {
     zz <<- dplyr::slice(.data, needed_elements)
     cli::cli_abort(
       "Debugging mode. An important element is absent from the outline. Review filters, regex detection etc."
@@ -690,7 +694,8 @@ extract_object_captions <- function(file) {
       }
     )
     dat <- dplyr::filter(dat, type == "block")$params
-
+    # Remove NA..
+    dat <- purrr::discard(dat,\(x) isTRUE(is.na(x)))
     # tidyverse/purrr#1081
     if (length(dat) > 0) {
       # We use `format()` in case a variable is used to name the caption.

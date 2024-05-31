@@ -114,6 +114,6 @@ get_active_qmd_post <- function(base_path = proj_get(), error_call = caller_env(
 }
 
 # to mock.
-is_rstudio <- function(v) {
+is_rstudio <- function(v = NULL) {
   rstudioapi::isAvailable(version_needed = v)
 }

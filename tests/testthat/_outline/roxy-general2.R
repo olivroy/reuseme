@@ -41,7 +41,7 @@ NULL
 #'
 #' desc
 #'
-#' @section section AA REQUIRED:
+#' @section section AA REQUIRED ELEMENT:
 #'
 #' * DO this
 #'

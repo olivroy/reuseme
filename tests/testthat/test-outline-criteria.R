@@ -50,6 +50,7 @@ test_that("o_is_tab_plot_title() works", {
   expect_false(o_is_tab_plot_title("title = '', symbol = 'x'"))
 
   expect_false(o_is_tab_plot_title('title = ".+", " +\\(",")'))
+  expect_false(o_is_tab_plot_title("dc:title = 'aaaaaaa'"))
 })
 
 test_that("o_is_section_title() works", {

@@ -165,7 +165,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    4.63s    4.63s     0.216      87MB    0.865
+#> 1 outline <- proj_outline()    4.61s    4.61s     0.217    87.3MB    0.868
 ```
 
 <details>
@@ -329,6 +329,7 @@ outline
 #> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`
 #> `i` TODO outline just create an `exclude` argument that will take an opti…- `Done✔?`
 #> `i` TODO outline remove snaps from outline and add a link in the test fil…- `Done✔?`
+#> `i` TODO outline family should be displayed differently..- `Done✔?`
 #> 
 #> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
 #> `i` Load packages
@@ -397,7 +398,7 @@ outline
 #> `i` Title with `_things` [f_to_be_index_in_outline()]
 #> `i` a family to include
 #> `i` An S3 method not to be include [f_not_to_index.xml()]
-#> `i` section AA REQUIRED
+#> `i` section AA REQUIRED ELEMENT
 #> 
 #> ── `tests/testthat/_outline/roxy-section.R`  multiple tags + name parsing issue
 #> `i` A title to be included [xxx]
@@ -440,6 +441,9 @@ outline
 #> 
 #> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
+#> 
+#> ── `tests/testthat/_snaps/outline-roxy.md`
+#> `i` cli escaping goes well in roxy comments
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` file_outline() works
@@ -511,7 +515,8 @@ outline
 #> `i` roxy tags are parsed properly + object names are correct
 #> `i` roxy tags don't error
 #> `i` multiple roxy tags don't error.
-#> `i` cli escaping goes well...
+#> `i` file_outline() works outside RStudio)
+#> `i` cli escaping goes well in roxy comments
 #> 
 #> ── `tests/testthat/test-outline.R`
 #> `i` alpha and work_only arguments work

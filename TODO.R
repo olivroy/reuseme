@@ -29,3 +29,4 @@
 # TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
 # TODO [outline] just create an `exclude` argument that will take an option? (exclude can be files or expressionsm, or elements.)
 # TODO [outline] remove snaps from outline and add a link in the test file instead?
+# TODO [outline] family should be displayed differently..
