@@ -325,13 +325,7 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
   if (recurse && !identical(Sys.getenv("TESTTHAT"), "true")) {
     # Remove examples from outline and test example files to avoid clutter
     # examples don't help understand a project.
-    file_list_to_outline <- fs::path_filter(
-      file_list_to_outline,
-      # TODO for usethis, add inst/templates/ but I may leave them for now....
-      # styler tests examples may not work..
-      regexp = "testthat/_outline/|testthat/assets|example-file|vignettes/test/|tests/performance-monitor|tests/gt-examples|revdep/|inst/templates/license-|tests/testthat/scope-",
-      invert = TRUE
-    )
+    file_list_to_outline <- exclude_example_files(file_list_to_outline)
   }
   if (exclude_tests) {
     file_list_to_outline <- fs::path_filter(
@@ -499,7 +493,7 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_chunk_cap | is_doc_title | is_object_title)) |
+      (is_md & (is_obj_caption | is_doc_title | is_object_title)) |
       (is_md & (is_section_title & before_and_after_empty)) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
@@ -525,8 +519,8 @@ display_outline_element <- function(.data, dir_common) {
   }
   x$outline_el <- purrr::map_chr(x$outline_el, \(x) link_gh_issue(x, org_repo)) # to add link to GitHub.
   x$outline_el <- purrr::map_chr(x$outline_el, markup_href)
-  if (any(x$is_chunk_cap)) {
-    x$outline_el[x$is_chunk_cap] <- get_chunk_cap(x$file[x$is_chunk_cap])
+  if (any(x$is_obj_caption)) {
+    x$outline_el[x$is_obj_caption] <- extract_object_captions(x$file[x$is_obj_caption])
   }
   x <- dplyr::mutate(
     x,
@@ -641,7 +635,8 @@ display_outline_element <- function(.data, dir_common) {
   y
 }
 
-get_chunk_cap <- function(file) {
+# With files with detected object captions, like fig.cap, title, tab.cap, tbl.cap.
+extract_object_captions <- function(file) {
   rlang::check_installed("lightparser", "to parse qmd files add chunk caption to outline.")
   # we want fig-cap, tbl-cap and title
   caps <- NULL
@@ -686,7 +681,7 @@ define_important_element <- function(.data) {
   dplyr::mutate(
     .data,
     importance = dplyr::case_when(
-      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
+      is_second_level_heading_or_more | is_obj_caption | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
       .default = "important"
     )
   )
@@ -705,7 +700,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data <- dplyr::mutate(
     .data,
     condition_to_truncate = !is.na(outline_el) & !has_title_el & (is_todo_fixme) & is_saved_doc & !has_inline_markup,
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle | is_chunk_cap) & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_

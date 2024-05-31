@@ -256,7 +256,7 @@ join_roxy_fun <- function(file) {
       .by = id,
       content = dplyr::case_when(
         # remove markup.
-        # avoid \code{} in tags. https://github.com/r-lib/roxygen2/issues/1618
+        # avoid \code{} in tags. r-lib/roxygen2#1618
         tag %in% c("title", "section", "subsection") ~ stringr::str_remove_all(content, "\\}+|\\\\+[:alpha:]+\\{+|\\{$"),
         .default = content
       )

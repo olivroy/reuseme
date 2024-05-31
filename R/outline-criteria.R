@@ -29,7 +29,11 @@ o_is_roxygen_comment <- function(x, file_ext = NULL, is_test_file = FALSE) {
     return(FALSE)
   }
 
-  ifelse(rep(is_r_file, length.out = length(x)), stringr::str_detect(x, "^#'\\s|^#'$"), FALSE)
+  ifelse(
+    rep(is_r_file, length.out = length(x)),
+    grepl("^#'\\s|^#'$", x), # detect roxygen comments in R files
+    FALSE # not a roxy comment in Rmd files, fusen is an exception?
+  )
 }
 
 o_is_todo_fixme <- function(x) {
@@ -45,7 +49,7 @@ o_is_todo_fixme <- function(x) {
   has_todo[p] <-
     !o_is_test_that(candidates) &
       !stringr::str_starts(candidates, "\\s*\"\\s*") &
-      !stringr::str_detect(candidates, "extract_tag_in_text") &
+      !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
       !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
       !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
       !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
@@ -77,9 +81,15 @@ o_is_generic_test <- function(x) {
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
+  generic_title_regex <- paste0(
+    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
+    "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
+    collapse = "|"
+  )
+
   stringr::str_detect(x, "(?<!(_|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
     !grepl("[", x, fixed = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(") &
+    !grepl(generic_title_regex, x) &
     !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &
     # not guide_*(title = ) as this is not a title.
     !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{|guide_")
@@ -93,10 +103,18 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   if (roxy_section) {
     x <- sub(":$", "", x)
   }
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$|^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode"
+  uninteresting_headings <- paste0(
+    "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE",
+    "url\\{|Error before installation|unreleased|^Function ID$|^Function Introduced$",
+    "^Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode",
+    collapse = "|"
+  )
   # potential section titles
   p_s_title <- which(is_section_title)
-  is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
+  is_section_title[p_s_title] <-
+    !grepl(uninteresting_headings, x[p_s_title]) &
+    !o_is_todo_fixme(x[p_s_title]) &
+    !o_is_commented_code(x[p_s_title])
   is_section_title
 }
 
@@ -152,7 +170,12 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     # roxygen2 messages
     # TRICK purrr::safely creates an error object, while possible is better.
     # Suppresss roxygen2 message, suppress callr output, suppress asciicast warnings.
-    invisible(capture.output(parsed_files <- purrr::map(files_with_roxy_comments, purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))) |>
+    invisible(
+      capture.output(
+        parsed_files <- purrr::map(
+          files_with_roxy_comments,
+          purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))
+      ) |>
       suppressMessages() |>
       suppressWarnings()
     # if roxygen2 cannot parse a file, let's just forget about it.
@@ -175,13 +198,17 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     # TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
     # TODO long enough to be meanignful?
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
+    # doc title cannot be after line 50 of a document.
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") &
+      !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
-    is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title)[:(\\s*=)]|```\\{r.*cap\\s?\\="),
+    is_obj_caption = stringr::str_detect(content, "\\#\\|.*(cap|title)[:(\\s*=)]|```\\{r.*cap\\s?\\="),
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
-    is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & stringr::str_detect(content, "[:alpha:]"),
+    is_section_title_source = o_is_section_title(content) &
+      stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
+      stringr::str_detect(content, "[:alpha:]"),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
     # roxygen2 title block
@@ -228,7 +255,7 @@ define_outline_criteria_roxy <- function(x) {
   x$is_section_title <- (x$tag %in% c("section", "subsection") & stringr::str_ends(x$content, ":") & o_is_section_title(x$content, roxy_section = TRUE)) |
     (x$tag %in% c("details", "description") & stringr::str_detect(x$content, "#\\s"))
   x$is_section_title_source <- x$is_section_title
-  x$is_chunk_cap <- FALSE
+  x$is_obj_caption <- FALSE
   x$is_test_name <- FALSE
   x$pkg_version <- NA_character_
   # a family or concept can be seen as a plot subtitle?
