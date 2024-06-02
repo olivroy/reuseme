@@ -244,6 +244,8 @@ join_roxy_fun <- function(file) {
     dplyr::mutate(content = dplyr::case_when(
       # only keep the first line of section, subsection, family and concept tags.
       tag %in% c("family", "concept") ~ stringr::str_extract(content, "^(.+)(\n)?", group = 1),
+      # Remove code blocks...
+      tag %in% c("details", "description") ~ stringr::str_remove_all(content, "```[^`]+```"),
       # Also remove : from section
       tag %in% c("section", "subsection") ~ stringr::str_extract(content, "^(.+)\\s?\\:\\s?\n?", group = 1),
       .default = content

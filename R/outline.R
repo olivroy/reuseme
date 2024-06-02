@@ -351,7 +351,6 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, exclude_te
 }
 
 exclude_example_files <- function(path) {
-  # TODO for usethis, add inst/templates/ but I may leave them for now....
   # styler tests examples may not work..
 
   regexp_exclude <- paste(
@@ -522,12 +521,11 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_obj_caption | is_doc_title | is_object_title)) |
-      (is_md & (is_section_title & before_and_after_empty)) |
+      (is_md & (is_obj_caption | (is_section_title & before_and_after_empty))) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title # | is_cli_info # TODO reanable cli info
+      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title | is_doc_title # | is_cli_info # TODO reanable cli info
   )
 
   dat$simplify_news <- NULL
@@ -820,16 +818,19 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     condition_to_truncate2 = NULL,
     style_fun = NULL,
     is_saved_doc = NULL,
+    is_roxygen_comment = NULL,
+    is_notebook = NULL,
+    is_news = NULL,
     # I may put it back...
     importance = NULL,
     # may be useful for debugging.
     before_and_after_empty = NULL,
     # may be useful for debugging
     has_inline_markup = NULL,
-    n_leading_hash = NULL
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }
+
 trim_outline <- function(x, width) {
   # problematic in case_when
   cli::ansi_strtrim(x, width = width)

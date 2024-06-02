@@ -5,6 +5,15 @@
 
 #' Title with `_things`
 #'
+#' @description
+#' ## Section
+#'
+#'
+#' ```r
+#' # Commented code not include
+#' title = "TITLE NOT INCLUDED"
+#' ```
+#'
 #' @examples
 #' # Commented code not included
 #'

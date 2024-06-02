@@ -256,6 +256,8 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     content != "NULL"
   )
   res <- dplyr::arrange(res, .data$file, .data$line)
+  #res$is_object_title[res$is_doc_title] <- FALSE
+  res
 }
 
 
@@ -292,7 +294,9 @@ define_outline_criteria_roxy <- function(x) {
   x$is_cross_ref <- FALSE
   x$is_function_def <- FALSE
   x$is_todo_fixme <- FALSE
-  x$is_doc_title <- x$line == 1 & x$tag == "title"
+  x$is_notebook <- FALSE
+  x$is_doc_title <- FALSE
+  #x$is_doc_title <- x$line == 1 & x$tag == "title"
   x$n_leading_hash <- nchar(stringr::str_extract(x$content, "\\#+"))
   x$n_leading_hash <- dplyr::case_when(
     x$n_leading_hash > 0 ~ x$n_leading_hash,

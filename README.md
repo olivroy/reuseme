@@ -170,7 +170,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    7.17s    7.17s     0.139    85.1MB    0.558
+#> 1 outline <- proj_outline()    5.96s    5.96s     0.168    85.6MB    0.671
 ```
 
 <details>
@@ -195,7 +195,6 @@ outline
 #> `i` family dplyr extensions
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
 #> `i` Keep rows that match one of the conditions [filter_if_any()]
-#> `i` with dplyr::filter
 #> `i` Elegant wrapper around filter and pull [extract_cell_value()]
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
@@ -258,7 +257,6 @@ outline
 #> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> `i` `file_outline()`
 #> `i` File outline
-#> `i` TODO for usethis, add inst/templates/ but I may leave them for now....- `Done✔?`
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info- `Done✔?`
@@ -404,6 +402,7 @@ outline
 #> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
 #> `i` Use 'tests/testthat/_outline/roxy-general.R' for output testing
 #> `i` Title with `_things` [f_to_be_index_in_outline()]
+#> `i` Section
 #> `i` a family to include
 #> `i` An S3 method not to be include [f_not_to_index.xml()]
 #> `i` section AA REQUIRED ELEMENT
