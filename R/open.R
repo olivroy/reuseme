@@ -212,7 +212,7 @@ active_rs_doc_delete <- function() {
   parent_dir <- fs::path_file(fs::path_dir(elems$full_path))
 
   if (grepl("^temp", fs::path_file(elems$rel_path)) ||
-    (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
+      (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
     reasons_deleting <- c(reasons_deleting, "it has the temp- prefix.")
     will_delete <- append(will_delete, TRUE)
   }

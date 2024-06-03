@@ -18,10 +18,7 @@ coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](ht
 The goal of reuseme is to provide utility functions for project
 management across RStudio projects. Sometimes, managing multiple
 projects can be challenging. reuseme also aims to simplify project
-management on Windows.
-
-Sometimes, you have to manage multiple things at once, but don’t have
-the time to do edits. You may need to switch quickly to a project, add
+management on Windows. You may need to switch quickly to a project, add
 things or browse a certain file if you have some replications across
 projects. Sometimes, it is hard to do that. reuseme also aims to help me
 overcome things I don’t like on Windows.
@@ -170,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    5.96s    5.96s     0.168    85.6MB    0.671
+#> 1 outline <- proj_outline()    10.2s    10.2s    0.0982    85.6MB    0.393
 ```
 
 <details>
@@ -343,21 +340,8 @@ outline
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
 #> 
-#> ── `playground/test.R`
+#> ── `playground/outline-tree.R`
 #> `i` TODOs (they don't affect heirarchy)- `Done✔?`
-#> 
-#> ── `playground/test.qmd`  Test
-#> `i` Quarto
-#> `i` Running Code
-#> `i` TODO fix this in the code- `Done✔?`
-#> `i` A sub header
-#> `i` TODO here's a todo in the text- `Done✔?`
-#> `i` Back to header 1
-#> `i` Dont skip me
-#> `i` header 5
-#> `i` TODO testing section- `Done✔?`
-#> `i` Another sub header
-#> `i` TODO section test- `Done✔?`
 #> 
 #> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
 #> `i` A great section
@@ -373,6 +357,7 @@ outline
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
 #> `i` Dashboard card
+#> `i` A code section
 #> `i` A subsection
 #> `i` A section2
 #> `i` A long ggplot2 title
@@ -437,6 +422,19 @@ outline
 #> `i` TODO this is an item- `Done✔?`
 #> `i` Last title
 #> `i` `function_name()` title
+#> 
+#> ── `tests/testthat/_outline/tree.qmd`  Test
+#> `i` Quarto
+#> `i` Running Code
+#> `i` TODO fix this in the code- `Done✔?`
+#> `i` A sub header
+#> `i` TODO here's a todo in the text- `Done✔?`
+#> `i` Back to header 1
+#> `i` Dont skip me
+#> `i` header 5
+#> `i` TODO testing section- `Done✔?`
+#> `i` Another sub header
+#> `i` TODO section test- `Done✔?`
 #> 
 #> ── `tests/testthat/_snaps/browse-pkg.md`
 #> `i` browse_pkg() works

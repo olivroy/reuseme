@@ -7,6 +7,7 @@
       -- `my-analysis.md`  My doc title 
     Output
       `i` A section
+      `i` A code section
       `i` A subsection
       `i` A section2
       `i` A long ggplot2 title

@@ -269,8 +269,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, e
       cli::cli_warn("Use {.fn dir_outline} for that.")
     }
     proj_dir <- proj
-  } else {
-    # when referring to a project by name.
+  } else { # when referring to a project by name.
     proj_dir <- proj_list(proj)
   }
 
@@ -373,6 +372,28 @@ exclude_example_files <- function(path) {
   )
 }
 
+exclude_example_files <- function(path) {
+  # styler tests examples may not work..
+
+  regexp_exclude <- paste(
+    "vignettes/test/", # test vignettes
+    "LICENSE.md", # avoid indexing this.
+    "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/|testthat/test-parallel/|testthat/test-list-reporter/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
+    "inst/((rmarkdown/)?templates/|example-file/|examples/rmd/|tutorials/)", # license templates in usethis
+    "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
+    "themes/hugo-theme-console/", # protect blogdown
+    "vignettes/.+\\.R$", # generated files
+    "RcppExports.R",
+    "pkgdown/assets",
+    sep = "|"
+  )
+
+  fs::path_filter(
+    path,
+    regexp = regexp_exclude,
+    invert = TRUE
+  )
+}
 # Print method -------------------
 
 #' @export
@@ -470,10 +491,10 @@ print.outline_report <- function(x, ...) {
     tryCatch(
       cli::cli_h3(base_name),
       error = function(e) {
-        #browser()
+        # browser()
         cli::cli_h3(escape_markup(base_name))
-        #print(base_name)
-        #rlang::abort("Could not parse by cli", parent = e)
+        # print(base_name)
+        # rlang::abort("Could not parse by cli", parent = e)
       }
     )
 
@@ -828,12 +849,12 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     is_roxygen_comment = NULL,
     is_notebook = NULL,
     is_news = NULL,
-    # I may put it back...
+    # I may put it back ...
     importance = NULL,
-    # may be useful for debugging.
+    # may be useful for debugging
     before_and_after_empty = NULL,
     # may be useful for debugging
-    has_inline_markup = NULL,
+    has_inline_markup = NULL
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }

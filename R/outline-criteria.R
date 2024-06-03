@@ -62,12 +62,12 @@ o_is_todo_fixme <- function(x) {
   # Eliminate candidates
   has_todo[p] <-
     !o_is_test_that(candidates) &
-      !stringr::str_starts(candidates, "\\s*\"\\s*") &
-      !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
-      !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
-      !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-      !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
-      !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
+    !stringr::str_starts(candidates, "\\s*\"\\s*") &
+    !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
+    !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
+    !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+    !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
+    !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
   has_todo
 }
 
@@ -149,11 +149,11 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
   has_cli[p_cli] <-
     stringr::str_detect(x[p_cli], "\\([\"']") &
-      !is_snap_file[p_cli] &
-      !grepl("outline.R", file[p_cli], fixed = TRUE) &
-      !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
-      !grepl("paste", x[p_cli], fixed = TRUE) &
-      !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
+    !is_snap_file[p_cli] &
+    !grepl("outline.R", file[p_cli], fixed = TRUE) &
+    !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
+    !grepl("paste", x[p_cli], fixed = TRUE) &
+    !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
   has_cli
 }
 
@@ -173,7 +173,7 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
 
   should_parse_roxy_comments <-
     !isFALSE(getOption("reuseme.roxy_parse", default = TRUE)) && # will not parse if option is set to FALSE
-      any(x$is_roxygen_comment)
+    any(x$is_roxygen_comment)
   if (should_parse_roxy_comments) {
     # doing this created problems in tests?
     if (interactive() && !is.null(dir_common) && is_rstudio()) {
@@ -195,7 +195,7 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
         parsed_files <- purrr::map(
           files_with_roxy_comments,
           purrr::possibly(\(x) roxygen2::parse_file(x, env = NULL))))
-      ) |>
+    ) |>
       suppressMessages() |>
       suppressWarnings()
     # if roxygen2 cannot parse a file, let's just forget about it.
