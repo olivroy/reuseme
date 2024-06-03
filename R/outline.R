@@ -796,12 +796,19 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
   }
 
+  # Tweak n_leasing hash for todos or fixme..
+  .data$n_leading_hash <- dplyr::case_when(
+    .data$is_todo_fixme ~ dplyr::lead(.data$n_leading_hash, default = 0) + 1,
+    .default = .data$n_leading_hash
+  )
+  .data$leading_space <- purrr::map_chr(.data$n_leading_hash, \(x) paste(rep(" ", length.out = max(min(x - 1, 1), 0)), collapse = ""))
   dplyr::mutate(.data,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
     link_rs_api = dplyr::case_when(
       is.na(outline_el2) ~ NA_character_,
       !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
       rs_avail_file_link ~ paste0(
+        leading_space,
         "{cli::style_hyperlink(", style_fun, ', "',
         paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
       ),
