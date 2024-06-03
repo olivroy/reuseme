@@ -343,6 +343,22 @@ outline
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
 #> 
+#> ── `playground/test.R`
+#> `i` TODOs (they don't affect heirarchy)- `Done✔?`
+#> 
+#> ── `playground/test.qmd`  Test
+#> `i` Quarto
+#> `i` Running Code
+#> `i` TODO fix this in the code- `Done✔?`
+#> `i` A sub header
+#> `i` TODO here's a todo in the text- `Done✔?`
+#> `i` Back to header 1
+#> `i` Dont skip me
+#> `i` header 5
+#> `i` TODO testing section- `Done✔?`
+#> `i` Another sub header
+#> `i` TODO section test- `Done✔?`
+#> 
 #> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
 #> `i` A great section
 #> 
