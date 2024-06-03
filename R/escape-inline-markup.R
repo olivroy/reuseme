@@ -28,12 +28,12 @@ escape_markup <- function(x) {
   is_markup_okay <- is_bracket & stringr::str_detect(x, "\\{\\.[:alpha:]+[^\\{]") & !local_var_ref_in_markup & !is_markup_incorrect(x)
 
   if (all(is_markup_okay) && !any(local_var_ref_in_markup)) {
-    x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
-    x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
+    x[is_left_bracket & !is_bracket] <- gsub("{", "{{", x[is_left_bracket & !is_bracket], fixed = TRUE)
+    x[is_right_bracket & !is_bracket] <- gsub("}", "}}", x[is_right_bracket & !is_bracket], fixed = TRUE)
     return(x)
   }
   # replace fn arg {fn}(arg) -> fn({arg})
-  valid_r_variable_regex <- "[:alpha:][[:alpha:]\\_\\d]+"
+  valid_r_variable_regex <- "\\.?[:alpha:][[:alpha:]\\_\\d]+"
   x <- stringr::str_replace_all(
     x,
     paste0("\\{(", valid_r_variable_regex, ")\\}\\("),
@@ -59,16 +59,20 @@ escape_markup <- function(x) {
   # )
   # replace variables
 
-
-
   x <- replace_r_var(x)
 
-  x[is_left_bracket & !is_bracket] <- stringr::str_replace_all(x[is_left_bracket & !is_bracket], "\\{", "{{")
-  x[is_right_bracket & !is_bracket] <- stringr::str_replace_all(x[is_right_bracket & !is_bracket], "\\}", "}}")
+  x[is_left_bracket & !is_bracket] <- gsub("{", "{{", x[is_left_bracket & !is_bracket], fixed = TRUE)
+  x[is_right_bracket & !is_bracket] <- gsub("}", "}}", x[is_right_bracket & !is_bracket], fixed = TRUE)
+
+  # whisker replacement {{{ vignette_title }}} in usethis by vignette_title
+  x <- stringr::str_replace_all(x, "\\{\\{?\\{?(\\s?[^\\}]+) \\}?\\}?\\}", "\\1")
+
+  # make `{` and `}` work
+  x <- stringr::str_replace_all(x, c("`\\{`" = "`{{`", "`\\}`" = "`}}`"))
 
   if (any(stringr::str_detect(x, "\\{{3,10}"))) {
     # more than 3 {
-    cli::cli_abort("internal errror. Did not transform string correctly.")
+    rlang::abort(c("internal error. Did not transform string correctly.", x))
   }
   x
 }
@@ -84,7 +88,7 @@ escape_markup <- function(x) {
 #' is_markup_incorrect("{.file {gt}}")
 is_markup_incorrect <- function(x) {
   # no match of single { or }
-  valid_r_variable_regex <- "[:alpha:][[:alpha:]\\_\\d]+"
+  valid_r_variable_regex <- "\\.?[:alpha:][[:alpha:]\\_\\d]+"
 
   stringr::str_detect(x, pattern = paste0("(?<!\\{)\\{", valid_r_variable_regex, "\\}(?!\\})")) |
     stringr::str_detect(x, pattern = "\\]\\(\\{.+\\}\\)\\}") |
@@ -107,7 +111,7 @@ cli_escape <- function(x) {
 #' # example code
 #' replace_r_var("{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}} and {my1e}.")
 replace_r_var <- function(x) {
-  valid_r_variable_regex <- "[:alpha:][[:alpha:]\\_\\d]+"
+  valid_r_variable_regex <- "\\.?[:alpha:][[:alpha:]\\_\\d]+"
   regexp <- paste0("(?<!\\{)\\{(", valid_r_variable_regex, ")\\}(?!\\})")
   stringr::str_replace_all(
     x, regexp, "\\{\\{\\1\\}\\}"
@@ -118,8 +122,8 @@ replace_r_var <- function(x) {
 #'
 #' @examples
 #' replace_r_var("i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
-#' # last instance taken care of with escape_markup with a different strategy
 #' #> "{{gt_var}} in {{gt_var}} in gt_var in {.file {gt_var}}."
+#' # last instance taken care of with escape_markup with a different strategy
 #' escape_markup("{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
 #' #> "{{gt_var}} in {{gt_var}} in gt_var in {.file gt_var}."
 NULL

@@ -16,12 +16,12 @@ coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](ht
 <!-- badges: end -->
 
 The goal of reuseme is to provide utility functions for project
-management across RStudio projects. Sometimes, you have to manage
-multiple things at once, but don’t have the time to do edits. You may
-need to switch quickly to a project, add things or browse a certain file
-if you have some replications across projects. Sometimes, it is hard to
-do that. reuseme also aims to help me overcome things I don’t like on
-Windows.
+management across RStudio projects. Sometimes, managing multiple
+projects can be challenging. reuseme also aims to simplify project
+management on Windows. You may need to switch quickly to a project, add
+things or browse a certain file if you have some replications across
+projects. Sometimes, it is hard to do that. reuseme also aims to help me
+overcome things I don’t like on Windows.
 
 ## Installation
 
@@ -45,13 +45,11 @@ resources)
 - Your RStudio projects are organized in a centralized location on your
   computer
 - Your RStudio projects are Version controlled with git (optional, but
-  recommended to avoid surprises! No need to be hosted on repositories
-  like GitLab or GitHub)
-- You are working on Windows (macOS is supported, but some things were
-  designed on Windows)
-- You use machine and human readable paths (i.e. no spaces, special
-  characters) (Tip: don’t hesitate to rename your files, it can take
-  away the pain in the long run!
+  recommended for avoiding surprises! No need to be hosted on
+  repositories like GitLab or GitHub)
+- You use machine and human-readable paths (i.e. no spaces, special
+  characters) (Tip: don’t hesitate to rename your files
+  (`reuseme::rename_files2()`), your future self will thank you!
 
 To take advantage of reuseme, it is highly recommended to set the
 following option in your `.Rprofile`
@@ -103,33 +101,36 @@ If you want to work across projects with [usethis](usethis.r-lib.org),
 you need to provide the full path to a project. With reuseme, just use
 the project name!
 
-<table style="width:100%;">
+<table style="width:99%;">
 <caption>usethis vs reuseme</caption>
 <colgroup>
-<col style="width: 27%" />
-<col style="width: 27%" />
-<col style="width: 45%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+<col style="width: 43%" />
+<col style="width: 2%" />
 </colgroup>
-<thead>
-<tr class="header">
-<th>Workflow</th>
-<th>reuseme</th>
-<th>usethis</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td>Switch to project “cool-project”</td>
-<td><code>proj_switch(proj = "cool-project")</code></td>
-<td><code>proj_activate(path = "C:/users/long/path/to/cool-project")</code></td>
+<td rowspan="2"><h1 id="workflow">Workflow</h1>
+<p>Switch to project “cool-project”</p></td>
+<td rowspan="2"><h1 id="reuseme-1">reuseme</h1>
+<p><code>proj_switch(proj = "cool-project")</code></p></td>
+<td rowspan="2"><h1 id="usethis">usethis</h1>
+<p><code>proj_activate(path = "C:/users/long/path/to/cool-project")</code></p></td>
+<td></td>
 </tr>
 <tr class="even">
-<td>Write a TODO item in project “cooler-project”, while working in
-“cool-project”</td>
-<td><code>use_todo(todo = "I need to do this ASAP as possible", proj = "cooler-project")</code></td>
-<td><code>usethis::write_union(path = "C:/Users/I/do/not/want/to/type/cooler-project/TODO.R", lines = "I need to do this ASAP as possible.")</code></td>
+<td></td>
 </tr>
 <tr class="odd">
+<td>Write a TODO item in project “cooler-project”, while working in
+“cool-project”</td>
+<td
+colspan="3"><code>reuseme::use_todo(todo = "I need to do this ASAP as possible", proj = "cooler-project")</code>
+|
+<code>usethis::write_union(path = "C:/Users/I/do/not/want/to/type/cooler-project/TODO.R", lines = "I need to do this ASAP as possible.")</code></td>
+</tr>
+<tr class="even">
 <td>Open pkgdown site link and see vignettes</td>
 <td><ol type="1">
 <li>`browse_pkg(“usethis”)</li>
@@ -141,6 +142,7 @@ the project name!
 <li><code>browseVignettes("usethis")</code></li>
 <li>Open it</li>
 </ol></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -165,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    559ms    559ms      1.79      18MB     3.58
+#> 1 outline <- proj_outline()    524ms    524ms      1.91    20.9MB     3.82
 ```
 
 <details>
@@ -183,41 +185,17 @@ outline
 #> `i` A great title
 #> `i` TODO improve this Viz!- `Done✔?`
 #> 
-#> ── `LICENSE.md`  MIT License
-#> 
-#> ── `playground/roxygen2-test.R`
-#> `i` Section to extract
-#> 
 #> ── `R/dplyr-plus.R`  dplyr extra
-#> `i` in the presence of ties.
-#> `i` Use with_ties = FALSE to return exactly n matches
-#> `i` Use each = FALSE to have n divided in each place
 #> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
-#> `i` with dplyr::filter
-#> `i` extract the skin_color for C-3PO
-#> `i` will return a named vector of mpg (as mtcars has rownames.)
-#> `i` Extract hair color for all people
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
 #> `i` summarise with total
-#> `i` works with `.by`
-#> `i` works with `group_by()`
-#> `i` NA all 2s
-#> `i` You can actually use dplyr::na_if() in this case
-#> `i` NA all 1 and 2
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
-#> `i` Use cases / advantages
-#> `i` Caution
-#> `i` Workflow to explore mtcars
 #> `i` base identity functions
 #> `i` dplyr identity functions with small tweaks
 #> `i` dplyr identity without tweaks
 #> `i` dplyr extensions identity
 #> `i` helpers
-#> 
-#> ── `R/escape-inline-markup.R`
-#> `i` example code
-#> `i` last instance taken care of with escape_markup with a different strategy
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file- `Done✔?`
@@ -229,11 +207,6 @@ outline
 #> ── `R/import-standalone-types-check.R`
 #> `i` Scalars
 #> `i` Vectors
-#> 
-#> ── `R/named.R`
-#> `i` returns the same as base R for unnamed input
-#> `i` returns all values
-#> `i` TODO is usable with `extract_cell_value()`
 #> 
 #> ── `R/open.R`
 #> `i` FIXME why is this code like this?- `Done✔?`
@@ -250,10 +223,6 @@ outline
 #> `i` it is 'R/outline.R'
 #> 
 #> ── `R/outline.R`  `proj_outline()`
-#> `i` Remove todo items
-#> `i` interact with data frame
-#> `i` These all work on the active file / project or directory.
-#> `i` Like proj_switch(), proj_outline() accepts a project
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
@@ -265,13 +234,9 @@ outline
 #> `i` TODO maybe add a max?- `Done✔?`
 #> `i` TODO improve on this message- `Done✔?`
 #> 
-#> ── `R/proj-reuseme.R`
-#> `i` Setup
-#> `i` Capabilities.
-#> 
-#> ── `R/rename-files.R`
-#> `i` Use case
+#> ── `R/rename.R`
 #> `i` After here, we start doing some renaming real situations
+#> `i` TODO verify if path should be normalized.- `Done✔?`
 #> `i` Helpers
 #> `i` helpers for computing scope of renaming
 #> `i` TODO measure of string proximity- `Done✔?`
@@ -279,7 +244,7 @@ outline
 #> `i` FIXME maybe not fail while testing- `Done✔?`
 #> `i` TODO Check that old file is more recent- `Done✔?`
 #> 
-#> ── `R/use-todo.R`
+#> ── `R/todo.R`
 #> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
 #> `i` TODO nice to have, but would need to extract duplicates- `Done✔?`
 #> `i` Helpers
@@ -289,13 +254,7 @@ outline
 #> 
 #> ── `R/utils.R`  OS utils
 #> 
-#> ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element
-#> `i` Another title
-#> `i` Second level
-#> `i` TODO this is an item- `Done✔?`
-#> `i` Last title
-#> 
-#> ── `tests/testthat/_ref/my-analysis.md`  My doc title
+#> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
 #> `i` Dashboard card
 #> `i` A code section
@@ -304,18 +263,21 @@ outline
 #> `i` A long ggplot2 title
 #> `i` A code section
 #> 
-#> ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets
+#> ── `tests/testthat/_outline/my-analysis.R`  Analyse my {streets}
 #> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
 #> `i` data wrangling
 #> `i` Write my streets
 #> `i` TODO Create a new version- `Done✔?`
-#> `i` Roxygen section
-#> `i` A real one
-#> `i` A true one
 #> `i` 'R/my-file.R'
 #> `i` Section title
 #> 
-#> ── `tests/testthat/_ref/single-title.md`  The title is the only outline element
+#> ── `tests/testthat/_outline/title.md`  The title is the only outline element
+#> 
+#> ── `tests/testthat/_outline/titles.md`  The title is the only outline element
+#> `i` Another title
+#> `i` Second level
+#> `i` TODO this is an item- `Done✔?`
+#> `i` Last title
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
 #> `i` wrong cases error
@@ -333,16 +295,16 @@ outline
 #> `i` alpha and work_only arguments work
 #> `i` pattern works as expected
 #> 
-#> ── `tests/testthat/_snaps/rename-files.md`
+#> ── `tests/testthat/_snaps/rename.md`
 #> `i` Helper files returns the expected input
 #> 
-#> ── `tests/testthat/_snaps/use-todo.md`
+#> ── `tests/testthat/_snaps/todo.md`
 #> `i` Marking a TODO item as done works
 #> 
 #> ── `tests/testthat/test-case-if-any.R`
 #> `i` case_if_any() basic work
 #> `i` wrong cases error
-#> `i` case_if_any() can use a newly created variable (#8)
+#> `i` case_if_any() can use a newly created variable (#8 (<https://github.com/olivroy/reuseme/issues/8>))
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
 #> `i` filter_if_any() errors correctly when using `by` instead of `.by`
@@ -356,7 +318,10 @@ outline
 #> `i` Returns identity
 #> `i` Side effects are what's intended in interactive sessions
 #> 
-#> ── `tests/testthat/test-link-elements.R`
+#> ── `tests/testthat/test-escape-inline-markup.R`
+#> `i` TODO could probably be {. } works?- `Done✔?`
+#> 
+#> ── `tests/testthat/test-markup.R`
 #> `i` link_gh_issue() + markup_href() work
 #> 
 #> ── `tests/testthat/test-named.R`
@@ -377,16 +342,16 @@ outline
 #> `i` file_outline() contains function calls
 #> `i` dir_outline() works with no error
 #> 
-#> ── `tests/testthat/test-rename-files.R`
+#> ── `tests/testthat/test-rename.R`
 #> `i` Helper files returns the expected input
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`
 #> `i` screenshot() does nothing in non-interactive sessions
 #> 
-#> ── `tests/testthat/test-use-todo.R`
+#> ── `tests/testthat/test-todo.R`
 #> `i` Marking TODO as done detects tags
-#> `i` todo items are correctly stripped
+#> `i` TODO items are correctly stripped
 #> 
 #> ── `tests/testthat/test-utils.R`
 #> `i` Windows is recognized correctly.
@@ -416,7 +381,10 @@ outline
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
 #> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
-#> `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`
+#> `i` TODO browse_pkg should open by default if no vignettes are found, becau…- `Done✔?`
+#> `i` TODO exclude _files from `proj_list()`- `Done✔?`
+#> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
+#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)

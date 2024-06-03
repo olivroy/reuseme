@@ -33,7 +33,7 @@ o_is_roxygen_comment <- function(x, file_ext = NULL) {
 }
 
 o_is_todo_fixme <- function(x) {
-  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])")
+  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME\\s|BOOK|(?<!\")WORK[^I``])")
 
   if (!any(has_todo)) {
     return(has_todo)
@@ -45,7 +45,7 @@ o_is_todo_fixme <- function(x) {
   has_todo[p] <-
     !o_is_test_that(candidates) &
       !stringr::str_starts(candidates, "\\s*\"\\s*") &
-      !stringr::str_detect(candidates, "extract_tag_in_text") &
+      !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
       !o_is_roxygen_comment(candidates) & # don't put these tags in documentation :)
       !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
       !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
@@ -64,7 +64,11 @@ o_is_work_item <- function(x) {
 
 o_is_test_that <- function(x) {
   # avoid generic like f works.
-  stringr::str_detect(x, "(?<!['\"])test_that\\(\"")
+  potential_test <- grepl("{", x, fixed = TRUE)
+  if (!any(potential_test)) {
+    return(potential_test)
+  }
+  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"(?!\")")
 }
 
 o_is_generic_test <- function(x) {
@@ -72,22 +76,43 @@ o_is_generic_test <- function(x) {
 }
 
 # Returns table or plot titles.
-o_is_object_title <- function(x) {
-  stringr::str_detect(x, "(?<!(\"|abbr\\s))title = [\"']|tab_header") &
+o_is_tab_plot_title <- function(x) {
+  generic_title_regex <- paste(
+    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
+    "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
+    sep = "|"
+  )
+
+  stringr::str_detect(x, "(?<!(_|:|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
     !grepl("[", x, fixed = TRUE) &
-    !stringr::str_detect(x, "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|man_get_image_tab|table's")
+    !grepl(generic_title_regex, x) &
+    !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &
+    # not guide_*(title = ) as this is not a title.
+    !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{|guide_")
 }
 
-o_is_section_title <- function(x) {
-  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)|^\\#'\\s\\#+\\s") # remove commented  add roxygen
+o_is_section_title <- function(x, roxy_section = FALSE) {
+  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)") | roxy_section # remove commented  add roxygen
   if (!any(is_section_title)) {
     return(is_section_title)
   }
-
-  uninteresting_headings <- "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE|url\\{|Error before installation"
+  if (roxy_section) {
+    x <- sub(":$", "", x)
+  }
+  uninteresting_headings <- paste(
+    "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE",
+    "url\\{|Error before installation|unreleased|Function ID$|Function Introduced",
+    "Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
+    sep = "|"
+  )
   # potential section titles
   p_s_title <- which(is_section_title)
-  is_section_title[p_s_title] <- !stringr::str_detect(x[p_s_title], uninteresting_headings) & !o_is_todo_fixme(x[p_s_title]) & !o_is_commented_code(x[p_s_title])
+  is_section_title[p_s_title] <-
+    !grepl(uninteresting_headings, x[p_s_title]) &
+    !o_is_todo_fixme(x[p_s_title]) &
+    !o_is_commented_code(x[p_s_title]) &
+    # to exclude md tables from outline
+    stringr::str_count(x[p_s_title], "\\|") < 4
   is_section_title
 }
 
@@ -122,7 +147,7 @@ define_outline_criteria <- function(.data, print_todo) {
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
   x$is_news <- x$is_md & grepl("NEWS.md", x$file, fixed = TRUE)
   x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
-  x$is_test_file <- grepl("tests/testthat", x$file, fixed = TRUE)
+  x$is_test_file <- grepl("tests/testthat/test", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
 
   x <- dplyr::mutate(
@@ -131,7 +156,8 @@ define_outline_criteria <- function(.data, print_todo) {
     # maybe force no leading space.
     # TODO strip is_cli_info in Package? only valid for EDA
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
-    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_])title\\:.{4,100}") & !stringr::str_detect(content, "Ttitle|Subtitle") &
+    is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_[:alpha:]])title\\:.{4,100}") &
+      !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap
@@ -146,20 +172,25 @@ define_outline_criteria <- function(.data, print_todo) {
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
     is_section_title = o_is_section_title(content),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
-    is_section_title_source = o_is_section_title(content) & stringr::str_detect(content, "[-\\=]{3,}|^\\#'") & !stringr::str_detect(content, "\\@param"),
-    is_tab_or_plot_title = o_is_object_title(content) & !is_section_title,
-    is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
+    is_section_title_source = is_section_title &
+      stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
+      stringr::str_detect(content, "[:alpha:]"),
     is_todo_fixme = print_todo & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
+    # Make sure everything is second level in revdep/.
+    n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
-    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#")
+    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
+    is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
+    is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
   )
   x <- dplyr::mutate(
     x,
-    before_and_after_empty = line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
-    .by = file
+    before_and_after_empty =
+      line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+    .by = "file"
   )
   x
 }

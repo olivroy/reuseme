@@ -63,7 +63,7 @@ use_todo <- function(todo, proj = proj_get2(), code = FALSE) {
 
 #' Remove a TODO/WORK/FIXME item from a file
 #'
-#' Function meant to be wrapped as `{.run}` hyperlinks with [file_outline()].
+#' Function meant to be wrapped as `{.run }` hyperlinks with [file_outline()].
 #' It basically removes a line from a file.
 #'
 #' @param line The line number (a single integer)
@@ -82,7 +82,7 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   check_number_whole(line)
   line_original <- line
   # to defer warning.
-  if (interactive() && rstudioapi::isAvailable()) {
+  if (interactive() && is_rstudio()) {
     rstudioapi::documentSaveAll()
   }
   warn_change_of_line <- FALSE
@@ -126,9 +126,9 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   if (warn_change_of_line) {
     cli::cli_warn(c(
       x = "Could not find {.arg regexp} as expected",
-      "Could not find {.val {regexp}} at line {line_original}.",
-      i = "Has the file content changed since you ran this code?",
-      # needs qty for cli pluralization, but no printing
+      "The expected pattern {.val {regexp}} was not found at line {line_original}.",
+      i = "Please verify if the file content has changed or if the pattern needs adjustment.",
+      # needs cli::qty for pluralization, but no printing
       "`regexp` was detected in {cli::qty(length(regexp_detection))} line{?s} {regexp_detection}."
     ))
   }
@@ -209,7 +209,7 @@ compute_path_todo <- function(todo, proj) {
   if (!is.na(proj_name_in_todo)) {
     proj <- proj_name_in_todo
     regex_proj_in_todo <- paste0(proj_name_in_todo, "\\:\\:", "\\s?")
-    todo[1] <- stringr::str_remove(todo[1], regex_proj_in_todo)
+    todo[1] <- sub(regex_proj_in_todo, "", todo[1])
   }
 
   is_active_proj <- tryCatch(
@@ -247,11 +247,11 @@ compute_path_todo <- function(todo, proj) {
 # accepts a single line
 strip_todo_line <- function(x, only_rm_tag = FALSE) {
   check_string(x)
-  if (!stringr::str_detect(x, "TODO|WORK|FIXME")) {
+  if (!grepl("TODO|WORK|FIXME", x)) {
     cli::cli_abort("Could not detect a todo tag in x")
   }
   if (only_rm_tag) {
-    x_new <- stringr::str_remove(x, "\\s(TODO|WORK|FIXME)")
+    x_new <- sub("\\s(TODO|WORK|FIXME)", "", x)
   } else {
     x_new <- stringr::str_extract(x, "([^#]+)\\#+", group = 1)
     if (is.na(x_new)) {

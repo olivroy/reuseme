@@ -1,5 +1,5 @@
 test_that("file_outline() works", {
-  my_test_files <- test_path("_ref", c("my-analysis.R", "my-analysis.md", "single-title.md", "many-titles.md"))
+  my_test_files <- test_path("_outline", c("my-analysis.R", "my-analysis.md", "title.md", "titles.md"))
   rlang::local_interactive(TRUE)
   expect_snapshot(
     file_outline(path = my_test_files, alpha = TRUE),
@@ -8,7 +8,7 @@ test_that("file_outline() works", {
 })
 
 test_that("alpha and work_only arguments work", {
-  my_test_file <- test_path("_ref/my-analysis.R")
+  my_test_file <- test_path("_outline/my-analysis.R")
   rlang::local_interactive(TRUE)
   # Somehow on r cmd check, strips _ref -> ref?
   # it is just RStudio vs non-Rstudio
@@ -52,13 +52,13 @@ test_that("pattern works as expected", {
 
 test_that("file_outline() with only title doesn't error", {
   expect_no_error({
-    file <- file_outline(path = test_path("_ref", "single-title.md"))
+    file <- file_outline(path = test_path("_outline", "title.md"))
   })
   expect_equal(nrow(file), 1L)
   expect_no_error({
-    file <- file_outline(path = test_path("_ref", "many-titles.md"))
+    file <- file_outline(path = test_path("_outline", "titles.md"))
   })
-  # Number of items in many-titles.md
+  # Number of items in titles.md
   expect_equal(nrow(file), 5L)
 })
 
@@ -71,5 +71,5 @@ test_that("file_outline() contains function calls", {
 })
 
 test_that("dir_outline() works with no error", {
-  expect_no_error(dir_outline(pattern = ".+", path = test_path("_ref")))
+  expect_no_error(dir_outline(pattern = ".+", path = test_path("_outline")))
 })

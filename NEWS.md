@@ -2,6 +2,16 @@
 
 * `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
 
+* `active_rs_doc_nav()` is a new function to navigate to files pane location.
+
+`active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
+
+* `proj_file()` is better.
+
+* Local GitHub issues show better in outline.
+
+* `file_outline()` detects better plot titles and section titles.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).

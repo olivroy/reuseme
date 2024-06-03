@@ -88,9 +88,9 @@ browse_pkg <- function(package = NULL,
       "reference"
     )
 
-    pkgdown <- stringr::str_remove(pkgdown, "/$")
+    pkgdown <- sub("/$", "", pkgdown)
     pkgdown_tabs_url <- paste0(pkgdown, "/", pkgdown_tabs, "/")
-    if (stringr::str_detect(pkgdown, "r-lib.org|tidyverse.org|tidymodels.org") && !stringr::str_detect(pkgdown, "github.com")) {
+    if (grepl("r-lib.org|tidyverse.org|tidymodels.org", pkgdown) && !grepl("github.com", pkgdown, fixed = TRUE)) {
       # known packages with dev enabled.
       pkgdown_tabs_url[1] <- paste0(pkgdown, "/dev/news")
     }

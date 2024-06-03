@@ -17,7 +17,7 @@ test_that("Marking TODO as done detects tags", {
   )
 })
 
-test_that("todo items are correctly stripped", {
+test_that("TODO items are correctly stripped", {
   expect_equal(
     strip_todo_line("2^2 # TODO this"),
     "2^2"

@@ -25,21 +25,33 @@ test_that("o_is_work_item() works", {
 })
 
 test_that("o_is_test_that() works", {
-  expect_true(o_is_test_that('test_that("Serious things are happening"'))
+  expect_true(o_is_test_that('test_that("Serious things are happening", {'))
+  expect_false(o_is_test_that('test_that("", {'))
 })
 
 test_that("o_is_generic_test() works", {
   expect_true(o_is_generic_test('test_that("Serious things work properly"'))
 })
 
-test_that("o_is_object_title() works", {
-  expect_true(o_is_object_title("title = 'A great'"))
+test_that("o_is_tab_plot_title() works", {
+  expect_true(o_is_tab_plot_title("title = 'A great'"))
+  expect_false(o_is_tab_plot_title("tab_header()"))
+  expect_false(o_is_tab_plot_title("```{r tab_header}"))
+  expect_false(o_is_tab_plot_title("fwd_title = 'Family'"))
+  expect_false(o_is_tab_plot_title("guide_legend(title = 'Family'"))
+  expect_false(o_is_tab_plot_title("title = ''"))
+  expect_false(o_is_tab_plot_title("title = '', symbol = 'x'"))
+
+  expect_false(o_is_tab_plot_title('title = ".+", " +\\(",")'))
+  expect_false(o_is_tab_plot_title("dc:title = 'aaaaaaa'"))
 })
 
 test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
+  expect_false(o_is_section_title("Function ID:", roxy_section = TRUE))
+  expect_false(o_is_section_title("#' @section Function ID:", roxy_section = TRUE))
 })
 
 test_that("o_is_commented_code() works", {
