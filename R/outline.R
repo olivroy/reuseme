@@ -472,8 +472,9 @@ keep_outline_element <- function(.data) {
   if (any(.data$simplify_news)) {
     # only keep dev, latest and major versions of NEWS.md in outline.
     all_versions <- .data$pkg_version[!is.na(.data$pkg_version)]
-    keep <- all_versions == max(all_versions, na.rm = TRUE) |
-      endsWith(all_versions, ".0")
+    all_versions_norm <- package_version(all_versions)
+    keep <- all_versions_norm == max(all_versions_norm, na.rm = TRUE) |
+      endsWith(all_versions, "-0") | endsWith(all_versions, ".0")
     versions_to_drop <- all_versions[!keep]
   } else {
     versions_to_drop <- character(0L)
@@ -487,12 +488,11 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_chunk_cap | is_doc_title)) |
-      (is_md & (is_section_title & before_and_after_empty & !is_a_comment_or_code)) |
+      (is_md & (is_chunk_cap | (is_section_title & before_and_after_empty & !is_a_comment_or_code))) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def # | is_cli_info # TODO reanable cli info
+      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_doc_title # | is_cli_info # TODO reanable cli info
   )
   dat$simplify_news <- NULL
   dat
@@ -518,7 +518,8 @@ display_outline_element <- function(.data, dir_common) {
       is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)|(BOOK.+)"),
       is_test_name ~ stringr::str_extract(outline_el, "test_that\\(['\"](.+)['\"],\\s?\\{", group = 1),
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
-      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1), is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
+      is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1),
+      is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
@@ -698,7 +699,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
     is_news = NULL,
-    # I may put it pack
+    # I may put it back ...
     importance = NULL,
     # may be useful for debugging
     before_and_after_empty = NULL,
@@ -707,6 +708,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }
+
 trim_outline <- function(x, width) {
   # problematic in case_when
   cli::ansi_strtrim(x, width = width)

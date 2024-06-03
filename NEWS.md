@@ -12,6 +12,8 @@
 
 * `file_outline()` detects better plot titles and section titles.
 
+* Package versions in NEWS.md are now normalized to yield better results.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).
