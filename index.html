@@ -66,7 +66,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The goal of reuseme is to provide utility functions for project management across RStudio projects. Sometimes, you have to manage multiple things at once, but don’t have the time to do edits. You may need to switch quickly to a project, add things or browse a certain file if you have some replications across projects. Sometimes, it is hard to do that. reuseme also aims to help me overcome things I don’t like on Windows.</p>
+<p>The goal of reuseme is to provide utility functions for project management across RStudio projects. Sometimes, managing multiple projects can be challenging. reuseme also aims to simplify project management on Windows. You may need to switch quickly to a project, add things or browse a certain file if you have some replications across projects. Sometimes, it is hard to do that. reuseme also aims to help me overcome things I don’t like on Windows.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -86,9 +86,8 @@
 <li>Anyone working in RStudio (recent version for hyperlink support)</li>
 <li>Work with RStudio projects</li>
 <li>Your RStudio projects are organized in a centralized location on your computer</li>
-<li>Your RStudio projects are Version controlled with git (optional, but recommended to avoid surprises! No need to be hosted on repositories like GitLab or GitHub)</li>
-<li>You are working on Windows (macOS is supported, but some things were designed on Windows)</li>
-<li>You use machine and human readable paths (i.e. no spaces, special characters) (Tip: don’t hesitate to rename your files, it can take away the pain in the long run!</li>
+<li>Your RStudio projects are Version controlled with git (optional, but recommended for avoiding surprises! No need to be hosted on repositories like GitLab or GitHub)</li>
+<li>You use machine and human-readable paths (i.e. no spaces, special characters) (Tip: don’t hesitate to rename your files (<code><a href="reference/rename_files2.html">reuseme::rename_files2()</a></code>), your future self will thank you!</li>
 </ul>
 <p>To take advantage of reuseme, it is highly recommended to set the following option in your <code>.Rprofile</code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -111,50 +110,58 @@
 </h3>
 <p>usethis is fantastic to manage workflow within a project, but is harder across projects.</p>
 <p>If you want to work across projects with <a href="usethis.r-lib.org">usethis</a>, you need to provide the full path to a project. With reuseme, just use the project name!</p>
-<table style="width:100%;" class="table">
+<table style="width:99%;" class="table">
 <caption>
 usethis vs reuseme
 </caption>
 <colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 43%">
+<col style="width: 2%">
 </colgroup>
-<thead><tr class="header">
-<th>
-Workflow
-</th>
-<th>
-reuseme
-</th>
-<th>
-usethis
-</th>
-</tr></thead>
 <tbody>
 <tr class="odd">
-<td>
+<td rowspan="2">
+<h1 id="workflow">
+Workflow
+</h1>
+<p>
 Switch to project “cool-project”
+</p>
 </td>
-<td>
+<td rowspan="2">
+<h1 id="reuseme-1">
+reuseme
+</h1>
+<p>
 <code>proj_switch(proj = “cool-project”)</code>
+</p>
+</td>
+<td rowspan="2">
+<h1 id="usethis">
+usethis
+</h1>
+<p>
+<code>proj_activate(path = “C:/users/long/path/to/cool-project”)</code>
+</p>
 </td>
 <td>
-<code>proj_activate(path = “C:/users/long/path/to/cool-project”)</code>
 </td>
 </tr>
 <tr class="even">
 <td>
-Write a TODO item in project “cooler-project”, while working in “cool-project”
-</td>
-<td>
-<code>use_todo(todo = “I need to do this ASAP as possible”, proj = “cooler-project”)</code>
-</td>
-<td>
-<code>usethis::write_union(path = “C:/Users/I/do/not/want/to/type/cooler-project/TODO.R”, lines = “I need to do this ASAP as possible.”)</code>
 </td>
 </tr>
 <tr class="odd">
+<td>
+Write a TODO item in project “cooler-project”, while working in “cool-project”
+</td>
+<td colspan="3">
+<code>reuseme::use_todo(todo = “I need to do this ASAP as possible”, proj = “cooler-project”)</code> | <code>usethis::write_union(path = “C:/Users/I/do/not/want/to/type/cooler-project/TODO.R”, lines = “I need to do this ASAP as possible.”)</code>
+</td>
+</tr>
+<tr class="even">
 <td>
 Open pkgdown site link and see vignettes
 </td>
@@ -184,6 +191,8 @@ Open it
 </li>
 </ol>
 </td>
+<td>
+</td>
 </tr>
 </tbody>
 </table>
@@ -209,7 +218,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    559ms    559ms      1.79      18MB     3.58</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    524ms    524ms      1.91    20.9MB     3.82</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -223,41 +232,17 @@ Example outline
 <span><span class="co">#&gt; `i` A great title</span></span>
 <span><span class="co">#&gt; `i` TODO improve this Viz!- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `LICENSE.md`  MIT License</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `playground/roxygen2-test.R`</span></span>
-<span><span class="co">#&gt; `i` Section to extract</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/dplyr-plus.R`  dplyr extra</span></span>
-<span><span class="co">#&gt; `i` in the presence of ties.</span></span>
-<span><span class="co">#&gt; `i` Use with_ties = FALSE to return exactly n matches</span></span>
-<span><span class="co">#&gt; `i` Use each = FALSE to have n divided in each place</span></span>
 <span><span class="co">#&gt; `i` FIXME Doesn't work, problem with symbols here- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` with dplyr::filter</span></span>
-<span><span class="co">#&gt; `i` extract the skin_color for C-3PO</span></span>
-<span><span class="co">#&gt; `i` will return a named vector of mpg (as mtcars has rownames.)</span></span>
-<span><span class="co">#&gt; `i` Extract hair color for all people</span></span>
 <span><span class="co">#&gt; `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (&lt;https://github.com/r-lib/rlang/issues/1618&gt;)- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` summarise with total</span></span>
-<span><span class="co">#&gt; `i` works with `.by`</span></span>
-<span><span class="co">#&gt; `i` works with `group_by()`</span></span>
-<span><span class="co">#&gt; `i` NA all 2s</span></span>
-<span><span class="co">#&gt; `i` You can actually use dplyr::na_if() in this case</span></span>
-<span><span class="co">#&gt; `i` NA all 1 and 2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/eda-identity.R`  dplyr/base identity helpers --------------------</span></span>
-<span><span class="co">#&gt; `i` Use cases / advantages</span></span>
-<span><span class="co">#&gt; `i` Caution</span></span>
-<span><span class="co">#&gt; `i` Workflow to explore mtcars</span></span>
 <span><span class="co">#&gt; `i` base identity functions</span></span>
 <span><span class="co">#&gt; `i` dplyr identity functions with small tweaks</span></span>
 <span><span class="co">#&gt; `i` dplyr identity without tweaks</span></span>
 <span><span class="co">#&gt; `i` dplyr extensions identity</span></span>
 <span><span class="co">#&gt; `i` helpers</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/escape-inline-markup.R`</span></span>
-<span><span class="co">#&gt; `i` example code</span></span>
-<span><span class="co">#&gt; `i` last instance taken care of with escape_markup with a different strategy</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/files-conflicts.R`</span></span>
 <span><span class="co">#&gt; `i` TODO insert in either proj_outline, or rename_file- `Done✔?`</span></span>
@@ -269,11 +254,6 @@ Example outline
 <span><span class="co">#&gt; ── `R/import-standalone-types-check.R`</span></span>
 <span><span class="co">#&gt; `i` Scalars</span></span>
 <span><span class="co">#&gt; `i` Vectors</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/named.R`</span></span>
-<span><span class="co">#&gt; `i` returns the same as base R for unnamed input</span></span>
-<span><span class="co">#&gt; `i` returns all values</span></span>
-<span><span class="co">#&gt; `i` TODO is usable with `extract_cell_value()`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/open.R`</span></span>
 <span><span class="co">#&gt; `i` FIXME why is this code like this?- `Done✔?`</span></span>
@@ -290,10 +270,6 @@ Example outline
 <span><span class="co">#&gt; `i` it is 'R/outline.R'</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outline.R`  `proj_outline()`</span></span>
-<span><span class="co">#&gt; `i` Remove todo items</span></span>
-<span><span class="co">#&gt; `i` interact with data frame</span></span>
-<span><span class="co">#&gt; `i` These all work on the active file / project or directory.</span></span>
-<span><span class="co">#&gt; `i` Like proj_switch(), proj_outline() accepts a project</span></span>
 <span><span class="co">#&gt; `i` `file_outline()`</span></span>
 <span><span class="co">#&gt; `i` File outline</span></span>
 <span><span class="co">#&gt; `i` Print method</span></span>
@@ -305,13 +281,9 @@ Example outline
 <span><span class="co">#&gt; `i` TODO maybe add a max?- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO improve on this message- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/proj-reuseme.R`</span></span>
-<span><span class="co">#&gt; `i` Setup</span></span>
-<span><span class="co">#&gt; `i` Capabilities.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/rename-files.R`</span></span>
-<span><span class="co">#&gt; `i` Use case</span></span>
+<span><span class="co">#&gt; ── `R/rename.R`</span></span>
 <span><span class="co">#&gt; `i` After here, we start doing some renaming real situations</span></span>
+<span><span class="co">#&gt; `i` TODO verify if path should be normalized.- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` Helpers</span></span>
 <span><span class="co">#&gt; `i` helpers for computing scope of renaming</span></span>
 <span><span class="co">#&gt; `i` TODO measure of string proximity- `Done✔?`</span></span>
@@ -319,7 +291,7 @@ Example outline
 <span><span class="co">#&gt; `i` FIXME maybe not fail while testing- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO Check that old file is more recent- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `R/use-todo.R`</span></span>
+<span><span class="co">#&gt; ── `R/todo.R`</span></span>
 <span><span class="co">#&gt; `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO nice to have, but would need to extract duplicates- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` Helpers</span></span>
@@ -329,13 +301,7 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/utils.R`  OS utils</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_ref/many-titles.md`  The title is the only outline element</span></span>
-<span><span class="co">#&gt; `i` Another title</span></span>
-<span><span class="co">#&gt; `i` Second level</span></span>
-<span><span class="co">#&gt; `i` TODO this is an item- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` Last title</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_ref/my-analysis.md`  My doc title</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_outline/my-analysis.md`  My doc title</span></span>
 <span><span class="co">#&gt; `i` A section</span></span>
 <span><span class="co">#&gt; `i` Dashboard card</span></span>
 <span><span class="co">#&gt; `i` A code section</span></span>
@@ -344,18 +310,21 @@ Example outline
 <span><span class="co">#&gt; `i` A long ggplot2 title</span></span>
 <span><span class="co">#&gt; `i` A code section</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_ref/my-analysis.R`  Analyse my streets</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_outline/my-analysis.R`  Analyse my {streets}</span></span>
 <span><span class="co">#&gt; `i` Read my streets (&lt;https://https://en.wikipedia.org/wiki/Street_art&gt;) data</span></span>
 <span><span class="co">#&gt; `i` data wrangling</span></span>
 <span><span class="co">#&gt; `i` Write my streets</span></span>
 <span><span class="co">#&gt; `i` TODO Create a new version- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` Roxygen section</span></span>
-<span><span class="co">#&gt; `i` A real one</span></span>
-<span><span class="co">#&gt; `i` A true one</span></span>
 <span><span class="co">#&gt; `i` 'R/my-file.R'</span></span>
 <span><span class="co">#&gt; `i` Section title</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_ref/single-title.md`  The title is the only outline element</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_outline/title.md`  The title is the only outline element</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_outline/titles.md`  The title is the only outline element</span></span>
+<span><span class="co">#&gt; `i` Another title</span></span>
+<span><span class="co">#&gt; `i` Second level</span></span>
+<span><span class="co">#&gt; `i` TODO this is an item- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` Last title</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/case-if-any.md`</span></span>
 <span><span class="co">#&gt; `i` wrong cases error</span></span>
@@ -373,16 +342,16 @@ Example outline
 <span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
 <span><span class="co">#&gt; `i` pattern works as expected</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/rename-files.md`</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/rename.md`</span></span>
 <span><span class="co">#&gt; `i` Helper files returns the expected input</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/_snaps/use-todo.md`</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/todo.md`</span></span>
 <span><span class="co">#&gt; `i` Marking a TODO item as done works</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-case-if-any.R`</span></span>
 <span><span class="co">#&gt; `i` case_if_any() basic work</span></span>
 <span><span class="co">#&gt; `i` wrong cases error</span></span>
-<span><span class="co">#&gt; `i` case_if_any() can use a newly created variable (#8)</span></span>
+<span><span class="co">#&gt; `i` case_if_any() can use a newly created variable (#8 (&lt;https://github.com/olivroy/reuseme/issues/8&gt;))</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-dplyr-plus.R`</span></span>
 <span><span class="co">#&gt; `i` filter_if_any() errors correctly when using `by` instead of `.by`</span></span>
@@ -396,7 +365,10 @@ Example outline
 <span><span class="co">#&gt; `i` Returns identity</span></span>
 <span><span class="co">#&gt; `i` Side effects are what's intended in interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/test-link-elements.R`</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-escape-inline-markup.R`</span></span>
+<span><span class="co">#&gt; `i` TODO could probably be {. } works?- `Done✔?`</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-markup.R`</span></span>
 <span><span class="co">#&gt; `i` link_gh_issue() + markup_href() work</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-named.R`</span></span>
@@ -417,16 +389,16 @@ Example outline
 <span><span class="co">#&gt; `i` file_outline() contains function calls</span></span>
 <span><span class="co">#&gt; `i` dir_outline() works with no error</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/test-rename-files.R`</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-rename.R`</span></span>
 <span><span class="co">#&gt; `i` Helper files returns the expected input</span></span>
 <span><span class="co">#&gt; `i` force and action are deprecated</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-screenshot.R`</span></span>
 <span><span class="co">#&gt; `i` screenshot() does nothing in non-interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── `tests/testthat/test-use-todo.R`</span></span>
+<span><span class="co">#&gt; ── `tests/testthat/test-todo.R`</span></span>
 <span><span class="co">#&gt; `i` Marking TODO as done detects tags</span></span>
-<span><span class="co">#&gt; `i` todo items are correctly stripped</span></span>
+<span><span class="co">#&gt; `i` TODO items are correctly stripped</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-utils.R`</span></span>
 <span><span class="co">#&gt; `i` Windows is recognized correctly.</span></span>
@@ -456,7 +428,10 @@ Example outline
 <span><span class="co">#&gt; `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`</span></span>
 <span><span class="co">#&gt; `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`</span></span>
-<span><span class="co">#&gt; `i` TODO outline Show function call if exported + not internal + bonus if…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO browse_pkg should open by default if no vignettes are found, becau…- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO exclude _files from `proj_list()`- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO rename_files should be less noisy about project name file- `Done✔?`</span></span>
+<span><span class="co">#&gt; `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `NEWS.md`</span></span>
 <span><span class="co">#&gt; `i` reuseme (development version)</span></span>

@@ -43,7 +43,7 @@ This function creates intermediate markdown links to entries of the form rstudio
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Create a markdown link to a GitHub issue</h1>
-      <small class="dont-index">Source: <a href="https://github.com/olivroy/reuseme/blob/HEAD/R/link-elements.R" class="external-link"><code>R/link-elements.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/olivroy/reuseme/blob/HEAD/R/markup.R" class="external-link"><code>R/markup.R</code></a></small>
       <div class="d-none name"><code>link_gh_issue.Rd</code></div>
     </div>
 
@@ -54,13 +54,17 @@ This function creates intermediate markdown links to entries of the form rstudio
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">link_gh_issue</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">link_gh_issue</span><span class="op">(</span><span class="va">x</span>, home_repo <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A string, usually lines of files that contains issue numbers.</p></dd>
+
+
+<dt>home_repo</dt>
+<dd><p>Optional, but if supplied, will be stripped.</p></dd>
 
 </dl></div>
     <div class="section level2">
