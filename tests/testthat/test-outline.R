@@ -7,6 +7,13 @@ test_that("file_outline() works", {
   )
 })
 
+test_that("file_outline() works for NEWS", {
+  expect_equal(
+    nrow(file_outline(path = test_path("_outline", "NEWS.md"))),
+    6
+  )
+})
+
 test_that("alpha and work_only arguments work", {
   my_test_file <- test_path("_outline/my-analysis.R")
   rlang::local_interactive(TRUE)

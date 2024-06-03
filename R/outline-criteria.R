@@ -72,7 +72,8 @@ o_is_test_that <- function(x) {
 }
 
 o_is_generic_test <- function(x) {
-  stringr::str_detect(x, "works\"|correctly\"|properly\"|expected\"")
+  # remove " detection to avoid discovering snapshot files.
+  stringr::str_detect(x, "works|correctly|properly|expected")
 }
 
 # Returns table or plot titles.
@@ -102,7 +103,7 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   uninteresting_headings <- paste(
     "(Tidy\\s?T(uesday|emplate)|Readme|Wrangle|Devel)$|error=TRUE",
     "url\\{|Error before installation|unreleased|Function ID$|Function Introduced",
-    "Examples$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
+    "Usage$|Examples?$|Newly broken$|Newly fixed$|In both$|Installation$|MIT License|nocov|With cli$|sourceCode|Detect #'",
     sep = "|"
   )
   # potential section titles

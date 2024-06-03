@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    524ms    524ms      1.91    20.9MB     3.82
+#> 1 outline <- proj_outline()    489ms    524ms      1.91    21.2MB     3.81
 ```
 
 <details>
@@ -278,25 +278,61 @@ outline
 #> `i` Second level
 #> `i` TODO this is an item- `Done✔?`
 #> `i` Last title
+#> `i` `function_name()` title
+#> 
+#> ── `tests/testthat/_snaps/browse-pkg.md`
+#> `i` browse_pkg() works
 #> 
 #> ── `tests/testthat/_snaps/case-if-any.md`
+#> `i` case_if_any() basic work
 #> `i` wrong cases error
 #> 
 #> ── `tests/testthat/_snaps/dplyr-plus.md`
+#> `i` filter_if_any() errors with across()
 #> `i` adds rows in front, but warns the user
+#> `i` summarise_with_total() works
+#> `i` slice_min_max() works
+#> `i` na_if2() works with expr and values
 #> 
 #> ── `tests/testthat/_snaps/eda-identity.md`
 #> `i` Side effects are what's intended in interactive sessions
+#> 
+#> ── `tests/testthat/_snaps/escape-inline-markup.md`
+#> `i` escape_markup() works
+#> `i` replace_r_var() works
+#> 
+#> ── `tests/testthat/_snaps/markup.md`
+#> `i` link_gh_issue() + markup_href() work
 #> 
 #> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
+#> `i` file_outline() works
 #> `i` alpha and work_only arguments work
+#> `i` file_outline() is a data frame
 #> `i` pattern works as expected
 #> 
+#> ── `tests/testthat/_snaps/proj-list.md`
+#> `i` proj_file() works
+#> 
+#> ── `tests/testthat/_snaps/quarto-help.md`
+#> `i` href_name_url() works
+#> `i` quarto_help() works
+#> 
 #> ── `tests/testthat/_snaps/rename.md`
+#> `i` rename_files2(): prevents file renaming if conflicts
+#> `i` rename_files2(): is easier to test messages with no action
+#> `i` rename_files2(): renames files if forced to do so
+#> `i` rename_files2(): doesn't check for references if file name is short
+#> `i` rename_files2(): priorizes references if name is generic or widely used in files
+#> `i` rename_files2(): can accept overridden preferences
+#> `i` rename_files2(): relaxes its conditions for figures
+#> `i` rename_files2(): calls check_referenced_files()
 #> `i` Helper files returns the expected input
+#> 
+#> ── `tests/testthat/_snaps/screenshot.md`
+#> `i` screenshot() does nothing in non-interactive sessions
 #> 
 #> ── `tests/testthat/_snaps/todo.md`
 #> `i` Marking a TODO item as done works
@@ -307,12 +343,10 @@ outline
 #> `i` case_if_any() can use a newly created variable (#8 (<https://github.com/olivroy/reuseme/issues/8>))
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
-#> `i` filter_if_any() errors correctly when using `by` instead of `.by`
 #> `i` filter_if_any() errors with across()
 #> `i` TODO improve this error- `Done✔?`
 #> `i` adds rows in front, but warns the user
 #> `i` summarise_with_total() keeps factors
-#> `i` na_if2() works with expr and values
 #> 
 #> ── `tests/testthat/test-eda-identity.R`
 #> `i` Returns identity
@@ -340,10 +374,8 @@ outline
 #> `i` TODO change tests for data frame size when stable (efficiency). As stil…- `Done✔?`
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
-#> `i` dir_outline() works with no error
 #> 
 #> ── `tests/testthat/test-rename.R`
-#> `i` Helper files returns the expected input
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`
@@ -351,10 +383,6 @@ outline
 #> 
 #> ── `tests/testthat/test-todo.R`
 #> `i` Marking TODO as done detects tags
-#> `i` TODO items are correctly stripped
-#> 
-#> ── `tests/testthat/test-utils.R`
-#> `i` Windows is recognized correctly.
 #> 
 #> ── `TODO.R`
 #> `i` TODO screenshot make the behaviour different when vignettes vs articl…- `Done✔?`
@@ -388,18 +416,23 @@ outline
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
-#> `i` reuseme 0.0.2
-#> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
 #> `i` reuseme
 #> `i` Installation
 #> `i` Getting started
-#> `i` Example
 #> `i` hello
 #> `i` Extend usethis functionality
 #> `i` Proposing a data analysis workflow
 #> `i` Outline speed
+#> 
+#> ── `tests/testthat/_outline/NEWS.md`
+#> `i` Package 202a20.9000
+#> `i` Package (development)
+#> `i` Pac
+#> `i` Package 1.0-0
+#> `i` Package 0.9-0
+#> `i` Package 0.1-0
 ```
 
 </p>

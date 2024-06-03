@@ -488,7 +488,7 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_chunk_cap | (is_section_title & before_and_after_empty & !is_a_comment_or_code))) |
+      (is_md & (is_chunk_cap | (is_section_title & before_and_after_empty))) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
