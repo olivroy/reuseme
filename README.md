@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    8.58s    8.58s     0.117    85.4MB    0.583
+#> 1 outline <- proj_outline()    12.5s    12.5s    0.0803    85.7MB    0.402
 ```
 
 <details>
@@ -503,12 +503,10 @@ outline
 #> `i` case_if_any() can use a newly created variable (#8 (<https://github.com/olivroy/reuseme/issues/8>))
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
-#> `i` filter_if_any() errors correctly when using `by` instead of `.by`
 #> `i` filter_if_any() errors with across()
 #> `i` TODO improve this error- `Done✔?`
 #> `i` adds rows in front, but warns the user
 #> `i` summarise_with_total() keeps factors
-#> `i` na_if2() works with expr and values
 #> 
 #> ── `tests/testthat/test-eda-identity.R`
 #> `i` Returns identity
@@ -532,10 +530,8 @@ outline
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline-roxy.R`
-#> `i` roxy tags are parsed properly + object names are correct
 #> `i` roxy tags don't error
 #> `i` multiple roxy tags don't error.
-#> `i` file_outline() works outside RStudio)
 #> `i` cli escaping goes well in roxy comments
 #> 
 #> ── `tests/testthat/test-outline.R`
@@ -544,12 +540,8 @@ outline
 #> `i` TODO change tests for data frame size when stable (efficiency). As stil…- `Done✔?`
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
-#> `i` dir_outline() works with no error
-#> `i` file_outline() works well with figure captions
-#> `i` file_outline() detects correctly knitr notebooks
 #> 
 #> ── `tests/testthat/test-rename.R`
-#> `i` Helper files returns the expected input
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`
@@ -557,25 +549,26 @@ outline
 #> 
 #> ── `tests/testthat/test-todo.R`
 #> `i` Marking TODO as done detects tags
-#> `i` TODO items are correctly stripped
-#> 
-#> ── `tests/testthat/test-utils.R`
-#> `i` Windows is recognized correctly.
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
-#> `i` reuseme 0.0.2
-#> `i` reuseme 0.0.1
 #> 
 #> ── `README.Rmd`
 #> `i` reuseme
 #> `i` Installation
 #> `i` Getting started
-#> `i` Example
 #> `i` hello
 #> `i` Extend usethis functionality
 #> `i` Proposing a data analysis workflow
 #> `i` Outline speed
+#> 
+#> ── `tests/testthat/_outline/NEWS.md`
+#> `i` Package 202a20.9000
+#> `i` Package (development)
+#> `i` Pac
+#> `i` Package 1.0-0
+#> `i` Package 0.9-0
+#> `i` Package 0.1-0
 ```
 
 </p>
