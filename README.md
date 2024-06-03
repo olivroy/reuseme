@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    10.2s    10.2s    0.0982    85.6MB    0.393
+#> 1 outline <- proj_outline()    8.58s    8.58s     0.117    85.4MB    0.583
 ```
 
 <details>
@@ -357,7 +357,6 @@ outline
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
 #> `i` Dashboard card
-#> `i` A code section
 #> `i` A subsection
 #> `i` A section2
 #> `i` A long ggplot2 title
