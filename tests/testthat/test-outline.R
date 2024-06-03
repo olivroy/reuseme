@@ -73,3 +73,4 @@ test_that("file_outline() contains function calls", {
 test_that("dir_outline() works with no error", {
   expect_no_error(dir_outline(pattern = ".+", path = test_path("_outline")))
 })
+
