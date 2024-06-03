@@ -6,12 +6,6 @@ title: My doc title
 
 ```{r}
 #| title: Dashboard card
-<<<<<<< HEAD
-=======
-
-# A code section ----
-
->>>>>>> b4803a244a484a7b686d05f28ea7be91f4d412c3
 ```
 
 ## A subsection
@@ -28,7 +22,6 @@ Some text with TODO.
 # A code section ----
 
 ```
-<<<<<<< HEAD
 
 ```{r}
 #| fig-cap: > 
@@ -41,5 +34,3 @@ Some text with TODO.
 #| A long ggplot2 title
 #|   with more details3."
 ```
-=======
->>>>>>> b4803a244a484a7b686d05f28ea7be91f4d412c3

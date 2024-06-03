@@ -6,11 +6,7 @@
 
 * `proj_outline()` gains `exclude_tests` to exclude tests from outline
 
-* `doc_title`, `is_plot_or_tab_title` is better detected now.
-
 * `proj_outline()` now detects legacy `fig.cap` in the chunk header. See `knitr::convert_chunk_headers()` for the newer approach. 
-
-* `proj_outline()` now autolinks GitHub issue inside the repo.
 
 * `file_outline()` now supports [R reports](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) (basic)
 
