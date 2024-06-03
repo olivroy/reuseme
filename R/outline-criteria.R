@@ -230,16 +230,15 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
       stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
       stringr::str_detect(content, "[:alpha:]"),
     is_todo_fixme = !exclude_todos & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext, is_notebook) & !is_snap_file,
-
-    # roxygen2 title block
-    is_object_title = FALSE,
-    tag = NA_character_,
-    topic = NA_character_,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     # Make sure everything is second level in revdep/.
     n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
+    # roxygen2 title block
+    is_object_title = FALSE,
+    tag = NA_character_,
+    topic = NA_character_,
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
