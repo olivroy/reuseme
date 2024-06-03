@@ -127,10 +127,10 @@ o_is_section_title <- function(x, roxy_section = FALSE) {
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <-
     !grepl(uninteresting_headings, x[p_s_title]) &
-    !o_is_todo_fixme(x[p_s_title]) &
-    !o_is_commented_code(x[p_s_title]) &
-    # to exclude md tables from outline
-    stringr::str_count(x[p_s_title], "\\|") < 4
+      !o_is_todo_fixme(x[p_s_title]) &
+      !o_is_commented_code(x[p_s_title]) &
+      # to exclude md tables from outline
+      stringr::str_count(x[p_s_title], "\\|") < 4
   is_section_title
 }
 

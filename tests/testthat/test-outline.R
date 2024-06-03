@@ -91,3 +91,4 @@ test_that("file_outline() detects correctly knitr notebooks", {
     transform = ~ sub(" `[^`]+` ", " `knitr-notebook.R` ", .x)
   )
 })
+
