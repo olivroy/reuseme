@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `proj_outline()` no longer shows `complete_todo()` links for items in non-interactive sessions. `complete_todo()` links are now only shown when calling `file_outline()` on the active file.
+
 * `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
 
 * `active_rs_doc_nav()` is a new function to navigate to files pane location.

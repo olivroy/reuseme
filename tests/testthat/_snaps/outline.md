@@ -21,12 +21,12 @@
       `i` Last title
       `i` Second level
       `i` `function_name()` title
-      `i` TODO this is an item- `Donev?`
+      `i` TODO this is an item
     Message
       
       -- `my-analysis.R`  Analyse my {streets} 
     Output
-      `i` TODO Create a new version- `Donev?`
+      `i` TODO Create a new version
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
       `i` Section title
       `i` Write my streets
@@ -58,7 +58,7 @@
       `i` Load packages
       `i` Wrangle + visualize data
       `i` A great title
-      `i` TODO improve this Viz!- `Donev?`
+      `i` TODO improve this Viz!
 
 # pattern works as expected
 
@@ -76,7 +76,7 @@
       
       -- `outline-script.R`  Example for `file_outline()` 
     Output
-      `i` TODO improve this Viz!- `Donev?`
+      `i` TODO improve this Viz!
 
 ---
 
