@@ -4,6 +4,12 @@ title: My doc title
 
 # A section
 
+```yaml
+
+    'title: "Tutorial"',
+    "title: tutorial-test-1",
+```
+
 ```{r}
 #| title: Dashboard card
 

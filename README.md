@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    495ms    504ms      1.98    21.1MB     4.96
+#> 1 outline <- proj_outline()    685ms    685ms      1.46    22.2MB     2.92
 ```
 
 <details>
@@ -218,6 +218,7 @@ outline
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
+#> `i` TODO extract title in roxy comments (@title too.L)
 #> `i` TODO strip is_cli_info in Package? only valid for EDA
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.
 #> `i` it is 'R/outline.R'
@@ -253,6 +254,9 @@ outline
 #> `i` Active project / document
 #> 
 #> ── `R/utils.R`  OS utils
+#> 
+#> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
+#> `i` A great section
 #> 
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
@@ -312,6 +316,7 @@ outline
 #> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
+#> `i` file_outline() detects correctly knitr notebooks
 #> 
 #> ── `tests/testthat/_snaps/proj-list.md`
 #> `i` proj_file() works

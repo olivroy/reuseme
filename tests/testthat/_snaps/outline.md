@@ -86,3 +86,13 @@
       
       -- `outline-script.R`  Example for `file_outline()` 
 
+# file_outline() detects correctly knitr notebooks
+
+    Code
+      file_outline(path = test_path("_outline", "knitr-notebook.R"))
+    Message
+      
+      -- `knitr-notebook.R`  Crop Analysis Q3 2013 
+    Output
+      `i` A great section
+

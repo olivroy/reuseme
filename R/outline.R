@@ -381,6 +381,16 @@ print.outline_report <- function(x, ...) {
   recent_only <- x$recent_only[1]
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
+  if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
+    # Remove all things that appear more than 4 times in a file.
+    # this typically indicates a placeholder
+    file_sections <- dplyr::filter(
+      file_sections,
+      dplyr::n() < 4,
+      .by = c(.data$file, .data$outline_el)
+    )
+  }
+
   summary_links_files <- file_sections |>
     dplyr::filter(!is_function_def) |>
     dplyr::summarise(
@@ -488,8 +498,8 @@ keep_outline_element <- function(.data) {
   dat <- dplyr::filter(
     .data,
     (is_news & (
-      (!simplify_news & is_section_title & !is_a_comment_or_code & before_and_after_empty) |
-        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & !is_a_comment_or_code & before_and_after_empty)
+      (!simplify_news & is_section_title & before_and_after_empty) |
+        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & before_and_after_empty)
     )) |
       # still regular comments in .md files
       # what to keep in .md docs
@@ -709,6 +719,7 @@ construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_commo
     style_fun = NULL,
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
+    is_notebook = NULL,
     complete_todo_link = NULL,
     is_news = NULL,
     # I may put it back ...

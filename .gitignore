@@ -3,5 +3,6 @@
 .Rdata
 .httr-oauth
 .DS_Store
+README.knit.md
 .quarto
 docs
