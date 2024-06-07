@@ -126,14 +126,9 @@ o_is_section_title <- function(x, is_roxygen_comment = FALSE, is_todo_fixme = FA
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <-
     !grepl(uninteresting_headings, x[p_s_title]) &
-      !o_is_commented_code(x[p_s_title]) &
       # to exclude md tables from outline
       stringr::str_count(x[p_s_title], "\\|") < 4
   is_section_title
-}
-
-o_is_commented_code <- function(x) {
-  stringr::str_detect(x, "#.+\\(.+\\=.+[\\),\"']$")
 }
 
 o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
@@ -215,7 +210,6 @@ define_outline_criteria <- function(.data, print_todo) {
     is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
-    is_a_comment_or_code = stringr::str_detect(content, "!=|\\|\\>|\\(\\.*\\)"),
   )
   x <- dplyr::mutate(
     x,

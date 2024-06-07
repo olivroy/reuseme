@@ -60,15 +60,6 @@ test_that("o_is_section_title() works", {
   expect_false(o_is_section_title("#' # A very interesting section"))
 })
 
-test_that("o_is_commented_code() works", {
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1,"))
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1)"))
-  expect_true(o_is_commented_code("#' # DiagrammeR(x = 1)"))
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1\""))
-
-  expect_false(o_is_commented_code("# A new section {.unnumbered}"))
-})
-
 test_that("o_is_cli_info() works", {
   expect_true(o_is_cli_info("cli::cli_ul('this')"))
   expect_false(o_is_cli_info("\"cli::cli_ul('aa')"))
