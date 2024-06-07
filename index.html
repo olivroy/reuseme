@@ -218,7 +218,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    495ms    504ms      1.98    21.1MB     4.96</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    685ms    685ms      1.46    22.2MB     2.92</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -265,6 +265,7 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/outline-criteria.R`</span></span>
 <span><span class="co">#&gt; `i` Add variable to outline data frame</span></span>
+<span><span class="co">#&gt; `i` TODO extract title in roxy comments (@title too.L)</span></span>
 <span><span class="co">#&gt; `i` TODO strip is_cli_info in Package? only valid for EDA</span></span>
 <span><span class="co">#&gt; `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.</span></span>
 <span><span class="co">#&gt; `i` it is 'R/outline.R'</span></span>
@@ -300,6 +301,9 @@ Example outline
 <span><span class="co">#&gt; `i` Active project / document</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/utils.R`  OS utils</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013</span></span>
+<span><span class="co">#&gt; `i` A great section</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_outline/my-analysis.md`  My doc title</span></span>
 <span><span class="co">#&gt; `i` A section</span></span>
@@ -359,6 +363,7 @@ Example outline
 <span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
 <span><span class="co">#&gt; `i` file_outline() is a data frame</span></span>
 <span><span class="co">#&gt; `i` pattern works as expected</span></span>
+<span><span class="co">#&gt; `i` file_outline() detects correctly knitr notebooks</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/proj-list.md`</span></span>
 <span><span class="co">#&gt; `i` proj_file() works</span></span>

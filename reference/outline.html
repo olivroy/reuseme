@@ -229,7 +229,7 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># interact with data frame</span></span></span>
 <span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 33</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 32</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   file     content outline_el title_el title_el_line  line has_title_el file_ext</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> /home/r… <span style="color: #949494;">"</span># Exa… <span style="color: #BB0000;">NA</span>         Example…             1     1 TRUE         R       </span>
@@ -239,13 +239,13 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> /home/r… <span style="color: #949494;">"</span># TOD… TODO impr… Example…             1    11 FALSE        R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> /home/r… <span style="color: #949494;">"</span>f_exa… f_example  Example…             1    14 FALSE        R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> /home/r… <span style="color: #949494;">"</span>  f2_… f2_example Example…             1    18 FALSE        R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 25 more variables: is_md &lt;lgl&gt;, is_test_file &lt;lgl&gt;, is_snap_file &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 24 more variables: is_md &lt;lgl&gt;, is_test_file &lt;lgl&gt;, is_snap_file &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_cli_info &lt;lgl&gt;, is_doc_title &lt;lgl&gt;, is_chunk_cap &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_chunk_cap_next &lt;lgl&gt;, is_test_name &lt;lgl&gt;, is_section_title &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pkg_version &lt;chr&gt;, is_section_title_source &lt;lgl&gt;, is_todo_fixme &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_chunk_cap_next &lt;lgl&gt;, is_test_name &lt;lgl&gt;, is_todo_fixme &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_section_title &lt;lgl&gt;, pkg_version &lt;chr&gt;, is_section_title_source &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_leading_hash &lt;dbl&gt;, is_second_level_heading_or_more &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_cross_ref &lt;lgl&gt;, is_function_def &lt;lgl&gt;, is_tab_or_plot_title &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_a_comment_or_code &lt;lgl&gt;, is_subtitle &lt;lgl&gt;, link &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_subtitle &lt;lgl&gt;, link &lt;chr&gt;, file_path &lt;chr&gt;, text_in_link &lt;chr&gt;, …</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span><span class="co"># These all work on the active file / project or directory.</span></span></span>
