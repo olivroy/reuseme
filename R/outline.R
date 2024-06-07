@@ -381,6 +381,16 @@ print.outline_report <- function(x, ...) {
   recent_only <- x$recent_only[1]
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
+  if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
+    # Remove all things that appear more than 4 times in a file.
+    # this typically indicates a placeholder
+    file_sections <- dplyr::filter(
+      file_sections,
+      dplyr::n() < 4,
+      .by = c(.data$file, .data$outline_el)
+    )
+  }
+
   summary_links_files <- file_sections |>
     dplyr::filter(!is_function_def) |>
     dplyr::summarise(
