@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    503ms    503ms      1.99    22.5MB     3.98
+#> 1 outline <- proj_outline()    523ms    523ms      1.91    22.2MB     3.82
 ```
 
 <details>
@@ -218,6 +218,7 @@ outline
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
+#> `i` TODO extract title in roxy comments (@title too.L)
 #> `i` TODO strip is_cli_info in Package? only valid for EDA
 #> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.
 #> `i` it is 'R/outline.R'
@@ -247,7 +248,6 @@ outline
 #> ── `R/todo.R`
 #> `i` TODO think about maybe using todo = clipr::read_clip()
 #> `i` TODO nice to have, but would need to extract duplicates
-#> `i` TODO, WORK, FIXME)
 #> `i` Helpers
 #> 
 #> ── `R/utils-proj.R`  usethis adaptions utils

@@ -24,6 +24,8 @@ test_that("o_is_todo_fixme() works", {
   expect_false(o_is_todo_fixme("  expect_true(o_is_todo_fixme(\"  # TODO this is important\"))"))
   # avoid finding comments.
   expect_false(o_is_todo_fixme("# another TODO item"))
+  expect_false(o_is_todo_fixme("#' TODO, WORK, FIXME)", is_roxygen_comment = T))
+
 })
 
 test_that("o_is_work_item() works", {

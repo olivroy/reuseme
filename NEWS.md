@@ -1,6 +1,6 @@
 # reuseme (development version)
 
-* `proj_outline()` now detects [knitr notebooks](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such.
+* `proj_outline()` now detects [knitr notebooks](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (#30)
 
 * `proj_outline()` no longer shows `complete_todo()` links for items in non-interactive sessions. `complete_todo()` links are now only shown when calling `file_outline()` on the active file.
 

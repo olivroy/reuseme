@@ -167,12 +167,14 @@ define_outline_criteria <- function(.data, print_todo) {
     x$content[x$is_notebook] <- sub("^#'\\s?", "", x$content[x$is_notebook])
     x$is_md <- (x$is_md | x$is_roxygen_comment | x$is_notebook) & !x$is_news # treating news and other md files differently.
     x$is_roxygen_comment <- x$is_roxygen_comment & !x$is_notebook
-    x <- dplyr::mutate(
-      x,
-      # Remove any files that contain noRd roxy tag to avoid false positive (this limitation can be overcome if / when I use roxygen2 parser)
-      is_roxygen_comment = is_roxygen_comment & !any(startsWith(content, "#' @noRd")),
-      .by = file
-    )
+    # TODO extract title in roxy comments (@title too.L)
+    # x <- dplyr::mutate(
+    #   x,
+    #   # Remove any files that contain noRd roxy tag to avoid false positive (this limitation can be overcome if / when I use roxygen2 parser)
+    #   is_roxygen_comment = is_roxygen_comment & !any(startsWith(content, "#' @noRd")),
+    #   .by = file
+    # )
+    # x$is_object_title <- x$is_roxygen_comment & (x$line == 1 | dplyr::lag(x$ccontent, "Nothing") %in% c("", " ", "  ") & dplyr::lead(x$ccontent) %in% c("#'", "#'  ", "#'   "))
   } else {
     x$is_notebook <- FALSE
   }
