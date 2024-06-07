@@ -2,7 +2,7 @@
 #' Print interactive outline of file sections
 #'
 #' @description
-#' THe outline functions return a data frame that contains details of file location.
+#' The outline functions return a data frame that contains details of file location.
 #'
 #' It also includes a print method that will provide a console output that will include [clickable hyperlinks](https://cli.r-lib.org/reference/links.html)
 #' in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
@@ -179,7 +179,7 @@ file_outline <- function(pattern = NULL,
   if (nrow(file_sections0) == 0) {
     if (is_active_doc && !identical(pattern, ".+")) {
       msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.",
-        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {pattern}})}?"
+               "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {pattern}})}?"
       )
     } else if (!identical(pattern, ".+")) {
       msg <- c(
@@ -335,6 +335,278 @@ dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree =
 
 # Print method -------------------
 
+my_print <- function() {
+
+  # Clean outline data ----
+  # outline_data <- reuseme::file_outline(path = "test.qmd") %>%
+  # outline_data <- reuseme::file_outline(path = "motebook.qmd") %>%
+  outline_data <- reuseme::proj_outline() %>%
+
+    # Convert the many is_ columns into mutually exclusive "outline row types"
+    pivot_longer(
+      names_to = "type", names_prefix = "is_", c(
+        starts_with("is_"), -is_saved_doc, -is_md, -is_a_comment_or_code, -is_second_level_heading_or_more
+      )
+    ) %>%
+    # # Double check that types are mututally exclusive
+    # filter(all(value == F), .by = c(file_short, title, line_id))
+    # filter(sum(value) > 1, .by = c(file_short, title, line_id))
+    filter(value == T) %>%
+    # We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)
+    filter(type != "tab_or_plot_title") %>%
+
+    # Some useful definitions!
+    mutate(
+      # title = coalesce(outline_el, title_el),
+      title = type %>% case_match(
+        .default = coalesce(outline_el, title_el),
+        "todo_fixme" ~ str_extract(
+          outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)", group = 2)
+      ),
+      # Capture TODO prefix for todo items seperately from title
+      title_prefix = str_extract(
+        outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)", group = 1),
+
+      file_short = fs::path_file(file),
+      n_leading_hash = type %>% case_match(
+        # these items should inheirit the last indent +1
+        c("todo_fixme", "tab_or_plot_title") ~ NA,
+        .default = n_leading_hash
+      )
+    ) %>%
+
+    # For each file, stick a item at the top of the outline
+    group_by(file, file_short) %>%
+    group_modify(\(data, group) data %>% add_row(
+      .before = 0,
+      n_leading_hash = -1,
+      title = group$file_short,
+      type = "file"
+    )) %>%
+
+    mutate(
+      # Assign TODO items (and other items missing n_leading_hash)
+      # to be indented under the last seen header level
+      indent = coalesce(n_leading_hash, zoo::na.locf0(n_leading_hash+1)),
+
+      # If there are any headers that skip an intermediate level,
+      # step thru and refine the indenting
+      indent %>% reduce(
+        .init = tibble(orig_indent = integer(), stack = list(), adjust = integer(), indent = integer()),
+        \(temp, orig_indent) {
+          if (last(temp$stack) %>% is.null()) {
+            # If we're at the top level, make sure indent starts at 0 not -1 or anything
+            new_stack <- tibble(adjust = -orig_indent, pop_adjust_at = orig_indent)
+          } else {
+            new_stack <- last(temp$stack) %>%
+              # If we reach a point on the outline where we're back up in
+              # the hierachy, stop adjusting for those items
+              filter(pop_adjust_at < orig_indent)
+          }
+
+          if (orig_indent > last(new_stack$pop_adjust_at)) {
+            # All the items below on the outline should be adjusted backwards
+            new_stack <- new_stack %>% add_row(
+              adjust = last(new_stack$pop_adjust_at)+1 - orig_indent,
+              pop_adjust_at = orig_indent
+            )
+          }
+
+          temp %>%
+            add_row(
+              orig_indent = orig_indent,
+              stack = list(new_stack),
+              adjust = sum(new_stack$adjust),
+              indent = orig_indent + adjust
+            )
+        })
+
+    ) %>%
+    ungroup()
+
+  colors <- c(
+    cli::col_blue,
+    cli::col_magenta,
+    cli::col_cyan,
+    cli::col_green,
+    cli::col_yellow,
+    cli::col_red
+  )
+
+  # Style outline ----
+  outline_styled <- outline_data %>%
+    rowwise() %>%
+    mutate(
+      # Select only fields we mention
+      .keep = "used",
+
+      link_to_line = cli::style_hyperlink(
+        "#", str_c("file://", file_path), params = list(line = line_id, col = 1)),
+
+      # Processing how title displays based on type
+      print_title = type %>% case_match(
+
+        # By default, just rainbow color titles by indent
+        .default = title %>% colors[[(indent %% length(colors)) + 1]](),
+
+        # For TODO items, highlight special and provide link completion link
+        "todo_fixme" ~ str_c(
+          str_extract(
+            outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
+            group = 1) %>%
+            cli::style_bold(),
+          " ",
+          str_extract(
+            outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
+            group = 2) %>%
+            cli::style_italic()
+        ) %>%
+          cli::col_silver()
+
+      ),
+
+      print_line = str_c(link_to_line, " ", print_title)
+    ) %>%
+    ungroup()
+
+  # Print outline data tree ----
+  outline_styled %>%
+    mutate(
+      # Give items IDs so titles do not have to be unique
+      item_id = row_number() %>% as.character(),
+      indent_wider = indent,
+      x = T
+    ) %>%
+
+    # We need these wide cumsum `header1` type fields to determine which items belong to which parents
+    pivot_wider(names_from = indent_wider, values_from = x, values_fill = F, names_prefix = "header") %>%
+    mutate(across(starts_with("header"), cumsum)) %>%
+
+    # For each row, pick the IDs of all direct children from the outline
+    pmap(function(...) with(list(..., childdata = .), tibble(
+      # file,
+      # file_short,
+      # title,
+      print_line,
+      # indent,
+      item_id,
+      # type,
+      root_id = header0,
+      parent_level_id = get(str_c("header", indent)),
+      children_ids = childdata %>%
+        # TODO: use data prefix? get around with() in general
+        rename(childindent = indent) %>%
+        filter(
+          childindent == indent+1,
+          cumsum(childindent == indent) == parent_level_id
+        ) %>%
+        pull(item_id) %>% list()
+    ))) %>%
+    list_rbind() %>%
+    # View()
+    select(item_id, children_ids, print_line, everything()) %>%
+    # Print tree for each root node
+    group_by(root_id) %>%
+    group_walk(\(data, group) {
+      data %>%
+        select(item_id, children_ids, print_line) %>%
+        cli::tree() %>%
+        # cli::tree(style = list(h = "━━━", v = "┃", l = "┗", j = "┣")) %>%
+        cat(sep = "\n")
+    })
+
+  # test2 <- test
+  # needs_collapse <- T
+  # while(needs_collapse) {
+  #
+  #   row_to_collapse <- test2 %>%
+  #     filter(map_int(children_ids, length) == 1) %>%
+  #     unnest(children_ids) %>%
+  #
+  #     left_join(
+  #       test %>%
+  #         select(item_id, child_type = type, child_title = title, child_children = children_ids),
+  #       join_by(children_ids == item_id)
+  #     ) %>%
+  #     filter(child_type != "todo_fixme") %>%
+  #     head(1)
+  #
+  #   row_child <- test2 %>%
+  #     filter(item_id == row_to_collapse$children_ids)
+  #
+  #   # if (row_child$type == "todo_fixme") {}
+  #
+  #   row_parent <- test2 %>%
+  #     unnest(children_ids) %>%
+  #     filter(children_ids == row_to_collapse$item_id)
+  #
+  #   test2 <- test2 %>%
+  #     filter(item_id != row_to_collapse$item_id) %>%
+  #     rows_update(tibble(
+  #       item_id = row_child$item_id,
+  #       children_ids = row_child$children_ids,
+  #       title = str_c(row_to_collapse$title, " -> ", row_child$title),
+  #       type = row_child$type,
+  #     ), by = "item_id")
+  #
+  #   test2 %>% select(item_id, children_ids, title) %>%
+  #     cli::tree()
+  #     # left_join(
+  #     #   test %>%
+  #     #     select(item_id, child_type = type, child_title = title, child_children = children_ids),
+  #     #   join_by(children_ids == item_id)
+  #     # ) %>%
+  #     # left_join(
+  #     #   test %>%
+  #     #     unnest(children_ids) %>%
+  #     #     select(parent_item_id = item_id, children_ids, parent_type = type, parent_title = title),
+  #     #   join_by(item_id == children_ids)
+  #     # ) %>%
+  #     # filter(child_type != "todo_fixme") %>%
+  #     # mutate(
+  #     #   new_item_id = children_ids,
+  #     #   new_title = case_when(
+  #     #     type == "filler" ~ child_title,
+  #     #     .default = str_c(title, " -> ", child_title)
+  #     #   )
+  #     # ) %>%
+  #     # reframe(
+  #     #   old_item_id = c(item_id, parent_item_id),
+  #     #   title = c(new_title, parent_title),
+  #     #   item_id = c(new_item_id, parent_item_id),
+  #     #   children_ids = c(child_children, as.list(new_item_id))
+  #     # )
+  #
+  # }
+  #
+  # test %>%
+  #   filter(map_int(children_ids, length) == 1) %>%
+  #   unnest(children_ids) %>%
+  #   left_join(
+  #     test %>%
+  #       select(item_id, child_type = type, child_title = title),
+  #     join_by(children_ids == item_id)
+  #   ) %>%
+  #   reframe(
+  #     title = str_c(title, " -> ", child_title)
+  #   )
+
+  # Row by row, call format_inline with the columns in the tibble
+  # TODO: format as non vectorized if statements instead of switch() for clarity
+  # pmap_chr(function(...) with(list(...), cli::format_inline(
+  #   strrep("  ", indent),
+  #   type %>% switch(
+  #     todo_fixme = c(
+  #       "  {cli::symbol$checkbox_off} ",
+  #       str_replace(title, "(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])", "\\{.field \\1\\}")
+  #     ),
+  #     # Default
+  #     title
+  #   )
+  # ))) %>%
+  # cat(sep = "\n")
+}
+
 #' @export
 print.outline_report <- function(x, ...) {
   # https://github.com/r-lib/cli/issues/607
@@ -348,7 +620,7 @@ print.outline_report <- function(x, ...) {
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
-    "(?<!(complete_todo.{1,500}))(?<![\\w'])([:upper:]{4,5})\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
+    "(?<!(complete_todo.{1,500}))(?<![\\w'])(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
     "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}", # until complex markup is resolved.
     # Workaround r-lib/cli#693
     "\\[([[:alpha:]\\s]+)\\]\\s" = "{cli::bg_white(cli::col_black('\\1'))} "
@@ -369,7 +641,7 @@ print.outline_report <- function(x, ...) {
           cli::format_inline
         )
       )),
-      .by = c("file_hl", "file")
+      .by = c(file_hl, file)
     )
   if (anyDuplicated(summary_links_files$file) > 0) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
@@ -465,7 +737,7 @@ keep_outline_element <- function(.data) {
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-       is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def # | is_cli_info # TODO reanable cli info
+      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def # | is_cli_info # TODO reanable cli info
   )
   dat$simplify_news <- NULL
   dat
@@ -508,19 +780,19 @@ display_outline_element <- function(.data) {
     x,
     has_title_el =
       ((line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-        (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !is_news,
+         (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !is_news,
     .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
-      title_el_line = ifelse(has_title_el, line_id[
-        (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
-          (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
-      ][1], # take  the first element to avoid problems (may be the reason why problems occur)
-      NA
-      ),
-      title_el = outline_el[line_id == title_el_line],
-      .by = "file"
+                  title_el_line = ifelse(has_title_el, line_id[
+                    (line_id == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+                      (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
+                  ][1], # take  the first element to avoid problems (may be the reason why problems occur)
+                  NA
+                  ),
+                  title_el = outline_el[line_id == title_el_line],
+                  .by = "file"
     ),
     error = function(e) {
       # browser()
@@ -622,19 +894,19 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   )
 
   .data <- dplyr::mutate(.data,
-    link = paste0(outline_el2, " {.path ", file, ":", line_id, "}"),
-    # rstudioapi::documentOpen works in the visual mode!! but not fully.
-    file_path = .data$file,
-    is_saved_doc = .env$is_saved_doc,
+                         link = paste0(outline_el2, " {.path ", file, ":", line_id, "}"),
+                         # rstudioapi::documentOpen works in the visual mode!! but not fully.
+                         file_path = .data$file,
+                         is_saved_doc = .env$is_saved_doc,
 
-    # May have caused CI failure
-    text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common)) |> stringr::str_remove("^/"),
-    # decide which is important
-    style_fun = dplyr::case_match(importance,
-      "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
-      "important" ~ "cli::style_inverse('i')",
-      .default = NA
-    )
+                         # May have caused CI failure
+                         text_in_link = stringr::str_remove(file_path, as.character(.env$dir_common)) |> stringr::str_remove("^/"),
+                         # decide which is important
+                         style_fun = dplyr::case_match(importance,
+                                                       "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+                                                       "important" ~ "cli::style_inverse('i')",
+                                                       .default = NA
+                         )
   )
 
   if (anyNA(.data$style_fun)) {
@@ -642,23 +914,23 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   }
 
   dplyr::mutate(.data,
-    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
-    link_rs_api = dplyr::case_when(
-      is.na(outline_el2) ~ NA_character_,
-      !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
-      rs_avail_file_link ~ paste0(
-        "{cli::style_hyperlink(", style_fun, ', "',
-        paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2
-      ),
-      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
-    ),
-    file_hl = dplyr::case_when(
-      !is_saved_doc ~ file_path,
-      rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
-      .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
-    ),
-    rs_version = NULL,
-    outline_el2 = NULL
+                # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))}"),
+                link_rs_api = dplyr::case_when(
+                  is.na(outline_el2) ~ NA_character_,
+                  !is_saved_doc ~ paste0("line ", line_id, " -", outline_el2),
+                  rs_avail_file_link ~ paste0(
+                    "{cli::style_hyperlink(", style_fun, ', "',
+                    paste0("file://", file_path), '", params = list(line = ', line_id, ", col = 1))} ", outline_el2
+                  ),
+                  .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line_id, "))} ", outline_el2)
+                ),
+                file_hl = dplyr::case_when(
+                  !is_saved_doc ~ file_path,
+                  rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
+                  .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
+                ),
+                rs_version = NULL,
+                outline_el2 = NULL
   ) |>
     dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
 }
