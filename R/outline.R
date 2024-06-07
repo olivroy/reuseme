@@ -709,6 +709,7 @@ construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_commo
     style_fun = NULL,
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
+    is_notebook = NULL,
     complete_todo_link = NULL,
     is_news = NULL,
     # I may put it back ...

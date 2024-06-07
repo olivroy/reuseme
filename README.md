@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    495ms    504ms      1.98    21.1MB     4.96
+#> 1 outline <- proj_outline()    1.03s    1.03s     0.973    22.2MB     1.95
 ```
 
 <details>
@@ -247,12 +247,16 @@ outline
 #> ── `R/todo.R`
 #> `i` TODO think about maybe using todo = clipr::read_clip()
 #> `i` TODO nice to have, but would need to extract duplicates
+#> `i` TODO, WORK, FIXME)
 #> `i` Helpers
 #> 
 #> ── `R/utils-proj.R`  usethis adaptions utils
 #> `i` Active project / document
 #> 
 #> ── `R/utils.R`  OS utils
+#> 
+#> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
+#> `i` A great section
 #> 
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section
@@ -312,6 +316,7 @@ outline
 #> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
+#> `i` file_outline() detects correctly knitr notebooks
 #> 
 #> ── `tests/testthat/_snaps/proj-list.md`
 #> `i` proj_file() works

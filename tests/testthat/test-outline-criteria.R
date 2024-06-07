@@ -1,4 +1,10 @@
 # Test individual outline elements ------
+test_that("o_is_notebook() works", {
+  expect_true(o_is_notebook("#' ---", "file.R", file_ext = "R", line = 1))
+  expect_false(o_is_notebook("#' ---", "file.R", file_ext = "qmd", line = 1))
+  expect_false(o_is_notebook("#' Fn title", "file.R", file_ext = "qmd", line = 1))
+})
+
 test_that("o_is_roxygen_comment() works", {
   expect_true(o_is_roxygen_comment("#' @param"))
   expect_equal(
@@ -50,8 +56,8 @@ test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
-  expect_false(o_is_section_title("Function ID:", roxy_section = TRUE))
-  expect_false(o_is_section_title("#' @section Function ID:", roxy_section = TRUE))
+  # not considering roxygen sections anymore.
+  expect_false(o_is_section_title("#' # A very interesting section"))
 })
 
 test_that("o_is_commented_code() works", {
