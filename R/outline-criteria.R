@@ -46,7 +46,8 @@ o_is_notebook <- function(x, file, file_ext, line) {
 }
 
 o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
-  has_todo <- stringr::str_detect(x, "(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME\\s|BOOK|(?<!\")WORK[^I``])")
+  has_todo <- !is_roxygen_comment &
+    grepl("(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME\\s|BOOK|(?<!\")WORK[^I``])", x, perl = TRUE)
   if (!any(has_todo)) {
     return(has_todo)
   }
@@ -73,7 +74,7 @@ o_is_work_item <- function(x, is_roxygen_comment = FALSE) {
   if (!any(res)) {
     return(res)
   }
-  res[which(res)] <- o_is_todo_fixme(x[which(res)], is_roxygen_comment = is_roxygen_comment)
+  res[which(res)] <- o_is_todo_fixme(x[which(res)], is_roxygen_comment)
   res
 }
 
@@ -107,8 +108,8 @@ o_is_tab_plot_title <- function(x) {
     !stringr::str_detect(x, "expect_error|header\\(\\)|```\\{|guide_")
 }
 
-o_is_section_title <- function(x, is_roxygen_comment = FALSE) {
-  is_section_title <- stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)") & !is_roxygen_comment # remove commented  add roxygen
+o_is_section_title <- function(x, is_roxygen_comment = FALSE, is_todo_fixme = FALSE) {
+  is_section_title <- !is_roxygen_comment & !is_todo_fixme & stringr::str_detect(x, "^\\s{0,4}\\#+\\s+(?!\\#)") & !is_roxygen_comment # remove commented  add roxygen
   if (!any(is_section_title)) {
     return(is_section_title)
   }
@@ -125,7 +126,6 @@ o_is_section_title <- function(x, is_roxygen_comment = FALSE) {
   p_s_title <- which(is_section_title)
   is_section_title[p_s_title] <-
     !grepl(uninteresting_headings, x[p_s_title]) &
-      !o_is_todo_fixme(x[p_s_title], is_roxygen_comment[p_s_title])  &
       !o_is_commented_code(x[p_s_title]) &
       # to exclude md tables from outline
       stringr::str_count(x[p_s_title], "\\|") < 4
@@ -201,12 +201,12 @@ define_outline_criteria <- function(.data, print_todo) {
     ),
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
-    is_section_title = o_is_section_title(content, is_roxygen_comment),
+    is_todo_fixme = print_todo & o_is_todo_fixme(content, is_roxygen_comment) & !is_snap_file,
+    is_section_title = o_is_section_title(content, is_roxygen_comment, is_todo_fixme),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = is_section_title &
       stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
       stringr::str_detect(content, "[:alpha:]"),
-    is_todo_fixme = print_todo & o_is_todo_fixme(content, is_roxygen_comment) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     # Make sure everything is second level in revdep/.

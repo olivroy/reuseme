@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    1.03s    1.03s     0.973    22.2MB     1.95
+#> 1 outline <- proj_outline()    503ms    503ms      1.99    22.5MB     3.98
 ```
 
 <details>
