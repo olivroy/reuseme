@@ -358,23 +358,20 @@ exclude_example_files <- function(path) {
   )
 }
 # Print method -------------------
-
-my_print <- function() {
-
-  # Clean outline data ----
-  # outline_data <- reuseme::file_outline(path = "test.qmd") %>%
-  # outline_data <- reuseme::file_outline(path = "motebook.qmd") %>%
-  outline_data <- reuseme::proj_outline() %>%
-
+#' @export
+print.outline_report <- function(outline, sort = F, collapse_nodes = T, prune_nodes = T, theme = NULL) {
+  # Make outline data match new API ----
+  # outline_new <- reuseme::file_outline(path = "test.qmd") %>%
+  # outline_new <- reuseme::file_outline(path = "motebook.qmd") %>%
+  outline_new <- outline %>%
     # Convert the many is_ columns into mutually exclusive "outline row types"
     pivot_longer(
       names_to = "type", names_prefix = "is_", c(
-        starts_with("is_"), -is_saved_doc, -is_md, -is_a_comment_or_code, -is_second_level_heading_or_more
+        starts_with("is_"), -is_md, -is_second_level_heading_or_more
       )
     ) %>%
     # # Double check that types are mututally exclusive
-    # filter(all(value == F), .by = c(file_short, title, line_id))
-    # filter(sum(value) > 1, .by = c(file_short, title, line_id))
+    # filter(sum(value) != 1, .by = c(file, line))
     filter(value == T) %>%
     # We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)
     filter(type != "tab_or_plot_title") %>%
@@ -382,29 +379,21 @@ my_print <- function() {
     # Some useful definitions!
     mutate(
       # title = coalesce(outline_el, title_el),
-      title = type %>% case_match(
-        .default = coalesce(outline_el, title_el),
-        "todo_fixme" ~ str_extract(
-          outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)", group = 2)
-      ),
-      # Capture TODO prefix for todo items seperately from title
-      title_prefix = str_extract(
-        outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)", group = 1),
-
-      file_short = fs::path_file(file),
+      title = coalesce(outline_el, title_el),
       n_leading_hash = type %>% case_match(
         # these items should inheirit the last indent +1
         c("todo_fixme", "tab_or_plot_title") ~ NA,
+        # headings use hashes
         .default = n_leading_hash
       )
     ) %>%
 
     # For each file, stick a item at the top of the outline
-    group_by(file, file_short) %>%
+    group_by(file) %>%
     group_modify(\(data, group) data %>% add_row(
       .before = 0,
       n_leading_hash = -1,
-      title = group$file_short,
+      title = fs::path_file(group$file),
       type = "file"
     )) %>%
 
@@ -415,6 +404,7 @@ my_print <- function() {
 
       # If there are any headers that skip an intermediate level,
       # step thru and refine the indenting
+      # TODO: break indent cleaning into separate function and also apply after file_outline()
       indent %>% reduce(
         .init = tibble(orig_indent = integer(), stack = list(), adjust = integer(), indent = integer()),
         \(temp, orig_indent) {
@@ -446,7 +436,8 @@ my_print <- function() {
         })
 
     ) %>%
-    ungroup()
+    ungroup() %>%
+    select(file, title, type, line, indent)
 
   colors <- c(
     cli::col_blue,
@@ -458,14 +449,14 @@ my_print <- function() {
   )
 
   # Style outline ----
-  outline_styled <- outline_data %>%
+  outline_styled <- outline_new %>%
     rowwise() %>%
     mutate(
       # Select only fields we mention
       .keep = "used",
 
       link_to_line = cli::style_hyperlink(
-        "#", str_c("file://", file_path), params = list(line = line_id, col = 1)),
+        "#", str_c("file://", file), params = list(line = line, col = 1)),
 
       # Processing how title displays based on type
       print_title = type %>% case_match(
@@ -476,12 +467,12 @@ my_print <- function() {
         # For TODO items, highlight special and provide link completion link
         "todo_fixme" ~ str_c(
           str_extract(
-            outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
+            title, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
             group = 1) %>%
             cli::style_bold(),
           " ",
           str_extract(
-            outline_el, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
+            title, "(?<!\"#\\s)(TODO|FIXME|BOOK|(?<!\")WORK[^I``])\\:?\\s*(.+)",
             group = 2) %>%
             cli::style_italic()
         ) %>%
@@ -538,6 +529,8 @@ my_print <- function() {
         # cli::tree(style = list(h = "━━━", v = "┃", l = "┗", j = "┣")) %>%
         cat(sep = "\n")
     })
+
+  invisible(outline)
 
   # test2 <- test
   # needs_collapse <- T
@@ -615,144 +608,8 @@ my_print <- function() {
   #     title = str_c(title, " -> ", child_title)
   #   )
 
-  # Row by row, call format_inline with the columns in the tibble
-  # TODO: format as non vectorized if statements instead of switch() for clarity
-  # pmap_chr(function(...) with(list(...), cli::format_inline(
-  #   strrep("  ", indent),
-  #   type %>% switch(
-  #     todo_fixme = c(
-  #       "  {cli::symbol$checkbox_off} ",
-  #       str_replace(title, "(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])", "\\{.field \\1\\}")
-  #     ),
-  #     # Default
-  #     title
-  #   )
-  # ))) %>%
-  # cat(sep = "\n")
 }
 
-#' @export
-print.outline_report <- function(x, ...) {
-  # https://github.com/r-lib/cli/issues/607
-  # Make output faster with cli!
-  withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
-
-  if (sum(!x$is_function_def) == 0) {
-    cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
-    return(invisible(x))
-  }
-  custom_styling <- c(
-    # 500 is the max path length.
-    # green todo
-    "(?<!(complete_todo.{1,500}))(?<![\\w'])(?<!\"#\\s)(TODO[^\\.]\\:?|FIXME|BOOK|(?<!\")WORK[^I``])\\:?($|\\s)" = "\\{.field \\2\\} ", # put/work todo as emphasis
-    "\\{\\.pkg \\{\\(?pkg\\$package\\}\\}\\)?" = "{.pkg {package}}", # until complex markup is resolved.
-    # Workaround r-lib/cli#693
-    "\\[([[:alpha:]\\s]+)\\]\\s" = "{cli::bg_white(cli::col_black('\\1'))} "
-  )
-  file_sections <- dplyr::as_tibble(x)
-  recent_only <- x$recent_only[1]
-  file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
-
-  if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
-    # Remove all things that appear more than 4 times in a file.
-    # this typically indicates a placeholder
-    file_sections <- dplyr::filter(
-      file_sections,
-      dplyr::n() < 4,
-      .by = c("file", "outline_el")
-    )
-  }
-
-  summary_links_files <- file_sections |>
-    dplyr::filter(!is_function_def) |>
-    dplyr::summarise(
-      first_line = unique(title_el_line),
-      first_line_el = unique(title_el),
-      link = list(rlang::set_names(
-        link_rs_api,
-        purrr::map_chr(
-          paste0("{.file ", file, ":", line, "}"),
-          cli::format_inline
-        )
-      )),
-      .by = c(file_hl, file)
-    )
-  if (anyDuplicated(summary_links_files$file) > 0) {
-    cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
-  }
-  # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
-  in_vscode <- FALSE # to do create it. # Sys.getenv("TERM_PROGRAM") == "vscode" when in vscode!
-  if (in_vscode) {
-    which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
-    summary_links_files$file_hl[which_detect] <-
-      stringr::str_replace(
-        summary_links_files$file_hl[which_detect],
-        "{.href [",
-        "{.href [./"
-      )
-  }
-  dat <- tibble::deframe(summary_links_files[, c("file_hl", "link")])
-  # dat <- purrr::map_depth(dat, 1, \(x) rlang::set_names(x, "xd"))
-  # browser()
-  # current_time <- Sys.time()
-  mod_date <- file.mtime(summary_links_files$file)
-  # five most recent get a little ching
-  if (length(mod_date) > 0) {
-    suppressWarnings(is_recently_modified <- kit::topn(mod_date, n = 5))
-  } else {
-    is_recently_modified <- 1L
-  }
-  if (!recent_only && length(is_recently_modified) == length(dat)) {
-    # don't show emojis if all are recently modified.
-    is_recently_modified <- character(0)
-  }
-
-  for (i in seq_along(dat)) {
-    base_name <- c(cli::col_blue(names(dat)[[i]]), " ")
-
-    if (i %in% is_recently_modified) {
-      # may decide to just color the name after all
-      # was cli::bg_br_green("*")
-      # Une crevette
-      emoji_recent <- getOption("reuseme.recent_indicator", "\U0001f552")
-      base_name <- c(base_name, emoji_recent)
-    }
-
-    # add first line to title and remove
-    has_title <- !is.na(summary_links_files$first_line[[i]])
-    if (has_title) {
-      title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
-      base_name <- c(base_name, " ", title_el)
-    }
-
-    # TRICK need tryCatch when doing something, withCallingHandlers when only rethrowing?
-    tryCatch(
-      cli::cli_h3(base_name),
-      error = function(e) {
-        # browser()
-        cli::cli_h3(escape_markup(base_name))
-        # print(base_name)
-        # rlang::abort("Could not parse by cli", parent = e)
-      }
-    )
-
-    if (recent_only) {
-      if (i %in% is_recently_modified) {
-        purrr::walk(dat[[i]], \(y) {
-          y <- escape_markup(y[!is.na(y)])
-          if (length(y)) cat(cli::format_inline(y), sep = "\n")
-        })
-      }
-    } else {
-      purrr::walk(dat[[i]], \(y) {
-        y <- escape_markup(y[!is.na(y)])
-        if (length(y)) cat(cli::format_inline(y), sep = "\n")
-      })
-    }
-  }
-
-  invisible(x)
-}
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
   # could use filter_if_any?
