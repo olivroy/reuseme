@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    12.5s    12.5s    0.0803    85.7MB    0.402
+#> 1 outline <- proj_outline()    5.07s    5.07s     0.197    90.3MB     1.18
 ```
 
 <details>
@@ -190,10 +190,10 @@ outline
 #> `i` dplyr extensions
 #> `i` Explore all rows in a random group [slice_group_sample()]
 #> `i` family dplyr extensions
-#> `i` FIXME Doesn't work, problem with symbols here- `Done✔?`
+#> `i` FIXME Doesn't work, problem with symbols here
 #> `i` Keep rows that match one of the conditions [filter_if_any()]
 #> `i` Elegant wrapper around filter and pull [extract_cell_value()]
-#> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)- `Done✔?`
+#> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)
 #> `i` summarise with total
 #> `i` Compute a summary for one group with the total included. [summarise_with_total()]
 #> `i` Transform to NA any of the condition [na_if2()]
@@ -209,11 +209,11 @@ outline
 #> `i` helpers
 #> 
 #> ── `R/files-conflicts.R`
-#> `i` TODO insert in either proj_outline, or rename_file- `Done✔?`
-#> `i` TODO probably needs a `detect_genuine_path()`- `Done✔?`
+#> `i` TODO insert in either proj_outline, or rename_file
+#> `i` TODO probably needs a `detect_genuine_path()`
 #> `i` Helpers
-#> `i` TODO Add false positive references- `Done✔?`
-#> `i` TODO fs::path and file.path should be handled differently- `Done✔?`
+#> `i` TODO Add false positive references
+#> `i` TODO fs::path and file.path should be handled differently
 #> 
 #> ── `R/import-standalone-types-check.R`
 #> `i` Scalars
@@ -222,31 +222,32 @@ outline
 #> ── `R/named.R`  Helpers that can return a named vector [named-base]
 #> 
 #> ── `R/open.R`  Open a Document in RStudio [open_rs_doc()]
-#> `i` FIXME why is this code like this?- `Done✔?`
+#> `i` FIXME why is this code like this?
 #> `i` Copy the active document to the same location [active_rs_doc_copy()]
 #> `i` document manipulation helpers
 #> `i` Delete the active RStudio document safely [active_rs_doc_delete()]
 #> `i` document manipulation helpers
-#> `i` TODO structure and summarise information.- `Done✔?`
-#> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)- `Done✔?`
+#> `i` TODO structure and summarise information.
+#> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)
 #> `i` Open Files Pane at current document location [active_rs_doc_nav()]
 #> 
 #> ── `R/outdated-pkgs.R`  Looks for outdated packages [outdated_pkgs()]
-#> `i` TODO figure out pad :)- `Done✔?`
+#> `i` TODO figure out pad :)
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
-#> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not sh…- `Done✔?`
-#> `i` TODO long enough to be meanignful?- `Done✔?`
-#> `i` TODO merge with define_outline_criteria- `Done✔?`
+#> `i` TODO extract title in roxy comments (@title too.L)
+#> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
+#> `i` TODO long enough to be meanignful?
+#> `i` TODO merge with define_outline_criteria
 #> `i` it is 'R/outline.R' or 'R/outline-roxy.R'
 #> 
 #> ── `R/outline-roxy.R`
-#> `i` TODO when stable delete- `Done✔?`
-#> `i` TODO Delete when stable debugging- `Done✔?`
-#> `i` TODO Delete when stable for debugging- `Done✔?`
-#> `i` TODO exclude S3 methods- `Done✔?`
-#> `i` FIXME escape markup see next line- `Done✔?`
+#> `i` TODO when stable delete
+#> `i` TODO Delete when stable debugging
+#> `i` TODO Delete when stable for debugging
+#> `i` TODO exclude S3 methods
+#> `i` FIXME escape markup see next line
 #> `i` helper for interactive checking
 #> 
 #> ── `R/outline.R`  `proj_outline()`
@@ -256,16 +257,16 @@ outline
 #> `i` File outline
 #> `i` Print method
 #> `i` Step: tweak outline look as they show
-#> `i` TODO reanable cli info- `Done✔?`
-#> `i` FIXME find a way to be as consistent as lightparser, but faster.- `Done✔?`
-#> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)- `Done✔?`
+#> `i` TODO reanable cli info
+#> `i` FIXME find a way to be as consistent as lightparser, but faster.
+#> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)
 #> 
 #> ── `R/proj-list.R`  Opens a RStudio project in a new session [proj_switch()]
 #> `i` project management helpers
-#> `i` TODO maybe add a max?- `Done✔?`
+#> `i` TODO maybe add a max?
 #> `i` Access the file outline within other project [proj_file()]
 #> `i` project management helpers
-#> `i` TODO improve on this message- `Done✔?`
+#> `i` TODO improve on this message
 #> `i` Returns a named project list options [proj_list()]
 #> `i` project management helpers
 #> 
@@ -279,19 +280,19 @@ outline
 #> ── `R/rename.R`  Rename an output or a data file and watch for references [rename_files2()]
 #> `i` Use case
 #> `i` After here, we start doing some renaming real situations
-#> `i` TODO verify if path should be normalized.- `Done✔?`
+#> `i` TODO verify if path should be normalized.
 #> `i` Helpers
 #> `i` helpers for computing scope of renaming
-#> `i` TODO measure of string proximity- `Done✔?`
+#> `i` TODO measure of string proximity
 #> `i` Prevent renaming if something is going on
-#> `i` FIXME maybe not fail while testing- `Done✔?`
-#> `i` TODO Check that old file is more recent- `Done✔?`
+#> `i` FIXME maybe not fail while testing
+#> `i` TODO Check that old file is more recent
 #> 
 #> ── `R/screenshot.R`  Save the current image in clipboard to png in your active directory [screenshot()]
 #> 
 #> ── `R/todo.R`  Add a TODO list by project to a TODO.R file in the base directory [use_todo()]
-#> `i` TODO think about maybe using todo = clipr::read_clip()- `Done✔?`
-#> `i` TODO nice to have, but would need to extract duplicates- `Done✔?`
+#> `i` TODO think about maybe using todo = clipr::read_clip()
+#> `i` TODO nice to have, but would need to extract duplicates
 #> `i` Helpers
 #> 
 #> ── `R/utils-proj.R`  usethis adaptions utils
@@ -300,48 +301,48 @@ outline
 #> ── `R/utils.R`  OS utils
 #> 
 #> ── `TODO.R`
-#> `i` TODO screenshot make the behaviour different when vignettes vs articl…- `Done✔?`
-#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd …- `Done✔?`
-#> `i` TODO use_family() to edit .R file to add @family data frames tags to ro…- `Done✔?`
-#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)- `Done✔?`
-#> `i` TODO rename if many matches, separate those with the exact path.- `Done✔?`
-#> `i` TODO outline make ggtitle work- `Done✔?`
-#> `i` TODO outline show extra msg only for some, but in file outline, not i…- `Done✔?`
-#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` dis…- `Done✔?`
-#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.- `Done✔?`
-#> `i` TODO outline avoid evaluating in current env.- `Done✔?`
-#> `i` TODO wrap regexps in functions- `Done✔?`
-#> `i` TODO outline remove examples from outline. Sometimes commented code i…- `Done✔?`
-#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`- `Done✔?`
-#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.- `Done✔?`
-#> `i` TODO outline remove ggtext markup from plot title.- `Done✔?`
-#> `i` FIXME outline comments are now interpreted as section- `Done✔?`
-#> `i` TODO outline todos in qmd file inside html comment- `Done✔?`
-#> `i` TODO reframe more than one issue. nw drive- `Done✔?`
-#> `i` TODO delete generated files- `Done✔?`
-#> `i` TODO [proj_file] to accesss data (return the path in this case?)- `Done✔?`
-#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'- `Done✔?`
-#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO…- `Done✔?`
-#> `i` TODO browse_pkg should open by default if no vignettes are found, becau…- `Done✔?`
-#> `i` TODO exclude _files from `proj_list()`- `Done✔?`
-#> `i` TODO outline Show function call if exported + not internal + bonus if has family tag! rstudio/rstudio#14766 (<https://github.com/rstudio/rstudio/issues/14766>)- `Done✔?`
-#> `i` TODO title of file could be function title if it is first element [proj…- `Done✔?`
-#> `i` TODO rename_files should be less noisy about project name file- `Done✔?`
-#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not …- `Done✔?`
-#> `i` TODO outline just create an `exclude` argument that will take an opti…- `Done✔?`
-#> `i` TODO outline remove snaps from outline and add a link in the test fil…- `Done✔?`
-#> `i` TODO outline family should be displayed differently..- `Done✔?`
-#> `i` TODO outline find a way to make print bookmarks..- `Done✔?`
-#> `i` TODO outline escape some content in headings see 'tests/testthat/_outline/quarto-caps.md' for examples.- `Done✔?`
+#> `i` TODO screenshot make the behaviour different when vignettes vs articles: vignettes should place it in man/figures, while articles could put it in vignettes/articles file.
+#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd doc. No longer needed with RStudio 2023.12
+#> `i` TODO use_family() to edit .R file to add @family data frames tags to roxygen
+#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)
+#> `i` TODO rename if many matches, separate those with the exact path.
+#> `i` TODO outline make ggtitle work
+#> `i` TODO outline show extra msg only for some, but in file outline, not in proj?
+#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
+#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
+#> `i` TODO outline avoid evaluating in current env.
+#> `i` TODO wrap regexps in functions
+#> `i` TODO outline remove examples from outline. Sometimes commented code is caught.
+#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`
+#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.
+#> `i` TODO outline remove ggtext markup from plot title.
+#> `i` FIXME outline comments are now interpreted as section
+#> `i` TODO outline todos in qmd file inside html comment
+#> `i` TODO reframe more than one issue. nw drive
+#> `i` TODO delete generated files
+#> `i` TODO [proj_file] to accesss data (return the path in this case?)
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
+#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
+#> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
+#> `i` TODO exclude _files from `proj_list()`
+#> `i` TODO outline Show function call if exported + not internal + bonus if has family tag! rstudio/rstudio#14766 (<https://github.com/rstudio/rstudio/issues/14766>)
+#> `i` TODO title of file could be function title if it is first element [proj_outline]
+#> `i` TODO rename_files should be less noisy about project name file
+#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+#> `i` TODO outline just create an `exclude` argument that will take an option? (exclude can be files or expressionsm, or elements.)
+#> `i` TODO outline remove snaps from outline and add a link in the test file instead?
+#> `i` TODO outline family should be displayed differently..
+#> `i` TODO outline find a way to make print bookmarks..
+#> `i` TODO outline escape some content in headings see 'tests/testthat/_outline/quarto-caps.md' for examples.
 #> 
 #> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
 #> `i` Load packages
 #> `i` Wrangle + visualize data
 #> `i` A great title
-#> `i` TODO improve this Viz!- `Done✔?`
+#> `i` TODO improve this Viz!
 #> 
 #> ── `playground/outline-tree.R`
-#> `i` TODOs (they don't affect heirarchy)- `Done✔?`
+#> `i` TODOs (they don't affect heirarchy)
 #> 
 #> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
 #> `i` A great section
@@ -350,7 +351,7 @@ outline
 #> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
 #> `i` data wrangling
 #> `i` Write my streets
-#> `i` TODO Create a new version- `Done✔?`
+#> `i` TODO Create a new version
 #> `i` 'R/my-file.R'
 #> `i` Section title
 #> 
@@ -418,22 +419,22 @@ outline
 #> ── `tests/testthat/_outline/titles.md`  The title is the only outline element
 #> `i` Another title
 #> `i` Second level
-#> `i` TODO this is an item- `Done✔?`
+#> `i` TODO this is an item
 #> `i` Last title
 #> `i` `function_name()` title
 #> 
 #> ── `tests/testthat/_outline/tree.qmd`  Test
 #> `i` Quarto
 #> `i` Running Code
-#> `i` TODO fix this in the code- `Done✔?`
+#> `i` TODO fix this in the code
 #> `i` A sub header
-#> `i` TODO here's a todo in the text- `Done✔?`
+#> `i` TODO here's a todo in the text
 #> `i` Back to header 1
 #> `i` Dont skip me
 #> `i` header 5
-#> `i` TODO testing section- `Done✔?`
+#> `i` TODO testing section
 #> `i` Another sub header
-#> `i` TODO section test- `Done✔?`
+#> `i` TODO section test
 #> 
 #> ── `tests/testthat/_snaps/browse-pkg.md`
 #> `i` browse_pkg() works
@@ -470,8 +471,8 @@ outline
 #> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
-#> `i` file_outline() works well with figure captions
 #> `i` file_outline() detects correctly knitr notebooks
+#> `i` file_outline() works well with figure captions
 #> 
 #> ── `tests/testthat/_snaps/proj-list.md`
 #> `i` proj_file() works
@@ -504,7 +505,7 @@ outline
 #> 
 #> ── `tests/testthat/test-dplyr-plus.R`
 #> `i` filter_if_any() errors with across()
-#> `i` TODO improve this error- `Done✔?`
+#> `i` TODO improve this error
 #> `i` adds rows in front, but warns the user
 #> `i` summarise_with_total() keeps factors
 #> 
@@ -513,7 +514,7 @@ outline
 #> `i` Side effects are what's intended in interactive sessions
 #> 
 #> ── `tests/testthat/test-escape-inline-markup.R`
-#> `i` TODO could probably be {. } works?- `Done✔?`
+#> `i` TODO could probably be {. } works?
 #> 
 #> ── `tests/testthat/test-markup.R`
 #> `i` link_gh_issue() + markup_href() work
@@ -526,7 +527,6 @@ outline
 #> `i` open_rs_doc() errors in non-interactive sessions
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
-#> `i` TODO figure out if this is still needed?- `Done✔?`
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline-roxy.R`
@@ -537,7 +537,7 @@ outline
 #> ── `tests/testthat/test-outline.R`
 #> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
-#> `i` TODO change tests for data frame size when stable (efficiency). As stil…- `Done✔?`
+#> `i` TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
 #> 

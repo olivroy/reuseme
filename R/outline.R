@@ -211,7 +211,13 @@ file_outline <- function(pattern = NULL,
   file_sections1 <- display_outline_element(file_sections0, dir_common)
 
   # Create hyperlink in console
-  file_sections <- construct_outline_link(file_sections1, is_saved_doc, dir_common, pattern)
+  file_sections <- construct_outline_link(
+    file_sections1,
+    is_saved_doc,
+    is_active_doc = is_active_doc,
+    dir_common,
+    pattern
+  )
 
   if (alpha) {
     # remove inline markup first before sorting alphabetically
@@ -394,6 +400,16 @@ print.outline_report <- function(x, ...) {
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
+
+  if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
+    # Remove all things that appear more than 4 times in a file.
+    # this typically indicates a placeholder
+    file_sections <- dplyr::filter(
+      file_sections,
+      dplyr::n() < 4,
+      .by = c("file", "outline_el")
+    )
+  }
 
   summary_links_files <- file_sections |>
     dplyr::filter(!is_function_def) |>
@@ -721,7 +737,7 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
+construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_common, pattern) {
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
@@ -731,10 +747,15 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
   .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
+  # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
+  # Using rlang::is_interactive to be able to test it if I ever feel the need.
+  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
   .data <- dplyr::mutate(
     .data,
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & (is_todo_fixme) & is_saved_doc & !has_inline_markup,
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & !is_todo_fixme & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
+    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
+    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
+    # Truncate todo items, subtitles
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
@@ -762,7 +783,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
   .data <- dplyr::mutate(
     .data,
     outline_el2 = ifelse(
-      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & is_todo_fixme & is_saved_doc,
+      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
       paste0(
         outline_el,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
@@ -825,6 +846,7 @@ construct_outline_link <- function(.data, is_saved_doc, dir_common, pattern) {
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
     is_notebook = NULL,
+    complete_todo_link = NULL,
     is_news = NULL,
     # I may put it back ...
     importance = NULL,

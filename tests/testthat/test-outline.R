@@ -84,14 +84,6 @@ test_that("dir_outline() works with no error", {
   expect_no_error(dir_outline(pattern = ".+", path = test_path("_outline")))
 })
 
-test_that("file_outline() works well with figure captions", {
-  skip_if_not_installed("lightparser")
-  expect_snapshot(
-    file_outline(path = test_path("_outline", "quarto-caps.md")),
-    transform = ~ sub(" `[^`]+` ", " `quarto-caps.md` ", .x)
-  )
-})
-
 test_that("file_outline() detects correctly knitr notebooks", {
   expect_snapshot(
     file_outline(path = test_path("_outline", "knitr-notebook.R")),
@@ -99,3 +91,10 @@ test_that("file_outline() detects correctly knitr notebooks", {
   )
 })
 
+test_that("file_outline() works well with figure captions", {
+  skip_if_not_installed("lightparser")
+  expect_snapshot(
+    file_outline(path = test_path("_outline", "quarto-caps.md")),
+    transform = ~ sub(" `[^`]+` ", " `quarto-caps.md` ", .x)
+  )
+})

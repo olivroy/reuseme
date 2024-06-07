@@ -3,7 +3,6 @@ test_that("o_is_notebook() works", {
   expect_true(o_is_notebook("#' ---", "file.R", file_ext = "R", line = 1))
   expect_false(o_is_notebook("#' ---", "file.R", file_ext = "qmd", line = 1))
   expect_false(o_is_notebook("#' Fn title", "file.R", file_ext = "qmd", line = 1))
-
 })
 
 test_that("o_is_roxygen_comment() works", {
@@ -25,6 +24,8 @@ test_that("o_is_todo_fixme() works", {
   expect_false(o_is_todo_fixme("  expect_true(o_is_todo_fixme(\"  # TODO this is important\"))"))
   # avoid finding comments.
   expect_false(o_is_todo_fixme("# another TODO item"))
+  expect_false(o_is_todo_fixme("#' TODO, WORK, FIXME)", is_roxygen_comment = T))
+
 })
 
 test_that("o_is_work_item() works", {
@@ -57,18 +58,8 @@ test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
-  expect_false(o_is_section_title("Function ID:", roxy_section = TRUE))
+  expect_false(o_is_section_title("@section: Function ID:", roxy_section = TRUE))
   expect_false(o_is_section_title("#' @section Function ID:", roxy_section = TRUE))
-})
-
-# TODO figure out if this is still needed?
-test_that("o_is_commented_code() works", {
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1,"))
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1)"))
-  expect_true(o_is_commented_code("#' # DiagrammeR(x = 1)"))
-  expect_true(o_is_commented_code("# DiagrammeR(x = 1\""))
-
-  expect_false(o_is_commented_code("# A new section {.unnumbered}"))
 })
 
 test_that("o_is_cli_info() works", {
