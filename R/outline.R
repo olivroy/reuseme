@@ -387,7 +387,7 @@ print.outline_report <- function(x, ...) {
     file_sections <- dplyr::filter(
       file_sections,
       dplyr::n() < 4,
-      .by = c(.data$file, .data$outline_el)
+      .by = c("file", "outline_el")
     )
   }
 
