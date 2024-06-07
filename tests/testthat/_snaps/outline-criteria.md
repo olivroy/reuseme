@@ -9,7 +9,7 @@
       o_is_roxygen_comment
       o_is_section_title
       o_is_tab_plot_title
-      o_is_test_that
+      o_is_test_name
       o_is_todo_fixme
       o_is_work_item
 

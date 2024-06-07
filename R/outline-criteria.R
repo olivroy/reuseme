@@ -59,7 +59,7 @@ o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
   candidates <- x[has_todo]
   # Eliminate candidates
   has_todo[p] <-
-    !o_is_test_that(candidates) &
+    !o_is_test_name(candidates) &
     !stringr::str_starts(candidates, "\\s*\"\\s*") &
     !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
     !is_roxygen_comment[p] & # don't put these tags in documentation :)
@@ -78,7 +78,7 @@ o_is_work_item <- function(x, is_roxygen_comment = FALSE) {
   res
 }
 
-o_is_test_that <- function(x) {
+o_is_test_name <- function(x) {
   # avoid generic like f works.
   potential_test <- grepl("{", x, fixed = TRUE)
   if (!any(potential_test)) {
@@ -197,7 +197,7 @@ define_outline_criteria <- function(.data, print_todo) {
       .default = is_chunk_cap
     ),
     is_chunk_cap_next = is_chunk_cap,
-    is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
+    is_test_name = is_test_file & o_is_test_name(content) & !o_is_generic_test(content),
     is_todo_fixme = print_todo & o_is_todo_fixme(content, is_roxygen_comment) & !is_snap_file,
     is_section_title = o_is_section_title(content, is_roxygen_comment, is_todo_fixme),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
