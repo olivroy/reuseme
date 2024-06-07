@@ -1,5 +1,8 @@
 # reuseme (development version)
 
+* `file_outline()` now recognize `describe()` test calls. 
+  (probably many false positive for now) (#31)
+  
 * Outline elements present more than four times in a file will not be printed as they are considered placeholders. (like generic test name)
 
 * `proj_outline()` now detects [knitr notebooks](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (#30)

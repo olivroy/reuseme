@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    685ms    685ms      1.46    22.2MB     2.92
+#> 1 outline <- proj_outline()    463ms    473ms      2.12    22.3MB     4.23
 ```
 
 <details>
@@ -381,6 +381,7 @@ outline
 #> `i` file_outline() contains function calls
 #> 
 #> ── `tests/testthat/test-rename.R`
+#> `i` rename_files2()
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`

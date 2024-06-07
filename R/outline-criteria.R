@@ -84,7 +84,13 @@ o_is_test_name <- function(x) {
   if (!any(potential_test)) {
     return(potential_test)
   }
-  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"(?!\")")
+  test_that_name_regex <- "(?<!['\"])test_that\\(\"(?!\")"
+  if (any(grepl('describe(', x, fixed = TRUE))) {
+    potential_test & (grepl(test_that_name_regex, x, perl = TRUE) |
+      grepl("(?<!['\"])describe\\(\"(?!\")", x, perl = TRUE))
+  } else {
+    potential_test & grepl(test_that_name_regex, x, perl = TRUE)
+  }
 }
 
 o_is_generic_test <- function(x) {

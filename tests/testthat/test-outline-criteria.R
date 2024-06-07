@@ -25,7 +25,6 @@ test_that("o_is_todo_fixme() works", {
   # avoid finding comments.
   expect_false(o_is_todo_fixme("# another TODO item"))
   expect_false(o_is_todo_fixme("#' TODO, WORK, FIXME)", is_roxygen_comment = T))
-
 })
 
 test_that("o_is_work_item() works", {
@@ -34,6 +33,7 @@ test_that("o_is_work_item() works", {
 
 test_that("o_is_test_name() works", {
   expect_true(o_is_test_name('test_that("Serious things are happening", {'))
+  expect_true(o_is_test_name('describe("This is happening", {'))
   expect_false(o_is_test_name('test_that("", {'))
 })
 
