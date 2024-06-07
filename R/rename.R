@@ -71,10 +71,11 @@ rename_files2 <- function(old,
 
   # renaming should only happen in tests or interactive sessions
   if (action == "rename" && !(rlang::is_interactive() || identical(Sys.getenv("TESTTHAT"), "true"))) {
-    cli::cli_abort(c("Should only rename files in interactive sessions (or in tests)"))
+    cli::cli_abort("Should only rename files in interactive sessions.")
   }
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
+  proj_name <- proj_get2()
   if (interactive() && !is_git && !identical(Sys.getenv("TESTTHAT"), "true")) {
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
@@ -91,7 +92,10 @@ rename_files2 <- function(old,
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
   related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
+  # remove project name from conflicts.
+  related_files <- stringr::str_subset(related_files, proj_name, negate = TRUE)
   if (length(related_files) > 0) {
+    # TODO verify if path should be normalized.
     cli::cli_warn(c(
       "Other files have a similar pattern",
       "See {.file {related_files}}",
@@ -120,7 +124,7 @@ rename_files2 <- function(old,
   if (renaming_strategy == "object_names") {
     # Create regex = replace kebab-case by snake_case to verify object names
     # Then the regex is the union of these.
-    regex_friendly <- c(basename_remove_ext(old), stringr::str_replace_all(basename_remove_ext(old), "-", "_"))
+    regex_friendly <- c(basename_remove_ext(old), gsub("-", "_", basename_remove_ext(old), fixed = TRUE))
     regex_friendly <- paste0(unique(regex_friendly), collapse = "|")
   } else {
     regex_friendly <- ifelse(renaming_strategy %in% c("object_names"), basename_remove_ext(old), old)
@@ -151,7 +155,7 @@ rename_files2 <- function(old,
     # check_referenced_files(path = ".", quiet = !verbose)
     if (interactive() && action != "test") {
       cli::cli_inform(c(
-        i = "Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files."
+        i = cli::col_grey("Call {.run reuseme::check_referenced_files()} to see if dir contains non-existing files.")
       ))
     }
     return(invisible(new))
@@ -212,7 +216,7 @@ compute_conflicts_regex <- function(file, renaming_strategy) {
 
   file_name_base <- basename_remove_ext(file)
 
-  object_snake_from_file_kebab <- stringr::str_replace_all(file_name_base, "-", "_")
+  object_snake_from_file_kebab <- gsub("-", "_", file_name_base, fixed = TRUE)
 
   if (renaming_strategy == "object_names") {
     # dat/file-name.csv|file_name
@@ -358,7 +362,7 @@ hint_acceptable_renaming <- function(old, new, overwrite) {
       ))
       return(FALSE)
     }
-    # r-lib/cli#683
+    # Delete when fixed r-lib/cli#683
     old_chr <- as.character(old)
     new_chr <- as.character(new)
 

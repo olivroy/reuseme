@@ -1,5 +1,28 @@
 # reuseme (development version)
 
+* `file_outline()` now recognize `describe()` test calls. 
+  (probably many false positive for now) (#31)
+  
+* Outline elements present more than four times in a file will not be printed as they are considered placeholders. (like generic test name)
+
+* `proj_outline()` now detects [knitr notebooks](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (#30)
+
+* `proj_outline()` no longer shows `complete_todo()` links for items in non-interactive sessions. `complete_todo()` links are now only shown when calling `file_outline()` on the active file.
+
+* `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
+
+* `active_rs_doc_nav()` is a new function to navigate to files pane location.
+
+`active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
+
+* `proj_file()` is better.
+
+* Local GitHub issues show better in outline.
+
+* `file_outline()` detects better plot titles and section titles.
+
+* Package versions in NEWS.md are now normalized to yield better results.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).

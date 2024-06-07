@@ -1,6 +1,6 @@
 Package: reuseme
 Title: Collections of Utility Functions to Work Across Projects
-Version: 0.0.2.9000
+Version: 0.0.2.9002
 Authors@R: 
     person("Olivier", "Roy", , "olivierroy71@hotmail.com", role = c("aut", "cre"))
 Description: Allows you to browse current projects, rename files safely,
@@ -35,11 +35,11 @@ Suggests:
     curl,
     gert,
     gt,
-    pillar,
     magick,
+    pillar,
     testthat (>= 3.2.1),
     withr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.1.9000

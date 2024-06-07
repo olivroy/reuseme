@@ -39,10 +39,10 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
 #' @name open_rs_doc
 #' @export
 active_rs_doc <- function() {
-  if (!interactive() && !rstudioapi::isAvailable()) {
+  if (!interactive() && !is_rstudio()) {
     return("Non-existing doc")
   }
-  if (!rstudioapi::isAvailable()) {
+  if (!is_rstudio()) {
     cli::cli_abort("Not in RStudio.")
   }
   unsaved_doc <- tryCatch(rstudioapi::documentPath(), error = function(e) TRUE)
@@ -79,20 +79,21 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
     cli::cli_abort("Unsaved document, focus on the saved doc you want to save.")
   }
 
-  if (!fs::path_ext(old) %in% c("R", "qmd", "Rmd")) {
-    cli::cli_abort("Only R docs for now")
+  if (!fs::path_ext(old) %in% c("md", "R", "qmd", "Rmd")) {
+    cli::cli_abort("Only R and md docs for now")
   }
   old_path_file <- fs::path_ext_remove(fs::path_file(old))
-  if (stringr::str_detect(old, "r-profile|Rprofile")) {
+
+  if (grepl("r-profile|Rprofile", old)) {
     cli::cli_abort("Attempting to copy Rprofile (focus on the document you want)")
   }
   if (is.null(new)) {
     new_name <- paste0(old_path_file, "-new")
   } else {
-    new_name <- stringr::str_remove(new, "\\.R|\\.qmd|\\.Rmd$")
+    new_name <- sub("\\.R|\\.[Rq]?md$", "", new)
   }
   # Hack to ensure file/file.R will be correctly renamed.
-  new_path <- stringr::str_replace(old, paste0(old_path_file, "\\."), paste0(new_name, "."))
+  new_path <- sub(paste0(old_path_file, "\\."), paste0(new_name, "."), old)
 
   copied <- file.copy(old, new_path, overwrite = FALSE)
   if (copied) {
@@ -124,7 +125,7 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
 #' @examplesIf FALSE
 #' active_rs_doc_delete()
 active_rs_doc_delete <- function() {
-  if (!rlang::is_interactive() || !rstudioapi::isAvailable()) {
+  if (!rlang::is_interactive() || !is_rstudio()) {
     cli::cli_abort(c("Can't delete files in non-interactive sessions."))
   }
   doc <- active_rs_doc()
@@ -140,7 +141,7 @@ active_rs_doc_delete <- function() {
   if (fs::is_dir(elems$full_path)) {
     cli::cli_abort("Must be a file", .internal = TRUE)
   }
-  if (interactive() && rstudioapi::isAvailable()) {
+  if (interactive() && is_rstudio()) {
     rstudioapi::documentSave()
   }
   cli::cli_inform(c(
@@ -211,7 +212,7 @@ active_rs_doc_delete <- function() {
   parent_dir <- fs::path_file(fs::path_dir(elems$full_path))
 
   if (grepl("^temp", fs::path_file(elems$rel_path)) ||
-    (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
+      (!parent_dir %in% c("tests", "testthat") && grepl("^test-", fs::path_file(elems$rel_path)))) {
     reasons_deleting <- c(reasons_deleting, "it has the temp- prefix.")
     will_delete <- append(will_delete, TRUE)
   }
@@ -255,7 +256,8 @@ active_rs_doc_delete <- function() {
   if (isTRUE(will_delete_decision)) {
     cli::cli_inform(c(
       "v" = "Deleted the active document {.val {elems$rel_path}} because {reasons_deleting}.",
-      "i" = cli::col_grey("The deleted file {.path {elems$full_path}} contents are returned invisibly in case you need them.")
+      # FIXME (upstream) the color div doesn't go all the way r-lib/cli#694
+      "i" = paste(cli::col_grey("The deleted file"), "{.path {elems$full_path}}", cli::col_grey("contents are returned invisibly in case you need them."))
     ))
     contents <- readLines(elems$full_path, encoding = "UTF-8")
     fs::file_delete(elems$full_path)
@@ -359,4 +361,37 @@ normalize_proj_and_path <- function(path, call = caller_env()) {
     rel_path = rel_path,
     full_path = full_path
   )
+}
+
+#' Open Files Pane at current document location
+#'
+#' Easily navigate to active file document.
+#'
+#' Wrapper around [executeCommand("activateFiles")][rstudioapi::executeCommand()] +
+#' [rstudioapi::filesPaneNavigate()] + [rstudioapi::getActiveDocumentContext()]
+#'
+#' @param path A path to file to navigate to (default active document).
+#'
+#' @returns NULL, called for its side effects.
+#' @export
+active_rs_doc_nav <- function(path = active_rs_doc()) {
+  if (!is_rstudio() || !interactive()) {
+    cli::cli_abort("Must use in RStudio interactive sessions.")
+  }
+  if (is.null(path)) {
+    cli::cli_abort("Can't navigate to an unsaved file!")
+  }
+  if (fs::is_file(path)) {
+    dir <- fs::path_dir(path)
+  } else if (fs::is_dir(path)) {
+    dir <- path
+  } else {
+    cli::cli_abort("{.arg path} must be an existing file or directory.")
+  }
+  rstudioapi::executeCommand("activateFiles")
+  rstudioapi::filesPaneNavigate(dir)
+  cli::cli_inform(c(
+    "v" = "Navigated to {.path {dir}} in RStudio Files Pane."
+  ))
+  invisible()
 }

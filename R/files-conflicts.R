@@ -85,7 +85,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
   }
   bullets_df <-
     rlang::set_names(files) |>
-    purrr::map(\(x) readLines(x, encoding = "UTF-8")) |>
+    purrr::map(\(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
     purrr::map(\(x) tibble::enframe(x, name = "line_number", value = "content")) |>
     dplyr::bind_rows(.id = "file")
 
@@ -118,7 +118,7 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
       cli::cli_inform
     }
     # Remove duplicated Found x references
-    which_bullet_to_replace <- stringr::str_subset(extra_msg, "Found references to", negate = TRUE)
+    which_bullet_to_replace <- stringr::str_subset(extra_msg, stringr::fixed("Found references to"), negate = TRUE)
     # possibly just move up our
     # extra_msg[i] <-
     f_inform(c(
@@ -145,15 +145,15 @@ get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
-  purrr::map(files, \(x) readLines(x, encoding = "UTF-8")) |>
+  purrr::map(files, \(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
     stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(|path_package|system.file", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
     stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
     stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
     stringr::str_subset(pattern = "grepl?\\(|stringr|g?sub\\(", negate = TRUE) |> # avoid regexp
-    stringr::str_subset(pattern = "nocheck", negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
-    stringr::str_subset("\"") |>
+    stringr::str_subset(pattern = stringr::fixed("nocheck"), negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
+    stringr::str_subset(stringr::fixed("\"")) |>
     stringr::str_trim() |>
     stringr::str_extract_all("\"[^\"]+\"") |>
     unlist() |>
@@ -163,7 +163,7 @@ get_referenced_files <- function(files) {
     stringr::str_subset(pattern = "tmp|temp", negate = TRUE) |> # remove common file names that are not very nice
     stringr::str_subset(pattern = "https?", negate = TRUE) |> # doesn't check for files read online.
     stringr::str_subset(pattern = "\\@.+\\.", negate = TRUE) |> # email addresses or containing @
-    stringr::str_subset(pattern = "_fichiers/", negate = TRUE) |> # manually remove false positive
+    stringr::str_subset(pattern = stringr::fixed("_fichiers/"), negate = TRUE) |> # manually remove false positive
     stringr::str_subset(pattern = "\n", negate = TRUE) |> # remove things with line breaks
     stringr::str_subset(pattern = "^\\.[:alpha:]{1,4}$", negate = TRUE) |> # remove reference to only file extensions
     stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) |> # remove 0.000 type

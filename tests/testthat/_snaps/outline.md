@@ -15,28 +15,26 @@
       `i` Dashboard card
     Message
       
-      -- `my-analysis.R`  Analyse my streets 
+      -- `titles.md`  The title is the only outline element 
     Output
-      `i` A real one
-      `i` A true one
-      `i` TODO Create a new version- `Donev?`
+      `i` Another title
+      `i` Last title
+      `i` Second level
+      `i` `function_name()` title
+      `i` TODO this is an item
+    Message
+      
+      -- `my-analysis.R`  Analyse my {streets} 
+    Output
+      `i` TODO Create a new version
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Roxygen section
       `i` Section title
       `i` Write my streets
       `i` data wrangling
       `i` 'R/my-file.R'
     Message
       
-      -- `many-titles.md`  The title is the only outline element 
-    Output
-      `i` Another title
-      `i` Last title
-      `i` Second level
-      `i` TODO this is an item- `Donev?`
-    Message
-      
-      -- `single-title.md`  The title is the only outline element 
+      -- `title.md`  The title is the only outline element 
 
 # alpha and work_only arguments work
 
@@ -44,7 +42,7 @@
       file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
     Message
       
-      -- `ref/my-analysis.R`  Analyse my streets 
+      -- `outline/my-analysis.R`  Analyse my {streets} 
     Output
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets
@@ -60,7 +58,7 @@
       `i` Load packages
       `i` Wrangle + visualize data
       `i` A great title
-      `i` TODO improve this Viz!- `Donev?`
+      `i` TODO improve this Viz!
 
 # pattern works as expected
 
@@ -78,7 +76,7 @@
       
       -- `outline-script.R`  Example for `file_outline()` 
     Output
-      `i` TODO improve this Viz!- `Donev?`
+      `i` TODO improve this Viz!
 
 ---
 
@@ -87,4 +85,14 @@
     Message
       
       -- `outline-script.R`  Example for `file_outline()` 
+
+# file_outline() detects correctly knitr notebooks
+
+    Code
+      file_outline(path = test_path("_outline", "knitr-notebook.R"))
+    Message
+      
+      -- `knitr-notebook.R`  Crop Analysis Q3 2013 
+    Output
+      `i` A great section
 

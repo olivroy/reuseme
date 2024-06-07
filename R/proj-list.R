@@ -58,10 +58,16 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
   if (fs::is_file(file)) {
     file_outline(path = file)
     open_rs_doc(file)
+    return(invisible(file))
   }
   proj <- proj %||% proj_get2()
   proj_path <- proj_list(proj)
-
+  file_path <- fs::path(proj_path, file)
+  if (fs::is_file(file_path)) {
+    file_outline(path = file_path)
+    open_rs_doc(file_path)
+    return(invisible(file_path))
+  }
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
   possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE)
@@ -105,13 +111,19 @@ proj_file <- function(file = NULL, proj = NULL, pattern = NULL) {
 proj_list <- function(proj = NULL, dirs = getOption("reuseme.reposdir")) {
   check_string(proj, allow_null = TRUE)
 
-  if (!is.null(proj) && length(proj) == 1 && fs::dir_exists(proj)) {
-    return(
-      rlang::set_names(
-        proj,
-        fs::path_file(proj)
-      )
-    )
+  if (!is.null(proj) && length(proj) == 1) {
+    # avoid creating a nested project.
+    # known direct
+    if (!proj %in% c("pkgdown", "testthat", "R", "man", "tests", "inst", "src")) {
+      if (fs::dir_exists(proj)) {
+        return(
+          rlang::set_names(
+            proj,
+            fs::path_file(proj)
+          )
+        )
+      }
+    }
   }
 
   proj_location <- dirs %||% default_dirs() %||% getOption("usethis.destdir")

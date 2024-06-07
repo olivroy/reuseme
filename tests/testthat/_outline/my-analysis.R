@@ -1,6 +1,6 @@
-# Analyse my streets ---------------
+# Analyse my {streets} ---------------
 ## Read my [streets](https://https://en.wikipedia.org/wiki/Street_art) data -------
-my_streets <- read.csv("data/my-streets.csv")
+my_streets <- read.csv("data/my-streets.csv", silent = TRUE)
 new_dat <- my_streets |>
   dplyr::mutate(
     title = "data wrangling", # "problem"
@@ -17,14 +17,8 @@ fs::path("data", "my-streets", ext = "csv")
 # system.file("file.R", package = "fs") # should not be listed.
 # TODO Create a new version
 
-#' ## Roxygen section
-#' \url{https://github.com}
-#'
-#' gt::tab_header(title = "A real one") |>
-#'   gt::tab_header(subtitle = "A true one")
-
 # {.file R/my-file.R} ---
-
+tab_header(title = md("**A table title**"))
 cli::cli_ul("Refer to {.href [google](https://google.com)}")
 # ## a commented section title -----
 
