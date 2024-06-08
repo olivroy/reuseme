@@ -1,5 +1,14 @@
 # reuseme (development version)
 
+## Breaking change
+
+* To facilitate piping, `path` / `proj` is now the first argument of `proj_outline()`, `file_outline()`, and `dir_outline()`.
+
+* If you previously relied on specifying pattern without naming it, you will have 
+ to get used to the opposite. Naming `pattern`, but not path.
+
+## Fixes
+
 * `file_outline()` now recognize `describe()` test calls. 
   (probably many false positive for now) (#31)
   

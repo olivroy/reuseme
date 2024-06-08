@@ -37,6 +37,9 @@
 #' Will show TODO items and will offer a link to [mark them as
 #' complete][complete_todo()].
 #'
+#' Note that `proj_outline()` strips some test files from the outline, as example
+#' test files (like in usethis repo) don't help understand a project's outline.
+#' Use `dir_outline(recurse = TRUE)` to make sure these are included in your outline.
 #'
 #' @param path,proj A character vector of file paths, a [project][proj_list()].
 #'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
@@ -81,8 +84,8 @@ NULL
 ## `file_outline()` ------
 #' @export
 #' @rdname outline
-file_outline <- function(pattern = NULL,
-                         path = active_rs_doc(),
+file_outline <- function(path = active_rs_doc(),
+                         pattern = NULL,
                          work_only = TRUE,
                          alpha = FALSE,
                          dir_common = NULL,
@@ -178,9 +181,7 @@ file_outline <- function(pattern = NULL,
 
   if (nrow(file_sections0) == 0) {
     if (is_active_doc && !identical(pattern, ".+")) {
-      msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.",
-        "i" = "Did you mean to use {.run reuseme::file_outline(path = {.str {pattern}})}?"
-      )
+      msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.")
     } else if (!identical(pattern, ".+")) {
       msg <- c(
         "{.code pattern = {.val {pattern}}} did not return any results looking in {length(path)} file{?s}.",
@@ -235,16 +236,8 @@ file_outline <- function(pattern = NULL,
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+proj_outline <- function(proj = proj_get2(), pattern = NULL, work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
-
-  if (is_active_proj && !is.null(pattern) && pattern %in% names(proj_list())) {
-    # only throw warning if proj is supplied
-    cli::cli_warn(c(
-      "You specified {.arg pattern} = {.val {pattern}}",
-      i = "Did you mean to use `proj = {.val {pattern}}?"
-    ))
-  }
 
   if (is_active_proj) {
     return(dir_outline(
@@ -296,7 +289,7 @@ proj_outline <- function(pattern = NULL, proj = proj_get2(), work_only = TRUE, d
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(pattern = NULL, path = ".", work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(path = ".", pattern = NULL, work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")

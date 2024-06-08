@@ -8,8 +8,8 @@
 \title{Print interactive outline of file sections}
 \usage{
 file_outline(
-  pattern = NULL,
   path = active_rs_doc(),
+  pattern = NULL,
   work_only = TRUE,
   alpha = FALSE,
   dir_common = NULL,
@@ -18,8 +18,8 @@ file_outline(
 )
 
 proj_outline(
-  pattern = NULL,
   proj = proj_get2(),
+  pattern = NULL,
   work_only = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,
@@ -27,8 +27,8 @@ proj_outline(
 )
 
 dir_outline(
-  pattern = NULL,
   path = ".",
+  pattern = NULL,
   work_only = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,
@@ -37,12 +37,12 @@ dir_outline(
 )
 }
 \arguments{
+\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
+Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
+
 \item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
 The print method will show the document title for context. Previously \code{regex_outline}}
-
-\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
-Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
 
 \item{work_only}{If \code{TRUE}, (the default), will only show you work items
 first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will
@@ -106,6 +106,10 @@ The parser is very opinioneted and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
 
 Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
+
+Note that \code{proj_outline()} strips some test files from the outline, as example
+test files (like in usethis repo) don't help understand a project's outline.
+Use \code{dir_outline(recurse = TRUE)} to make sure these are included in your outline.
 }
 \examples{
 file <- fs::path_package("reuseme", "example-file", "outline-script.R")
