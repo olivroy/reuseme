@@ -69,15 +69,6 @@ o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
   has_todo
 }
 
-o_is_work_item <- function(x, is_roxygen_comment = FALSE) {
-  res <- stringr::str_detect(x, "(?<!\")# WORK")
-  if (!any(res)) {
-    return(res)
-  }
-  res[which(res)] <- o_is_todo_fixme(x[which(res)], is_roxygen_comment)
-  res
-}
-
 o_is_test_name <- function(x) {
   # avoid generic like f works.
   potential_test <- grepl("{", x, fixed = TRUE)

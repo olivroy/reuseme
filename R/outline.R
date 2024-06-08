@@ -19,10 +19,6 @@
 #' * Colored output for
 #' * URL and gh issue detection and link creation.
 #'
-#'
-#' If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
-#' in `path`. `work_only = TRUE` will have an effect on `pattern`.
-#'
 #' By default
 #' * `file_outline()` prints the outline the [active document][active_rs_doc()] if in RStudio
 #' * `proj_outline()` prints the outline of the [active project][usethis::proj_get()] if in RStudio
@@ -46,9 +42,6 @@
 #' @param pattern A string or regex to search for in the outline. If
 #'   specified, will search only for elements matching this regular expression.
 #'   The print method will show the document title for context. Previously `regex_outline`
-#' @param work_only If `TRUE`, (the default), will only show you work items
-#'   first. Set to `FALSE` if you want to see the full outline. `WORK` will
-#'   combine with `pattern`
 #' @param print_todo Should include TODOs in the file outline? If `FALSE`, will
 #'   print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
@@ -64,13 +57,13 @@
 #' @name outline
 #' @examples
 #' file <- fs::path_package("reuseme", "example-file", "outline-script.R")
-#' file_outline(path = file)
+#' file_outline(file)
 #'
 #' # Remove todo items
-#' file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+#' file_outline(file, print_todo = FALSE, alpha = TRUE)
 #'
 #' # interact with data frame
-#' file_outline(path = file) |> dplyr::as_tibble()
+#' file_outline(file) |> dplyr::as_tibble()
 #'
 #' @examplesIf interactive()
 #' # These all work on the active file / project or directory.
@@ -86,11 +79,10 @@ NULL
 #' @rdname outline
 file_outline <- function(path = active_rs_doc(),
                          pattern = NULL,
-                         work_only = TRUE,
                          alpha = FALSE,
-                         dir_common = NULL,
                          print_todo = TRUE,
-                         recent_only = FALSE) {
+                         recent_only = FALSE,
+                         dir_common = NULL) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
 
   if (length(path) == 1L && rlang::is_interactive() && is_rstudio()) {
@@ -144,26 +136,8 @@ file_outline <- function(path = active_rs_doc(),
     )
   )
   # After this point we have validated that paths exist.
-
-  # Handle differently if in showing work items only
-  if (work_only) {
-    # Detect special tag for work item
-    should_show_only_work_items <- any(o_is_work_item(file_content$content))
-    # Check if there are work items in files
-  } else {
-    should_show_only_work_items <- FALSE
-  }
-
-  # Will append Work to the regexp outline, if it was provided.
-  # otherwise sets pattern to anything
-  if (should_show_only_work_items) {
-    cli::cli_inform("Use {.code work_only = FALSE} to display the full file/project outline.")
-    pattern <- paste(c("work\\s", pattern), collapse = "|")
-  } else {
-    pattern <- pattern %||% ".+"
-  }
-
-  check_string(pattern, arg = "You may have specified path Internal error")
+  pattern <- pattern %||% ".+"
+  check_string(pattern)
 
   file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
@@ -236,13 +210,12 @@ file_outline <- function(path = active_rs_doc(),
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(proj = proj_get2(), pattern = NULL, work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+proj_outline <- function(proj = proj_get2(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   is_active_proj <- identical(proj, proj_get2())
 
   if (is_active_proj) {
     return(dir_outline(
       pattern = pattern,
-      work_only = work_only,
       dir_tree = dir_tree,
       alpha = alpha,
       recent_only = recent_only,
@@ -281,7 +254,6 @@ proj_outline <- function(proj = proj_get2(), pattern = NULL, work_only = TRUE, d
   dir_outline(
     pattern = pattern,
     path = proj_dir,
-    work_only = work_only,
     dir_tree = dir_tree,
     alpha = alpha,
     recurse = TRUE
@@ -289,7 +261,7 @@ proj_outline <- function(proj = proj_get2(), pattern = NULL, work_only = TRUE, d
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(path = ".", pattern = NULL, work_only = TRUE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -325,7 +297,7 @@ dir_outline <- function(path = ".", pattern = NULL, work_only = TRUE, dir_tree =
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern, work_only = work_only, dir_common = dir, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern, dir_common = dir, alpha = alpha, recent_only = recent_only)
 }
 
 exclude_example_files <- function(path) {

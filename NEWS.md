@@ -7,6 +7,9 @@
 * If you previously relied on specifying pattern without naming it, you will have 
  to get used to the opposite. Naming `pattern`, but not path.
 
+* Removed `work_only` argument from `file_outline()`, use `pattern = "WORK"` to 
+  acheive the same result.
+
 ## Fixes
 
 * `file_outline()` now recognize `describe()` test calls. 
