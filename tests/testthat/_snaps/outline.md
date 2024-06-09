@@ -1,7 +1,7 @@
 # file_outline() works
 
     Code
-      file_outline(path = my_test_files, alpha = TRUE)
+      file_outline(my_test_files, alpha = TRUE)
     Message
       
       -- `my-analysis.md`  My doc title 
@@ -37,10 +37,10 @@
       
       -- `title.md`  The title is the only outline element 
 
-# alpha and work_only arguments work
+# alpha arguments works
 
     Code
-      file_outline("street", my_test_file, alpha = TRUE, work_only = FALSE)
+      file_outline(my_test_file, pattern = "street", alpha = TRUE)
     Message
       
       -- `outline/my-analysis.R`  Analyse my {streets} 
@@ -64,7 +64,7 @@
 # pattern works as expected
 
     Code
-      file_outline(pattern = "not found", path = file)
+      file_outline(file, pattern = "not found")
     Message
       `pattern = "not found"` did not return any results looking in 1 file.
       i Run `` `proj_file()` `` to search in file names too.
@@ -72,7 +72,7 @@
 ---
 
     Code
-      file_outline("Viz", path = file)
+      file_outline(file, "Viz")
     Message
       
       -- `outline-script.R`  Example for `file_outline()` 
@@ -82,7 +82,7 @@
 ---
 
     Code
-      file_outline("Example for", path = file)
+      file_outline(file, "Example for")
     Message
       
       -- `outline-script.R`  Example for `file_outline()` 
@@ -90,7 +90,7 @@
 # file_outline() detects correctly knitr notebooks
 
     Code
-      file_outline(path = test_path("_outline", "knitr-notebook.R"))
+      file_outline(test_path("_outline", "knitr-notebook.R"))
     Message
       
       -- `knitr-notebook.R`  Crop Analysis Q3 2013 

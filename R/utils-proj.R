@@ -113,6 +113,35 @@ get_active_qmd_post <- function(base_path = proj_get(), error_call = caller_env(
   fs::path_dir(relative_path)
 }
 
+# Tweak check_string
+check_proj <- function(x,
+                       ...,
+                       allow_null = FALSE, # allow active project.
+                       allow_na = FALSE, # Allow all projects
+                       arg = caller_arg(x),
+                       call = caller_env()) {
+  if (!missing(x)) {
+    is_string <- .rlang_check_is_string(
+      x,
+      allow_empty = FALSE,
+      allow_na = allow_na,
+      allow_null = allow_null
+    )
+    if (is_string) {
+      return(invisible(NULL))
+    }
+  }
+
+  stop_input_type(
+    x,
+    cli::format_inline("a single {.help [proj](reuseme::proj_list)}"),
+    ...,
+    allow_na = allow_na,
+    allow_null = allow_null,
+    arg = arg,
+    call = call
+  )
+}
 # to mock.
 is_rstudio <- function(v = NULL) {
   rstudioapi::isAvailable(version_needed = v)

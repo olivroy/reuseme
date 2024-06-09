@@ -4,12 +4,13 @@
 \alias{proj_file}
 \title{Access the file outline within other project}
 \usage{
-proj_file(file = NULL, proj = NULL, pattern = NULL)
+proj_file(file = NULL, path = active_rs_proj(), pattern = NULL)
 }
 \arguments{
 \item{file}{A filename or regexp to a file inside \code{proj}}
 
-\item{proj}{a project path or file \code{\link[=proj_list]{proj_list()}}}
+\item{path}{a project path  \code{\link[=proj_list]{proj_list()}}. If \code{NULL},
+will return active project.}
 
 \item{pattern}{A regular expression to look for}
 }

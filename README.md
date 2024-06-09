@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    5.07s    5.07s     0.197    90.3MB     1.18
+#> 1 outline <- proj_outline()     5.1s     5.1s     0.196    90.3MB     1.18
 ```
 
 <details>
@@ -252,7 +252,6 @@ outline
 #> 
 #> ── `R/outline.R`  `proj_outline()`
 #> `i` Print interactive outline of file sections [outline]
-#> `i` If `work_only` is set to `TRUE`, the function will only return outline of the `# WORK` comment
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
@@ -267,7 +266,7 @@ outline
 #> `i` Access the file outline within other project [proj_file()]
 #> `i` project management helpers
 #> `i` TODO improve on this message
-#> `i` Returns a named project list options [proj_list()]
+#> `i` Specify `proj` in functions [proj_list()]
 #> `i` project management helpers
 #> 
 #> ── `R/proj-reuseme.R`  Interact with different RStudio projects [proj-reuseme]
@@ -322,7 +321,6 @@ outline
 #> `i` TODO delete generated files
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
-#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
 #> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 #> `i` TODO exclude _files from `proj_list()`
 #> `i` TODO outline Show function call if exported + not internal + bonus if has family tag! rstudio/rstudio#14766 (<https://github.com/rstudio/rstudio/issues/14766>)
@@ -468,7 +466,7 @@ outline
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` file_outline() works
-#> `i` alpha and work_only arguments work
+#> `i` alpha arguments works
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
 #> `i` file_outline() detects correctly knitr notebooks
@@ -535,13 +533,13 @@ outline
 #> `i` cli escaping goes well in roxy comments
 #> 
 #> ── `tests/testthat/test-outline.R`
-#> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
 #> `i` TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.
 #> `i` file_outline() with only title doesn't error
 #> `i` file_outline() contains function calls
 #> 
 #> ── `tests/testthat/test-rename.R`
+#> `i` rename_files2()
 #> `i` force and action are deprecated
 #> 
 #> ── `tests/testthat/test-screenshot.R`

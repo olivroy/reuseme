@@ -77,7 +77,7 @@ o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
   candidates <- x[has_todo]
   # Eliminate candidates
   has_todo[p] <-
-    !o_is_test_that(candidates) &
+    !o_is_test_name(candidates) &
     !stringr::str_starts(candidates, "\\s*\"\\s*") &
     !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
     !is_roxygen_comment[p] & # don't put these tags in documentation :)
@@ -87,22 +87,19 @@ o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
   has_todo
 }
 
-o_is_work_item <- function(x, is_roxygen_comment = FALSE) {
-  res <- stringr::str_detect(x, "(?<!\")# WORK")
-  if (!any(res)) {
-    return(res)
-  }
-  res[which(res)] <- o_is_todo_fixme(x[which(res)], is_roxygen_comment)
-  res
-}
-
-o_is_test_that <- function(x) {
+o_is_test_name <- function(x) {
   # avoid generic like f works.
   potential_test <- grepl("{", x, fixed = TRUE)
   if (!any(potential_test)) {
     return(potential_test)
   }
-  potential_test & stringr::str_detect(x, "(?<!['\"])test_that\\(\"(?!\")")
+  test_that_name_regex <- "(?<!['\"])test_that\\(\"(?!\")"
+  if (any(grepl('describe(', x, fixed = TRUE))) {
+    potential_test & (grepl(test_that_name_regex, x, perl = TRUE) |
+      grepl("(?<!['\"])describe\\(\"(?!\")", x, perl = TRUE))
+  } else {
+    potential_test & grepl(test_that_name_regex, x, perl = TRUE)
+  }
 }
 
 o_is_generic_test <- function(x) {
@@ -262,14 +259,13 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
       !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_obj_caption = stringr::str_detect(content, "\\#\\|\\s{1,2}[:alpha:]{0,5}[\\-\\.]?(cap|title)[:(\\s*=)]|```\\{r.*cap\\s?\\="),
-    is_test_name = is_test_file & o_is_test_that(content) & !o_is_generic_test(content),
-    is_todo_fixme = !exclude_todos & o_is_todo_fixme(content, is_roxygen_comment) & !is_snap_file,
+    is_test_name = is_test_file & o_is_test_name(content) & !o_is_generic_test(content),
+    is_todo_fixme = !exclude_todos & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext, is_notebook) & !is_snap_file,
     is_section_title = o_is_section_title(content, is_roxygen_comment, is_todo_fixme),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = is_section_title &
       stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
       stringr::str_detect(content, "[:alpha:]"),
-    is_todo_fixme = !exclude_todos & o_is_todo_fixme(content) & !o_is_roxygen_comment(content, file_ext, is_notebook) & !is_snap_file,
     n_leading_hash = nchar(stringr::str_extract(content, "\\#+(?!\\|)")), # don't count hashpipe
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     # Make sure everything is second level in revdep/.
