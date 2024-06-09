@@ -26,7 +26,7 @@ Inspired by \link[usethis:usethis_options]{usethis options}
 Assumes that you have a project named \code{"learning"}
 A project outline
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{proj_outline(proj = "learning)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{proj_outline("learning)
 }\if{html}{\out{</div>}}
 
 Add a TODO item to the \code{learning} project
