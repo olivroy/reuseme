@@ -30,8 +30,6 @@ that will passed on to `proj_list()`
 
 * `proj_outline()` now detects legacy `fig.cap` in the chunk header. See `knitr::convert_chunk_headers()` for the newer approach. 
 
-* `file_outline()` now supports [R reports](https://rmarkdown.rstudio.com/articles_report_from_r_script.html) (basic)
-
 * `active_rs_doc_nav()` is a new function to navigate to files pane location.
 
 `active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.

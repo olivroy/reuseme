@@ -18,19 +18,6 @@ extract_pkg_version <- function(x, is_news, is_heading) {
 #' * is_tab_plot_title
 #'
 #' @noRd
-o_is_notebook <- function(x, file, file_ext, line) {
-  # Like roxy comments and first line = --, 2nd title.
-  # x$is_notebook <- grepl("notebook.*\\.R", x$file)
-  # Detect #' ---
-  any_notebooks <- grep("^#' ---", x[line == 1 & file_ext == "R"], fixed = FALSE)
-  if (length(any_notebooks) > 0L) {
-    is_notebook <- file %in% file[line == 1 & file_ext == "R"][any_notebooks]
-  } else {
-    is_notebook <- FALSE
-  }
-  is_notebook
-}
-
 
 o_is_roxygen_comment <- function(x, file_ext = NULL, is_notebook = FALSE) {
   if (!is.null(file_ext)) {
