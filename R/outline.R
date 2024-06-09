@@ -87,6 +87,7 @@ file_outline <- function(path = active_rs_doc(),
                          recent_only = FALSE,
                          dir_common = NULL) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
+  check_string(pattern, allow_null = TRUE)
 
   if (length(path) == 1L && rlang::is_interactive() && is_rstudio()) {
     is_active_doc <- identical(path, active_rs_doc())
@@ -139,15 +140,13 @@ file_outline <- function(path = active_rs_doc(),
     )
   )
   # After this point we have validated that paths exist.
-  pattern <- pattern %||% ".+"
-  check_string(pattern)
 
   file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
   file_sections0 <- keep_outline_element(file_sections00)
 
-  if (!grepl(".+", pattern, fixed = TRUE)) {
+  if (!is.null(pattern)) {
     # keep files where pattern was detected (not the generic .+)
     file_sections0 <- dplyr::filter(
       file_sections0,
@@ -674,7 +673,7 @@ construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_commo
     # may be useful for debugging
     has_inline_markup = NULL
   ) |>
-    dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
+    dplyr::filter(is.na(outline_el) | grepl(pattern %||% ".+", outline_el, ignore.case = TRUE))
 }
 
 trim_outline <- function(x, width) {
