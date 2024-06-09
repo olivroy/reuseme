@@ -62,7 +62,7 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
     open_rs_doc(file)
     return(invisible(file))
   }
-  proj_path <- proj_list(proj)
+  proj_path <- proj_list(path)
   file_path <- fs::path(proj_path, file)
   if (fs::is_file(file_path)) {
     file_outline(path = file_path)
@@ -82,20 +82,20 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
       cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
     } else {
       return(proj_outline(
-        pattern = pattern,
-        proj = proj
+        path = proj,
+        pattern = pattern
       ))
     }
   }
 
   if (length(possible_files) == 1L) {
-    return(file_outline(pattern = pattern, path = possible_files))
+    return(file_outline(possible_files, pattern = pattern))
   }
 
   cli::cli_inform(c( # TODO improve on this message
     "A couple files found. Access the desired place."
   ))
-  file_outline(pattern = pattern, path = possible_files)
+  file_outline(path = possible_files, pattern = pattern)
 }
 
 #' Specify `proj` in functions
