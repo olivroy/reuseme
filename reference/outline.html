@@ -15,8 +15,6 @@ Colored output for
 URL and gh issue detection and link creation.
 
 
-If work_only is set to TRUE, the function will only return outline of the # WORK comment
-in path. work_only = TRUE will have an effect on pattern.
 By default
 file_outline() prints the outline the active document if in RStudio
 proj_outline() prints the outline of the active project if in RStudio
@@ -38,8 +36,6 @@ Colored output for
 URL and gh issue detection and link creation.
 
 
-If work_only is set to TRUE, the function will only return outline of the # WORK comment
-in path. work_only = TRUE will have an effect on pattern.
 By default
 file_outline() prints the outline the active document if in RStudio
 proj_outline() prints the outline of the active project if in RStudio
@@ -105,9 +101,7 @@ in RStudio (or if your terminal supports it). It works with both (qR)md and R fi
 <li><p>Indicator of recent modification</p></li>
 <li><p>Colored output for</p></li>
 <li><p>URL and gh issue detection and link creation.</p></li>
-</ul><p>If <code>work_only</code> is set to <code>TRUE</code>, the function will only return outline of the <code># WORK</code> comment
-in <code>path</code>. <code>work_only = TRUE</code> will have an effect on <code>pattern</code>.</p>
-<p>By default</p><ul><li><p><code>file_outline()</code> prints the outline the <a href="open_rs_doc.html">active document</a> if in RStudio</p></li>
+</ul><p>By default</p><ul><li><p><code>file_outline()</code> prints the outline the <a href="open_rs_doc.html">active document</a> if in RStudio</p></li>
 <li><p><code>proj_outline()</code> prints the outline of the <a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">active project</a> if in RStudio</p></li>
 <li><p><code>dir_outline()</code> prints the outline of the <a href="https://rdrr.io/r/base/getwd.html" class="external-link">active working directory</a> by default or</p></li>
 </ul></div>
@@ -115,28 +109,25 @@ in <code>path</code>. <code>work_only = TRUE</code> will have an effect on <code
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">file_outline</span><span class="op">(</span></span>
-<span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  path <span class="op">=</span> <span class="fu"><a href="open_rs_doc.html">active_rs_doc</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  work_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  dir_common <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  print_todo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dir_common <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">proj_outline</span><span class="op">(</span></span>
+<span>  path <span class="op">=</span> <span class="fu">active_rs_proj</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  proj <span class="op">=</span> <span class="fu">proj_get2</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  work_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  dir_tree <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dir_outline</span><span class="op">(</span></span>
-<span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  path <span class="op">=</span> <span class="st">"."</span>,</span>
-<span>  work_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dir_tree <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  recent_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -146,29 +137,19 @@ in <code>path</code>. <code>work_only = TRUE</code> will have an effect on <code
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>pattern</dt>
+    <dl><dt>path</dt>
+<dd><p>A character vector of file paths, a <a href="proj_list.html">project</a>.
+Defaults to the <a href="open_rs_doc.html">active file</a>, project or directory.</p></dd>
+
+
+<dt>pattern</dt>
 <dd><p>A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
 The print method will show the document title for context. Previously <code>regex_outline</code></p></dd>
 
 
-<dt>path, proj</dt>
-<dd><p>A character vector of file paths, a <a href="proj_list.html">project</a>.
-Defaults to active file, project or directory. <code><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">rstudioapi::documentPath()</a></code></p></dd>
-
-
-<dt>work_only</dt>
-<dd><p>If <code>TRUE</code>, (the default), will only show you work items
-first. Set to <code>FALSE</code> if you want to see the full outline. <code>WORK</code> will
-combine with <code>pattern</code></p></dd>
-
-
 <dt>alpha</dt>
 <dd><p>Whether to show in alphabetical order</p></dd>
-
-
-<dt>dir_common</dt>
-<dd><p>(Do not use it)</p></dd>
 
 
 <dt>print_todo</dt>
@@ -178,6 +159,10 @@ print a less verbose output with sections.</p></dd>
 
 <dt>recent_only</dt>
 <dd><p>Show outline for recent files</p></dd>
+
+
+<dt>dir_common</dt>
+<dd><p>(Do not use it)</p></dd>
 
 
 <dt>dir_tree</dt>
@@ -203,15 +188,20 @@ to recurse.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>proj_outline()</code> and <code>dir_outline()</code> are wrapper of <code>file_outline()</code>.</p>
-<p>The parser is very opinioneted and is not very robust as it is based on regexps.
+<p>In <code>proj_outline()</code>, <code>path</code> accepts project names, see <code><a href="proj_list.html">proj_list()</a></code> for how to
+set up reuseme to regognize your projects' locations.</p>
+<p>The parser is very opinionated and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like <a href="https://thinkr-open.github.io/lightparser/" class="external-link">lightparser</a> for Quarto,  <code>{roxygen2}</code></p>
 <p>Will show TODO items and will offer a link to <a href="complete_todo.html">mark them as complete</a>.</p>
+<p>Note that <code>proj_outline()</code> strips some test files from the outline, as example
+test files (like in usethis repo) don't help understand a project's outline.
+Use <code>dir_outline(recurse = TRUE)</code> to make sure these are included in your outline.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_package.html" class="external-link">path_package</a></span><span class="op">(</span><span class="st">"reuseme"</span>, <span class="st">"example-file"</span>, <span class="st">"outline-script.R"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span>  Example for `file_outline()` </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Load packages</span>
@@ -220,7 +210,7 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` <span style="color: #00BB00;">TODO</span> improve this Viz!</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove todo items</span></span></span>
-<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span>, print_todo <span class="op">=</span> <span class="cn">FALSE</span>, alpha <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span><span class="va">file</span>, print_todo <span class="op">=</span> <span class="cn">FALSE</span>, alpha <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">`example-file/outline-script.R`</span>  Example for `file_outline()` </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` A great title</span>
@@ -228,7 +218,7 @@ For a better file parser, explore other options, like <a href="https://thinkr-op
 <span class="r-out co"><span class="r-pr">#&gt;</span> `i` Wrangle + visualize data</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># interact with data frame</span></span></span>
-<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span>path <span class="op">=</span> <span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span><span class="va">file</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 32</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   file     content outline_el title_el title_el_line  line has_title_el file_ext</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>

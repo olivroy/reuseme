@@ -218,7 +218,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    463ms    473ms      2.12    22.3MB     4.23</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    874ms    874ms      1.14    22.2MB     2.29</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -360,7 +360,7 @@ Example outline
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/outline.md`</span></span>
 <span><span class="co">#&gt; `i` file_outline() works</span></span>
-<span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
+<span><span class="co">#&gt; `i` alpha arguments works</span></span>
 <span><span class="co">#&gt; `i` file_outline() is a data frame</span></span>
 <span><span class="co">#&gt; `i` pattern works as expected</span></span>
 <span><span class="co">#&gt; `i` file_outline() detects correctly knitr notebooks</span></span>
@@ -421,7 +421,6 @@ Example outline
 <span><span class="co">#&gt; `i` No outline criteria are untested</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-outline.R`</span></span>
-<span><span class="co">#&gt; `i` alpha and work_only arguments work</span></span>
 <span><span class="co">#&gt; `i` file_outline() is a data frame</span></span>
 <span><span class="co">#&gt; `i` TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.</span></span>
 <span><span class="co">#&gt; `i` file_outline() with only title doesn't error</span></span>
@@ -461,7 +460,6 @@ Example outline
 <span><span class="co">#&gt; `i` TODO delete generated files</span></span>
 <span><span class="co">#&gt; `i` TODO [proj_file] to accesss data (return the path in this case?)</span></span>
 <span><span class="co">#&gt; `i` TODO [check_referenced_files] doesn't check for 'R/file.R'</span></span>
-<span><span class="co">#&gt; `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work</span></span>
 <span><span class="co">#&gt; `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.</span></span>
 <span><span class="co">#&gt; `i` TODO exclude _files from `proj_list()`</span></span>
 <span><span class="co">#&gt; `i` TODO rename_files should be less noisy about project name file</span></span>

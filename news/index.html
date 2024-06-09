@@ -46,6 +46,15 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="reuseme-development-version">reuseme (development version)<a class="anchor" aria-label="anchor" href="#reuseme-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-change-development-version">Breaking change<a class="anchor" aria-label="anchor" href="#breaking-change-development-version"></a></h3>
+<ul><li><p>To facilitate piping, <code>path</code> / <code>proj</code> is now the first argument of <code><a href="../reference/outline.html">proj_outline()</a></code>, <code><a href="../reference/outline.html">file_outline()</a></code>, and <code><a href="../reference/outline.html">dir_outline()</a></code>.</p></li>
+<li><p>If you previously relied on specifying pattern without naming it, you will have to get used to the opposite. Naming <code>pattern</code>, but not path.</p></li>
+<li><p>Removed <code>work_only</code> argument from <code><a href="../reference/outline.html">file_outline()</a></code>, use <code>pattern = "WORK"</code> to acheive the same result.</p></li>
+<li><p>In <code><a href="../reference/outline.html">proj_outline()</a></code>, <code>proj</code> has been renamed <code>path</code>, but still accepts a project name, that will passed on to <code><a href="../reference/proj_list.html">proj_list()</a></code></p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/outline.html">file_outline()</a></code> now recognize <code>describe()</code> test calls. (probably many false positive for now) (<a href="https://github.com/olivroy/reuseme/issues/31" class="external-link">#31</a>)</p></li>
 <li><p>Outline elements present more than four times in a file will not be printed as they are considered placeholders. (like generic test name)</p></li>
 <li><p><code><a href="../reference/outline.html">proj_outline()</a></code> now detects <a href="https://rmarkdown.rstudio.com/articles_report_from_r_script.html" class="external-link">knitr notebooks</a> that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (<a href="https://github.com/olivroy/reuseme/issues/30" class="external-link">#30</a>)</p></li>
@@ -58,6 +67,7 @@
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> detects better plot titles and section titles.</p></li>
 <li><p>Package versions in NEWS.md are now normalized to yield better results.</p></li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.2" id="reuseme-002">reuseme 0.0.2<a class="anchor" aria-label="anchor" href="#reuseme-002"></a></h2>
 <ul><li><p><code><a href="../reference/complete_todo.html">complete_todo()</a></code> no longer deletes the full line. It only deletes what it says it deletes (<a href="https://github.com/olivroy/reuseme/issues/27" class="external-link">#27</a>).</p></li>
