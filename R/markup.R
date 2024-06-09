@@ -71,8 +71,15 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
     if (is.null(pkg_path)) {
       return(NULL)
     }
+    basename_null <- function(x) {
+      if (is.null(x)) {
+        return(x)
+      }
+      basename(x)
+    }
+
     gh_url <- tryCatch(
-      usethis::browse_github(basename(pkg_path)),
+      usethis::browse_github(basename_null(pkg_path)),
       error = function(e) {
         # TODO possibly look into checking desc::desc_get("BugReports", "~/path/to/DESCRIPTION")
         # cli::cli_abort("didn't find a way to do what is required.", parent = e)
@@ -87,22 +94,29 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
   }
 
   if (!is.null(file)) {
-    pkg_path <- withCallingHandlers(
+    pkg_path <- tryCatch(
       rprojroot::find_package_root_file(path = file),
       error = function(e) {
         # cli::cli_inform("Could not detect path.")
         NULL
       }
     )
+    basename_null <- function(x) {
+      if (is.null(x)) {
+        return(NULL)
+      }
+      basename(x)
+    }
 
-    gh_url <- usethis::browse_github(basename(pkg_path))
+    gh_url <- usethis::browse_github(basename_null(pkg_path))
     org_repo_found <- sub(".+github.com/|.+gitlab.com/", "", gh_url)
   } else {
     org_repo_found <- NULL
   }
-  if (is.null(org_repo) && is.null(org_repo_found)) {
+  if (is.null(org_repo_found)) {
     cli::cli_abort("No way to discover URL.")
   }
+  org_repo_found
 }
 #' Create a cli href with a markdown link
 #'

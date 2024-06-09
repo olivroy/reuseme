@@ -94,12 +94,12 @@ file_outline <- function(path = active_rs_doc(),
   } else {
     is_active_doc <- FALSE
   }
-  if (length(path) == 0L) {
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
+  is_saved_doc <- !is.null(path)
+  if (length(path) == 0L && is_saved_doc) {
     cli::cli_abort("No path specified.")
   }
 
-  # active_rs_doc() returns `NULL` if the active document is unsaved.
-  is_saved_doc <- !is.null(path)
   if (is_saved_doc) {
     # little help temporarily
     if (any(stringr::str_detect(path, "~/rrr|~/Requests"))) {
@@ -179,7 +179,6 @@ file_outline <- function(path = active_rs_doc(),
   # Create hyperlink in console
   file_sections <- construct_outline_link(
     file_sections1,
-    is_saved_doc,
     is_active_doc = is_active_doc,
     dir_common,
     pattern
@@ -562,7 +561,8 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_common, pattern) {
+construct_outline_link <- function(.data, is_active_doc, dir_common, pattern) {
+  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
