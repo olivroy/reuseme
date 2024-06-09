@@ -8,28 +8,25 @@
 \title{Print interactive outline of file sections}
 \usage{
 file_outline(
-  pattern = NULL,
   path = active_rs_doc(),
-  work_only = TRUE,
+  pattern = NULL,
   alpha = FALSE,
-  dir_common = NULL,
   print_todo = TRUE,
-  recent_only = FALSE
+  recent_only = FALSE,
+  dir_common = NULL
 )
 
 proj_outline(
+  path = active_rs_proj(),
   pattern = NULL,
-  proj = proj_get2(),
-  work_only = TRUE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE
 )
 
 dir_outline(
-  pattern = NULL,
   path = ".",
-  work_only = TRUE,
+  pattern = NULL,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE,
@@ -37,25 +34,21 @@ dir_outline(
 )
 }
 \arguments{
+\item{path}{A character vector of file paths, a \link[=proj_list]{project}.
+Defaults to the \link[=active_rs_doc]{active file}, project or directory.}
+
 \item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
 The print method will show the document title for context. Previously \code{regex_outline}}
 
-\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
-Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
-
-\item{work_only}{If \code{TRUE}, (the default), will only show you work items
-first. Set to \code{FALSE} if you want to see the full outline. \code{WORK} will
-combine with \code{pattern}}
-
 \item{alpha}{Whether to show in alphabetical order}
-
-\item{dir_common}{(Do not use it)}
 
 \item{print_todo}{Should include TODOs in the file outline? If \code{FALSE}, will
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
+
+\item{dir_common}{(Do not use it)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
 the directory}
@@ -89,9 +82,6 @@ Outline elements include
 \item URL and gh issue detection and link creation.
 }
 
-If \code{work_only} is set to \code{TRUE}, the function will only return outline of the \verb{# WORK} comment
-in \code{path}. \code{work_only = TRUE} will have an effect on \code{pattern}.
-
 By default
 \itemize{
 \item \code{file_outline()} prints the outline the \link[=active_rs_doc]{active document} if in RStudio
@@ -102,20 +92,27 @@ By default
 \details{
 \code{proj_outline()} and \code{dir_outline()} are wrapper of \code{file_outline()}.
 
-The parser is very opinioneted and is not very robust as it is based on regexps.
+In \code{proj_outline()}, \code{path} accepts project names, see \code{\link[=proj_list]{proj_list()}} for how to
+set up reuseme to regognize your projects' locations.
+
+The parser is very opinionated and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
 
 Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
+
+Note that \code{proj_outline()} strips some test files from the outline, as example
+test files (like in usethis repo) don't help understand a project's outline.
+Use \code{dir_outline(recurse = TRUE)} to make sure these are included in your outline.
 }
 \examples{
 file <- fs::path_package("reuseme", "example-file", "outline-script.R")
-file_outline(path = file)
+file_outline(file)
 
 # Remove todo items
-file_outline(path = file, print_todo = FALSE, alpha = TRUE)
+file_outline(file, print_todo = FALSE, alpha = TRUE)
 
 # interact with data frame
-file_outline(path = file) |> dplyr::as_tibble()
+file_outline(file) |> dplyr::as_tibble()
 
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # These all work on the active file / project or directory.

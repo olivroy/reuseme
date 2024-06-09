@@ -4,10 +4,10 @@
 \alias{proj_switch}
 \title{Opens a RStudio project in a new session}
 \usage{
-proj_switch(proj = NULL, new_session = TRUE)
+proj_switch(proj = NA, new_session = TRUE)
 }
 \arguments{
-\item{proj}{the name of a project located in the default locations or \code{NULL}}
+\item{proj}{the name of a project located in the default locations or \code{NA}}
 
 \item{new_session}{Should open in a new session?}
 }
