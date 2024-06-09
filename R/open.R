@@ -36,6 +36,10 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
   invisible(doc_id)
 }
 
+active_rs_proj <- function() {
+  NULL
+}
+
 #' @name open_rs_doc
 #' @export
 active_rs_doc <- function() {

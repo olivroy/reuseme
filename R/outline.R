@@ -27,7 +27,10 @@
 #' @details
 #' `proj_outline()` and `dir_outline()` are wrapper of `file_outline()`.
 #'
-#' The parser is very opinioneted and is not very robust as it is based on regexps.
+#' In `proj_outline()`, `path` accepts project names, see [proj_list()] for how to
+#' set up reuseme to regognize your projects' locations.
+#'
+#' The parser is very opinionated and is not very robust as it is based on regexps.
 #' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/) for Quarto,  `{roxygen2}`
 #'
 #' Will show TODO items and will offer a link to [mark them as
@@ -37,8 +40,8 @@
 #' test files (like in usethis repo) don't help understand a project's outline.
 #' Use `dir_outline(recurse = TRUE)` to make sure these are included in your outline.
 #'
-#' @param path,proj A character vector of file paths, a [project][proj_list()].
-#'   Defaults to active file, project or directory. `rstudioapi::documentPath()`
+#' @param path A character vector of file paths, a [project][proj_list()].
+#'   Defaults to the [active file][active_rs_doc()], project or directory.
 #' @param pattern A string or regex to search for in the outline. If
 #'   specified, will search only for elements matching this regular expression.
 #'   The print method will show the document title for context. Previously `regex_outline`
@@ -210,50 +213,31 @@ file_outline <- function(path = active_rs_doc(),
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(proj = proj_get2(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
-  is_active_proj <- identical(proj, proj_get2())
+proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
+  check_proj(path, allow_null = TRUE)
+  path_proj <- proj_list(path)
 
-  if (is_active_proj) {
-    return(dir_outline(
-      pattern = pattern,
-      dir_tree = dir_tree,
-      alpha = alpha,
-      recent_only = recent_only,
-      recurse = TRUE
-    ))
-  }
-
-  if (fs::dir_exists(proj)) {
-    if (!is_active_proj) {
-      cli::cli_warn("Use {.fn dir_outline} for that.")
-    }
-
-    proj_dir <- proj
-  } else { # when referring to a project by name.
-    proj_dir <- proj_list(proj)
-  }
-
-  if (!rlang::has_length(proj_dir, 1)) {
+  if (!rlang::has_length(path_proj, 1)) {
     cli::cli_abort("Cannot process more than one project/directory at once.")
   }
 
-  if (!fs::dir_exists(proj_dir)) {
-    cli::cli_abort("Internal errors due to path processing. Maybe use fs's path processing ")
+  if (!fs::dir_exists(path_proj)) {
+    cli::cli_abort("Internal errors due to path processing. Maybe use fs's path processing problem.")
   }
 
-  if (!is_proj(proj_dir)) {
+  if (!is_proj(path_proj)) {
     cli::cli_abort("Not in a project. Use {.fn reuseme::dir_outline} instead.")
   }
 
-  is_active_proj <- identical(fs::path(proj_dir), proj_get2())
-  if (!is_active_proj) {
+  if (!is.null(path)) {
+    proj <- basename(path)
     # Add an outline that enables switching projects if searching outside
     cli::cli_h1(paste0("{.run [", proj, "](reuseme::proj_switch('", proj, "'))}"))
   }
 
   dir_outline(
+    path = path_proj,
     pattern = pattern,
-    path = proj_dir,
     dir_tree = dir_tree,
     alpha = alpha,
     recurse = TRUE
@@ -271,11 +255,6 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
     type = "file",
     glob = file_exts_regex,
     recurse = recurse
-  )
-  file_list_to_outline <- fs::path_filter(
-    file_list_to_outline,
-    regexp = "vignette-dump|renv/",
-    invert = TRUE
   )
 
   if (recurse && !identical(Sys.getenv("TESTTHAT"), "true")) {
@@ -311,6 +290,7 @@ exclude_example_files <- function(path) {
     "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
     "themes/hugo-theme-console/", # protect blogdown
     "vignettes/.+\\.R$", # generated files
+    "vignette-dump|renv/",
     "RcppExports.R",
     "pkgdown/assets",
     sep = "|"

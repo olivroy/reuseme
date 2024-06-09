@@ -17,7 +17,7 @@ file_outline(
 )
 
 proj_outline(
-  proj = proj_get2(),
+  path = active_rs_proj(),
   pattern = NULL,
   dir_tree = FALSE,
   alpha = FALSE,
@@ -34,8 +34,8 @@ dir_outline(
 )
 }
 \arguments{
-\item{path, proj}{A character vector of file paths, a \link[=proj_list]{project}.
-Defaults to active file, project or directory. \code{rstudioapi::documentPath()}}
+\item{path}{A character vector of file paths, a \link[=proj_list]{project}.
+Defaults to the \link[=active_rs_doc]{active file}, project or directory.}
 
 \item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
@@ -92,7 +92,10 @@ By default
 \details{
 \code{proj_outline()} and \code{dir_outline()} are wrapper of \code{file_outline()}.
 
-The parser is very opinioneted and is not very robust as it is based on regexps.
+In \code{proj_outline()}, \code{path} accepts project names, see \code{\link[=proj_list]{proj_list()}} for how to
+set up reuseme to regognize your projects' locations.
+
+The parser is very opinionated and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
 
 Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
