@@ -71,13 +71,6 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
     if (is.null(pkg_path)) {
       return(NULL)
     }
-    basename_null <- function(x) {
-      if (is.null(x)) {
-        return(x)
-      }
-      basename(x)
-    }
-
     gh_url <- tryCatch(
       usethis::browse_github(basename_null(pkg_path)),
       error = function(e) {
@@ -101,13 +94,6 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
         NULL
       }
     )
-    basename_null <- function(x) {
-      if (is.null(x)) {
-        return(NULL)
-      }
-      basename(x)
-    }
-
     gh_url <- usethis::browse_github(basename_null(pkg_path))
     org_repo_found <- sub(".+github.com/|.+gitlab.com/", "", gh_url)
   } else {
