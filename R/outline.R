@@ -185,7 +185,6 @@ file_outline <- function(path = active_rs_doc(),
   # Create hyperlink in console
   file_sections <- construct_outline_link(
     file_sections1,
-    is_active_doc = is_active_doc,
     dir_common
   )
 
@@ -566,8 +565,9 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_active_doc, dir_common) {
+construct_outline_link <- function(.data, dir_common) {
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
+  is_active_doc <- length(unique(.data$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
