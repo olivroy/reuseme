@@ -133,17 +133,12 @@ file_outline <- function(path = active_rs_doc(),
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  in_active_project <- suppressMessages(
-    tryCatch(
-      identical(suppressWarnings(proj_get2()), dir_common),
-      error = function(e) FALSE
-    )
-  )
   # After this point we have validated that paths exist.
 
   file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
+  # Also scrub duplicated items, as they are likely to be uninteresting.
   file_sections0 <- keep_outline_element(file_sections00)
 
   if (!is.null(pattern)) {
@@ -175,10 +170,6 @@ file_outline <- function(path = active_rs_doc(),
   # File outline ===================
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
   file_sections1 <- display_outline_element(file_sections0, dir_common)
-
-  if (anyDuplicated(file_sections1$outline_el) > 0L) {
-    file_sections1 <- scrub_duplicate_outline(file_sections1)
-  }
 
   if (is.null(pattern)) {
     #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
@@ -458,6 +449,51 @@ keep_outline_element <- function(.data) {
   )
   dat$simplify_news <- NULL
   dat
+
+  # Remove duplicate outline elements
+  if (anyDuplicated(dat$content) > 0L) {
+    dat <- scrub_duplicate_outline(dat)
+  }
+  dat
+}
+# Remove duplicated entries from outline
+# for example, snapshots will have priority and will not return both the snapshot and the original test
+scrub_duplicate_outline <- function(x) {
+  x$order <- seq_len(nrow(x))
+  # outline = NA (title)
+  #
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "content")
+  if (FALSE) {
+    # TODO Improve performance with vctrs tidyverse/dplyr#6806
+    mtcars$vs
+    count <- vctrs::vec_count(mtcars$vs)
+    res <- vctrs::vec_match(mtcars$vs, count$key)
+    res[0]
+
+    count$count
+
+    factor(res, labels = c(count$key))
+    match
+  }
+  x <- dplyr::mutate(
+    x,
+    # higher is better
+    points = 1L + !is_test_name + is_section_title
+  )
+
+  x <- dplyr::slice_max(
+    x,
+    n = 1L,
+    order_by = .data$points,
+    with_ties = TRUE,
+    by = "content"
+  )
+  # use the previous order
+  x <- dplyr::arrange(x, .data$order)
+  x$points <- NULL
+  x$order <- NULL
+  x$n_dup <- NULL
+  x
 }
 
 #
@@ -682,47 +718,6 @@ construct_outline_link <- function(.data, dir_common) {
 trim_outline <- function(x, width) {
   # problematic in case_when
   cli::ansi_strtrim(x, width = width)
-}
-# Remove duplicated entries from outline
-# for example, snapshots will have priority and will not return both the snapshot and the original test
-scrub_duplicate_outline <- function(x) {
-  x$order <- seq_len(nrow(x))
-  # outline = NA (title)
-  x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
-  #
-  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "outline_el_count")
-  if (FALSE) {
-    # TODO Improve performance with vctrs tidyverse/dplyr#6806
-    mtcars$vs
-    count <- vctrs::vec_count(mtcars$vs)
-    res <- vctrs::vec_match(mtcars$vs, count$key)
-    res[0]
-
-    count$count
-
-    factor(res, labels = c(count$key))
-    match
-  }
-  x <- dplyr::mutate(
-    x,
-    # higher is better
-    points = 1L + !is_test_name + is_section_title
-  )
-
-  x <- dplyr::slice_max(
-    x,
-    n = 1L,
-    order_by = .data$points,
-    with_ties = TRUE,
-    by = "outline_el_count"
-  )
-  # use the previous order
-  x <- dplyr::arrange(x, .data$order)
-  x$points <- NULL
-  x$order <- NULL
-  x$n_dup <- NULL
-  x$outline_el_count <- NULL
-  x
 }
 
 arrange_outline <- function(x) {
