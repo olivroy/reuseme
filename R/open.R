@@ -193,7 +193,7 @@ active_rs_doc_delete <- function() {
         NA
       }
     )
-    if (!is.null(outline) && is.na(outline)) {
+    if (!is.null(outline) && !identical(outline, NA)) {
       will_delete <- append(will_delete, FALSE)
       reasons_not_deleting <- c(
         reasons_not_deleting, "couldn't explore the outline, worth taking a look."
