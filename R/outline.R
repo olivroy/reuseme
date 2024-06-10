@@ -156,9 +156,9 @@ file_outline <- function(path = active_rs_doc(),
   }
 
   if (nrow(file_sections0) == 0) {
-    if (is_active_doc && !identical(pattern, ".+")) {
+    if (is_active_doc && !is.null(pattern)) {
       msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.")
-    } else if (!identical(pattern, ".+")) {
+    } else if (!is.null(pattern)) {
       msg <- c(
         "{.code pattern = {.val {pattern}}} did not return any results looking in {length(path)} file{?s}.",
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
@@ -176,12 +176,17 @@ file_outline <- function(path = active_rs_doc(),
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
   file_sections1 <- display_outline_element(file_sections0, dir_common)
 
+  if (is.null(pattern)) {
+    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+  } else {
+    file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
+  }
+
   # Create hyperlink in console
   file_sections <- construct_outline_link(
     file_sections1,
     is_active_doc = is_active_doc,
-    dir_common,
-    pattern
+    dir_common
   )
 
   if (alpha) {
@@ -561,7 +566,7 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_active_doc, dir_common, pattern) {
+construct_outline_link <- function(.data, is_active_doc, dir_common) {
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
@@ -672,8 +677,7 @@ construct_outline_link <- function(.data, is_active_doc, dir_common, pattern) {
     before_and_after_empty = NULL,
     # may be useful for debugging
     has_inline_markup = NULL
-  ) |>
-    dplyr::filter(is.na(outline_el) | grepl(pattern %||% ".+", outline_el, ignore.case = TRUE))
+  )
 }
 
 trim_outline <- function(x, width) {
