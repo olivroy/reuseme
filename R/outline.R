@@ -2,7 +2,7 @@
 #' Print interactive outline of file sections
 #'
 #' @description
-#' THe outline functions return a data frame that contains details of file location.
+#' The outline functions return a data frame that contains details of file location.
 #'
 #' It also includes a print method that will provide a console output that will include [clickable hyperlinks](https://cli.r-lib.org/reference/links.html)
 #' in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
@@ -94,12 +94,12 @@ file_outline <- function(path = active_rs_doc(),
   } else {
     is_active_doc <- FALSE
   }
-  if (length(path) == 0L) {
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
+  is_saved_doc <- !is.null(path)
+  if (length(path) == 0L && is_saved_doc) {
     cli::cli_abort("No path specified.")
   }
 
-  # active_rs_doc() returns `NULL` if the active document is unsaved.
-  is_saved_doc <- !is.null(path)
   if (is_saved_doc) {
     # little help temporarily
     if (any(stringr::str_detect(path, "~/rrr|~/Requests"))) {
@@ -133,17 +133,12 @@ file_outline <- function(path = active_rs_doc(),
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  in_active_project <- suppressMessages(
-    tryCatch(
-      identical(suppressWarnings(proj_get2()), dir_common),
-      error = function(e) FALSE
-    )
-  )
   # After this point we have validated that paths exist.
 
   file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
 
   # filter for interesting items.
+  # Also scrub duplicated items, as they are likely to be uninteresting.
   file_sections0 <- keep_outline_element(file_sections00)
 
   if (!is.null(pattern)) {
@@ -156,9 +151,9 @@ file_outline <- function(path = active_rs_doc(),
   }
 
   if (nrow(file_sections0) == 0) {
-    if (is_active_doc && !identical(pattern, ".+")) {
+    if (is_active_doc && !is.null(pattern)) {
       msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.")
-    } else if (!identical(pattern, ".+")) {
+    } else if (!is.null(pattern)) {
       msg <- c(
         "{.code pattern = {.val {pattern}}} did not return any results looking in {length(path)} file{?s}.",
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
@@ -176,38 +171,36 @@ file_outline <- function(path = active_rs_doc(),
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
   file_sections1 <- display_outline_element(file_sections0, dir_common)
 
-  # Create hyperlink in console
-  file_sections <- construct_outline_link(
-    file_sections1,
-    is_saved_doc,
-    is_active_doc = is_active_doc,
-    dir_common,
-    pattern
-  )
+  if (is.null(pattern)) {
+    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+  } else {
+    file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
+  }
 
   if (alpha) {
     # remove inline markup first before sorting alphabetically
-    file_sections <- arrange_outline(file_sections)
+    file_sections1 <- arrange_outline(file_sections1)
   }
 
   # take most important first!
-  file_sections <-
-    dplyr::arrange(
-      file_sections,
-      grepl("README|NEWS|vignettes", file)
-    )
+  file_sections1 <- dplyr::arrange(
+    file_sections1,
+    grepl("README|NEWS|vignettes", file)
+  )
+  file_sections1 <- dplyr::relocate(
+    file_sections1,
+    "outline_el", "title_el", "title_el_line",
+    .after = "content"
+  )
+  # Create hyperlink in console
+  file_sections <- construct_outline_link(
+    file_sections1,
+    dir_common
+  )
+
   file_sections$recent_only <- recent_only
 
-  if (anyDuplicated(file_sections$outline_el) > 0L) {
-    file_sections <- scrub_duplicate_outline(file_sections)
-  }
-  file_sections <- dplyr::relocate(
-    file_sections,
-    "outline_el", "title_el", "title_el_line",
-    .after = content
-  )
   class(file_sections) <- c("outline_report", class(file_sections))
-
   file_sections
 }
 #' @rdname outline
@@ -302,7 +295,6 @@ exclude_example_files <- function(path) {
   )
 }
 # Print method -------------------
-
 #' @export
 print.outline_report <- function(x, ...) {
   # https://github.com/r-lib/cli/issues/607
@@ -456,6 +448,51 @@ keep_outline_element <- function(.data) {
   )
   dat$simplify_news <- NULL
   dat
+
+  # Remove duplicate outline elements
+  if (anyDuplicated(dat$content) > 0L) {
+    dat <- scrub_duplicate_outline(dat)
+  }
+  dat
+}
+# Remove duplicated entries from outline
+# for example, snapshots will have priority and will not return both the snapshot and the original test
+scrub_duplicate_outline <- function(x) {
+  x$order <- seq_len(nrow(x))
+  # outline = NA (title)
+  #
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "content")
+  if (FALSE) {
+    # TODO Improve performance with vctrs tidyverse/dplyr#6806
+    mtcars$vs
+    count <- vctrs::vec_count(mtcars$vs)
+    res <- vctrs::vec_match(mtcars$vs, count$key)
+    res[0]
+
+    count$count
+
+    factor(res, labels = c(count$key))
+    match
+  }
+  x <- dplyr::mutate(
+    x,
+    # higher is better
+    points = 1L + !is_test_name + is_section_title
+  )
+
+  x <- dplyr::slice_max(
+    x,
+    n = 1L,
+    order_by = .data$points,
+    with_ties = TRUE,
+    by = "content"
+  )
+  # use the previous order
+  x <- dplyr::arrange(x, .data$order)
+  x$points <- NULL
+  x$order <- NULL
+  x$n_dup <- NULL
+  x
 }
 
 #
@@ -562,7 +599,9 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_common, pattern) {
+construct_outline_link <- function(.data, dir_common) {
+  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
+  is_active_doc <- length(unique(.data$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
@@ -672,54 +711,12 @@ construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_commo
     before_and_after_empty = NULL,
     # may be useful for debugging
     has_inline_markup = NULL
-  ) |>
-    dplyr::filter(is.na(outline_el) | grepl(pattern %||% ".+", outline_el, ignore.case = TRUE))
+  )
 }
 
 trim_outline <- function(x, width) {
   # problematic in case_when
   cli::ansi_strtrim(x, width = width)
-}
-# Remove duplicated entries from outline
-# for example, snapshots will have priority and will not return both the snapshot and the original test
-scrub_duplicate_outline <- function(x) {
-  x$order <- seq_len(nrow(x))
-  # outline = NA (title)
-  x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
-  #
-  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "outline_el_count")
-  if (FALSE) {
-    # TODO Improve performance with vctrs tidyverse/dplyr#6806
-    mtcars$vs
-    count <- vctrs::vec_count(mtcars$vs)
-    res <- vctrs::vec_match(mtcars$vs, count$key)
-    res[0]
-
-    count$count
-
-    factor(res, labels = c(count$key))
-    match
-  }
-  x <- dplyr::mutate(
-    x,
-    # higher is better
-    points = 1L + !is_test_name + is_section_title
-  )
-
-  x <- dplyr::slice_max(
-    x,
-    n = 1L,
-    order_by = .data$points,
-    with_ties = TRUE,
-    by = "outline_el_count"
-  )
-  # use the previous order
-  x <- dplyr::arrange(x, .data$order)
-  x$points <- NULL
-  x$order <- NULL
-  x$n_dup <- NULL
-  x$outline_el_count <- NULL
-  x
 }
 
 arrange_outline <- function(x) {

@@ -9,3 +9,7 @@ test_that("Windows is recognized correctly.", {
 test_that("basename_remove_ext() works", {
   expect_equal(basename_remove_ext("data/xx.R"), "xx")
 })
+
+test_that("basename_null() works", {
+  expect_null(basename_null(NULL))
+})

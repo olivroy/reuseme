@@ -63,7 +63,7 @@ A \code{outline_report} object that contains the information. Inherits
 A symbol will show for recently modified files.
 }
 \description{
-THe outline functions return a data frame that contains details of file location.
+The outline functions return a data frame that contains details of file location.
 
 It also includes a print method that will provide a console output that will include \href{https://cli.r-lib.org/reference/links.html}{clickable hyperlinks}
 in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
