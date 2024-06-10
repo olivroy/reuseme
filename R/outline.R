@@ -2,7 +2,7 @@
 #' Print interactive outline of file sections
 #'
 #' @description
-#' THe outline functions return a data frame that contains details of file location.
+#' The outline functions return a data frame that contains details of file location.
 #'
 #' It also includes a print method that will provide a console output that will include [clickable hyperlinks](https://cli.r-lib.org/reference/links.html)
 #' in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
@@ -295,7 +295,6 @@ exclude_example_files <- function(path) {
   )
 }
 # Print method -------------------
-
 #' @export
 print.outline_report <- function(x, ...) {
   # https://github.com/r-lib/cli/issues/607
