@@ -57,9 +57,10 @@ link_local_gh_issue <- function(x, repo_home) {
     x
   )
 }
-find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
+find_pkg_org_repo <- function(file = NULL) {
   rlang::local_interactive(FALSE)
   withr::local_options("usethis.quiet" = TRUE)
+  dir_common <- get_dir_common_outline(file)
   if (!is.null(dir_common)) {
     pkg_path <- tryCatch(
       rprojroot::find_package_root_file(path = dir_common),

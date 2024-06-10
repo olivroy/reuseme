@@ -112,9 +112,6 @@ file_outline <- function(path = active_rs_doc(),
       fs::path_real(path = path) # verify if the files exist
     }
 
-    # if (rstudioapi::rstudio)
-    dir_common <- get_dir_common_outline(NULL, path)
-
     path <- stringr::str_sort(path)
     file_content <- rlang::set_names(path)
     # Not warn
@@ -167,7 +164,7 @@ file_outline <- function(path = active_rs_doc(),
   }
   # File outline ===================
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
-  file_sections1 <- display_outline_element(file_sections0, dir_common)
+  file_sections1 <- display_outline_element(file_sections0)
 
   if (is.null(pattern)) {
     #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
@@ -496,9 +493,9 @@ scrub_duplicate_outline <- function(x) {
 # Includes removing headings comments
 # Remove title =
 # Removing quotes, etc.
-display_outline_element <- function(.data, dir_common) {
+display_outline_element <- function(.data) {
   x <- .data
-  org_repo <- find_pkg_org_repo(dir_common, unique(x$file))
+  org_repo <- find_pkg_org_repo(unique(x$file))
   if (!is.null(org_repo)) {
     x$outline_el <- link_local_gh_issue(x$content, org_repo)
   } else {
@@ -597,7 +594,7 @@ define_important_element <- function(.data) {
 }
 
 construct_outline_link <- function(.data) {
-  dir_common <- get_dir_common_outline(NULL, path = unique(.data$file))
+  dir_common <- get_dir_common_outline(path = .data$file)
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   is_active_doc <- length(unique(.data$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
@@ -734,15 +731,9 @@ arrange_outline <- function(x) {
   x[ordered_rows, ]
 }
 
-get_dir_common_outline <- function(dir_common, path) {
-  if (!is.null(dir_common)) {
-    dir_common <- tryCatch(
-      fs::path_real(dir_common),
-      error = function(e) {
-        cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE, parent = e)
-      }
-    )
-  } else if (rlang::has_length(path, 1)) {
+get_dir_common_outline <- function(path) {
+  path <- unique(path)
+  if (rlang::has_length(path, 1)) {
     # If a single path
     root_path <- tryCatch(
       rprojroot::find_root_file(
