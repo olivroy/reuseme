@@ -13,6 +13,8 @@
 * In `proj_outline()`, `proj` has been renamed `path`, but still accepts a project name,
 that will passed on to `proj_list()`
 
+* Removed `dir_common` from `file_outline()` (#35)
+
 ## Fixes
 
 * `file_outline()` now recognize `describe()` test calls. 
