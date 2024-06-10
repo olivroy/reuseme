@@ -176,41 +176,40 @@ file_outline <- function(path = active_rs_doc(),
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
   file_sections1 <- display_outline_element(file_sections0, dir_common)
 
+  if (anyDuplicated(file_sections1$outline_el) > 0L) {
+    file_sections1 <- scrub_duplicate_outline(file_sections1)
+  }
+
   if (is.null(pattern)) {
     #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
   } else {
     file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
   }
 
+  if (alpha) {
+    # remove inline markup first before sorting alphabetically
+    file_sections1 <- arrange_outline(file_sections1)
+  }
+
+  # take most important first!
+  file_sections1 <- dplyr::arrange(
+    file_sections1,
+    grepl("README|NEWS|vignettes", file)
+  )
+  file_sections1 <- dplyr::relocate(
+    file_sections1,
+    "outline_el", "title_el", "title_el_line",
+    .after = "content"
+  )
   # Create hyperlink in console
   file_sections <- construct_outline_link(
     file_sections1,
     dir_common
   )
 
-  if (alpha) {
-    # remove inline markup first before sorting alphabetically
-    file_sections <- arrange_outline(file_sections)
-  }
-
-  # take most important first!
-  file_sections <-
-    dplyr::arrange(
-      file_sections,
-      grepl("README|NEWS|vignettes", file)
-    )
   file_sections$recent_only <- recent_only
 
-  if (anyDuplicated(file_sections$outline_el) > 0L) {
-    file_sections <- scrub_duplicate_outline(file_sections)
-  }
-  file_sections <- dplyr::relocate(
-    file_sections,
-    "outline_el", "title_el", "title_el_line",
-    .after = content
-  )
   class(file_sections) <- c("outline_report", class(file_sections))
-
   file_sections
 }
 #' @rdname outline
