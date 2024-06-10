@@ -12,8 +12,7 @@ file_outline(
   pattern = NULL,
   alpha = FALSE,
   print_todo = TRUE,
-  recent_only = FALSE,
-  dir_common = NULL
+  recent_only = FALSE
 )
 
 proj_outline(
@@ -47,8 +46,6 @@ The print method will show the document title for context. Previously \code{rege
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
-
-\item{dir_common}{(Do not use it)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
 the directory}

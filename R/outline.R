@@ -51,7 +51,6 @@
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in
 #'   the directory
 #' @param recent_only Show outline for recent files
-#' @param dir_common (Do not use it)
 #' @inheritParams fs::dir_ls
 #' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
@@ -84,8 +83,7 @@ file_outline <- function(path = active_rs_doc(),
                          pattern = NULL,
                          alpha = FALSE,
                          print_todo = TRUE,
-                         recent_only = FALSE,
-                         dir_common = NULL) {
+                         recent_only = FALSE) {
   # To contribute to this function, take a look at .github/CONTRIBUTING
   check_string(pattern, allow_null = TRUE)
 
@@ -115,7 +113,7 @@ file_outline <- function(path = active_rs_doc(),
     }
 
     # if (rstudioapi::rstudio)
-    dir_common <- get_dir_common_outline(dir_common, path)
+    dir_common <- get_dir_common_outline(NULL, path)
 
     path <- stringr::str_sort(path)
     file_content <- rlang::set_names(path)
@@ -194,8 +192,7 @@ file_outline <- function(path = active_rs_doc(),
   )
   # Create hyperlink in console
   file_sections <- construct_outline_link(
-    file_sections1,
-    dir_common
+    file_sections1
   )
 
   file_sections$recent_only <- recent_only
@@ -239,7 +236,7 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FAL
 #' @export
 dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
-  file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
+  file_exts <- c("R", "RProfile", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
 
   file_list_to_outline <- fs::dir_ls(
@@ -268,7 +265,7 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern, dir_common = dir, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern, alpha = alpha, recent_only = recent_only)
 }
 
 exclude_example_files <- function(path) {
@@ -599,7 +596,8 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, dir_common) {
+construct_outline_link <- function(.data) {
+  dir_common <- get_dir_common_outline(NULL, path = unique(.data$file))
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   is_active_doc <- length(unique(.data$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
