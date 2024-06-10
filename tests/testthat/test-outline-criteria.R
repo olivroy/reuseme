@@ -27,10 +27,6 @@ test_that("o_is_todo_fixme() works", {
   expect_false(o_is_todo_fixme("#' TODO, WORK, FIXME)", is_roxygen_comment = T))
 })
 
-test_that("o_is_work_item() works", {
-  expect_true(o_is_work_item("# WORK this needs to be done."))
-})
-
 test_that("o_is_test_name() works", {
   expect_true(o_is_test_name('test_that("Serious things are happening", {'))
   expect_true(o_is_test_name('describe("This is happening", {'))

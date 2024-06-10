@@ -4,6 +4,13 @@ is_windows <- function() {
   .Platform$OS.type == "windows"
 }
 
+basename_null <- function(x) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  basename(x)
+}
+
 basename_remove_ext <- function(x) {
   fs::path_ext_remove(basename(x))
 }

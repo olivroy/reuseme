@@ -2,12 +2,13 @@
 % Please edit documentation in R/proj-list.R
 \name{proj_list}
 \alias{proj_list}
-\title{Returns a named project list options}
+\title{Specify \code{proj} in functions}
 \usage{
-proj_list(proj = NULL, dirs = getOption("reuseme.reposdir"))
+proj_list(proj = NA, dirs = getOption("reuseme.reposdir"))
 }
 \arguments{
-\item{proj}{A project path or name to match}
+\item{proj}{A project path or name to match. If \code{NA}, returns all projects.
+If \code{NULL}, returns the active project.}
 
 \item{dirs}{The directories in which we want to list projects.}
 }
@@ -16,7 +17,12 @@ A named character vector with the project name as name, and path as value.
 If \code{proj} is supplied
 }
 \description{
-It peeks \code{options(reuseme.reposdir)} to find projects.
+Two main ways to specify proj:
+\itemize{
+\item Set \code{options(reuseme.reposdir)} in \code{.Rprofile} that contains a character
+vector of paths to your projects. (i.e. \verb{~/rrr} that contains all your projects)
+\item Specify the full path to \code{proj}. (like you would for usethis function)
+}
 }
 \seealso{
 Other project management helpers: 

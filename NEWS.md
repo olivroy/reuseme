@@ -1,5 +1,20 @@
 # reuseme (development version)
 
+## Breaking change
+
+* To facilitate piping, `path` / `proj` is now the first argument of `proj_outline()`, `file_outline()`, and `dir_outline()`.
+
+* If you previously relied on specifying pattern without naming it, you will have 
+ to get used to the opposite. Naming `pattern`, but not path.
+
+* Removed `work_only` argument from `file_outline()`, use `pattern = "WORK"` to 
+  acheive the same result.
+  
+* In `proj_outline()`, `proj` has been renamed `path`, but still accepts a project name,
+that will passed on to `proj_list()`
+
+## Fixes
+
 * `file_outline()` now recognize `describe()` test calls. 
   (probably many false positive for now) (#31)
   

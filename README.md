@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    463ms    473ms      2.12    22.3MB     4.23
+#> 1 outline <- proj_outline()    481ms    491ms      2.04    22.6MB     4.08
 ```
 
 <details>
@@ -313,7 +313,7 @@ outline
 #> 
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` file_outline() works
-#> `i` alpha and work_only arguments work
+#> `i` alpha arguments works
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
 #> `i` file_outline() detects correctly knitr notebooks
@@ -374,7 +374,6 @@ outline
 #> `i` No outline criteria are untested
 #> 
 #> ── `tests/testthat/test-outline.R`
-#> `i` alpha and work_only arguments work
 #> `i` file_outline() is a data frame
 #> `i` TODO change tests for data frame size when stable (efficiency). As still debugging, better to keep all snapshots.
 #> `i` file_outline() with only title doesn't error
@@ -414,7 +413,6 @@ outline
 #> `i` TODO delete generated files
 #> `i` TODO [proj_file] to accesss data (return the path in this case?)
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
-#> `i` TODO explain rationale behind `work_only`. Suggest to transform to TODO if this item is no longer critical. `work_only` goal is to show you exactly where you need to do work
 #> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 #> `i` TODO exclude _files from `proj_list()`
 #> `i` TODO rename_files should be less noisy about project name file
