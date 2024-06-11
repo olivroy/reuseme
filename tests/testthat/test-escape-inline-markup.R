@@ -49,3 +49,10 @@ test_that("is_markup_incorrect() works", {
   expect_true(is_markup_incorrect("{.file {gt}}"))
   expect_false(is_markup_incorrect("{.file x}"))
 })
+
+test_that("escape_markup() doesn't error for edge cases", {
+  # workaround for ,
+  expect_no_error(
+    escape_markup("{equal,identical}")
+  )
+})

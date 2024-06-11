@@ -181,7 +181,9 @@ common_regex <- function(which) {
     # usage of double negation will make it work
     md_url = "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\)(?![^\\s,\\:;\\.$\\)]))",
     # Prevent (, ), space and comma from being a gh org.
-    gh_issue = "([^\\(\\)\\s,#/\\*]+/[^#\\s\\(\\)]+)#(\\d+)"
+    gh_issue = "([^\\(\\)\\s,#/\\*]+/[^#\\s\\(\\)]+)#(\\d+)",
+    # trick it to think , is a valid variable as a workaroun
+    r_var = "\\.?[:alpha:][[:alpha:]\\_\\d,]+"
   )
   unname(x[which])
 }
