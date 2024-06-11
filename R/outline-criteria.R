@@ -86,7 +86,8 @@ o_is_test_name <- function(x) {
 
 o_is_generic_test <- function(x) {
   # remove " detection to avoid discovering snapshot files.
-  stringr::str_detect(x, "works|correctly|properly|expected")
+  # Workaround to bad cli parsing remove '}' from tests
+  stringr::str_detect(x, "works|correctly|properly|expected|'\\{'|'\\}'")
 }
 
 # Returns table or plot titles.
