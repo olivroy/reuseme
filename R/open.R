@@ -252,7 +252,7 @@ active_rs_doc_delete <- function() {
   file_info <- dplyr::select(file_info, !dplyr::where(\(x) all(is.na(x))))
   file_info <- dplyr::select(file_info, !dplyr::any_of(rm_duplicate_columns(file_info)))
   if (!is.null(file_info$size) && all(file_info$size == 0)) {
-    will_delete <- append(will_delete, TRUE)
+    will_delete <- append(will_delete, c(TRUE, TRUE))
     reasons_deleting <- c(reasons_deleting, "file is empty")
     file_info$size <- NULL
   }
