@@ -170,12 +170,18 @@ active_rs_doc_delete <- function() {
   }
 
   if (!is.na(stat_files$modified)) {
-    will_delete <- append(will_delete, FALSE)
-    reasons_not_deleting <- c(reasons_not_deleting, "the file is tracked with git")
     print(stat_files)
     file_status <- gert::git_status(pathspec = elems$rel_path, repo = elems$project)
     if (nrow(file_status) > 0) {
       print(file_status)
+
+      if (all(file_status$status == "conflicted")) {
+        will_delete <- append(will_delete, TRUE)
+        reasons_deleting <- c(reasons_deleting, "the file is a renamed git conflict")
+      } else {
+        will_delete <- append(will_delete, FALSE)
+        reasons_not_deleting <- c(reasons_not_deleting, "the file is tracked with git")
+      }
     }
     file_info <- fs::file_info(elems$rel_path)
   } else {
