@@ -17,6 +17,8 @@ that will passed on to `proj_list()`
 
 ## Fixes
 
+* Improved regex in `link_gh_issue()`.
+
 * `file_outline()` now recognize `describe()` test calls. 
   (probably many false positive for now) (#31)
   
