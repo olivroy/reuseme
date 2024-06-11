@@ -257,13 +257,14 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
     regexp_exclude <- paste(
       "vignettes/test/", # test vignettes
       "LICENSE.md", # avoid indexing this.
-      "tests/(performance-monitor|gt-examples/|testthat/(scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
+      "tests/(performance-monitor|gt-examples/|testthat/(dummy_|exclusions-test/|scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
       "inst/((rmarkdown/)?templates/|example-file/|examples/rmd/|tutorials/)", # license templates in usethis
       "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
       "themes/hugo-theme-console/", # protect blogdown
       "vignettes/.+\\.R$", # generated files
       "vignette-dump|renv/",
       "RcppExports.R",
+      "malformed", # likely for tests
       "pkgdown/assets",
       sep = "|"
     )
@@ -284,13 +285,14 @@ exclude_example_files <- function(path) {
     "vignettes/test/", # test vignettes
     "LICENSE.md", # avoid indexing this.
     "cran-comments.md",
-    "tests/(performance-monitor|gt-examples/|testthat/(scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
+    "tests/(performance-monitor|gt-examples/|testthat/(dummy_|exclusions-test/|scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
     "inst/((rmarkdown/)?templates/|example-file/|examples/rmd/|tutorials/)", # license templates in usethis
     "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
     "themes/hugo-theme-console/", # protect blogdown
     "vignettes/.+\\.R$", # generated files
     "vignette-dump|renv/",
     "RcppExports.R",
+    "malformed", # likely for tests
     "pkgdown/assets",
     sep = "|"
   )
