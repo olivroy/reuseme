@@ -218,7 +218,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    717ms    717ms      1.40    22.3MB     4.19</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    504ms    504ms      1.98    21.7MB     5.95</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -274,6 +274,7 @@ Example outline
 <span><span class="co">#&gt; `i` `file_outline()`</span></span>
 <span><span class="co">#&gt; `i` File outline</span></span>
 <span><span class="co">#&gt; `i` Print method</span></span>
+<span><span class="co">#&gt; `i` TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812 (&lt;https://github.com/microsoft/vscode/issues/176812&gt;)</span></span>
 <span><span class="co">#&gt; `i` Step: tweak outline look as they show</span></span>
 <span><span class="co">#&gt; `i` TODO reanable cli info</span></span>
 <span><span class="co">#&gt; `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (&lt;https://github.com/tidyverse/dplyr/issues/6806&gt;)</span></span>
@@ -405,7 +406,8 @@ Example outline
 <span><span class="co">#&gt; `i` Side effects are what's intended in interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-escape-inline-markup.R`</span></span>
-<span><span class="co">#&gt; `i` TODO could probably be {. } works?</span></span>
+<span><span class="co">#&gt; `i` TODO could . stay as is?</span></span>
+<span><span class="co">#&gt; `i` escape_markup() doesn't error for edge cases</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/test-markup.R`</span></span>
 <span><span class="co">#&gt; `i` link_gh_issue() + markup_href() work</span></span>
