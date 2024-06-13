@@ -467,7 +467,6 @@ construct_outline_link <- function(.data) {
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   is_active_doc <- length(unique(.data$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
-  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
   .data <- define_important_element(.data)
 
   if (is.null(dir_common) || !nzchar(dir_common)) {
@@ -535,9 +534,9 @@ construct_outline_link <- function(.data) {
   .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
   .data$text_in_link <- sub("^/", "", .data$text_in_link)
   .data$style_fun <- dplyr::case_match(.data$importance,
-                                       "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
-                                       "important" ~ "cli::style_inverse('i')",
-                                       .default = NA_character_
+    "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+    "important" ~ "cli::style_inverse('i')",
+    .default = NA_character_
   )
 
   if (anyNA(.data$style_fun)) {
@@ -551,26 +550,26 @@ construct_outline_link <- function(.data) {
   )
   .data$leading_space <- purrr::map_chr(.data$n_leading_hash, \(x) paste(rep(" ", length.out = max(min(x - 1, 1), 0)), collapse = ""))
   dplyr::mutate(.data,
-                # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
-                link_rs_api = dplyr::case_when(
-                  is.na(outline_el2) ~ NA_character_,
-                  !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
-                  rs_avail_file_link ~ paste0(
-                    leading_space,
-                    "{cli::style_hyperlink(", style_fun, ', "',
-                    paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
-                  ),
-                  .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
-                ),
-                file_hl = dplyr::case_when(
-                  !is_saved_doc ~ file_path,
-                  rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
-                  .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
-                ),
-                rs_version = NULL,
-                outline_el2 = NULL,
-                condition_to_truncate = NULL,
-                condition_to_truncate2 = NULL
+    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
+    link_rs_api = dplyr::case_when(
+      is.na(outline_el2) ~ NA_character_,
+      !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
+      rs_avail_file_link ~ paste0(
+        leading_space,
+        "{cli::style_hyperlink(", style_fun, ', "',
+        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
+      ),
+      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
+    ),
+    file_hl = dplyr::case_when(
+      !is_saved_doc ~ file_path,
+      rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
+      .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
+    ),
+    rs_version = NULL,
+    outline_el2 = NULL,
+    condition_to_truncate = NULL,
+    condition_to_truncate2 = NULL
   )
 }
 # Step: tweak outline look as they show ---------
