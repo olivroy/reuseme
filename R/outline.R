@@ -188,7 +188,7 @@ file_outline <- function(path = active_rs_doc(),
     .after = "content"
   )
   # Create hyperlink in console
-  file_sections <- construct_outline_link(
+  file_sections <- remove_outline_columns(
     file_sections1
   )
 
@@ -320,7 +320,7 @@ print.outline_report <- function(x, ...) {
   # add links and truncate elements
   file_sections$outline_el[!is.na(file_sections$outline_el)] <-
     escape_markup(file_sections$outline_el[!is.na(file_sections$outline_el)])
-  file_sections <- create_outline_links_and_truncate_content(file_sections)
+  file_sections <- construct_outline_link(file_sections)
 
   custom_styling <- c(
     # 500 is the max path length.
@@ -432,6 +432,110 @@ print.outline_report <- function(x, ...) {
   }
 
   invisible(x)
+}
+
+construct_outline_link <- function(.data) {
+  dir_common <- get_dir_common_outline(path = .data$file)
+  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
+  is_active_doc <- length(unique(.data$file)) == 1L
+  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
+  .data <- define_important_element(.data)
+
+  if (is.null(dir_common) || !nzchar(dir_common)) {
+    dir_common <- "Don't remove anything if not null"
+  }
+  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
+  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
+  .data$is_saved_doc <- is_saved_doc
+  # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
+  # Using rlang::is_interactive to be able to test it if I ever feel the need.
+  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
+  .data <- dplyr::mutate(
+    .data,
+    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
+    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
+    # Truncate todo items, subtitles
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
+  )
+  # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
+  .data$outline_el2 <- NA_character_
+  width <- cli::console_width()
+
+  cn <- .data$condition_to_truncate
+  # Not showing up are the longer items.
+  # truncating to make sure the hyperlink shows up.
+  .data$outline_el2[cn] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
+    "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$line[cn], ", '", .data$file[cn], "', '",
+    # modify regex twice if needed (see below)
+    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+    .data$rs_version[cn]
+  )
+  # truncate other elements
+  cn2 <- .data$condition_to_truncate2
+  .data$outline_el2[cn2] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$rs_version[cn2]
+  )
+  .data <- dplyr::mutate(
+    .data,
+    outline_el2 = ifelse(
+      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
+      paste0(
+        outline_el,
+        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+        # Removed ending dot. (possibly will fail with older versions)
+
+        # modify regex twice if needed (see above)
+        line, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+        rs_version
+      ),
+      outline_el2
+    ),
+    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
+  )
+
+  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
+  # rstudioapi::documentOpen works in the visual mode!! but not fully.
+  .data$file_path <- .data$file
+  .data$is_saved_doc <- is_saved_doc
+  # May have caused CI failure
+  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
+  .data$text_in_link <- sub("^/", "", .data$text_in_link)
+  .data$style_fun <- dplyr::case_match(.data$importance,
+    "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+    "important" ~ "cli::style_inverse('i')",
+    .default = NA_character_
+  )
+
+  if (anyNA(.data$style_fun)) {
+    cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
+  }
+
+  dplyr::mutate(.data,
+    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
+    link_rs_api = dplyr::case_when(
+      is.na(outline_el2) ~ NA_character_,
+      !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
+      rs_avail_file_link ~ paste0(
+        "{cli::style_hyperlink(", style_fun, ', "',
+        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
+      ),
+      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
+    ),
+    file_hl = dplyr::case_when(
+      !is_saved_doc ~ file_path,
+      rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
+      .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
+    ),
+    rs_version = NULL,
+    outline_el2 = NULL,
+    condition_to_truncate = NULL,
+    condition_to_truncate2 = NULL
+  )
 }
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
@@ -615,107 +719,8 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data) {
-  dir_common <- get_dir_common_outline(path = .data$file)
-  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
-  is_active_doc <- length(unique(.data$file)) == 1L
-  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
-  .data <- define_important_element(.data)
-
-  if (is.null(dir_common) || !nzchar(dir_common)) {
-    dir_common <- "Don't remove anything if not null"
-  }
-  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
-  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
-  .data$is_saved_doc <- is_saved_doc
-  # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
-  # Using rlang::is_interactive to be able to test it if I ever feel the need.
-  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
-  .data <- dplyr::mutate(
-    .data,
-    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
-    # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
-  )
-  # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
-  .data$outline_el2 <- NA_character_
-  width <- cli::console_width()
-
-  cn <- .data$condition_to_truncate
-  # Not showing up are the longer items.
-  # truncating to make sure the hyperlink shows up.
-  .data$outline_el2[cn] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
-    "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
-    # Removed ending dot. (possibly will fail with older versions)
-    .data$line[cn], ", '", .data$file[cn], "', '",
-    # modify regex twice if needed (see below)
-    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
-    .data$rs_version[cn]
-  )
-  # truncate other elements
-  cn2 <- .data$condition_to_truncate2
-  .data$outline_el2[cn2] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
-    # Removed ending dot. (possibly will fail with older versions)
-    .data$rs_version[cn2]
-  )
-  .data <- dplyr::mutate(
-    .data,
-    outline_el2 = ifelse(
-      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
-      paste0(
-        outline_el,
-        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
-        # Removed ending dot. (possibly will fail with older versions)
-
-        # modify regex twice if needed (see above)
-        line, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
-        rs_version
-      ),
-      outline_el2
-    ),
-    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
-  )
-
-  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
-  # rstudioapi::documentOpen works in the visual mode!! but not fully.
-  .data$file_path <- .data$file
-  .data$is_saved_doc <- is_saved_doc
-  # May have caused CI failure
-  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
-  .data$text_in_link <- sub("^/", "", .data$text_in_link)
-  .data$style_fun <- dplyr::case_match(.data$importance,
-    "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
-    "important" ~ "cli::style_inverse('i')",
-    .default = NA_character_
-  )
-
-  if (anyNA(.data$style_fun)) {
-    cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
-  }
-
+remove_outline_columns <- function(.data) {
   dplyr::mutate(.data,
-    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
-    link_rs_api = dplyr::case_when(
-      is.na(outline_el2) ~ NA_character_,
-      !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
-      rs_avail_file_link ~ paste0(
-        "{cli::style_hyperlink(", style_fun, ', "',
-        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
-      ),
-      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
-    ),
-    file_hl = dplyr::case_when(
-      !is_saved_doc ~ file_path,
-      rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
-      .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
-    ),
-    rs_version = NULL,
-    outline_el2 = NULL,
-    condition_to_truncate = NULL,
-    condition_to_truncate2 = NULL,
     style_fun = NULL,
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
