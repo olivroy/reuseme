@@ -15,3 +15,14 @@ test_that("link_gh_issue() + markup_href() work", {
     cat(markup_href(lines_with_md_link), sep = "\n")
   })
 })
+
+test_that("link_gh_issue() works", {
+  expect_equal(
+    matches_regex("# TODO(r-lib/lintr#1580)", "gh_issue"),
+    "r-lib/lintr#1580"
+  )
+  expect_equal(
+    link_gh_issue("# TODO(r-lib/lintr#1580)"),
+    "# TODO([r-lib/lintr#1580](https://github.com/r-lib/lintr/issues/1580))"
+  )
+})

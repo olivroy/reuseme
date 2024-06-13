@@ -91,13 +91,14 @@ o_is_test_name <- function(x) {
 
 o_is_generic_test <- function(x) {
   # remove " detection to avoid discovering snapshot files.
-  stringr::str_detect(x, "works|correctly|properly|expected")
+  # Workaround to bad cli parsing remove '}' from tests
+  stringr::str_detect(x, "works|correctly|properly|expected|'\\{'|'\\}'")
 }
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
   generic_title_regex <- paste(
-    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
+    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|Header|hi there",
     "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
     sep = "|"
   )
@@ -163,7 +164,8 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
 # Add variable to outline data frame --------------------
 
-define_outline_criteria <- function(.data, exclude_todos, dir_common) {
+define_outline_criteria <- function(.data, exclude_todos) {
+  dir_common <- get_dir_common_outline(.data$file)
   x <- .data
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
@@ -262,7 +264,7 @@ define_outline_criteria <- function(.data, exclude_todos, dir_common) {
     is_object_title = FALSE,
     tag = NA_character_,
     topic = NA_character_,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_cross_ref = stringr::str_detect(content, "docs_links?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )

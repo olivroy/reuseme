@@ -57,9 +57,10 @@ link_local_gh_issue <- function(x, repo_home) {
     x
   )
 }
-find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
+find_pkg_org_repo <- function(file = NULL) {
   rlang::local_interactive(FALSE)
   withr::local_options("usethis.quiet" = TRUE)
+  dir_common <- get_dir_common_outline(file)
   if (!is.null(dir_common)) {
     pkg_path <- tryCatch(
       rprojroot::find_package_root_file(path = dir_common),
@@ -72,7 +73,10 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
       return(NULL)
     }
     gh_url <- tryCatch(
-      usethis::browse_github(basename(pkg_path)),
+      usethis::browse_github(basename_null(pkg_path)),
+      warning = function(e) {
+        NULL # if no gh url found
+      },
       error = function(e) {
         # TODO possibly look into checking desc::desc_get("BugReports", "~/path/to/DESCRIPTION")
         # cli::cli_abort("didn't find a way to do what is required.", parent = e)
@@ -87,22 +91,36 @@ find_pkg_org_repo <- function(dir_common = NULL, file = NULL) {
   }
 
   if (!is.null(file)) {
-    pkg_path <- withCallingHandlers(
+    pkg_path <- tryCatch(
       rprojroot::find_package_root_file(path = file),
       error = function(e) {
         # cli::cli_inform("Could not detect path.")
         NULL
       }
     )
-
-    gh_url <- usethis::browse_github(basename(pkg_path))
+    gh_url <- tryCatch(
+      usethis::browse_github(basename_null(pkg_path)),
+      warning = function(e) {
+        NULL # if no gh url found
+      },
+      error = function(e) {
+        # TODO possibly look into checking desc::desc_get("BugReports", "~/path/to/DESCRIPTION")
+        # cli::cli_abort("didn't find a way to do what is required.", parent = e)
+        NULL
+      }
+    )
     org_repo_found <- sub(".+github.com/|.+gitlab.com/", "", gh_url)
+    if (length(org_repo_found) == 0) {
+      # sub(NULL) -> character(0)
+      org_repo_found <- NULL
+    }
   } else {
     org_repo_found <- NULL
   }
-  if (is.null(org_repo) && is.null(org_repo_found)) {
+  if (is.null(org_repo_found)) {
     cli::cli_abort("No way to discover URL.")
   }
+  org_repo_found
 }
 #' Create a cli href with a markdown link
 #'
@@ -162,7 +180,10 @@ common_regex <- function(which) {
   x <- c(
     # usage of double negation will make it work
     md_url = "(?<!\\{\\.href\\s)(\\[[^\\[\\]]+\\])(\\(https[^,\\s]+\\)(?![^\\s,\\:;\\.$\\)]))",
-    gh_issue = "([[:alpha:]][[:graph:]]+/[^#\\s]+)#(\\d+)"
+    # Prevent (, ), space and comma from being a gh org.
+    gh_issue = "([^\\(\\)\\s,#/\\*]+/[^#\\s\\(\\)]+)#(\\d+)",
+    # trick it to think , is a valid variable as a workaroun
+    r_var = "\\.?[:alpha:][[:alpha:]\\_\\d,]+"
   )
   unname(x[which])
 }

@@ -25,7 +25,7 @@
 #' A project outline
 #'
 #' ```
-#' proj_outline(proj = "learning)
+#' proj_outline("learning)
 #' ```
 #'
 #' Add a TODO item to the `learning` project

@@ -167,7 +167,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()     5.1s     5.1s     0.196    90.3MB     1.18
+#> 1 outline <- proj_outline()    5.61s    5.61s     0.178    89.6MB     1.25
 ```
 
 <details>
@@ -255,10 +255,11 @@ outline
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` Print method
+#> `i` TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812 (<https://github.com/microsoft/vscode/issues/176812>)
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info
-#> `i` FIXME find a way to be as consistent as lightparser, but faster.
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)
+#> `i` FIXME find a way to be as consistent as lightparser, but faster.
 #> 
 #> ── `R/proj-list.R`  Opens a RStudio project in a new session [proj_switch()]
 #> `i` project management helpers
@@ -452,7 +453,7 @@ outline
 #> `i` Side effects are what's intended in interactive sessions
 #> 
 #> ── `tests/testthat/_snaps/escape-inline-markup.md`
-#> `i` escape_markup() works
+#> `i` escape_markup() works with {
 #> `i` replace_r_var() works
 #> 
 #> ── `tests/testthat/_snaps/markup.md`
@@ -512,7 +513,8 @@ outline
 #> `i` Side effects are what's intended in interactive sessions
 #> 
 #> ── `tests/testthat/test-escape-inline-markup.R`
-#> `i` TODO could probably be {. } works?
+#> `i` TODO could . stay as is?
+#> `i` escape_markup() doesn't error for edge cases
 #> 
 #> ── `tests/testthat/test-markup.R`
 #> `i` link_gh_issue() + markup_href() work

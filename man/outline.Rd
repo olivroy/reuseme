@@ -13,7 +13,6 @@ file_outline(
   alpha = FALSE,
   exclude_todos = FALSE,
   recent_only = FALSE,
-  dir_common = NULL,
   print_todo = deprecated()
 )
 
@@ -53,8 +52,6 @@ print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
 
-\item{dir_common}{(Do not use it)}
-
 \item{print_todo}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}. Use \code{exclude_todos} instead.}
 
 \item{exclude_tests}{Should tests be displayed? (Not sure if this argument will stay, Will have to think)}
@@ -72,7 +69,7 @@ A \code{outline_report} object that contains the information. Inherits
 A symbol will show for recently modified files.
 }
 \description{
-THe outline functions return a data frame that contains details of file location.
+The outline functions return a data frame that contains details of file location.
 
 It also includes a print method that will provide a console output that will include \href{https://cli.r-lib.org/reference/links.html}{clickable hyperlinks}
 in RStudio (or if your terminal supports it). It works with both (qR)md and R files.

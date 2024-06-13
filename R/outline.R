@@ -2,7 +2,7 @@
 #' Print interactive outline of file sections
 #'
 #' @description
-#' THe outline functions return a data frame that contains details of file location.
+#' The outline functions return a data frame that contains details of file location.
 #'
 #' It also includes a print method that will provide a console output that will include [clickable hyperlinks](https://cli.r-lib.org/reference/links.html)
 #' in RStudio (or if your terminal supports it). It works with both (qR)md and R files.
@@ -51,7 +51,6 @@
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in
 #'   the directory
 #' @param recent_only Show outline for recent files
-#' @param dir_common (Do not use it)
 #' @param print_todo `r lifecycle::badge("deprecated")`. Use `exclude_todos` instead.
 #' @inheritParams fs::dir_ls
 #' @returns A `outline_report` object that contains the information. Inherits
@@ -86,16 +85,18 @@ file_outline <- function(path = active_rs_doc(),
                          alpha = FALSE,
                          exclude_todos = FALSE,
                          recent_only = FALSE,
-                         dir_common = NULL,
                          print_todo = deprecated()) {
   # To contribute to this function, take a look at .github/CONTRIBUTING.md
+  check_string(pattern, allow_null = TRUE)
 
   if (length(path) == 1L && rlang::is_interactive() && is_rstudio()) {
     is_active_doc <- identical(path, active_rs_doc())
   } else {
     is_active_doc <- FALSE
   }
-  if (length(path) == 0L) {
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
+  is_saved_doc <- !is.null(path)
+  if (length(path) == 0L && is_saved_doc) {
     cli::cli_abort("No path specified.")
   }
 
@@ -124,9 +125,6 @@ file_outline <- function(path = active_rs_doc(),
       fs::path_real(path = path) # verify if the files exist
     }
 
-    # if (rstudioapi::rstudio)
-    dir_common <- get_dir_common_outline(dir_common, path)
-
     path <- stringr::str_sort(path)
     file_content <- rlang::set_names(path)
     # Not warn
@@ -143,22 +141,15 @@ file_outline <- function(path = active_rs_doc(),
     file_content <- dplyr::bind_rows(file_content, .id = "file")
   }
 
-  in_active_project <- suppressMessages(
-    tryCatch(
-      identical(suppressWarnings(proj_get2()), dir_common),
-      error = function(e) FALSE
-    )
-  )
   # After this point we have validated that paths exist.
-  pattern <- pattern %||% ".+"
-  check_string(pattern)
 
-  file_sections00 <- define_outline_criteria(file_content, exclude_todos = exclude_todos, dir_common)
+  file_sections00 <- define_outline_criteria(file_content, exclude_todos = exclude_todos)
 
   # filter for interesting items.
+  # Also scrub duplicated items, as they are likely to be uninteresting.
   file_sections0 <- keep_outline_element(file_sections00)
 
-  if (!grepl(".+", pattern, fixed = TRUE)) {
+  if (!is.null(pattern)) {
     # keep files where pattern was detected (not the generic .+)
     file_sections0 <- dplyr::filter(
       file_sections0,
@@ -168,9 +159,9 @@ file_outline <- function(path = active_rs_doc(),
   }
 
   if (nrow(file_sections0) == 0) {
-    if (is_active_doc && !identical(pattern, ".+")) {
+    if (is_active_doc && !is.null(pattern)) {
       msg <- c("{.code pattern = {.val {pattern}}} did not return any results looking in the active document.")
-    } else if (!identical(pattern, ".+")) {
+    } else if (!is.null(pattern)) {
       msg <- c(
         "{.code pattern = {.val {pattern}}} did not return any results looking in {length(path)} file{?s}.",
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
@@ -186,40 +177,37 @@ file_outline <- function(path = active_rs_doc(),
   }
   # File outline ===================
   # strip outline element .data$outline = `# Section 1` becomes `Section 1`
-  file_sections1 <- display_outline_element(file_sections0, dir_common)
+  file_sections1 <- display_outline_element(file_sections0)
 
-  # Create hyperlink in console
-  file_sections <- construct_outline_link(
-    file_sections1,
-    is_saved_doc,
-    is_active_doc = is_active_doc,
-    dir_common,
-    pattern
-  )
+  if (is.null(pattern)) {
+    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+  } else {
+    file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
+  }
 
   if (alpha) {
     # remove inline markup first before sorting alphabetically
-    file_sections <- arrange_outline(file_sections)
+    file_sections1 <- arrange_outline(file_sections1)
   }
 
   # take most important first!
-  file_sections <-
-    dplyr::arrange(
-      file_sections,
-      grepl("README|NEWS|vignettes", file)
-    )
+  file_sections1 <- dplyr::arrange(
+    file_sections1,
+    grepl("README|NEWS|vignettes", file)
+  )
+  file_sections1 <- dplyr::relocate(
+    file_sections1,
+    "outline_el", "title_el", "title_el_line",
+    .after = "content"
+  )
+  # Create hyperlink in console
+  file_sections <- remove_outline_columns(
+    file_sections1
+  )
+
   file_sections$recent_only <- recent_only
 
-  if (anyDuplicated(file_sections$outline_el) > 0L) {
-    file_sections <- scrub_duplicate_outline(file_sections)
-  }
-  file_sections <- dplyr::relocate(
-    file_sections,
-    "outline_el", "title_el", "title_el_line",
-    .after = content
-  )
   class(file_sections) <- c("outline_report", class(file_sections))
-
   file_sections
 }
 #' @rdname outline
@@ -258,7 +246,7 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, exclude_tests 
 #' @export
 dir_outline <- function(path = ".", pattern = NULL, exclude_tests = FALSE, exclude_todos = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
-  file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
+  file_exts <- c("R", "RProfile", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
 
   file_list_to_outline <- fs::dir_ls(
@@ -285,15 +273,29 @@ dir_outline <- function(path = ".", pattern = NULL, exclude_tests = FALSE, exclu
   }
   if (dir_tree) {
     cli::cli_h2("Here are the non-R files of {.file {path}}")
-
+    regexp_exclude <- paste(
+      "vignettes/test/", # test vignettes
+      "LICENSE.md", # avoid indexing this.
+      "cran-comments.md",
+      "tests/(performance-monitor|gt-examples/|testthat/(dummy_|exclusions-test/|scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|serialize_tests/|line_breaks_and_other/|indentation_multiple/|public-api/|rmd/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
+      "inst/((rmarkdown/)?templates/|example-file/|examples/rmd/|tutorials/)", # license templates in usethis
+      "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
+      "themes/hugo-theme-console/", # protect blogdown
+      "vignettes/.+\\.R$", # generated files
+      "vignette-dump|renv/",
+      "RcppExports.R",
+      "malformed", # likely for tests
+      "pkgdown/assets",
+      sep = "|"
+    )
     fs::dir_tree(
       path = dir,
-      regexp = "R/.+|qmd|Rmd|_files|~\\$|*.Rd|_snaps|tests/testthat.R|Rmarkdown|docs/",
+      regexp = paste0("R/.+|qmd|Rmd|_files|~\\$|*.Rd|_snaps|tests/testthat.R|Rmarkdown|docs/|", regexp_exclude),
       recurse = recurse,
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern, exclude_todos = exclude_todos, alpha = alpha, recent_only = recent_only, dir_common = dir)
+  file_outline(path = file_list_to_outline, pattern = pattern, exclude_todos = exclude_todos, alpha = alpha, recent_only = recent_only)
 }
 
 exclude_example_files <- function(path) {
@@ -302,13 +304,15 @@ exclude_example_files <- function(path) {
   regexp_exclude <- paste(
     "vignettes/test/", # test vignettes
     "LICENSE.md", # avoid indexing this.
-    "tests/(performance-monitor|gt-examples/|testthat/scope-|testthat/assets|testthat/_outline|testthat/testTestWithFailure|testthat/testTest/|testthat/test-parallel/|testthat/test-list-reporter/)", # example files in usethis, pkgdown, reuseme, devtools, etc.
+    "cran-comments.md",
+    "tests/(performance-monitor|gt-examples/|testthat/(dummy_|exclusions-test/|scope-|assets|_outline|testTestWithFailure|testTest/|test-parallel/|test-list-reporter/|serialize_tests/|line_breaks_and_other/|indentation_multiple/|public-api/|rmd/|examples/))", # example files in usethis, pkgdown, reuseme, devtools, etc.
     "inst/((rmarkdown/)?templates/|example-file/|examples/rmd/|tutorials/)", # license templates in usethis
     "revdep/", # likely don't need to outline revdep/, use dir_outline() to find something in revdep/
     "themes/hugo-theme-console/", # protect blogdown
     "vignettes/.+\\.R$", # generated files
     "vignette-dump|renv/",
     "RcppExports.R",
+    "malformed", # likely for tests
     "pkgdown/assets",
     sep = "|"
   )
@@ -320,7 +324,6 @@ exclude_example_files <- function(path) {
   )
 }
 # Print method -------------------
-
 #' @export
 print.outline_report <- function(x, ...) {
   # https://github.com/r-lib/cli/issues/607
@@ -331,6 +334,13 @@ print.outline_report <- function(x, ...) {
     cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
     return(invisible(x))
   }
+  file_sections <- dplyr::as_tibble(x)
+  recent_only <- x$recent_only[1]
+  # add links and truncate elements
+  file_sections$outline_el[!is.na(file_sections$outline_el)] <-
+    escape_markup(file_sections$outline_el[!is.na(file_sections$outline_el)])
+  file_sections <- construct_outline_link(file_sections)
+
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
@@ -339,8 +349,7 @@ print.outline_report <- function(x, ...) {
     # Workaround r-lib/cli#693
     "\\[([[:alpha:]\\s]+)\\]\\s" = "{cli::bg_white(cli::col_black('\\1'))} "
   )
-  file_sections <- dplyr::as_tibble(x)
-  recent_only <- x$recent_only[1]
+
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
   if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
@@ -371,6 +380,8 @@ print.outline_report <- function(x, ...) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
   }
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
+  # TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812
+  # doesn't work when paths are created with cli::style_hyperlink, but maybe could use a different condition to show them as is.
   in_vscode <- FALSE # to do create it. # Sys.getenv("TERM_PROGRAM") == "vscode" when in vscode!
   if (in_vscode) {
     which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
@@ -436,19 +447,131 @@ print.outline_report <- function(x, ...) {
     if (recent_only) {
       if (i %in% is_recently_modified) {
         purrr::walk(dat[[i]], \(y) {
-          y <- escape_markup(y[!is.na(y)])
+          y <- y[!is.na(y)]
           if (length(y)) cat(cli::format_inline(y), sep = "\n")
         })
       }
     } else {
       purrr::walk(dat[[i]], \(y) {
-        y <- escape_markup(y[!is.na(y)])
+        y <- y[!is.na(y)]
         if (length(y)) cat(cli::format_inline(y), sep = "\n")
       })
     }
   }
 
   invisible(x)
+}
+
+construct_outline_link <- function(.data) {
+  dir_common <- get_dir_common_outline(path = .data$file)
+  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
+  is_active_doc <- length(unique(.data$file)) == 1L
+  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
+  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
+  .data <- define_important_element(.data)
+
+  if (is.null(dir_common) || !nzchar(dir_common)) {
+    dir_common <- "Don't remove anything if not null"
+  }
+  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
+  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
+  .data$is_saved_doc <- is_saved_doc
+  # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
+  # Using rlang::is_interactive to be able to test it if I ever feel the need.
+  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
+  .data <- dplyr::mutate(
+    .data,
+    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
+    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
+    # Truncate todo items, subtitles
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
+  )
+  # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
+  .data$outline_el2 <- NA_character_
+  width <- cli::console_width()
+
+  cn <- .data$condition_to_truncate
+  # Not showing up are the longer items.
+  # truncating to make sure the hyperlink shows up.
+  .data$outline_el2[cn] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
+    "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$line[cn], ", '", .data$file[cn], "', '",
+    # modify regex twice if needed (see below)
+    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+    .data$rs_version[cn]
+  )
+  # truncate other elements
+  cn2 <- .data$condition_to_truncate2
+  .data$outline_el2[cn2] <- paste0(
+    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
+    # Removed ending dot. (possibly will fail with older versions)
+    .data$rs_version[cn2]
+  )
+  .data <- dplyr::mutate(
+    .data,
+    outline_el2 = ifelse(
+      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
+      paste0(
+        outline_el,
+        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
+        # Removed ending dot. (possibly will fail with older versions)
+
+        # modify regex twice if needed (see above)
+        line, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+        rs_version
+      ),
+      outline_el2
+    ),
+    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
+  )
+
+  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
+  # rstudioapi::documentOpen works in the visual mode!! but not fully.
+  .data$file_path <- .data$file
+  .data$is_saved_doc <- is_saved_doc
+  # May have caused CI failure
+  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
+  .data$text_in_link <- sub("^/", "", .data$text_in_link)
+  .data$style_fun <- dplyr::case_match(.data$importance,
+                                       "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
+                                       "important" ~ "cli::style_inverse('i')",
+                                       .default = NA_character_
+  )
+
+  if (anyNA(.data$style_fun)) {
+    cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
+  }
+
+  # Tweak n_leasing hash for todos or fixme..
+  .data$n_leading_hash <- dplyr::case_when(
+    .data$is_todo_fixme ~ dplyr::lead(.data$n_leading_hash, default = 0) + 1,
+    .default = .data$n_leading_hash
+  )
+  .data$leading_space <- purrr::map_chr(.data$n_leading_hash, \(x) paste(rep(" ", length.out = max(min(x - 1, 1), 0)), collapse = ""))
+  dplyr::mutate(.data,
+                # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
+                link_rs_api = dplyr::case_when(
+                  is.na(outline_el2) ~ NA_character_,
+                  !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
+                  rs_avail_file_link ~ paste0(
+                    leading_space,
+                    "{cli::style_hyperlink(", style_fun, ', "',
+                    paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
+                  ),
+                  .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
+                ),
+                file_hl = dplyr::case_when(
+                  !is_saved_doc ~ file_path,
+                  rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
+                  .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
+                ),
+                rs_version = NULL,
+                outline_el2 = NULL,
+                condition_to_truncate = NULL,
+                condition_to_truncate2 = NULL
+  )
 }
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
@@ -492,15 +615,60 @@ keep_outline_element <- function(.data) {
     )
   }
   dat
+
+  # Remove duplicate outline elements
+  if (anyDuplicated(dat$content) > 0L) {
+    dat <- scrub_duplicate_outline(dat)
+  }
+  dat
+}
+# Remove duplicated entries from outline
+# for example, snapshots will have priority and will not return both the snapshot and the original test
+scrub_duplicate_outline <- function(x) {
+  x$order <- seq_len(nrow(x))
+  # outline = NA (title)
+  #
+  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "content")
+  if (FALSE) {
+    # TODO Improve performance with vctrs tidyverse/dplyr#6806
+    mtcars$vs
+    count <- vctrs::vec_count(mtcars$vs)
+    res <- vctrs::vec_match(mtcars$vs, count$key)
+    res[0]
+
+    count$count
+
+    factor(res, labels = c(count$key))
+    match
+  }
+  x <- dplyr::mutate(
+    x,
+    # higher is better
+    points = 1L + !is_test_name + is_section_title
+  )
+
+  x <- dplyr::slice_max(
+    x,
+    n = 1L,
+    order_by = .data$points,
+    with_ties = TRUE,
+    by = "content"
+  )
+  # use the previous order
+  x <- dplyr::arrange(x, .data$order)
+  x$points <- NULL
+  x$order <- NULL
+  x$n_dup <- NULL
+  x
 }
 
 #
 # Includes removing headings comments
 # Remove title =
 # Removing quotes, etc.
-display_outline_element <- function(.data, dir_common) {
+display_outline_element <- function(.data) {
   x <- .data
-  org_repo <- find_pkg_org_repo(dir_common, unique(x$file))
+  org_repo <- find_pkg_org_repo(unique(x$file))
   if (!is.null(org_repo)) {
     x$outline_el <- link_local_gh_issue(x$content, org_repo)
   } else {
@@ -679,111 +847,8 @@ define_important_element <- function(.data) {
   )
 }
 
-construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_common, pattern) {
-  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
-  .data <- define_important_element(.data)
-
-  if (is.null(dir_common) || !nzchar(dir_common)) {
-    dir_common <- "Don't remove anything if not null"
-  }
-  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
-  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
-  .data$is_saved_doc <- is_saved_doc
-  # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
-  # Using rlang::is_interactive to be able to test it if I ever feel the need.
-  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
-  .data <- dplyr::mutate(
-    .data,
-    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
-    # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
-  )
-  # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
-  .data$outline_el2 <- NA_character_
-  width <- cli::console_width()
-
-  cn <- .data$condition_to_truncate
-  # Not showing up are the longer items.
-  # truncating to make sure the hyperlink shows up.
-  .data$outline_el2[cn] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
-    "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
-    # Removed ending dot. (possibly will fail with older versions)
-    .data$line[cn], ", '", .data$file[cn], "', '",
-    # modify regex twice if needed (see below)
-    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
-    .data$rs_version[cn]
-  )
-  # truncate other elements
-  cn2 <- .data$condition_to_truncate2
-  .data$outline_el2[cn2] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
-    # Removed ending dot. (possibly will fail with older versions)
-    .data$rs_version[cn2]
-  )
-  .data <- dplyr::mutate(
-    .data,
-    outline_el2 = ifelse(
-      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
-      paste0(
-        outline_el,
-        "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
-        # Removed ending dot. (possibly will fail with older versions)
-
-        # modify regex twice if needed (see above)
-        line, ", '", file, "', '", stringr::str_sub(stringr::str_replace_all(content, "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
-        rs_version
-      ),
-      outline_el2
-    ),
-    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
-  )
-
-  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
-  # rstudioapi::documentOpen works in the visual mode!! but not fully.
-  .data$file_path <- .data$file
-  .data$is_saved_doc <- is_saved_doc
-  # May have caused CI failure
-  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
-  .data$text_in_link <- sub("^/", "", .data$text_in_link)
-  .data$style_fun <- dplyr::case_match(.data$importance,
-    "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
-    "important" ~ "cli::style_inverse('i')",
-    .default = NA_character_
-  )
-
-  if (anyNA(.data$style_fun)) {
-    cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
-  }
-
-  # Tweak n_leasing hash for todos or fixme..
-  .data$n_leading_hash <- dplyr::case_when(
-    .data$is_todo_fixme ~ dplyr::lead(.data$n_leading_hash, default = 0) + 1,
-    .default = .data$n_leading_hash
-  )
-  .data$leading_space <- purrr::map_chr(.data$n_leading_hash, \(x) paste(rep(" ", length.out = max(min(x - 1, 1), 0)), collapse = ""))
+remove_outline_columns <- function(.data) {
   dplyr::mutate(.data,
-    # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
-    link_rs_api = dplyr::case_when(
-      is.na(outline_el2) ~ NA_character_,
-      !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
-      rs_avail_file_link ~ paste0(
-        leading_space,
-        "{cli::style_hyperlink(", style_fun, ', "',
-        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
-      ),
-      .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
-    ),
-    file_hl = dplyr::case_when(
-      !is_saved_doc ~ file_path,
-      rs_avail_file_link ~ paste0("{.href [", text_in_link, "](file://", file_path, ")}"),
-      .default = paste0("{.run [", text_in_link, "](reuseme::open_rs_doc('", file_path, "'))}")
-    ),
-    rs_version = NULL,
-    outline_el2 = NULL,
-    condition_to_truncate = NULL,
-    condition_to_truncate2 = NULL,
     style_fun = NULL,
     is_saved_doc = NULL,
     is_roxygen_comment = NULL,
@@ -796,54 +861,12 @@ construct_outline_link <- function(.data, is_saved_doc, is_active_doc, dir_commo
     before_and_after_empty = NULL,
     # may be useful for debugging
     has_inline_markup = NULL
-  ) |>
-    dplyr::filter(is.na(outline_el) | grepl(pattern, outline_el, ignore.case = TRUE))
+  )
 }
 
 trim_outline <- function(x, width) {
   # problematic in case_when
   cli::ansi_strtrim(x, width = width)
-}
-# Remove duplicated entries from outline
-# for example, snapshots will have priority and will not return both the snapshot and the original test
-scrub_duplicate_outline <- function(x) {
-  x$order <- seq_len(nrow(x))
-  # outline = NA (title)
-  x$outline_el_count <- dplyr::coalesce(x$outline_el, x$title_el)
-  #
-  x <- dplyr::mutate(x, n_dup = dplyr::n(), .by = "outline_el_count")
-  if (FALSE) {
-    # TODO Improve performance with vctrs tidyverse/dplyr#6806
-    mtcars$vs
-    count <- vctrs::vec_count(mtcars$vs)
-    res <- vctrs::vec_match(mtcars$vs, count$key)
-    res[0]
-
-    count$count
-
-    factor(res, labels = c(count$key))
-    match
-  }
-  x <- dplyr::mutate(
-    x,
-    # higher is better
-    points = 1L + !is_test_name + is_section_title
-  )
-
-  x <- dplyr::slice_max(
-    x,
-    n = 1L,
-    order_by = .data$points,
-    with_ties = TRUE,
-    by = "outline_el_count"
-  )
-  # use the previous order
-  x <- dplyr::arrange(x, .data$order)
-  x$points <- NULL
-  x$order <- NULL
-  x$n_dup <- NULL
-  x$outline_el_count <- NULL
-  x
 }
 
 arrange_outline <- function(x) {
@@ -863,15 +886,9 @@ arrange_outline <- function(x) {
   x[ordered_rows, ]
 }
 
-get_dir_common_outline <- function(dir_common, path) {
-  if (!is.null(dir_common)) {
-    dir_common <- tryCatch(
-      fs::path_real(dir_common),
-      error = function(e) {
-        cli::cli_abort("Don't specify `dir_common`, leave it as default", .internal = TRUE, parent = e)
-      }
-    )
-  } else if (rlang::has_length(path, 1)) {
+get_dir_common_outline <- function(path) {
+  path <- unique(path)
+  if (rlang::has_length(path, 1)) {
     # If a single path
     root_path <- tryCatch(
       rprojroot::find_root_file(
