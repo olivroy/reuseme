@@ -93,7 +93,7 @@ o_is_generic_test <- function(x) {
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
   generic_title_regex <- paste(
-    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
+    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|Header|hi there",
     "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
     sep = "|"
   )
