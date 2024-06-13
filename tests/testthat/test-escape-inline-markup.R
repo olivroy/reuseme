@@ -1,4 +1,4 @@
-test_that("escape_markup() works", {
+test_that("escape_markup() works with {", {
   expect_equal(escape_markup(c("gt", "y {")), c("gt", "y {{"))
   expect_equal(escape_markup(c("gt", "y {", "{gt}")), c("gt", "y {{", "{{gt}}"))
   expect_equal(escape_markup("{gt}"), "{{gt}}")
@@ -8,7 +8,7 @@ test_that("escape_markup() works", {
   expect_equal(escape_markup("This `}` and `{`"), "This `}}` and `{{`")
   expect_equal(escape_markup("This `{` and `}`"), "This `{{` and `}}`")
 
-  # TODO could probably be {{. }} works?
+  # TODO could {{. }} stay as is?
   expect_equal(escape_markup("{. } works"), ". works")
   input <- "multi problems {{gt}} to {gt} to {.file gt} to {.file {gt}}"
   exp_str <- "multi problems {{gt}} to {{gt}} to {.file gt} to {.file {.url gt}}"

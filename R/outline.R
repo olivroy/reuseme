@@ -361,6 +361,8 @@ print.outline_report <- function(x, ...) {
     cli::cli_abort(c("Expected each file to be listed once."), .internal = TRUE)
   }
   # At the moment, especially `active_rs_doc()`, we are relying on path inconsistencies by RStudio.
+  # TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812
+  # doesn't work when paths are created with cli::style_hyperlink, but maybe could use a different condition to show them as is.
   in_vscode <- FALSE # to do create it. # Sys.getenv("TERM_PROGRAM") == "vscode" when in vscode!
   if (in_vscode) {
     which_detect <- stringr::str_which(tolower(summary_links_files$file_hl), "file://\\~|file://c\\:", negate = TRUE)
