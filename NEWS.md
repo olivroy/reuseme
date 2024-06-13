@@ -15,6 +15,8 @@ that will passed on to `proj_list()`
 
 * Removed `dir_common` from `file_outline()` (#35)
 
+* `file_outline()` result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)
+
 ## Fixes
 
 * Improved regex in `link_gh_issue()`.
