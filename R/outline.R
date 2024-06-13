@@ -314,6 +314,13 @@ print.outline_report <- function(x, ...) {
     cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
     return(invisible(x))
   }
+  file_sections <- dplyr::as_tibble(x)
+  recent_only <- x$recent_only[1]
+  # add links and truncate elements
+  file_sections$outline_el[!is.na(file_sections$outline_el)] <-
+    escape_markup(file_sections$outline_el[!is.na(file_sections$outline_el)])
+  file_sections <- create_outline_links_and_truncate_content(file_sections)
+
   custom_styling <- c(
     # 500 is the max path length.
     # green todo
@@ -322,8 +329,7 @@ print.outline_report <- function(x, ...) {
     # Workaround r-lib/cli#693
     "\\[([[:alpha:]\\s]+)\\]\\s" = "{cli::bg_white(cli::col_black('\\1'))} "
   )
-  file_sections <- dplyr::as_tibble(x)
-  recent_only <- x$recent_only[1]
+
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
   if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
@@ -412,13 +418,13 @@ print.outline_report <- function(x, ...) {
     if (recent_only) {
       if (i %in% is_recently_modified) {
         purrr::walk(dat[[i]], \(y) {
-          y <- escape_markup(y[!is.na(y)])
+          y <- y[!is.na(y)]
           if (length(y)) cat(cli::format_inline(y), sep = "\n")
         })
       }
     } else {
       purrr::walk(dat[[i]], \(y) {
-        y <- escape_markup(y[!is.na(y)])
+        y <- y[!is.na(y)]
         if (length(y)) cat(cli::format_inline(y), sep = "\n")
       })
     }
