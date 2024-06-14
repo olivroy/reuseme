@@ -41,6 +41,7 @@ reference:
   - count_pct
   - case_if_any
   - filter_if_any
+  - filter_detect
   - extract_cell_value
   - slice_group_sample
   - na_if2
