@@ -254,6 +254,45 @@ filter_if_any <- function(.data, ..., .by = NULL, .keep_new_var = FALSE) {
     i = "See {.help dplyr::filter} for more information on how it works."
   ))
 }
+
+#' Filter rows by pattern
+#'
+#' Shortcut for [dplyr::filter()] and [stringr::str_detect()]
+#'
+#' @inheritParams dplyr::mutate
+#' @inheritParams dplyr::if_any
+#' @inheritParams base::grepl
+#'
+#' @return A data frame with relocated columns at first
+#' @export
+#'
+#' @examples
+#' # don't specify column
+#' dplyr::band_members |>
+#'   filter_detect("Beatles")
+#' # specify columns
+#' dplyr::band_members |>
+#'   filter_detect("Beatles", band)
+filter_detect <- function(.data, pattern, .cols = dplyr::everything(), ignore.case = TRUE) {
+  rlang::check_required(pattern)
+  res <- dplyr::filter(
+    .data,
+    dplyr::if_any(
+      .cols = {{ .cols }},
+      \(x) grepl(pattern, x, ignore.case = ignore.case)
+    )
+  )
+  n_matches <- purrr::map_int(res, \(x) sum(grepl(pattern, x, ignore.case = ignore.case)))
+  n_matches <- n_matches[n_matches > 0]
+
+  if (length(n_matches) > 0L) {
+    n_matches <- sort(n_matches)
+    res <- res |>
+      dplyr::relocate(dplyr::all_of(n_matches))
+  }
+  res
+}
+
 #' Elegant wrapper around filter and pull
 #'
 #' It can be very useful when trying to extract a value from somewhere, and you

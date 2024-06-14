@@ -28,7 +28,7 @@ test_that("slice_group_sample() works as expected", {
   )
 })
 
-test_that("`filter_if_any()` works as expected", {
+test_that("filter_if_any() works as expected", {
   expect_equal(
     dplyr::starwars |>
       dplyr::mutate(v1 = birth_year > 10, .by = gender) |>
@@ -42,6 +42,20 @@ test_that("`filter_if_any()` works as expected", {
   )
 })
 
+test_that("filter_detect() works as expected", {
+  expect_gt(
+    dplyr::band_members |>
+      filter_detect("Beatles") |>
+      nrow(),
+    0
+  )
+  expect_equal(
+    mtcars |>
+      filter_detect("Beatles") |>
+      nrow(),
+    0
+  )
+})
 
 test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {
   skip("Not ready")
