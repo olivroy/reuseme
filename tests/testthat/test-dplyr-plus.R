@@ -55,6 +55,12 @@ test_that("filter_detect() works as expected", {
       nrow(),
     0
   )
+  # Reorder based on number of matches.
+  expect_named(
+    mtcars |>
+      filter_detect("Beatles"),
+    c("band", "name")
+  )
 })
 
 test_that("filter_if_any() errors correctly when using `by` instead of `.by`", {

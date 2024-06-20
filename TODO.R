@@ -26,3 +26,4 @@
 # TODO exclude _files from `proj_list()`
 # TODO rename_files should be less noisy about project name file
 # TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+# TODO do the same as readme : don't show x.Rmd and x.md in outline (full path checking required)

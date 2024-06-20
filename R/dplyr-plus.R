@@ -286,7 +286,7 @@ filter_detect <- function(.data, pattern, .cols = dplyr::everything(), ignore.ca
   n_matches <- n_matches[n_matches > 0]
 
   if (length(n_matches) > 0L) {
-    n_matches <- sort(n_matches)
+    n_matches <- sort(names(n_matches))
     res <- res |>
       dplyr::relocate(dplyr::all_of(n_matches))
   }
