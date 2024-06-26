@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
-<ul><li><p>Improved regex in <code><a href="../reference/link_gh_issue.html">link_gh_issue()</a></code>.</p></li>
+<ul><li><p><code><a href="../reference/rename_files2.html">rename_files2()</a></code> now looks in <code>.Rbuildignore</code> to see if some files should be replaced.</p></li>
+<li><p>Improved regex in <code><a href="../reference/link_gh_issue.html">link_gh_issue()</a></code>.</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> now recognize <code>describe()</code> test calls. (probably many false positive for now) (<a href="https://github.com/olivroy/reuseme/issues/31" class="external-link">#31</a>)</p></li>
 <li><p>Outline elements present more than four times in a file will not be printed as they are considered placeholders. (like generic test name)</p></li>
 <li><p><code><a href="../reference/outline.html">proj_outline()</a></code> now detects <a href="https://rmarkdown.rstudio.com/articles_report_from_r_script.html" class="external-link">knitr notebooks</a> that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (<a href="https://github.com/olivroy/reuseme/issues/30" class="external-link">#30</a>)</p></li>
