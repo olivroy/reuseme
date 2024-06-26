@@ -1,4 +1,4 @@
-# escape_markup() works
+# escape_markup() works with {
 
     Code
       escape_markup("i{gt_var} in {{gt_var}} in gt_var in {.file {gt_var}}.")
