@@ -50,6 +50,11 @@ proj_switch <- function(proj = NA, new_session = TRUE) {
 proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
   rlang::check_required(file)
   check_proj(path, allow_null = TRUE)
+
+  # avoid indexing roxy comments.
+  withr::local_options(
+    "reuseme.roxy_parse" = FALSE
+  )
   # search will only be conducted with pattern
   if (is.null(pattern) && is.null(file)) {
     cli::cli_abort(

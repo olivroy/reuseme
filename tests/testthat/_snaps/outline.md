@@ -7,11 +7,12 @@
       -- `my-analysis.md`  My doc title 
     Output
       `i` A section
-      `i` A code section
       `i` A subsection
       `i` A section2
       `i` A long ggplot2 title
       `i` A code section
+      `i` A long ggplot2 title with more details2
+      `i` A long ggplot2 title with more details3.
       `i` Dashboard card
     Message
       
@@ -95,4 +96,19 @@
       -- `knitr-notebook.R`  Crop Analysis Q3 2013 
     Output
       `i` A great section
+
+# file_outline() works well with figure captions
+
+    Code
+      file_outline(path = test_path("_outline", "quarto-caps.md"))
+    Message
+      
+      -- `quarto-caps.md`  title 
+    Output
+      `i` A long ggplot2 title with more details
+      `i` Heading  <i class="cheatsheet-icon fa-solid fa-tags"></i>
+      `i` A long ggplot2 title with more details
+      `i` Heading2\_done
+      `i` Dashboard link
+      `i` Dashboard link
 

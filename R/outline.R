@@ -13,7 +13,7 @@
 #' * `TODO` items
 #' * Parse cli hyperlinks
 #' * Plot or table titles
-#' * FIgures caption in Quarto documents (limited support for multiline caption currently)
+#' * Figures caption in Quarto documents
 #' * test names
 #' * Indicator of recent modification
 #' * Colored output for
@@ -30,8 +30,7 @@
 #' In `proj_outline()`, `path` accepts project names, see [proj_list()] for how to
 #' set up reuseme to regognize your projects' locations.
 #'
-#' The parser is very opinionated and is not very robust as it is based on regexps.
-#' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/) for Quarto,  `{roxygen2}`
+#' The parser is opinionated and based on lightparser, roxygen2 and regexps.
 #'
 #' Will show TODO items and will offer a link to [mark them as
 #' complete][complete_todo()].
@@ -44,13 +43,15 @@
 #'   Defaults to the [active file][active_rs_doc()], project or directory.
 #' @param pattern A string or regex to search for in the outline. If
 #'   specified, will search only for elements matching this regular expression.
-#'   The print method will show the document title for context. Previously `regex_outline`
-#' @param print_todo Should include TODOs in the file outline? If `FALSE`, will
+#'   The print method will show the document title for context. Previously `regex_outline`.
+#' @param exclude_tests Should tests be displayed? (Not sure if this argument will stay, Will have to think)
+#' @param exclude_todos Should include TODOs in the file outline? If `FALSE`, will
 #'   print a less verbose output with sections.
 #' @param alpha Whether to show in alphabetical order
 #' @param dir_tree If `TRUE`, will print the [fs::dir_tree()] or non-R files in
 #'   the directory
 #' @param recent_only Show outline for recent files
+#' @param print_todo `r lifecycle::badge("deprecated")`. Use `exclude_todos` instead.
 #' @inheritParams fs::dir_ls
 #' @returns A `outline_report` object that contains the information. Inherits
 #' `tbl_df`.
@@ -62,7 +63,7 @@
 #' file_outline(file)
 #'
 #' # Remove todo items
-#' file_outline(file, print_todo = FALSE, alpha = TRUE)
+#' file_outline(file, exclude_todos = TRUE, alpha = TRUE)
 #'
 #' # interact with data frame
 #' file_outline(file) |> dplyr::as_tibble()
@@ -82,9 +83,10 @@ NULL
 file_outline <- function(path = active_rs_doc(),
                          pattern = NULL,
                          alpha = FALSE,
-                         print_todo = TRUE,
-                         recent_only = FALSE) {
-  # To contribute to this function, take a look at .github/CONTRIBUTING
+                         exclude_todos = FALSE,
+                         recent_only = FALSE,
+                         print_todo = deprecated()) {
+  # To contribute to this function, take a look at .github/CONTRIBUTING.md
   check_string(pattern, allow_null = TRUE)
 
   if (length(path) == 1L && rlang::is_interactive() && is_rstudio()) {
@@ -98,6 +100,17 @@ file_outline <- function(path = active_rs_doc(),
     cli::cli_abort("No path specified.")
   }
 
+  if (lifecycle::is_present(print_todo)) {
+    exclude_todos <- !print_todo
+    lifecycle::deprecate_warn(
+      when = "0.0.3",
+      what = "file_outline(print_todo)",
+      with = "file_outline(exclude_todos)"
+    )
+  }
+
+  # active_rs_doc() returns `NULL` if the active document is unsaved.
+  is_saved_doc <- !is.null(path)
   if (is_saved_doc) {
     # little help temporarily
     if (any(stringr::str_detect(path, "~/rrr|~/Requests"))) {
@@ -130,7 +143,7 @@ file_outline <- function(path = active_rs_doc(),
 
   # After this point we have validated that paths exist.
 
-  file_sections00 <- define_outline_criteria(file_content, print_todo = print_todo)
+  file_sections00 <- define_outline_criteria(file_content, exclude_todos = exclude_todos)
 
   # filter for interesting items.
   # Also scrub duplicated items, as they are likely to be uninteresting.
@@ -199,10 +212,8 @@ file_outline <- function(path = active_rs_doc(),
 }
 #' @rdname outline
 #' @export
-proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
-  check_proj(path, allow_null = TRUE)
+proj_outline <- function(path = active_rs_proj(), pattern = NULL, exclude_tests = FALSE, exclude_todos = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   path_proj <- proj_list(path)
-
   if (!rlang::has_length(path_proj, 1)) {
     cli::cli_abort("Cannot process more than one project/directory at once.")
   }
@@ -224,6 +235,8 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FAL
   dir_outline(
     path = path_proj,
     pattern = pattern,
+    exclude_tests = exclude_tests,
+    exclude_todos = exclude_todos,
     dir_tree = dir_tree,
     alpha = alpha,
     recurse = TRUE
@@ -231,7 +244,7 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FAL
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(path = ".", pattern = NULL, exclude_tests = FALSE, exclude_todos = FALSE, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "RProfile", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
@@ -247,6 +260,14 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
     # Remove examples from outline and test example files to avoid clutter
     # examples don't help understand a project.
     file_list_to_outline <- exclude_example_files(file_list_to_outline)
+  }
+
+  if (exclude_tests) {
+    file_list_to_outline <- fs::path_filter(
+      file_list_to_outline,
+      regexp = "tests/",
+      invert = TRUE
+    )
   }
 
   # TODO expand this to apply to most generated files
@@ -278,7 +299,7 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
       invert = TRUE
     )
   }
-  file_outline(path = file_list_to_outline, pattern = pattern, alpha = alpha, recent_only = recent_only)
+  file_outline(path = file_list_to_outline, pattern = pattern, exclude_todos = exclude_todos, alpha = alpha, recent_only = recent_only)
 }
 
 exclude_example_files <- function(path) {
@@ -405,10 +426,17 @@ print.outline_report <- function(x, ...) {
     # add first line to title and remove
     has_title <- !is.na(summary_links_files$first_line[[i]])
     if (has_title) {
-      title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
+      title_el <- withCallingHandlers(
+        cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]])),
+        error = function(e) {
+          thing <- summary_links_files$first_line_el[[i]]
+          print(thing)
+          print(escape_markup(thing))
+          cli::cli_abort("Failed to parse in first line of file {.file {summary_links_files$file[[i]]}}.", parent = e)
+        }
+      )
       base_name <- c(base_name, " ", title_el)
     }
-
     # TRICK need tryCatch when doing something, withCallingHandlers when only rethrowing?
     tryCatch(
       cli::cli_h3(base_name),
@@ -459,7 +487,7 @@ construct_outline_link <- function(.data) {
     # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
     condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
     # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle | is_obj_caption) & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
@@ -519,12 +547,19 @@ construct_outline_link <- function(.data) {
     cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
   }
 
+  # Tweak n_leasing hash for todos or fixme..
+  .data$n_leading_hash <- dplyr::case_when(
+    .data$is_todo_fixme ~ dplyr::lead(.data$n_leading_hash, default = 0) + 1,
+    .default = .data$n_leading_hash
+  )
+  .data$leading_space <- purrr::map_chr(.data$n_leading_hash, \(x) paste(rep(" ", length.out = max(min(x - 1, 1), 0)), collapse = ""))
   dplyr::mutate(.data,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
     link_rs_api = dplyr::case_when(
       is.na(outline_el2) ~ NA_character_,
       !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
       rs_avail_file_link ~ paste0(
+        leading_space,
         "{cli::style_hyperlink(", style_fun, ', "',
         paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
       ),
@@ -555,6 +590,10 @@ keep_outline_element <- function(.data) {
   } else {
     versions_to_drop <- character(0L)
   }
+  # browser()
+  # For debugging.
+  needed_elements <- which(grepl("REQUIRED ELEMENT", .data$content, fixed = TRUE) & !grepl("grep|keyword", .data$content, fixed = FALSE))
+
   dat <- dplyr::filter(
     .data,
     (is_news & (
@@ -564,13 +603,20 @@ keep_outline_element <- function(.data) {
       # still regular comments in .md files
       # what to keep in .md docs
 
-      (is_md & (is_chunk_cap | (is_section_title & before_and_after_empty))) |
+      (is_md & (is_obj_caption | (is_section_title & before_and_after_empty))) |
       # What to keep in .R files
       (!is_md & is_section_title_source) |
       # What to keep anywhere
-      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_doc_title # | is_cli_info # TODO reanable cli info
+      is_tab_or_plot_title | is_todo_fixme | is_test_name | is_cross_ref | is_function_def | is_object_title | is_doc_title # | is_cli_info # TODO reanable cli info
   )
+
   dat$simplify_news <- NULL
+  if (length(needed_elements) != length(grep("REQUIRED ELEMENT", dat$content, fixed = TRUE))) {
+    zz <<- dplyr::slice(.data, needed_elements)
+    cli::cli_abort(
+      "Debugging mode. An important element is absent from the outline. Review filters, regex detection etc."
+    )
+  }
   dat
 
   # Remove duplicate outline elements
@@ -633,15 +679,20 @@ display_outline_element <- function(.data) {
   }
   x$outline_el <- purrr::map_chr(x$outline_el, \(x) link_gh_issue(x, org_repo)) # to add link to GitHub.
   x$outline_el <- purrr::map_chr(x$outline_el, markup_href)
+  if (any(x$is_obj_caption)) {
+    x$outline_el[x$is_obj_caption] <- extract_object_captions(x$file[x$is_obj_caption])
+  }
   x <- dplyr::mutate(
     x,
     outline_el = dplyr::case_when(
       is_todo_fixme ~ stringr::str_extract(outline_el, "(TODO.+)|(FIXME.+)|(WORK.+)|(BOOK.+)"),
       is_test_name ~ stringr::str_extract(outline_el, "(test_that|describe)\\(['\"](.+)['\"],\\s?\\{", group = 2),
       is_cli_info ~ stringr::str_extract(outline_el, "[\"'](.{5,})[\"']") |> stringr::str_remove_all("\""),
+      # Add related topic if available
+      tag == "title" & !is.na(topic) ~ paste0(outline_el, " [", topic, "]"),
+      # family or concept!
+      is_tab_or_plot_title & !is.na(tag) ~ outline_el,
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1),
-      is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
-      is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
       is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
@@ -655,8 +706,40 @@ display_outline_element <- function(.data) {
       .default = outline_el
     ),
     outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
-    is_subtitle = (is_tab_or_plot_title | is_doc_title) & grepl("subt", content, fixed = TRUE),
+    is_subtitle = (is_tab_or_plot_title | is_doc_title) & (
+      grepl("subt", content, fixed = TRUE) |
+        tag %in% c("family", "concept"))
   )
+
+  if (anyNA(x$outline_el)) {
+    zz <<- x |> dplyr::filter(is.na(outline_el))
+    indices <- which(is.na(x$outline_el))
+    all_na <- x |>
+      dplyr::select(!dplyr::where(\(x) !is.logical(x) & all(is.na(x)))) |>
+      dplyr::slice(dplyr::all_of(indices)) |>
+      dplyr::select(dplyr::where(\(x) all(is.na(x)))) |>
+      names()
+    all_true_or_single_value <- x |>
+      dplyr::slice(dplyr::all_of(indices)) |>
+      dplyr::select(dplyr::where(\(x) dplyr::n_distinct(x) == 1)) |>
+      dplyr::select(!dplyr::where(\(x) all(is.na(x)))) |>
+      dplyr::select(!dplyr::where(\(x) is.logical(x) & !suppressWarnings(any(x, na.rm = FALSE)))) |>
+      names()
+    if (length(all_na) > 0) {
+      msg <- c("The following places have all NAs {.var {all_na}}")
+    } else {
+      msg <- NULL
+    }
+    if (length(all_true_or_single_value) > 0) {
+      msg <- c(msg, "Likely problems in creating or displaying {.var {all_true_or_single_value}}.")
+    }
+    cli::cli_abort(c(
+      "Internal error, outline elements can't be NA. Please review.", msg,
+      paste0("{.file ", zz$file, ":", zz$line, "}"),
+      "Criteria are created in {.fn define_outline_criteria} and {.fn define_outline_criteria_roxy}.
+                     `outline_el` is defined in {.fn display_outline_element}. Investigate `zz` for debugging."
+    ))
+  }
 
   y <- dplyr::mutate(
     x,
@@ -703,6 +786,7 @@ display_outline_element <- function(.data) {
     x
   }
   if (!all(is.na(y$title_el))) {
+    # browser()
     y <- dplyr::mutate(
       y,
       title_el = na_if0(title_el[!is.na(title_el)], "title"),
@@ -713,11 +797,54 @@ display_outline_element <- function(.data) {
   y
 }
 
+# With files with detected object captions, like fig.cap, title, tab.cap, tbl.cap.
+extract_object_captions <- function(file) {
+  rlang::check_installed("lightparser", "to parse qmd files add chunk caption to outline.")
+  # we want fig-cap, tbl-cap and title
+  caps <- NULL
+  unique_file <- unique(file)
+  # ThinkR-open/lightparser#8
+  for (i in seq_along(unique_file)) {
+    # FIXME find a way to be as consistent as lightparser, but faster.
+    dat <- tryCatch(
+      lightparser::split_to_tbl(unique_file[i]),
+      error = function(e) {
+        # workaround ThinkR-open/lightparser#11
+        tmp <- withr::local_tempfile(
+          lines = c(
+            "---",
+            "title: dummy",
+            "---",
+            readLines(unique_file[i], warn = FALSE)
+          )
+        )
+        lightparser::split_to_tbl(tmp)
+      }
+    )
+    dat <- dplyr::filter(dat, type == "block")$params
+    # Remove NA..
+    dat <- purrr::discard(dat,\(x) isTRUE(is.na(x)))
+    # tidyverse/purrr#1081
+    if (length(dat) > 0) {
+      # We use `format()` in case a variable is used to name the caption.
+      tryCatch(caps <- c(caps, dat |> purrr::map_chr(\(x) format(x[["fig-cap"]] %||% x[["tbl-cap"]] %||% x[["title"]] %||% x[["fig.cap"]] %||% x[["tbl.cap"]] %||% x[["tab.cap"]] %||% x[["cap"]] %||% "USELESS THING"))), error = function(e) {
+        cli::cli_abort("Error in {.file {unique_file[i]}}", parent = e)
+      })
+    }
+  }
+  # used as a default to make sure purrr doesn't complain
+  caps <- caps[caps != "USELESS THING"]
+  if (length(caps) != length(file)) {
+    cli::cli_abort("error! :(, caps = {length(caps)}, file = {length(file)} in file {.file {unique_file}}")
+  }
+  caps |> stringr::str_squish()
+}
+
 define_important_element <- function(.data) {
   dplyr::mutate(
     .data,
     importance = dplyr::case_when(
-      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
+      is_second_level_heading_or_more | is_obj_caption | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
       .default = "important"
     )
   )

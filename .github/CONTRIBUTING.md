@@ -47,7 +47,7 @@ See our guide on [how to create a great issue](https://code-review.tidyverse.org
 * `define_outline_criteria()` if an item shows as outline, but seems like a false positive, 
 
 
-* `keep_outline_element()`: if an element is **missing** from outline.
+* `keep_outline_element()`: if an element is **missing** from outline, you can add the keyword "REQUIRED ELEMENT" to get an object for debugging.
 
 * `define_important_element()` if an element is important [^1] 
 
