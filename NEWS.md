@@ -19,6 +19,7 @@ that will passed on to `proj_list()`
 
 ## Fixes
 
+* `rename_files2()` now looks in `.Rbuildignore` to see if some files should be replaced.
 * Improved regex in `link_gh_issue()`.
 
 * `file_outline()` now recognize `describe()` test calls. 
