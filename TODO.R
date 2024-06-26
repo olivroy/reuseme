@@ -20,10 +20,8 @@
 # TODO [outline] todos in qmd file inside html comment
 # TODO reframe more than one issue. nw drive
 # TODO [delete] generated files
-# TODO [proj_file] to accesss data (return the path in this case?)
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 # TODO exclude _files from `proj_list()`
 # TODO rename_files should be less noisy about project name file
 # TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
-# TODO do the same as readme : don't show x.Rmd and x.md in outline (full path checking required)

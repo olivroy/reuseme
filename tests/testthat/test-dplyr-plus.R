@@ -49,17 +49,18 @@ test_that("filter_detect() works as expected", {
       nrow(),
     0
   )
+  # Reorder based on number of matches.
+  expect_named(
+    dplyr::band_members |>
+      filter_detect("Beatles"),
+    c("band", "name")
+  )
+  # no match
   expect_equal(
     mtcars |>
       filter_detect("Beatles") |>
       nrow(),
     0
-  )
-  # Reorder based on number of matches.
-  expect_named(
-    mtcars |>
-      filter_detect("Beatles"),
-    c("band", "name")
   )
 })
 

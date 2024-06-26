@@ -154,7 +154,7 @@ file_outline <- function(path = active_rs_doc(),
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
       )
     } else {
-      msg <- "Empty outline."
+      msg <- c("{.path {path}}","Empty outline.")
     }
     cli::cli_inform(msg)
     return(invisible())
@@ -249,9 +249,11 @@ dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FA
     file_list_to_outline <- exclude_example_files(file_list_to_outline)
   }
 
+  # TODO expand this to apply to most generated files
   if (any(grepl("README.Rmd", file_list_to_outline))) {
     file_list_to_outline <- stringr::str_subset(file_list_to_outline, "README.md", negate = TRUE)
   }
+
   if (dir_tree) {
     cli::cli_h2("Here are the non-R files of {.file {path}}")
     regexp_exclude <- paste(

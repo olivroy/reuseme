@@ -71,7 +71,7 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
   }
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
-  possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE)
+  possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE, type = "file")
   possible_files <- fs::path_filter(possible_files, regexp = file)
   if (length(possible_files) > 1L) {
     # exclude these files if multiple matches
