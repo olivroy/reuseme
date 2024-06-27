@@ -1,123 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://olivroy.github.io/reuseme/404.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/index.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_copy.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_delete.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_nav.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/browse_pkg.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/case_if_any.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/check_referenced_files.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/complete_todo.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/count_pct.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/eda-identity.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/extract_cell_value.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/filter_detect.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/filter_if_any.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/link_gh_issue.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/markup_href.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/na_if2.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/named-base.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/open_rs_doc.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/outdated_pkgs.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/outline.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/proj-reuseme.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/proj_file.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/proj_list.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/proj_switch.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/quarto_help.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/rename_files2.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/reuseme-package.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/screenshot.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/slice_group_sample.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/slice_min_max.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/solve_file_name_conflict.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/summarise_with_total.html</loc>
-  </url>
-  <url>
-    <loc>https://olivroy.github.io/reuseme/reference/use_todo.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://olivroy.github.io/reuseme/404.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/CONTRIBUTING.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/LICENSE-text.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/LICENSE.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/authors.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/index.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/news/index.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_copy.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_delete.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/active_rs_doc_nav.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/browse_pkg.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/case_if_any.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/check_referenced_files.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/complete_todo.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/count_pct.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/eda-identity.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/extract_cell_value.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/filter_detect.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/filter_if_any.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/index.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/link_gh_issue.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/markup_href.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/na_if2.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/named-base.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/open_rs_doc.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/outdated_pkgs.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/outline.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/proj-reuseme.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/proj_file.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/proj_list.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/proj_switch.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/quarto_help.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/rename_files2.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/reuseme-package.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/screenshot.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/slice_group_sample.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/slice_min_max.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/solve_file_name_conflict.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/summarise_with_total.html</loc></url>
+<url><loc>https://olivroy.github.io/reuseme/reference/use_todo.html</loc></url>
 </urlset>
+
