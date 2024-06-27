@@ -58,6 +58,8 @@ browse_pkg <- function(package = NULL,
     if (length(pkgdown) > 1) {
       pkgdown <- stringr::str_subset(pkgdown, package)
     }
+    # Remove trailing index.html from site
+    pkgdown <- sub("index.html$", "", pkgdown)
   }
 
   cran_home <- suppressMessages(usethis::browse_cran(package))

@@ -92,6 +92,7 @@ rename_files2 <- function(old,
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
   related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
   related_files <- setdiff(related_files, old)
+
   # remove project name from conflicts.
   related_files <- stringr::str_subset(related_files, proj_name, negate = TRUE)
   if (length(related_files) > 0) {
@@ -132,8 +133,8 @@ rename_files2 <- function(old,
 
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
-  files_to_look_into <- fs::dir_ls(regexp = "ya?ml$|md$|R$", type = "file", recurse = TRUE)
-  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_freeze/|renv/", invert = TRUE) # need to do elsewhere too
+  files_to_look_into <- fs::dir_ls(regexp = "ya?ml$|md$|R$|gitignore|Rbuildignore", type = "file", recurse = TRUE, all = TRUE)
+  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_freeze/|renv/|.github/|.git/", invert = TRUE) # need to do elsewhere too
   n_file_names_conflicts <- solve_file_name_conflict(
     files = files_to_look_into,
     regex = regexp_to_search_for_in_files,

@@ -13,7 +13,14 @@
 * In `proj_outline()`, `proj` has been renamed `path`, but still accepts a project name,
 that will passed on to `proj_list()`
 
+* Removed `dir_common` from `file_outline()` (#35)
+
+* `file_outline()` result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)
+
 ## Fixes
+
+* `rename_files2()` now looks in `.Rbuildignore` to see if some files should be replaced.
+* Improved regex in `link_gh_issue()`.
 
 * `file_outline()` now recognize `describe()` test calls. 
   (probably many false positive for now) (#31)

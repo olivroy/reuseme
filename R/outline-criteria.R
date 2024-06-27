@@ -86,13 +86,14 @@ o_is_test_name <- function(x) {
 
 o_is_generic_test <- function(x) {
   # remove " detection to avoid discovering snapshot files.
-  stringr::str_detect(x, "works|correctly|properly|expected")
+  # Workaround to bad cli parsing remove '}' from tests
+  stringr::str_detect(x, "works|correctly|properly|expected|'\\{'|'\\}'")
 }
 
 # Returns table or plot titles.
 o_is_tab_plot_title <- function(x) {
   generic_title_regex <- paste(
-    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.",
+    "Foo|test|Title|TITLE|Subtitle|[eE]xample|x\\.x\\.|Header|hi there",
     "man_get_image_tab|table's|list\\(|bla\"|\", \"|use_.+\\(",
     sep = "|"
   )
@@ -206,7 +207,7 @@ define_outline_criteria <- function(.data, print_todo) {
     # Make sure everything is second level in revdep/.
     n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_cross_ref = stringr::str_detect(content, "docs_links?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )

@@ -20,7 +20,6 @@
 # TODO [outline] todos in qmd file inside html comment
 # TODO reframe more than one issue. nw drive
 # TODO [delete] generated files
-# TODO [proj_file] to accesss data (return the path in this case?)
 # TODO [check_referenced_files] doesn't check for {.file R/file.R}
 # TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 # TODO exclude _files from `proj_list()`
