@@ -22,12 +22,17 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     default_repo <- getOption("repos")[[1]]
     default_repo <- sub("/$", "", default_repo)
     default_repo <- sub("https://", "", default_repo, fixed = TRUE)
+    if (!grepl("packagemanager", default_repo)) {
+      # ppm is not well detected
+      access_repo <- tryCatch(curl::nslookup(default_repo),
+                              error = function(e) {
+                                FALSE
+                              }
+      )
+    } else {
+      access_repo <- TRUE
+    }
 
-    access_repo <- tryCatch(curl::nslookup(default_repo),
-      error = function(e) {
-        FALSE
-      }
-    )
   } else {
     access_repo <- TRUE
   }
@@ -46,7 +51,12 @@ outdated_pkgs <- function(type = c("binary", "source")) {
   outdated_pkg_mat <- utils::old.packages(type = type, lib.loc = .libPaths()[1])
 
   if (rlang::has_length(outdated_pkg_mat) && !is.null(getOption("reuseme.ignore_update"))) {
-    indices_to_discard <- which(rownames(outdated_pkg_mat) %in% getOption("reuseme.ignore_update"))
+    if (type == "source") {
+      # only disallow update when building from source.
+      indices_to_discard <- which(rownames(outdated_pkg_mat) %in% getOption("reuseme.ignore_update"))
+    } else {
+      indices_to_discard <- integer(0L)
+    }
     if (rlang::has_length(indices_to_discard)) { # because matrix[-character(0), ] destroys |>  the matrix?
       outdated_pkg_mat <- outdated_pkg_mat[-indices_to_discard, , drop = FALSE]
     }
