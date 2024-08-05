@@ -33,6 +33,10 @@ A data frame with relocated columns at first
 Shortcut for \code{\link[dplyr:filter]{dplyr::filter()}} and \code{\link[stringr:str_detect]{stringr::str_detect()}}
 }
 \examples{
+# don't specify column
 dplyr::band_members |>
   filter_detect("Beatles")
+# specify columns
+dplyr::band_members |>
+  filter_detect("Beatles", band)
 }

@@ -17,6 +17,9 @@ that will passed on to `proj_list()`
 
 * `file_outline()` result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)
 
+* `use_todo("global::todo")` no longer works out of the box. You need to set `options(reuseme.global_todo = fs::path("Documents"))` explicitly (in .Rprofile) for example to make sure 
+  reuseme can write in a directory.
+
 ## Fixes
 
 * `rename_files2()` now looks in `.Rbuildignore` to see if some files should be replaced.
