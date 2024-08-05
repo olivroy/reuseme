@@ -11,8 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/reuseme)](https://CRAN.R-project.org/package=reuseme)
 [![R-CMD-check](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme?branch=main)
-
+coverage](https://codecov.io/gh/olivroy/reuseme/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme)
 <!-- badges: end -->
 
 The goal of reuseme is to provide utility functions for project
@@ -167,7 +166,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    504ms    504ms      1.98    21.7MB     5.95
+#> 1 outline <- proj_outline()    656ms    656ms      1.52    22.4MB     3.05
 ```
 
 <details>
@@ -199,6 +198,7 @@ outline
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file
+#> `i` FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
 #> `i` TODO probably needs a `detect_genuine_path()`
 #> `i` Helpers
 #> `i` TODO Add false positive references
@@ -226,6 +226,7 @@ outline
 #> ── `R/outline.R`  `proj_outline()`
 #> `i` `file_outline()`
 #> `i` File outline
+#> `i` TODO expand this to apply to most generated files
 #> `i` Print method
 #> `i` TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812 (<https://github.com/microsoft/vscode/issues/176812>)
 #> `i` Step: tweak outline look as they show
@@ -303,7 +304,7 @@ outline
 #> `i` Side effects are what's intended in interactive sessions
 #> 
 #> ── `tests/testthat/_snaps/escape-inline-markup.md`
-#> `i` escape_markup() works
+#> `i` escape_markup() works with {
 #> `i` replace_r_var() works
 #> 
 #> ── `tests/testthat/_snaps/markup.md`
@@ -413,12 +414,15 @@ outline
 #> `i` TODO outline todos in qmd file inside html comment
 #> `i` TODO reframe more than one issue. nw drive
 #> `i` TODO delete generated files
-#> `i` TODO [proj_file] to accesss data (return the path in this case?)
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
 #> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 #> `i` TODO exclude _files from `proj_list()`
 #> `i` TODO rename_files should be less noisy about project name file
 #> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+#> `i` TODO use vapply() instead of purrr::map
+#> `i` TODO rename_files() should know about .covrignore too
+#> `i` TODO withr::local_dir for proj_outline.
+#> `i` TODO add warn_conflicts = 'none'
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)
