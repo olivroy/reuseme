@@ -207,7 +207,7 @@ define_outline_criteria <- function(.data, print_todo) {
     # Make sure everything is second level in revdep/.
     n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_cross_ref = stringr::str_detect(content, "docs_(links|add.+)?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )
