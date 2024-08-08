@@ -195,7 +195,7 @@ file_outline <- function(path = active_rs_doc(),
   file_sections$recent_only <- recent_only
   file_sections <- reshape_longer(file_sections)
 
-  class(file_sections) <- c("outline_report", class(file_sections))
+  # class(file_sections) <- c("outline_report", class(file_sections))
   file_sections
 }
 
