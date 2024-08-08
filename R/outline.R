@@ -556,7 +556,7 @@ construct_outline_link <- function(.data) {
     # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
     condition_to_truncate = !is.na(title) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
     # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(title) & !has_title_el & (type == "todo_fixme" & !complete_todo_link) & (type == "subtitle") & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(title) & !has_title_el & (type == "todo_fixme" & !complete_todo_link) & (indent >= 2 | type == "subtitle") & is_saved_doc & !has_inline_markup
   )
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
