@@ -241,7 +241,7 @@ reshape_longer <- function(file_sections) {
     dplyr::mutate(
       # Assign TODO items (and other items missing n_leading_hash)
       # to be indented under the last seen header level
-      indent = dplyr::coalesce(n_leading_hash, zoo::na.locf0(n_leading_hash + 1)),
+      indent = dplyr::coalesce(n_leading_hash, carry_last_obs(n_leading_hash + 1)),
 
       # If there are any headers that skip an intermediate level,
       # step thru and refine the indenting
