@@ -2,6 +2,9 @@
 
 ## Breaking change
 
+* `file_outline()` now has a different shape. Instead of having multiple `is_*` columns,
+  it now has a column `type` which defines the outline type (`"doc_title"`, `"section_title"`, etc.)
+
 * To facilitate piping, `path` / `proj` is now the first argument of `proj_outline()`, `file_outline()`, and `dir_outline()`.
 
 * If you previously relied on specifying pattern without naming it, you will have 

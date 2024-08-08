@@ -4,6 +4,16 @@
       file_outline(my_test_files, alpha = TRUE)
     Message
       
+      -- `my-analysis.R`  Analyse my {streets} 
+    Output
+      `i` TODO Create a new version
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+      `i` Section title
+      `i` Write my streets
+      `i` data wrangling
+      `i` 'R/my-file.R'
+    Message
+      
       -- `my-analysis.md`  My doc title 
     Output
       `i` A section
@@ -15,26 +25,15 @@
       `i` Dashboard card
     Message
       
-      -- `titles.md`  The title is the only outline element 
+      -- `title.md`  The title is the only outline element 
+      
+      -- `titles.md`  The title is the first outline element 
     Output
       `i` Another title
       `i` Last title
       `i` Second level
       `i` `function_name()` title
       `i` TODO this is an item
-    Message
-      
-      -- `my-analysis.R`  Analyse my {streets} 
-    Output
-      `i` TODO Create a new version
-      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Section title
-      `i` Write my streets
-      `i` data wrangling
-      `i` 'R/my-file.R'
-    Message
-      
-      -- `title.md`  The title is the only outline element 
 
 # alpha arguments works
 

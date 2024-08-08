@@ -1,4 +1,4 @@
-# The title is the only outline element
+# The title is the first outline element
 
 
 # Another title
