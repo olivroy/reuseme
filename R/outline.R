@@ -744,14 +744,14 @@ display_outline_element <- function(.data) {
   y <- dplyr::mutate(
     x,
     has_title_el =
-      ((line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+      ((line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file & !is_cross_ref) |
         (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)) & !is_news,
     .by = "file"
   )
   y <- withCallingHandlers(
     dplyr::mutate(y,
       title_el_line = ifelse(has_title_el, line[
-        (line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file) |
+        (line == 1 & !is_todo_fixme & !is_test_name & !is_snap_file & !is_cross_ref) |
           (is_doc_title & !is_subtitle & !is_snap_file & !is_second_level_heading_or_more)
       ][1], # take  the first element to avoid problems (may be the reason why problems occur)
       NA_integer_

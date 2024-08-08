@@ -11,8 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/reuseme)](https://CRAN.R-project.org/package=reuseme)
 [![R-CMD-check](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme?branch=main)
-
+coverage](https://codecov.io/gh/olivroy/reuseme/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme)
 <!-- badges: end -->
 
 The goal of reuseme is to provide utility functions for project
@@ -210,6 +209,7 @@ outline
 #> 
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file
+#> `i` FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
 #> `i` TODO probably needs a `detect_genuine_path()`
 #> `i` Helpers
 #> `i` TODO Add false positive references
@@ -254,6 +254,7 @@ outline
 #> `i` Print interactive outline of file sections [outline]
 #> `i` `file_outline()`
 #> `i` File outline
+#> `i` TODO expand this to apply to most generated files
 #> `i` Print method
 #> `i` TODO since April 2024, cli links work almost out of the box in VScode? microsoft/vscode#176812 (<https://github.com/microsoft/vscode/issues/176812>)
 #> `i` Step: tweak outline look as they show
@@ -549,6 +550,38 @@ outline
 #> 
 #> ── `tests/testthat/test-todo.R`
 #> `i` Marking TODO as done detects tags
+#> 
+#> ── `TODO.R`
+#> `i` TODO screenshot make the behaviour different when vignettes vs articles: vignettes should place it in man/figures, while articles could put it in vignettes/articles file.
+#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd doc. No longer needed with RStudio 2023.12
+#> `i` TODO use_family() to edit .R file to add @family data frames tags to roxygen
+#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)
+#> `i` TODO rename if many matches, separate those with the exact path.
+#> `i` TODO outline make ggtitle work
+#> `i` TODO outline show extra msg only for some, but in file outline, not in proj?
+#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
+#> `i` TODO outline renable cli info.
+#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
+#> `i` TODO outline avoid evaluating in current env.
+#> `i` TODO wrap regexps in functions
+#> `i` TODO outline remove examples from outline. Sometimes commented code is caught.
+#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`
+#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.
+#> `i` TODO outline roxygen function title
+#> `i` TODO outline remove ggtext markup from plot title.
+#> `i` FIXME outline comments are now interpreted as section
+#> `i` TODO outline todos in qmd file inside html comment
+#> `i` TODO reframe more than one issue. nw drive
+#> `i` TODO delete generated files
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
+#> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
+#> `i` TODO exclude _files from `proj_list()`
+#> `i` TODO rename_files should be less noisy about project name file
+#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+#> `i` TODO use vapply() instead of purrr::map
+#> `i` TODO rename_files() should know about .covrignore too
+#> `i` TODO withr::local_dir for proj_outline.
+#> `i` TODO add warn_conflicts = 'none'
 #> 
 #> ── `NEWS.md`
 #> `i` reuseme (development version)

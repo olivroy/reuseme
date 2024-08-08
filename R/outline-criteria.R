@@ -264,7 +264,7 @@ define_outline_criteria <- function(.data, exclude_todos) {
     is_object_title = FALSE,
     tag = NA_character_,
     topic = NA_character_,
-    is_cross_ref = stringr::str_detect(content, "docs_links?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_cross_ref = stringr::str_detect(content, "docs_(links|add.+)?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )

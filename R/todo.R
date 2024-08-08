@@ -7,7 +7,11 @@
 #' use `usethis::use_git_ignore("TODO.R")` if you don't want your `TODO.R` file
 #'
 #' to be included in git. If using in a package directory, use
-#' `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`
+#' `usethis::use_build_ignore("TODO.R")` to prevent a note in `R CMD CHECK`.
+#'
+#' If you want to write to a global TODO, use
+#'
+#' `options(reuseme.global_todo = fs::path("Documents"))` to write there.
 #'
 #' @param todo A character vector of lines to add to the TODO file. See details
 #'   for special handling.
@@ -219,7 +223,13 @@ compute_path_todo <- function(todo, proj) {
 
   # Handle special global and all syntax for todo items.
   if (proj %in% c("global", "all")) {
-    proj_path <- Sys.getenv("R_USER", Sys.getenv("HOME")) # ?base::path.expand
+    proj_path <- getOption("reuseme.global_todo")
+    if (is.null(proj_path)) {
+      cli::cli_abort(c(
+        "You must set a global option reuseme.global_todo to write to a global todo.",
+        i ="A good option for cross-platform is `options(reuseme.global_todo = fs::path_home(\"Documents\"))"
+      ))
+    }
   } else if (!is_active_proj) {
     # in interactive session with options set
     proj_path <- proj_list(proj)

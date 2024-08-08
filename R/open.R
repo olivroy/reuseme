@@ -57,6 +57,14 @@ active_rs_doc <- function() {
     cli::cli_abort("Either RStudio is not available or you are trying to map an unsaved file")
   })
   path <- fs::path_expand_r(path)
+  active_proj <- proj_get2()
+  if (is.null(active_proj)) {
+    return(invisible(path))
+  }
+  if (isTRUE(fs::path_has_parent(path, active_proj))) {
+    path <- fs::path_rel(path)
+  }
+  path
   # likely not hapenning on RStudio >= 2023.06.2
 }
 

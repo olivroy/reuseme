@@ -20,8 +20,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/reuseme)](https://CRAN.R-project.org/package=reuseme)
 [![R-CMD-check](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/olivroy/reuseme/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/olivroy/reuseme/branch/main/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme?branch=main)
-
+[![Codecov test coverage](https://codecov.io/gh/olivroy/reuseme/graph/badge.svg)](https://app.codecov.io/gh/olivroy/reuseme)
 <!-- badges: end -->
 
 The goal of reuseme is to provide utility functions for project management across RStudio projects.

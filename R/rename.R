@@ -90,7 +90,7 @@ rename_files2 <- function(old,
   # Warn if some related files are found. If I have file.R and file.csv,
   # this will warn if I rename file.R, but not file.csv
   related_files <- fs::dir_ls(regexp = paste0(basename_remove_ext(old), "\\."), recurse = TRUE)
-  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/", invert = TRUE)
+  related_files <- fs::path_filter(related_files, "_snaps/|_book/|_files|_freeze|renv/|\\~\\$", invert = TRUE)
   related_files <- setdiff(related_files, old)
 
   # remove project name from conflicts.

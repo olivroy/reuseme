@@ -30,3 +30,7 @@
 # TODO [outline] family should be displayed differently..
 # TODO [outline] find a way to make print bookmarks..
 # TODO [outline] escape some content in headings see {.file tests/testthat/_outline/quarto-caps.md} for examples.
+# TODO use vapply() instead of purrr::map
+# TODO rename_files() should know about .covrignore too
+# TODO withr::local_dir for proj_outline.
+# TODO add warn_conflicts = 'none'
