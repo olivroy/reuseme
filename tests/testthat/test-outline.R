@@ -72,9 +72,9 @@ test_that("file_outline() with only title doesn't error", {
 test_that("file_outline() contains function calls", {
   file <- fs::path_package("reuseme", "example-file", "outline-script.R")
   outline <- file_outline(file)
-  expect_contains(outline$outline_el, c("f_example", "f2_example"))
+  expect_contains(outline$title, c("f_example", "f2_example"))
   # excludes commented things
-  expect_no_match(outline$outline_el, "f_commented_example")
+  expect_no_match(outline$title, "f_commented_example")
 })
 
 test_that("dir_outline() works with no error", {
