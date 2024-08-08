@@ -822,7 +822,8 @@ remove_outline_columns <- function(.data) {
     # may be useful for debugging
     before_and_after_empty = NULL,
     # may be useful for debugging
-    has_inline_markup = NULL
+    has_inline_markup = NULL,
+    is_md = NULL
   )
 }
 
