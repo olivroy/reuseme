@@ -4,9 +4,8 @@
       file_outline(my_test_files, alpha = TRUE)
     Message
       
-      -- `my-analysis.R`  
+      -- `my-analysis.R`  Analyse my {streets} 
     Output
-      `i` Analyse my {streets}
       `i` TODO Create a new version
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
       `i` Section title
@@ -14,7 +13,7 @@
       `i` 'R/my-file.R'
     Message
       
-      -- `my-analysis.md`  
+      -- `my-analysis.md`  My doc title 
     Output
       `i` A section
       `i` A code section
@@ -23,20 +22,18 @@
       `i` A long ggplot2 title
       `i` A code section
       `i` Dashboard card
-      `i` My doc title
     Message
       
-      -- `title.md`  
+      -- `title.md`  The title is the only outline element 
     Output
       `i` The title is the only outline element
     Message
       
-      -- `titles.md`  
+      -- `titles.md`  The title is the only outline element 
     Output
       `i` Another title
       `i` Last title
       `i` Second level
-      `i` The title is the only outline element
       `i` `function_name()` title
       `i` TODO this is an item
 
@@ -46,9 +43,8 @@
       file_outline(my_test_file, pattern = "street", alpha = TRUE)
     Message
       
-      -- `outline/my-analysis.R`  
+      -- `outline/my-analysis.R`  Analyse my {streets} 
     Output
-      `i` Analyse my {streets}
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Streetart>) data
       `i` Write my streets
 
@@ -58,9 +54,8 @@
       outline
     Message
       
-      -- `outline-script.R`  
+      -- `outline-script.R`  Example for `file_outline()` 
     Output
-      `i` Example for `file_outline()`
       `i` Load packages
       `i` Wrangle + visualize data
       `i` TODO improve this Viz!
@@ -79,9 +74,8 @@
       file_outline(file, "Viz")
     Message
       
-      -- `outline-script.R`  
+      -- `outline-script.R`  Example for `file_outline()` 
     Output
-      `i` Example for `file_outline()`
       `i` TODO improve this Viz!
 
 ---
@@ -90,7 +84,7 @@
       file_outline(file, "Example for")
     Message
       
-      -- `outline-script.R`  
+      -- `outline-script.R`  Example for `file_outline()` 
     Output
       `i` Example for `file_outline()`
 
@@ -100,8 +94,7 @@
       file_outline(test_path("_outline", "knitr-notebook.R"))
     Message
       
-      -- `knitr-notebook.R`  
+      -- `knitr-notebook.R`  Crop Analysis Q3 2013 
     Output
-      `i` Crop Analysis Q3 2013
       `i` A great section
 

@@ -284,7 +284,7 @@ reshape_longer <- function(file_sections) {
   # Expect a one-to-one relationship means elements are mutually exclusive
   outline_new |>
     dplyr::left_join(
-      file_sections |> dplyr::select(file, line, content),
+      file_sections |> dplyr::select(file, line, content, has_title_el, title_el, title_el_line),
       by = c("file", "line"),
       # unmatched = "error",
       relationship = "one-to-one"
@@ -441,10 +441,12 @@ print.outline_report <- function(x, ...) {
 
   summary_links_files <- file_sections |>
     # TODO Revert when applying the tree print method.
+    # TODO remove title_el work eventually
     dplyr::filter(type != "function_def", type != "file") |>
+    dplyr::filter(line != title_el_line | dplyr::n() == 1, .by = file) |>
     dplyr::summarise(
-      #first_line = unique(title_el_line),
-      #first_line_el = unique(title_el),
+      first_line = unique(title_el_line),
+      first_line_el = unique(title_el),
       link = list(rlang::set_names(
         link_rs_api,
         purrr::map_chr(
@@ -497,12 +499,12 @@ print.outline_report <- function(x, ...) {
       base_name <- c(base_name, emoji_recent)
     }
 
-    # # add first line to title and remove
-    # has_title <- !is.na(summary_links_files$first_line[[i]])
-    # if (has_title) {
-    #   title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
-    #   base_name <- c(base_name, " ", title_el)
-    # }
+    # add first line to title and remove
+    has_title <- !is.na(summary_links_files$first_line[[i]])
+    if (has_title) {
+      title_el <- cli::format_inline(escape_markup(summary_links_files$first_line_el[[i]]))
+      base_name <- c(base_name, " ", title_el)
+    }
 
     # TRICK need tryCatch when doing something, withCallingHandlers when only rethrowing?
     tryCatch(
