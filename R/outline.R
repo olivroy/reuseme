@@ -823,7 +823,8 @@ remove_outline_columns <- function(.data) {
     before_and_after_empty = NULL,
     # may be useful for debugging
     has_inline_markup = NULL,
-    is_md = NULL
+    is_md = NULL,
+    is_section_title_source = NULL
   )
 }
 
