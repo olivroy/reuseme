@@ -193,10 +193,96 @@ file_outline <- function(path = active_rs_doc(),
   )
 
   file_sections$recent_only <- recent_only
+  file_sections <- reshape_longer(file_sections)
 
   class(file_sections) <- c("outline_report", class(file_sections))
   file_sections
 }
+
+reshape_longer <- function(file_sections) {
+  # Thanks @violetcereza for kicking the tires.
+  # TODO 1. refactor how columns are initialized to avoid this function alogether?
+  # TODO 2. Remove logic for is_title and put that in the print method.
+  outline_new <- file_sections |>
+    # Convert the many is_ columns into mutually exclusive "outline row types"
+    tidyr::pivot_longer(
+      cols = c(dplyr::starts_with("is_"), -is_second_level_heading_or_more),
+      names_to = "type",
+      names_prefix = "is_"
+    ) %>%
+    # # Double check that types are mututally exclusive
+    # filter(sum(value) != 1, .by = c(file, line))
+    dplyr::filter(value) |>
+    # We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)
+    dplyr::filter(type != "tab_or_plot_title") |>
+
+    # Some useful definitions!
+    dplyr::mutate(
+      # title = coalesce(outline_el, title_el),
+      title = dplyr::coalesce(outline_el, title_el),
+      n_leading_hash = dplyr::case_match(type,
+        # these items should inheirit the last indent +1
+        c("todo_fixme", "tab_or_plot_title") ~ NA,
+        # headings use hashes
+        .default = n_leading_hash
+      )
+    ) |>
+
+    # For each file, stick a item at the top of the outline
+    dplyr::group_by(file) |>
+    dplyr::group_modify(\(data, group) tibble::add_row(
+      data,
+      .before = 0,
+      n_leading_hash = -1,
+      title = fs::path_file(group$file),
+      type = "file"
+    )) |>
+
+    dplyr::mutate(
+      # Assign TODO items (and other items missing n_leading_hash)
+      # to be indented under the last seen header level
+      indent = dplyr::coalesce(n_leading_hash, zoo::na.locf0(n_leading_hash+1)),
+
+      # If there are any headers that skip an intermediate level,
+      # step thru and refine the indenting
+      # TODO: break indent cleaning into separate function and also apply after file_outline()
+      indent %>% purrr::reduce(
+        .init = dplyr::tibble(orig_indent = integer(), stack = list(), adjust = integer(), indent = integer()),
+        \(temp, orig_indent) {
+          if (is.null(dplyr::last(temp$stack))) {
+            # If we're at the top level, make sure indent starts at 0 not -1 or anything
+            new_stack <- dplyr::tibble(adjust = -orig_indent, pop_adjust_at = orig_indent)
+          } else {
+            new_stack <- dplyr::last(temp$stack) %>%
+              # If we reach a point on the outline where we're back up in
+              # the hierachy, stop adjusting for those items
+              dplyr::filter(pop_adjust_at < orig_indent)
+          }
+
+          if (orig_indent > dplyr::last(new_stack$pop_adjust_at)) {
+            # All the items below on the outline should be adjusted backwards
+            new_stack <-  dplyr::add_row(
+              new_stack,
+              adjust = dplyr::last(new_stack$pop_adjust_at)+1 - orig_indent,
+              pop_adjust_at = orig_indent
+            )
+          }
+
+            dplyr::add_row(
+              temp,
+              orig_indent = orig_indent,
+              stack = list(new_stack),
+              adjust = sum(new_stack$adjust),
+              indent = orig_indent + adjust
+            )
+        })
+
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::select(file, title, type, line, indent)
+  outline_new
+}
+
 #' @rdname outline
 #' @export
 proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
