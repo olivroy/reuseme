@@ -656,7 +656,7 @@ keep_outline_element <- function(.data) {
     .data,
     (is_news & (
       (!simplify_news & is_section_title & before_and_after_empty) |
-        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & before_and_after_empty)
+        (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & before_and_after_empty)
     )) |
       # still regular comments in .md files
       # what to keep in .md docs
