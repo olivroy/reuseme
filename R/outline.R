@@ -231,13 +231,6 @@ reshape_longer <- function(file_sections) {
     ) |>
     # For each file, stick a item at the top of the outline
     dplyr::group_by(file) |>
-    dplyr::group_modify(\(data, group) tibble::add_row(
-      data,
-      .before = 0,
-      n_leading_hash = -1,
-      title = fs::path_file(group$file),
-      type = "file"
-    )) |>
     dplyr::mutate(
       # Assign TODO items (and other items missing n_leading_hash)
       # to be indented under the last seen header level
@@ -260,7 +253,8 @@ reshape_longer <- function(file_sections) {
               dplyr::filter(dplyr::last(temp$stack), pop_adjust_at < orig_indent)
           }
 
-          if (orig_indent > dplyr::last(new_stack$pop_adjust_at)) {
+          # need to add a default to avoid NA problem
+          if (orig_indent > dplyr::last(new_stack$pop_adjust_at, default = Inf)) {
             # All the items below on the outline should be adjusted backwards
             new_stack <- dplyr::add_row(
               new_stack,
@@ -442,6 +436,7 @@ print.outline_report <- function(x, ...) {
   summary_links_files <- file_sections |>
     # TODO Revert when applying the tree print method.
     # TODO remove title_el work eventually
+    add_file_row() |>
     dplyr::filter(type != "function_def", type != "file") |>
     # Remove title el from outline (May want to revert later)
     dplyr::filter(line != title_el_line | dplyr::n() == 1, .by = "file")
@@ -454,10 +449,9 @@ print.outline_report <- function(x, ...) {
     summary_links_files <- dplyr::mutate(
       summary_links_files,
       n = dplyr::n(),
-      title = ifelse(n  == 1 & has_title_el, NA_character_, title),
-      link = ifelse(n  == 1 & has_title_el, NA_character_, link),
-      link_rs_api = ifelse(n  == 1 & has_title_el, NA_character_, link_rs_api),
-
+      title = ifelse(n == 1 & has_title_el, NA_character_, title),
+      link = ifelse(n == 1 & has_title_el, NA_character_, link),
+      link_rs_api = ifelse(n == 1 & has_title_el, NA_character_, link_rs_api),
       n = NULL,
       .by = "file"
     )
@@ -900,4 +894,22 @@ get_dir_common_outline <- function(path) {
   }
 
   dir_common
+}
+
+# Needed for tree printing. Basically adds a row for each file for base indent.
+add_file_row <- function(x) {
+  x <- dplyr::group_by(x, file)
+  dplyr::group_modify(x, \(data, group) dplyr::add_row(
+    data,
+    .before = 0,
+    indent = -1,
+    title = fs::path_file(group$file),
+    type = "file"
+  ))
+  x <- dplyr::ungroup(x)
+  dplyr::arrange(
+    x,
+    grepl("README|NEWS|vignettes", file),
+    file
+  )
 }
