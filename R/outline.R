@@ -254,7 +254,7 @@ reshape_longer <- function(file_sections) {
           }
 
           # need to add a default to avoid NA problem
-          if (orig_indent > dplyr::last(new_stack$pop_adjust_at, default = Inf)) {
+          if (!is.na(orig_indent) && orig_indent > dplyr::last(new_stack$pop_adjust_at, default = Inf) %|% Inf) {
             # All the items below on the outline should be adjusted backwards
             new_stack <- dplyr::add_row(
               new_stack,
@@ -569,8 +569,14 @@ construct_outline_link <- function(.data) {
     # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
     condition_to_truncate = !is.na(title) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
     # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(title) & !has_title_el & (type == "todo_fixme" & !complete_todo_link) & (indent >= 2 | type == "subtitle") & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(title) & !has_title_el & (type == "todo_fixme" & !complete_todo_link) & ((!is.na(indent) & indent >= 2) | type == "subtitle") & is_saved_doc & !has_inline_markup
   )
+  if (anyNA(.data$condition_to_truncate) || anyNA(.data$condition_to_truncate2)) {
+    cli::cli_abort(c(
+      "Internal error, should not contain NA.",
+      "Review expressions in `condition_to_truncate` or `condition_to_truncate2"
+    ))
+  }
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
   width <- cli::console_width()
@@ -849,6 +855,8 @@ remove_outline_columns <- function(.data) {
     # may be useful for debugging
     has_inline_markup = NULL,
     is_md = NULL,
+    is_snap_file = NULL,
+    is_test_file = NULL,
     is_section_title_source = NULL,
     is_chunk_cap_next = NULL
   )
