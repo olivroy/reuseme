@@ -57,7 +57,7 @@ To take advantage of reuseme, it is highly recommended to set the following opti
 options(reuseme.reposdir = c("~/rrr", "any-other-directories-that-contain-rstudio-projects"))
 ```
 
-This will enable functions like `proj_switch()`, `proj_list()`, `use_todo()` to be optimized.
+This will enable functions like `proj_switch()`, `proj_list()`, `reuseme::use_todo()` to be optimized.
 
 ## Example
 

@@ -54,8 +54,8 @@ test_that("o_is_section_title() works", {
   expect_true(o_is_section_title("# Analysis of this"))
   expect_true(o_is_section_title("  # section 1 ----"))
   expect_false(o_is_section_title("# TidyTuesday"))
-  # not considering roxygen sections anymore.
-  expect_false(o_is_section_title("#' # A very interesting section"))
+  expect_false(o_is_section_title("@section: Function ID:", roxy_section = TRUE))
+  expect_false(o_is_section_title("#' @section Function ID:", roxy_section = TRUE))
 })
 
 test_that("o_is_cli_info() works", {

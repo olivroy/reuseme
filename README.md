@@ -58,7 +58,7 @@ options(reuseme.reposdir = c("~/rrr", "any-other-directories-that-contain-rstudi
 ```
 
 This will enable functions like `proj_switch()`, `proj_list()`,
-`use_todo()` to be optimized.
+`reuseme::use_todo()` to be optimized.
 
 ## Example
 
@@ -166,7 +166,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    656ms    656ms      1.52    22.4MB     3.05
+#> 1 outline <- proj_outline()    5.61s    5.61s     0.178    89.6MB     1.25
 ```
 
 <details>
@@ -178,18 +178,29 @@ Example outline
 ``` r
 outline
 #> 
-#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
-#> `i` Load packages
-#> `i` Wrangle + visualize data
-#> `i` A great title
-#> `i` TODO improve this Viz!
+#> ── `R/browse-pkg.R`  Browse pkgdown site if it exists [browse_pkg()]
+#> 
+#> ── `R/case-if-any.R`  case-when, but checks for all matches, returns a character [case_if_any()]
 #> 
 #> ── `R/dplyr-plus.R`  dplyr extra
+#> `i` Count observations by group and compute percentage [count_pct()]
+#> `i` dplyr extensions
+#> `i` Subset rows using their positions [slice_min_max()]
+#> `i` dplyr extensions
+#> `i` Explore all rows in a random group [slice_group_sample()]
+#> `i` family dplyr extensions
 #> `i` FIXME Doesn't work, problem with symbols here
+#> `i` Keep rows that match one of the conditions [filter_if_any()]
+#> `i` Elegant wrapper around filter and pull [extract_cell_value()]
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)
 #> `i` summarise with total
+#> `i` Compute a summary for one group with the total included. [summarise_with_total()]
+#> `i` Transform to NA any of the condition [na_if2()]
 #> 
 #> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
+#> `i` Helpers that return the same value [eda-identity]
+#> `i` Use cases / advantages
+#> `i` Caution
 #> `i` base identity functions
 #> `i` dplyr identity functions with small tweaks
 #> `i` dplyr identity without tweaks
@@ -208,22 +219,39 @@ outline
 #> `i` Scalars
 #> `i` Vectors
 #> 
-#> ── `R/open.R`
+#> ── `R/named.R`  Helpers that can return a named vector [named-base]
+#> 
+#> ── `R/open.R`  Open a Document in RStudio [open_rs_doc()]
 #> `i` FIXME why is this code like this?
+#> `i` Copy the active document to the same location [active_rs_doc_copy()]
+#> `i` document manipulation helpers
+#> `i` Delete the active RStudio document safely [active_rs_doc_delete()]
+#> `i` document manipulation helpers
 #> `i` TODO structure and summarise information.
 #> `i` FIXME (upstream) the color div doesn't go all the way r-lib/cli#694 (<https://github.com/r-lib/cli/issues/694>)
+#> `i` Open Files Pane at current document location [active_rs_doc_nav()]
 #> 
-#> ── `R/outdated-pkgs.R`
+#> ── `R/outdated-pkgs.R`  Looks for outdated packages [outdated_pkgs()]
 #> `i` TODO figure out pad :)
 #> 
 #> ── `R/outline-criteria.R`
 #> `i` Add variable to outline data frame
 #> `i` TODO extract title in roxy comments (@title too.L)
-#> `i` TODO strip is_cli_info in Package? only valid for EDA
-#> `i` FIXME try to detect all the chunk caption, but would have to figure out the end of it maybe lightparser.
-#> `i` it is 'R/outline.R'
+#> `i` TODO strip is_cli_info in Package? only valid for EDA (currently not showcased..)
+#> `i` TODO long enough to be meanignful?
+#> `i` TODO merge with define_outline_criteria
+#> `i` it is 'R/outline.R' or 'R/outline-roxy.R'
+#> 
+#> ── `R/outline-roxy.R`
+#> `i` TODO when stable delete
+#> `i` TODO Delete when stable debugging
+#> `i` TODO Delete when stable for debugging
+#> `i` TODO exclude S3 methods
+#> `i` FIXME escape markup see next line
+#> `i` helper for interactive checking
 #> 
 #> ── `R/outline.R`  `proj_outline()`
+#> `i` Print interactive outline of file sections [outline]
 #> `i` `file_outline()`
 #> `i` File outline
 #> `i` TODO expand this to apply to most generated files
@@ -232,12 +260,26 @@ outline
 #> `i` Step: tweak outline look as they show
 #> `i` TODO reanable cli info
 #> `i` TODO Improve performance with vctrs tidyverse/dplyr#6806 (<https://github.com/tidyverse/dplyr/issues/6806>)
+#> `i` FIXME find a way to be as consistent as lightparser, but faster.
 #> 
-#> ── `R/proj-list.R`
+#> ── `R/proj-list.R`  Opens a RStudio project in a new session [proj_switch()]
+#> `i` project management helpers
 #> `i` TODO maybe add a max?
+#> `i` Access the file outline within other project [proj_file()]
+#> `i` project management helpers
 #> `i` TODO improve on this message
+#> `i` Specify `proj` in functions [proj_list()]
+#> `i` project management helpers
 #> 
-#> ── `R/rename.R`
+#> ── `R/proj-reuseme.R`  Interact with different RStudio projects [proj-reuseme]
+#> `i` Setup
+#> `i` Capabilities.
+#> `i` project management helpers
+#> 
+#> ── `R/quarto-help.R`  Show links to Quarto documentation of interest [quarto_help()]
+#> 
+#> ── `R/rename.R`  Rename an output or a data file and watch for references [rename_files2()]
+#> `i` Use case
 #> `i` After here, we start doing some renaming real situations
 #> `i` TODO verify if path should be normalized.
 #> `i` Helpers
@@ -247,7 +289,9 @@ outline
 #> `i` FIXME maybe not fail while testing
 #> `i` TODO Check that old file is more recent
 #> 
-#> ── `R/todo.R`
+#> ── `R/screenshot.R`  Save the current image in clipboard to png in your active directory [screenshot()]
+#> 
+#> ── `R/todo.R`  Add a TODO list by project to a TODO.R file in the base directory [use_todo()]
 #> `i` TODO think about maybe using todo = clipr::read_clip()
 #> `i` TODO nice to have, but would need to extract duplicates
 #> `i` Helpers
@@ -257,17 +301,51 @@ outline
 #> 
 #> ── `R/utils.R`  OS utils
 #> 
+#> ── `TODO.R`
+#> `i` TODO screenshot make the behaviour different when vignettes vs articles: vignettes should place it in man/figures, while articles could put it in vignettes/articles file.
+#> `i` TODO screenshot RStudio addin to insert the code directly in the qmd doc. No longer needed with RStudio 2023.12
+#> `i` TODO use_family() to edit .R file to add @family data frames tags to roxygen
+#> `i` TODO mutate_identity redundant if the focus pillar PR was merged. r-lib/pillar#585 (<https://github.com/r-lib/pillar/issues/585>)
+#> `i` TODO rename if many matches, separate those with the exact path.
+#> `i` TODO outline make ggtitle work
+#> `i` TODO outline show extra msg only for some, but in file outline, not in proj?
+#> `i` TODO outline detect help calls and apply markup. `?fs::file_show` disregard finishing `.` (not followed by dot)
+#> `i` TODO escape_markup doesn't work with complex operation {x^2} for example. Maybe if detecting something complex, use cli_escape function. escape-complex-markyp branch created to try to address this.
+#> `i` TODO outline avoid evaluating in current env.
+#> `i` TODO wrap regexps in functions
+#> `i` TODO outline remove examples from outline. Sometimes commented code is caught.
+#> `i` TODO outline roxygen comments processing should be left to `roxygen2::parse_file()`
+#> `i` TODO outline show key like `pak::pkg_deps_tree()` does.
+#> `i` TODO outline remove ggtext markup from plot title.
+#> `i` FIXME outline comments are now interpreted as section
+#> `i` TODO outline todos in qmd file inside html comment
+#> `i` TODO reframe more than one issue. nw drive
+#> `i` TODO delete generated files
+#> `i` TODO [proj_file] to accesss data (return the path in this case?)
+#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
+#> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
+#> `i` TODO exclude _files from `proj_list()`
+#> `i` TODO outline Show function call if exported + not internal + bonus if has family tag! rstudio/rstudio#14766 (<https://github.com/rstudio/rstudio/issues/14766>)
+#> `i` TODO title of file could be function title if it is first element [proj_outline]
+#> `i` TODO rename_files should be less noisy about project name file
+#> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
+#> `i` TODO outline just create an `exclude` argument that will take an option? (exclude can be files or expressionsm, or elements.)
+#> `i` TODO outline remove snaps from outline and add a link in the test file instead?
+#> `i` TODO outline family should be displayed differently..
+#> `i` TODO outline find a way to make print bookmarks..
+#> `i` TODO outline escape some content in headings see 'tests/testthat/_outline/quarto-caps.md' for examples.
+#> 
+#> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
+#> `i` Load packages
+#> `i` Wrangle + visualize data
+#> `i` A great title
+#> `i` TODO improve this Viz!
+#> 
+#> ── `playground/outline-tree.R`
+#> `i` TODOs (they don't affect heirarchy)
+#> 
 #> ── `tests/testthat/_outline/knitr-notebook.R`  Crop Analysis Q3 2013
 #> `i` A great section
-#> 
-#> ── `tests/testthat/_outline/my-analysis.md`  My doc title
-#> `i` A section
-#> `i` Dashboard card
-#> `i` A code section
-#> `i` A subsection
-#> `i` A section2
-#> `i` A long ggplot2 title
-#> `i` A code section
 #> 
 #> ── `tests/testthat/_outline/my-analysis.R`  Analyse my {streets}
 #> `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
@@ -277,6 +355,65 @@ outline
 #> `i` 'R/my-file.R'
 #> `i` Section title
 #> 
+#> ── `tests/testthat/_outline/my-analysis.md`  My doc title
+#> `i` A section
+#> `i` Dashboard card
+#> `i` A subsection
+#> `i` A section2
+#> `i` A long ggplot2 title
+#> `i` A code section
+#> `i` A long ggplot2 title with more details2
+#> `i` A long ggplot2 title with more details3.
+#> 
+#> ── `tests/testthat/_outline/quarto-caps.md`  title
+#> `i` A long ggplot2 title with more details
+#> `i` Heading  <i class="cheatsheet-icon fa-solid fa-tags"></i>
+#> `i` A long ggplot2 title with more details
+#> `i` Heading2\_done
+#> `i` Dashboard link
+#> `i` Dashboard link
+#> 
+#> ── `tests/testthat/_outline/roxy-cli.R`  outline
+#> `i` Like [base::grep()] but [grepl()] for ANSI strings [f2()]
+#> 
+#> ── `tests/testthat/_outline/roxy-general.R`
+#> `i` Use 'tests/testthat/_outline/roxy-general2.R' for output testing
+#> `i` Complete block for exported function with headings
+#> `i` A title to be included [f_to_be_index_in_outline()]
+#> `i` A second-level heading in description to be included?
+#> `i` A detail first level-heading to be included
+#> `i` A detail second-level heading to be included
+#> `i` `First code` to be included
+#> `i` a family to include
+#> `i` block not to index
+#> `i` Topic to index
+#> `i` A title to be included [topic-name-to-include]
+#> `i` A second-level heading in description to be included?
+#> `i` A detail first level-heading to be included
+#> `i` A detail second-level heading to be included
+#> `i` First to be included
+#> `i` a family to include
+#> `i` Opens a RStudio project in a new session
+#> `i` second-level heading in desc
+#> `i` Details + 2nd level heading
+#> `i` second heading
+#> `i` data to index
+#> `i` My data [dataset]
+#> 
+#> ── `tests/testthat/_outline/roxy-general2.R`  Test for roxygen parsing for no error
+#> `i` Use 'tests/testthat/_outline/roxy-general.R' for output testing
+#> `i` Title with `_things` [f_to_be_index_in_outline()]
+#> `i` Section
+#> `i` a family to include
+#> `i` An S3 method not to be include [f_not_to_index.xml()]
+#> `i` section AA REQUIRED ELEMENT
+#> 
+#> ── `tests/testthat/_outline/roxy-section.R`  multiple tags + name parsing issue
+#> `i` A title to be included [xxx]
+#> `i` a section
+#> `i` another section
+#> `i` another sectio2n
+#> 
 #> ── `tests/testthat/_outline/title.md`  The title is the only outline element
 #> 
 #> ── `tests/testthat/_outline/titles.md`  The title is the only outline element
@@ -285,6 +422,19 @@ outline
 #> `i` TODO this is an item
 #> `i` Last title
 #> `i` `function_name()` title
+#> 
+#> ── `tests/testthat/_outline/tree.qmd`  Test
+#> `i` Quarto
+#> `i` Running Code
+#> `i` TODO fix this in the code
+#> `i` A sub header
+#> `i` TODO here's a todo in the text
+#> `i` Back to header 1
+#> `i` Dont skip me
+#> `i` header 5
+#> `i` TODO testing section
+#> `i` Another sub header
+#> `i` TODO section test
 #> 
 #> ── `tests/testthat/_snaps/browse-pkg.md`
 #> `i` browse_pkg() works
@@ -313,12 +463,16 @@ outline
 #> ── `tests/testthat/_snaps/outline-criteria.md`
 #> `i` No outline criteria are untested
 #> 
+#> ── `tests/testthat/_snaps/outline-roxy.md`
+#> `i` cli escaping goes well in roxy comments
+#> 
 #> ── `tests/testthat/_snaps/outline.md`
 #> `i` file_outline() works
 #> `i` alpha arguments works
 #> `i` file_outline() is a data frame
 #> `i` pattern works as expected
 #> `i` file_outline() detects correctly knitr notebooks
+#> `i` file_outline() works well with figure captions
 #> 
 #> ── `tests/testthat/_snaps/proj-list.md`
 #> `i` proj_file() works
@@ -375,6 +529,11 @@ outline
 #> 
 #> ── `tests/testthat/test-outline-criteria.R`  Test individual outline elements
 #> `i` No outline criteria are untested
+#> 
+#> ── `tests/testthat/test-outline-roxy.R`
+#> `i` roxy tags don't error
+#> `i` multiple roxy tags don't error.
+#> `i` cli escaping goes well in roxy comments
 #> 
 #> ── `tests/testthat/test-outline.R`
 #> `i` file_outline() is a data frame

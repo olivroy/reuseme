@@ -36,6 +36,12 @@ that will passed on to `proj_list()`
 
 * `proj_list()` / `proj_switch()` no longer opens a nested project if looking for `"pkgdown"`, `"testthat"`, etc.
 
+* `proj_outline()` was improved to work with roxygen2 and lightparser to parse file contents more consistenly. This means a slowdown, but the increased accuracy is worth it! Parsing a single file should still be pretty fast!
+
+* `proj_outline()` gains `exclude_tests` to exclude tests from outline
+
+* `proj_outline()` now detects legacy `fig.cap` in the chunk header. See `knitr::convert_chunk_headers()` for the newer approach. 
+
 * `active_rs_doc_nav()` is a new function to navigate to files pane location.
 
 `active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.

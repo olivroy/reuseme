@@ -11,13 +11,16 @@ file_outline(
   path = active_rs_doc(),
   pattern = NULL,
   alpha = FALSE,
-  print_todo = TRUE,
-  recent_only = FALSE
+  exclude_todos = FALSE,
+  recent_only = FALSE,
+  print_todo = deprecated()
 )
 
 proj_outline(
   path = active_rs_proj(),
   pattern = NULL,
+  exclude_tests = FALSE,
+  exclude_todos = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE
@@ -26,6 +29,8 @@ proj_outline(
 dir_outline(
   path = ".",
   pattern = NULL,
+  exclude_tests = FALSE,
+  exclude_todos = FALSE,
   dir_tree = FALSE,
   alpha = FALSE,
   recent_only = FALSE,
@@ -38,14 +43,18 @@ Defaults to the \link[=active_rs_doc]{active file}, project or directory.}
 
 \item{pattern}{A string or regex to search for in the outline. If
 specified, will search only for elements matching this regular expression.
-The print method will show the document title for context. Previously \code{regex_outline}}
+The print method will show the document title for context. Previously \code{regex_outline}.}
 
 \item{alpha}{Whether to show in alphabetical order}
 
-\item{print_todo}{Should include TODOs in the file outline? If \code{FALSE}, will
+\item{exclude_todos}{Should include TODOs in the file outline? If \code{FALSE}, will
 print a less verbose output with sections.}
 
 \item{recent_only}{Show outline for recent files}
+
+\item{print_todo}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}. Use \code{exclude_todos} instead.}
+
+\item{exclude_tests}{Should tests be displayed? (Not sure if this argument will stay, Will have to think)}
 
 \item{dir_tree}{If \code{TRUE}, will print the \code{\link[fs:dir_tree]{fs::dir_tree()}} or non-R files in
 the directory}
@@ -72,7 +81,7 @@ Outline elements include
 \item \code{TODO} items
 \item Parse cli hyperlinks
 \item Plot or table titles
-\item FIgures caption in Quarto documents (limited support for multiline caption currently)
+\item Figures caption in Quarto documents
 \item test names
 \item Indicator of recent modification
 \item Colored output for
@@ -92,8 +101,7 @@ By default
 In \code{proj_outline()}, \code{path} accepts project names, see \code{\link[=proj_list]{proj_list()}} for how to
 set up reuseme to regognize your projects' locations.
 
-The parser is very opinionated and is not very robust as it is based on regexps.
-For a better file parser, explore other options, like \href{https://thinkr-open.github.io/lightparser/}{lightparser} for Quarto,  \code{{roxygen2}}
+The parser is opinionated and based on lightparser, roxygen2 and regexps.
 
 Will show TODO items and will offer a link to \link[=complete_todo]{mark them as complete}.
 
@@ -106,7 +114,7 @@ file <- fs::path_package("reuseme", "example-file", "outline-script.R")
 file_outline(file)
 
 # Remove todo items
-file_outline(file, print_todo = FALSE, alpha = TRUE)
+file_outline(file, exclude_todos = TRUE, alpha = TRUE)
 
 # interact with data frame
 file_outline(file) |> dplyr::as_tibble()

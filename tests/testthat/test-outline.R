@@ -1,4 +1,5 @@
 test_that("file_outline() works", {
+  skip_if_not_installed("lightparser")
   my_test_files <- test_path("_outline", c("my-analysis.R", "my-analysis.md", "title.md", "titles.md"))
   rlang::local_interactive(TRUE)
   expect_snapshot(
@@ -58,6 +59,7 @@ test_that("pattern works as expected", {
 })
 
 test_that("file_outline() with only title doesn't error", {
+  # broken by change to before_and_after_empty
   expect_no_error({
     file <- file_outline(test_path("_outline", "title.md"))
   })
@@ -78,6 +80,7 @@ test_that("file_outline() contains function calls", {
 })
 
 test_that("dir_outline() works with no error", {
+  skip_if_not_installed("lightparser")
   expect_no_error(dir_outline(path = test_path("_outline"), pattern = ".+"))
 })
 
@@ -85,5 +88,13 @@ test_that("file_outline() detects correctly knitr notebooks", {
   expect_snapshot(
     file_outline(test_path("_outline", "knitr-notebook.R")),
     transform = ~ sub(" `[^`]+` ", " `knitr-notebook.R` ", .x)
+  )
+})
+
+test_that("file_outline() works well with figure captions", {
+  skip_if_not_installed("lightparser")
+  expect_snapshot(
+    file_outline(path = test_path("_outline", "quarto-caps.md")),
+    transform = ~ sub(" `[^`]+` ", " `quarto-caps.md` ", .x)
   )
 })
