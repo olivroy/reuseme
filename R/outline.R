@@ -212,7 +212,7 @@ reshape_longer <- function(file_sections) {
       cols = c(dplyr::starts_with("is_"), -is_second_level_heading_or_more),
       names_to = "type",
       names_prefix = "is_"
-    ) %>%
+    ) |>
     # # Double check that types are mututally exclusive
     # filter(sum(value) != 1, .by = c(file, line))
     dplyr::filter(value) |>
@@ -246,17 +246,18 @@ reshape_longer <- function(file_sections) {
       # If there are any headers that skip an intermediate level,
       # step thru and refine the indenting
       # TODO: break indent cleaning into separate function and also apply after file_outline()
-      indent %>% purrr::reduce(
+      purrr::reduce(
+        indent,
         .init = dplyr::tibble(orig_indent = integer(), stack = list(), adjust = integer(), indent = integer()),
         \(temp, orig_indent) {
           if (is.null(dplyr::last(temp$stack))) {
             # If we're at the top level, make sure indent starts at 0 not -1 or anything
             new_stack <- dplyr::tibble(adjust = -orig_indent, pop_adjust_at = orig_indent)
           } else {
-            new_stack <- dplyr::last(temp$stack) %>%
+            new_stack <-
               # If we reach a point on the outline where we're back up in
               # the hierachy, stop adjusting for those items
-              dplyr::filter(pop_adjust_at < orig_indent)
+              dplyr::filter( dplyr::last(temp$stack), pop_adjust_at < orig_indent)
           }
 
           if (orig_indent > dplyr::last(new_stack$pop_adjust_at)) {
