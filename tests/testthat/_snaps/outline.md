@@ -30,7 +30,7 @@
       `i` The title is the only outline element
     Message
       
-      -- `titles.md`  The title is the only outline element 
+      -- `titles.md`  The title is the first outline element 
     Output
       `i` Another title
       `i` Last title
