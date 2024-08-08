@@ -26,9 +26,6 @@
     Message
       
       -- `title.md`  The title is the only outline element 
-    Output
-      `i` The title is the only outline element
-    Message
       
       -- `titles.md`  The title is the first outline element 
     Output
@@ -87,8 +84,6 @@
     Message
       
       -- `outline-script.R`  Example for `file_outline()` 
-    Output
-      `i` Example for `file_outline()`
 
 # file_outline() detects correctly knitr notebooks
 

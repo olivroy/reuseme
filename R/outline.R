@@ -443,7 +443,26 @@ print.outline_report <- function(x, ...) {
     # TODO Revert when applying the tree print method.
     # TODO remove title_el work eventually
     dplyr::filter(type != "function_def", type != "file") |>
-    dplyr::filter(line != title_el_line | dplyr::n() == 1, .by = file) |>
+    # Remove title el from outline (May want to revert later)
+    dplyr::filter(line != title_el_line | dplyr::n() == 1, .by = "file")
+
+  counts <- vctrs::vec_count(summary_links_files$file)
+
+  # Maybe a title
+  if (any(counts$count == 1) && any(summary_links_files$has_title_el)) {
+    # TODO refactor for speed
+    summary_links_files <- dplyr::mutate(
+      summary_links_files,
+      n = dplyr::n(),
+      title = ifelse(n  == 1 & has_title_el, NA_character_, title),
+      link = ifelse(n  == 1 & has_title_el, NA_character_, link),
+      link_rs_api = ifelse(n  == 1 & has_title_el, NA_character_, link_rs_api),
+
+      n = NULL,
+      .by = "file"
+    )
+  }
+  summary_links_files <- summary_links_files |>
     dplyr::summarise(
       first_line = unique(title_el_line),
       first_line_el = unique(title_el),
