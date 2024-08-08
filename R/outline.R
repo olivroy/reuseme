@@ -216,8 +216,8 @@ reshape_longer <- function(file_sections) {
     # # Double check that types are mututally exclusive
     # filter(sum(value) != 1, .by = c(file, line))
     dplyr::filter(value) |>
-    # We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)
-    dplyr::filter(type != "tab_or_plot_title") |>
+    # TODO We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)?
+    # dplyr::filter(type != "tab_or_plot_title") |>
     # Some useful definitions!
     dplyr::mutate(
       # title = coalesce(outline_el, title_el),
@@ -257,7 +257,7 @@ reshape_longer <- function(file_sections) {
             new_stack <-
               # If we reach a point on the outline where we're back up in
               # the hierachy, stop adjusting for those items
-              dplyr::filter( dplyr::last(temp$stack), pop_adjust_at < orig_indent)
+              dplyr::filter(dplyr::last(temp$stack), pop_adjust_at < orig_indent)
           }
 
           if (orig_indent > dplyr::last(new_stack$pop_adjust_at)) {
@@ -815,7 +815,7 @@ define_important_element <- function(.data) {
   dplyr::mutate(
     .data,
     importance = dplyr::case_when(
-       indent >= 2 | type %in% c("chunk_cap", "cli_info", "todo_fixme", "subtitle", "test_name") ~ "not_important",
+      indent >= 2 | type %in% c("chunk_cap", "cli_info", "todo_fixme", "subtitle", "test_name") ~ "not_important",
       .default = "important"
     )
   )

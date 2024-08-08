@@ -10,6 +10,7 @@
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
       `i` Section title
       `i` Write my streets
+      `i` data wrangling
       `i` 'R/my-file.R'
     Message
       
@@ -58,6 +59,7 @@
     Output
       `i` Load packages
       `i` Wrangle + visualize data
+      `i` A great title
       `i` TODO improve this Viz!
 
 # pattern works as expected
