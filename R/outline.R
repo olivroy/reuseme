@@ -154,7 +154,7 @@ file_outline <- function(path = active_rs_doc(),
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
       )
     } else {
-      msg <- c("{.path {path}}","Empty outline.")
+      msg <- c("{.path {path}}", "Empty outline.")
     }
     cli::cli_inform(msg)
     return(invisible())
@@ -167,7 +167,7 @@ file_outline <- function(path = active_rs_doc(),
   file_sections1 <- display_outline_element(file_sections0)
 
   if (is.null(pattern)) {
-    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+    # file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
   } else {
     file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
   }
@@ -215,7 +215,6 @@ reshape_longer <- function(file_sections) {
     dplyr::filter(value) |>
     # We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)
     dplyr::filter(type != "tab_or_plot_title") |>
-
     # Some useful definitions!
     dplyr::mutate(
       # title = coalesce(outline_el, title_el),
@@ -227,7 +226,6 @@ reshape_longer <- function(file_sections) {
         .default = n_leading_hash
       )
     ) |>
-
     # For each file, stick a item at the top of the outline
     dplyr::group_by(file) |>
     dplyr::group_modify(\(data, group) tibble::add_row(
@@ -237,11 +235,10 @@ reshape_longer <- function(file_sections) {
       title = fs::path_file(group$file),
       type = "file"
     )) |>
-
     dplyr::mutate(
       # Assign TODO items (and other items missing n_leading_hash)
       # to be indented under the last seen header level
-      indent = dplyr::coalesce(n_leading_hash, zoo::na.locf0(n_leading_hash+1)),
+      indent = dplyr::coalesce(n_leading_hash, zoo::na.locf0(n_leading_hash + 1)),
 
       # If there are any headers that skip an intermediate level,
       # step thru and refine the indenting
@@ -261,22 +258,22 @@ reshape_longer <- function(file_sections) {
 
           if (orig_indent > dplyr::last(new_stack$pop_adjust_at)) {
             # All the items below on the outline should be adjusted backwards
-            new_stack <-  dplyr::add_row(
+            new_stack <- dplyr::add_row(
               new_stack,
-              adjust = dplyr::last(new_stack$pop_adjust_at)+1 - orig_indent,
+              adjust = dplyr::last(new_stack$pop_adjust_at) + 1 - orig_indent,
               pop_adjust_at = orig_indent
             )
           }
 
-            dplyr::add_row(
-              temp,
-              orig_indent = orig_indent,
-              stack = list(new_stack),
-              adjust = sum(new_stack$adjust),
-              indent = orig_indent + adjust
-            )
-        })
-
+          dplyr::add_row(
+            temp,
+            orig_indent = orig_indent,
+            stack = list(new_stack),
+            adjust = sum(new_stack$adjust),
+            indent = orig_indent + adjust
+          )
+        }
+      )
     ) |>
     dplyr::ungroup() |>
     dplyr::select(file, title, type, line, indent)
