@@ -125,6 +125,24 @@ test_that("summarise_with_total() works", {
   })
 })
 
+test_that("summarise_with_total() works with two groups", {
+  gr_s <- summarise_with_total(dplyr::group_by(mtcars, vs, cyl), mpg = sum(mpg))
+  by_s <-   summarise_with_total(mtcars, mpg = sum(mpg), .by = c(vs, cyl))
+
+  expect_equal(
+    dim(gr_s),
+    dim(by_s)
+  )
+  expect_setequal(
+    levels(by_s$cyl),
+    levels(gr_s$cyl)
+  )
+  expect_setequal(
+    levels(by_s$vs),
+    levels(gr_s$vs)
+  )
+})
+
 test_that("summarise_with_total() keeps factors", {
   fac <- mtcars |>
     dplyr::mutate(vs = factor(vs), mpg, .keep = "none")

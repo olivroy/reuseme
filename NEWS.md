@@ -50,6 +50,8 @@ that will passed on to `proj_list()`
 
 * `active_rs_doc()` returns the relative path if in RStudio project.
 
+* `summarise_with_total()` works with more than 1 group to get the total summary.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).
