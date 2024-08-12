@@ -2,7 +2,7 @@
 % Please edit documentation in R/dplyr-plus.R
 \name{summarise_with_total}
 \alias{summarise_with_total}
-\title{Compute a summary for one group with the total included.}
+\title{Compute a summary for groups with the total included.}
 \usage{
 summarise_with_total(.data, ..., .by = NULL, .label = "Total", .first = TRUE)
 }
