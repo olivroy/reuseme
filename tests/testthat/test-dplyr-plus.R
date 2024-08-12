@@ -151,6 +151,30 @@ test_that("summarise_with_total() keeps factors", {
   expect_equal(levels(res$vs), c("Total", "0", "1"))
 })
 
+test_that("extract_cell_value() works", {
+  dat <- data.frame(
+    x = c(1, 2, 3),
+    y = c(1.5, 3, 3.5),
+    row.names = c("row1", "row2", "row4")
+  )
+  expect_equal(
+    extract_cell_value(
+      dat,
+      x == 2,
+      var = y
+    ),
+    c("row2" = 3)
+  )
+  expect_snapshot(error = TRUE,
+    extract_cell_value(
+      dat,
+      x >= 2,
+      var = y,
+      length = 1
+    )
+  )
+})
+
 test_that("slice_min_max() works", {
   expect_snapshot({
     slice_min_max(mtcars, mpg, n = 3)
@@ -160,6 +184,9 @@ test_that("slice_min_max() works", {
     nrow(slice_min_max(mtcars, mpg, with_ties = FALSE, n = 2, each = FALSE)),
     2
   )
+  expect_equal(
+    nrow(slice_min_max(mtcars, mpg, with_ties = FALSE)),
+    2)
 })
 
 test_that("na_if2() works with expr and values", {

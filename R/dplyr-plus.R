@@ -156,12 +156,14 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
     data <- dplyr::group_by(data, {{ group_var }})
   }
   if (!dplyr::is_grouped_df(data)) {
+    # nocov: start
     cli::cli_abort(
       c(
         "Not supposed to happen"
       ),
       .internal = TRUE
     )
+    # nocov: end
   }
   # Assuming the data is grouped now.
   group_var_name <- dplyr::group_vars(data)
@@ -353,8 +355,7 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
   if (!is.null(length) && !rlang::has_length(res2, length)) {
     # TODO use `check_length()` when implemented. r-lib/rlang#1618
     cli::cli_abort(c(
-      "Expected an output of {length}",
-      "Got an output of {length(res2)}"
+      "Expected an output of length {length}, not {length(res2)}."
     ))
   }
 
