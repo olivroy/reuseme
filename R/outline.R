@@ -654,7 +654,7 @@ display_outline_element <- function(.data) {
       is_md & is_todo_fixme ~ stringr::str_remove(outline_el, "\\s?-{2,}\\>.*"),
       .default = outline_el
     ),
-    outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
+    outline_el = stringr::str_remove(outline_el, "[-=#]{3,}$") |> stringr::str_trim(), # remove trailing bars
     is_subtitle = (is_tab_or_plot_title | is_doc_title) & grepl("subt", content, fixed = TRUE),
   )
 

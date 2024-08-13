@@ -15,6 +15,17 @@
       `i` Dashboard card
     Message
       
+      -- `my-analysis.R`  Analyse my {streets} 
+    Output
+      `i` A section
+      `i` TODO Create a new version
+      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
+      `i` Section title
+      `i` Write my streets
+      `i` data wrangling
+      `i` 'R/my-file.R'
+    Message
+      
       -- `titles.md`  The title is the only outline element 
     Output
       `i` Another title
@@ -22,16 +33,6 @@
       `i` Second level
       `i` `function_name()` title
       `i` TODO this is an item
-    Message
-      
-      -- `my-analysis.R`  Analyse my {streets} 
-    Output
-      `i` TODO Create a new version
-      `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
-      `i` Section title
-      `i` Write my streets
-      `i` data wrangling
-      `i` 'R/my-file.R'
     Message
       
       -- `title.md`  The title is the only outline element 

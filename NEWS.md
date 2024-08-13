@@ -38,9 +38,11 @@ that will passed on to `proj_list()`
 
 * `active_rs_doc_nav()` is a new function to navigate to files pane location.
 
-`active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
+* `active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
 
 * `proj_file()` is better.
+
+* `file_outline()` has more support for deeper file sections.
 
 * Local GitHub issues show better in outline.
 
