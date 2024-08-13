@@ -166,7 +166,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    463ms    476ms      2.10    22.4MB     4.21
+#> 1 outline <- proj_outline()    453ms    459ms      2.18    22.5MB     4.36
 ```
 
 <details>
@@ -189,7 +189,7 @@ outline
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)
 #> `i` summarise with total
 #> 
-#> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
+#> ── `R/eda-identity.R`  ----- dplyr/base identity helpers
 #> `i` base identity functions
 #> `i` dplyr identity functions with small tweaks
 #> `i` dplyr identity without tweaks
@@ -276,6 +276,8 @@ outline
 #> `i` TODO Create a new version
 #> `i` 'R/my-file.R'
 #> `i` Section title
+#> `i` A section
+#> `i` The last section
 #> 
 #> ── `tests/testthat/_outline/title.md`  The title is the only outline element
 #> 
@@ -297,6 +299,7 @@ outline
 #> `i` filter_if_any() errors with across()
 #> `i` adds rows in front, but warns the user
 #> `i` summarise_with_total() works
+#> `i` extract_cell_value() works
 #> `i` slice_min_max() works
 #> `i` na_if2() works with expr and values
 #> 
