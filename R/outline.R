@@ -448,7 +448,7 @@ construct_outline_link <- function(.data) {
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
-  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
+  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(f = "documentOpen"), ".", "")
   .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
   # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions

@@ -25,15 +25,26 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
     cli::cli_abort("Internal error, you can't specify col only.")
   }
 
-  doc_id <- rstudioapi::documentOpen(path = path, line = line, col = col, moveCursor = move_cursor)
-  if (is.null(doc_id)) {
-    # FIXME why is this code like this?
-    file_pos_string <- path
-    if (line != -1L) pos_string <- paste0(pos_string, ":", line)
-    if (col != -1L) pos_string <- paste0(pos_string, ":", col)
-    cli::cli_bullets()
+  if (is_rstudio() && rstudioapi::hasFun("documentOpen")) {
+    doc_id <- rstudioapi::documentOpen(path = path, line = line, col = col, moveCursor = move_cursor)
+    if (is.null(doc_id)) {
+      # FIXME why is this code like this?
+      file_pos_string <- path
+      if (line != -1L) pos_string <- paste0(pos_string, ":", line)
+      if (col != -1L) pos_string <- paste0(pos_string, ":", col)
+      cli::cli_bullets()
+    }
+    return(invisible(doc_id))
   }
-  invisible(doc_id)
+
+  # Fallback if rstudioapi not available
+  utils::file.edit(path)
+  if (line != -1L || col != -1L) {
+    cli::cli_inform(c(
+      "Jump to {.file {path:{line}:{col}}}"
+    ))
+  }
+  invisible(path)
 }
 
 active_rs_proj <- function() {
@@ -46,7 +57,7 @@ active_rs_doc <- function() {
   if (!interactive() && !is_rstudio()) {
     return("Non-existing doc")
   }
-  if (!is_rstudio()) {
+  if (!is_rstudio(f = "documentPath")) {
     cli::cli_abort("Not in RStudio.")
   }
   unsaved_doc <- tryCatch(rstudioapi::documentPath(), error = function(e) TRUE)
@@ -393,7 +404,7 @@ normalize_proj_and_path <- function(path, call = caller_env()) {
 #' @returns NULL, called for its side effects.
 #' @export
 active_rs_doc_nav <- function(path = active_rs_doc()) {
-  if (!is_rstudio() || !interactive()) {
+  if (!is_rstudio(f = "filesPaneNavigate") || !interactive()) {
     cli::cli_abort("Must use in RStudio interactive sessions.")
   }
   if (is.null(path)) {

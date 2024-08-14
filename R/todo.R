@@ -86,7 +86,8 @@ complete_todo <- function(line, file, regexp, rm_line = NULL) {
   check_number_whole(line)
   line_original <- line
   # to defer warning.
-  if (interactive() && is_rstudio()) {
+  if (interactive() && is_rstudio(f = "documentSaveAll")) {
+    # VSCode has a way to save All
     rstudioapi::documentSaveAll()
   }
   warn_change_of_line <- FALSE
