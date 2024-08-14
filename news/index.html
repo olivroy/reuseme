@@ -42,6 +42,7 @@
 <li><p>In <code><a href="../reference/outline.html">proj_outline()</a></code>, <code>proj</code> has been renamed <code>path</code>, but still accepts a project name, that will passed on to <code><a href="../reference/proj_list.html">proj_list()</a></code></p></li>
 <li><p>Removed <code>dir_common</code> from <code><a href="../reference/outline.html">file_outline()</a></code> (<a href="https://github.com/olivroy/reuseme/issues/35" class="external-link">#35</a>)</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)</p></li>
+<li><p>More safety around rstudioapi. (make <code><a href="../reference/open_rs_doc.html">open_rs_doc()</a></code> work in Positron.)</p></li>
 <li><p><code>use_todo("global::todo")</code> no longer works out of the box. You need to set <code>options(reuseme.global_todo = fs::path("Documents"))</code> explicitly (in .Rprofile) for example to make sure reuseme can write in a directory.</p></li>
 </ul></div>
 <div class="section level3">
