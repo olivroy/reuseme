@@ -21,8 +21,9 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
   if (path == "." || fs::is_dir(path)) {
     # FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
-    path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ml|builignore)$", all = TRUE, type = "file")
-    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|.github", invert = TRUE) # need to do this in 2 places
+    path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ya?ml|builignore)$", all = TRUE, type = "file")
+    # FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.
+    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|_site|.github|_pkgdown", invert = TRUE) # need to do this in 2 places
   } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown", "gitignore", "Rbuildignore")) {
     path <- path
   } else {
@@ -146,14 +147,39 @@ get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
-  purrr::map(files, \(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
+  potential_files_refs <- purrr::map(files, \(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
     purrr::list_c(ptype = "character") |>
     stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
     stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(|path_package|system.file", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
     stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
     stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
     stringr::str_subset(pattern = "grepl?\\(|stringr|g?sub\\(", negate = TRUE) |> # avoid regexp
-    stringr::str_subset(pattern = stringr::fixed("nocheck"), negate = TRUE) |> # remove nocheck and unlink statements (refers to deleted files anywa)
+    stringr::str_subset(pattern = stringr::fixed("nocheck"), negate = TRUE) |> # nocheck is a way to add
+    stringr::str_subset(pattern = "standalone-.+\\.R", negate = TRUE) # Avoid import standalone file ref.
+
+  ref_files_strings <- extract_files_as_strings(potential_files_refs)
+
+  # the the .file file-ref
+  ref_files_unquoted <- potential_files_refs |>
+    stringr::str_subset("\\.[Rq]md|\\.R|\\.ya?ml|\\.csv|\\.xlsx") |>
+    stringr::str_subset("read_.+\\(|excel_sheets", negate = TRUE) |> # Avoid the read_excel read_ (will be caught in strings)
+    stringr::str_remove("^\\s+\\-\\s+") |> # trim _quarto.yml
+    stringr::str_remove("href:\\s")
+
+  ref_files_unquoted2 <- dplyr::case_when(
+    stringr::str_detect(ref_files_unquoted, "file/file") ~ NA,
+    # TODO refine extraction rules as needed. for now, we are ignoring.
+    stringr::str_length(ref_files_unquoted) > 100 ~ NA,
+    stringr::str_detect(ref_files_unquoted, "\\{.file") ~ stringr::str_extract(ref_files_unquoted, "\\{.file ([^\\}]+)\\}", group = 1),
+    .default = ref_files_unquoted
+  )
+  ref_files_unquoted2 <- rlang::set_names(ref_files_unquoted2[!is.na(ref_files_unquoted2)])
+
+  c(ref_files_strings, ref_files_unquoted2)
+}
+
+extract_files_as_strings <- function(lines) {
+  lines |> # remove nocheck and unlink statements (refers to deleted files anywa)
     stringr::str_subset(stringr::fixed("\"")) |>
     stringr::str_trim() |>
     stringr::str_extract_all("\"[^\"]+\"") |>
