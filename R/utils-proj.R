@@ -143,6 +143,10 @@ check_proj <- function(x,
   )
 }
 # to mock.
-is_rstudio <- function(v = NULL) {
-  rstudioapi::isAvailable(version_needed = v)
+is_rstudio <- function(v = NULL, f = NULL) {
+  avail <- rstudioapi::isAvailable(version_needed = v)
+  if (avail && !is.null(f)) {
+    avail <- rstudioapi::hasFun(f)
+  }
+  avail
 }

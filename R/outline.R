@@ -552,13 +552,13 @@ construct_outline_link <- function(.data) {
   dir_common <- get_dir_common_outline(path = .data$file)
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   is_active_doc <- length(unique(.data$file)) == 1L
-  rs_avail_file_link <- is_rstudio("2023.09.0.375") # better handling after
+  rs_avail_file_link <- is_rstudio("2023.09.0.375") || (cli::ansi_has_hyperlink_support() && !is_rstudio()) # better handling after
   .data <- define_important_element(.data)
 
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
-  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(), ".", "")
+  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(f = "documentOpen"), ".", "")
   .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$title, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
   # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
@@ -758,7 +758,7 @@ display_outline_element <- function(.data) {
       is_tab_or_plot_title ~ stringr::str_extract(outline_el, "title =[^\"']*[\"']([^\"]{5,})[\"']", group = 1),
       is_chunk_cap_next & !is_chunk_cap ~ stringr::str_remove_all(outline_el, "\\s?\\#\\|\\s+"),
       is_chunk_cap ~ stringr::str_remove_all(stringr::str_extract(outline_el, "(cap|title)\\:\\s*(.+)", group = 2), "\"|'"),
-      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_lin.s\\(|[\"']\\)$|\""),
+      is_cross_ref ~ stringr::str_remove_all(outline_el, "^(i.stat\\:\\:)?.cdocs_(lin.s|a.d..er...n)\\(|[\"']\\)$|\""),
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}|<(a href|img src).+$"), # strip cross-refs.
@@ -770,7 +770,8 @@ display_outline_element <- function(.data) {
       is_md & is_todo_fixme ~ stringr::str_remove(outline_el, "\\s?-{2,}\\>.*"),
       .default = outline_el
     ),
-    outline_el = stringr::str_remove(outline_el, "[-\\=]{3,}") |> stringr::str_trim(), # remove trailing bars
+    outline_el = stringr::str_remove(outline_el, "[-=#]{3,}$") |> stringr::str_trim(), # remove trailing bars
+    outline_el = stringr::str_remove(outline_el, "\\s-{3,}"),
     is_subtitle = (is_tab_or_plot_title | is_doc_title) & grepl("subt", content, fixed = TRUE),
   )
 

@@ -156,12 +156,14 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
     data <- dplyr::group_by(data, {{ group_var }})
   }
   if (!dplyr::is_grouped_df(data)) {
+    # nocov: start
     cli::cli_abort(
       c(
         "Not supposed to happen"
       ),
       .internal = TRUE
     )
+    # nocov: end
   }
   # Assuming the data is grouped now.
   group_var_name <- dplyr::group_vars(data)
@@ -353,8 +355,7 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
   if (!is.null(length) && !rlang::has_length(res2, length)) {
     # TODO use `check_length()` when implemented. r-lib/rlang#1618
     cli::cli_abort(c(
-      "Expected an output of {length}",
-      "Got an output of {length(res2)}"
+      "Expected an output of length {length}, not {length(res2)}."
     ))
   }
 
@@ -362,7 +363,7 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
 }
 
 # summarise with total ---------------------------------------------------------
-#' Compute a summary for one group with the total included.
+#' Compute a summary for groups with the total included.
 #'
 #' This function is useful to create end tables, apply the same formula to a group and to its overall.
 #' You can specify a personalized `Total` value with the `.label` argument. You
@@ -397,48 +398,50 @@ extract_cell_value <- function(data, var, filter, name = NULL, length = NULL, un
 #'   )
 summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .first = TRUE) {
   check_string(.label)
+
   # check_dots_used()
 
   # Computing summary (depending if .data is grouped or uses `.by`)
   if (dplyr::is_grouped_df(.data)) {
     group_var <- dplyr::group_vars(.data)
 
-    if (length(group_var) != 1) {
-      cli::cli_abort(c(
-        "Must supply a single group"
-      ))
-    }
-
     by_summary <- dplyr::summarise(.data, ...)
 
     summary <- dplyr::summarise(
-      .data = dplyr::ungroup(.data),
-      "{group_var}" := .label,
+      dplyr::ungroup(.data),
+      dplyr::across(
+        dplyr::all_of(group_var),
+        function(x) .label
+      ),
       ...
     )
   } else {
     # compute summary by variable
     by_summary <- dplyr::summarise(.data, ..., .by = {{ .by }})
-
     # Compute the summary for total
-    summary <- dplyr::summarise(.data, "{{ .by }}" := .label, ...)
+    summary <- dplyr::summarise(.data, dplyr::across({{ .by }}, function(x) .label), ...)
   }
 
-  # Decide how to arrange the data.
-  summary_levels <- if (.first) {
-    c(.label, as.character(levels(by_summary[[1]]) %||% unique(by_summary[[1]])))
-  } else {
-    c(as.character(levels(by_summary[[1]]) %||% unique(by_summary[[1]])), .label)
-  }
+  # Figure out which columns are the total column.
+  total_cols <- which(purrr::map_lgl(summary, function(x) x == .label))
 
-  if (is.factor(by_summary[[1]])) {
-    by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
-    summary[[1]] <- factor(summary[[1]], levels = summary_levels)
-  } else if (!is.character(by_summary[[1]])) {
-    by_summary[[1]] <- factor(by_summary[[1]], levels = summary_levels)
-    summary[[1]] <- factor(summary[[1]], levels = summary_levels)
-  }
+  for (i in seq_along(total_cols)) {
+    # Decide how to arrange the data.
 
+    col_id <- names(total_cols)[[i]]
+    summary_levels <- if (.first) {
+      c(.label, as.character(levels(.data[[col_id]]) %||% unique(.data[[col_id]])))
+    } else {
+      c(as.character(levels(.data[[col_id]]) %||% unique(.data[[col_id]])), .label)
+    }
+    if (is.factor(by_summary[[col_id]])) {
+      by_summary[[col_id]] <- factor(by_summary[[col_id]], levels = summary_levels)
+      summary[[col_id]]  <- factor(summary[[col_id]], levels = summary_levels)
+    } else if (!is.character(by_summary[[col_id]])) {
+      by_summary[[col_id]] <- factor(by_summary[[col_id]], levels = summary_levels)
+      summary[[col_id]] <- factor(summary[[col_id]], levels = summary_levels)
+    }
+  }
 
   # .first decides which ones to bind
   if (.first) {

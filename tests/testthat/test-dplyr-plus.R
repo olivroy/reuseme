@@ -125,12 +125,54 @@ test_that("summarise_with_total() works", {
   })
 })
 
+test_that("summarise_with_total() works with two groups", {
+  gr_s <- summarise_with_total(dplyr::group_by(mtcars, vs, cyl), mpg = sum(mpg))
+  by_s <-   summarise_with_total(mtcars, mpg = sum(mpg), .by = c(vs, cyl))
+
+  expect_equal(
+    dim(gr_s),
+    dim(by_s)
+  )
+  expect_setequal(
+    levels(by_s$cyl),
+    levels(gr_s$cyl)
+  )
+  expect_setequal(
+    levels(by_s$vs),
+    levels(gr_s$vs)
+  )
+})
+
 test_that("summarise_with_total() keeps factors", {
   fac <- mtcars |>
     dplyr::mutate(vs = factor(vs), mpg, .keep = "none")
   res <- summarise_with_total(fac, m = mean(mpg), .by = vs) |> tibble::as_tibble()
   expect_s3_class(res$vs, "factor")
   expect_equal(levels(res$vs), c("Total", "0", "1"))
+})
+
+test_that("extract_cell_value() works", {
+  dat <- data.frame(
+    x = c(1, 2, 3),
+    y = c(1.5, 3, 3.5),
+    row.names = c("row1", "row2", "row4")
+  )
+  expect_equal(
+    extract_cell_value(
+      dat,
+      x == 2,
+      var = y
+    ),
+    c("row2" = 3)
+  )
+  expect_snapshot(error = TRUE,
+    extract_cell_value(
+      dat,
+      x >= 2,
+      var = y,
+      length = 1
+    )
+  )
 })
 
 test_that("slice_min_max() works", {
@@ -142,6 +184,9 @@ test_that("slice_min_max() works", {
     nrow(slice_min_max(mtcars, mpg, with_ties = FALSE, n = 2, each = FALSE)),
     2
   )
+  expect_equal(
+    nrow(slice_min_max(mtcars, mpg, with_ties = FALSE)),
+    2)
 })
 
 test_that("na_if2() works with expr and values", {

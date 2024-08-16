@@ -166,7 +166,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    2.21s    2.21s     0.453    26.5MB     9.52
+#> 1 outline <- proj_outline()    2.69s    2.69s     0.372    26.6MB     7.82
 ```
 
 <details>
@@ -183,7 +183,7 @@ outline
 #> `i` TODO use `check_length()` when implemented. r-lib/rlang#1618 (<https://github.com/r-lib/rlang/issues/1618>)
 #> `i` summarise with total
 #> 
-#> ── `R/eda-identity.R`  dplyr/base identity helpers --------------------
+#> ── `R/eda-identity.R`  ----- dplyr/base identity helpers
 #> `i` base identity functions
 #> `i` dplyr identity functions with small tweaks
 #> `i` dplyr identity without tweaks
@@ -232,6 +232,8 @@ outline
 #> `i` TODO Create a new version
 #> `i` 'R/my-file.R'
 #> `i` Section title
+#> `i` A section
+#> `i` The last section
 #> 
 #> ── `tests/testthat/_outline/my-analysis.md`  My doc title
 #> `i` A section

@@ -20,6 +20,8 @@ that will passed on to `proj_list()`
 
 * `file_outline()` result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)
 
+* More safety around rstudioapi. (make `open_rs_doc()` work in Positron.)
+
 * `use_todo("global::todo")` no longer works out of the box. You need to set `options(reuseme.global_todo = fs::path("Documents"))` explicitly (in .Rprofile) for example to make sure 
   reuseme can write in a directory.
 
@@ -41,9 +43,11 @@ that will passed on to `proj_list()`
 
 * `active_rs_doc_nav()` is a new function to navigate to files pane location.
 
-`active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
+* `active_rs_doc_copy()` now accepts copying md and qmd files too and no longer allows renaming Rprofile.
 
 * `proj_file()` is better.
+
+* `file_outline()` has more support for deeper file sections.
 
 * Local GitHub issues show better in outline.
 
@@ -52,6 +56,8 @@ that will passed on to `proj_list()`
 * Package versions in NEWS.md are now normalized to yield better results.
 
 * `active_rs_doc()` returns the relative path if in RStudio project.
+
+* `summarise_with_total()` works with more than 1 group to get the total summary.
 
 # reuseme 0.0.2
 

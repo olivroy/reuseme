@@ -63,6 +63,14 @@
       2 1       344.  24.6
       3 All vs  643.  20.1
 
+# extract_cell_value() works
+
+    Code
+      extract_cell_value(dat, x >= 2, var = y, length = 1)
+    Condition
+      Error in `extract_cell_value()`:
+      ! Expected an output of length 1, not 2.
+
 # slice_min_max() works
 
     Code

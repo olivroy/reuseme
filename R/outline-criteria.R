@@ -200,14 +200,14 @@ define_outline_criteria <- function(.data, print_todo) {
     is_section_title = o_is_section_title(content, is_roxygen_comment, is_todo_fixme),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = is_section_title &
-      stringr::str_detect(content, "[-\\=]{3,}|^\\#'") &
+      stringr::str_detect(content, "[-=#]{3,}|^\\#'") &
       stringr::str_detect(content, "[:alpha:]"),
-    n_leading_hash = nchar(stringr::str_extract(content, "\\#+")),
+    n_leading_hash = nchar(stringr::str_extract(content, "#+")),
     n_leading_hash = dplyr::coalesce(n_leading_hash, 0),
     # Make sure everything is second level in revdep/.
     n_leading_hash = n_leading_hash + grepl("revdep/", file, fixed = TRUE),
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
-    is_cross_ref = stringr::str_detect(content, "docs_(links|add.+)?\\(.") & !stringr::str_detect(content, "@param|\\{\\."),
+    is_cross_ref = stringr::str_detect(content, "docs_(links|add.+)?\\(.") & !stringr::str_detect(content, "@param|\\{\\.|str_"),
     is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )

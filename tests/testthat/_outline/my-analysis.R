@@ -26,3 +26,10 @@ if (TRUE) {
   # Section title ---
   pattern <- "{1} <abbr title = '{4}'>{3}</abbr> <br> <small><p style='color:gray;'> {2}</p> </small>"
 }
+
+######### A section #####################################
+
+x <- 2
+
+### The last section ------
+x <- 3
