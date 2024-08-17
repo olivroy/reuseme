@@ -4,17 +4,6 @@
       file_outline(my_test_files, alpha = TRUE)
     Message
       
-      -- `my-analysis.md`  My doc title 
-    Output
-      `i` A section
-      `i` A code section
-      `i` A subsection
-      `i` A section2
-      `i` A long ggplot2 title
-      `i` A code section
-      `i` Dashboard card
-    Message
-      
       -- `my-analysis.R`  Analyse my {streets} 
     Output
       `i` A section
@@ -27,16 +16,26 @@
       `i` 'R/my-file.R'
     Message
       
-      -- `titles.md`  The title is the only outline element 
+      -- `my-analysis.md`  My doc title 
+    Output
+      `i` A section
+      `i` A code section
+      `i` A subsection
+      `i` A section2
+      `i` A long ggplot2 title
+      `i` A code section
+      `i` Dashboard card
+    Message
+      
+      -- `title.md`  The title is the only outline element 
+      
+      -- `titles.md`  The title is the first outline element 
     Output
       `i` Another title
       `i` Last title
       `i` Second level
       `i` `function_name()` title
       `i` TODO this is an item
-    Message
-      
-      -- `title.md`  The title is the only outline element 
 
 # alpha arguments works
 

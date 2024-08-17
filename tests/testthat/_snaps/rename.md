@@ -79,7 +79,7 @@
       check_referenced_files(path = tmp_dir)
     Message
       Check in some locations.
-      i Found 2 references to non-existent files in some locations.
+      i Found 3 references to non-existent files in some locations.
 
 # Helper files returns the expected input
 

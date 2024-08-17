@@ -154,7 +154,7 @@ file_outline <- function(path = active_rs_doc(),
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
       )
     } else {
-      msg <- c("{.path {path}}","Empty outline.")
+      msg <- c("{.path {path}}", "Empty outline.")
     }
     cli::cli_inform(msg)
     return(invisible())
@@ -167,29 +167,33 @@ file_outline <- function(path = active_rs_doc(),
   file_sections1 <- display_outline_element(file_sections0)
 
   if (is.null(pattern)) {
-    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+    # file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
   } else {
     file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
   }
 
-  if (alpha) {
-    # remove inline markup first before sorting alphabetically
-    file_sections1 <- arrange_outline(file_sections1)
-  }
-
-  # take most important first!
-  file_sections1 <- dplyr::arrange(
-    file_sections1,
-    grepl("README|NEWS|vignettes", file)
-  )
   file_sections1 <- dplyr::relocate(
     file_sections1,
     "outline_el", "title_el", "title_el_line",
     .after = "content"
   )
-  # Create hyperlink in console
+
   file_sections <- remove_outline_columns(
     file_sections1
+  )
+
+  file_sections <- reshape_longer(file_sections)
+
+  if (alpha) {
+    # remove inline markup first before sorting alphabetically
+    file_sections <- arrange_outline(file_sections)
+  }
+
+  # take most important first!
+  file_sections <- dplyr::arrange(
+    file_sections,
+    grepl("README|NEWS|vignettes", file),
+    file
   )
 
   file_sections$recent_only <- recent_only
@@ -197,6 +201,90 @@ file_outline <- function(path = active_rs_doc(),
   class(file_sections) <- c("outline_report", class(file_sections))
   file_sections
 }
+
+reshape_longer <- function(file_sections) {
+  # Thanks @violetcereza for kicking the tires.
+  # TODO 1. refactor how columns are initialized to avoid this function alogether?
+  # TODO 2. Remove logic for is_title and put that in the print method.
+  outline_new <- file_sections |>
+    # Convert the many is_ columns into mutually exclusive "outline row types"
+    tidyr::pivot_longer(
+      cols = c(dplyr::starts_with("is_"), -is_second_level_heading_or_more),
+      names_to = "type",
+      names_prefix = "is_"
+    ) |>
+    # # Double check that types are mututally exclusive
+    # filter(sum(value) != 1, .by = c(file, line))
+    dplyr::filter(value) |>
+    # TODO We drop these because they don't serve to add much context to TODOs (they don't affect hierarchy)?
+    # dplyr::filter(type != "tab_or_plot_title") |>
+    # Some useful definitions!
+    dplyr::mutate(
+      # title = coalesce(outline_el, title_el),
+      title = dplyr::coalesce(outline_el, title_el),
+      n_leading_hash = dplyr::case_match(type,
+        # these items should inheirit the last indent +1
+        c("todo_fixme", "tab_or_plot_title") ~ NA,
+        # headings use hashes
+        .default = n_leading_hash
+      )
+    ) |>
+    # For each file, stick a item at the top of the outline
+    dplyr::group_by(file) |>
+    dplyr::mutate(
+      # Assign TODO items (and other items missing n_leading_hash)
+      # to be indented under the last seen header level
+      indent = dplyr::coalesce(n_leading_hash, carry_last_obs(n_leading_hash + 1)),
+
+      # If there are any headers that skip an intermediate level,
+      # step thru and refine the indenting
+      # TODO: break indent cleaning into separate function and also apply after file_outline()
+      purrr::reduce(
+        indent,
+        .init = dplyr::tibble(orig_indent = integer(), stack = list(), adjust = integer(), indent = integer()),
+        \(temp, orig_indent) {
+          if (is.null(dplyr::last(temp$stack))) {
+            # If we're at the top level, make sure indent starts at 0 not -1 or anything
+            new_stack <- dplyr::tibble(adjust = -orig_indent, pop_adjust_at = orig_indent)
+          } else {
+            new_stack <-
+              # If we reach a point on the outline where we're back up in
+              # the hierachy, stop adjusting for those items
+              dplyr::filter(dplyr::last(temp$stack), pop_adjust_at < orig_indent)
+          }
+
+          # need to add a default to avoid NA problem
+          if (!is.na(orig_indent) && orig_indent > dplyr::last(new_stack$pop_adjust_at, default = Inf) %|% Inf) {
+            # All the items below on the outline should be adjusted backwards
+            new_stack <- dplyr::add_row(
+              new_stack,
+              adjust = dplyr::last(new_stack$pop_adjust_at) + 1 - orig_indent,
+              pop_adjust_at = orig_indent
+            )
+          }
+
+          dplyr::add_row(
+            temp,
+            orig_indent = orig_indent,
+            stack = list(new_stack),
+            adjust = sum(new_stack$adjust),
+            indent = orig_indent + adjust
+          )
+        }
+      )
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::select(file, title, type, line, indent)
+  # Expect a one-to-one relationship means elements are mutually exclusive
+  outline_new |>
+    dplyr::left_join(
+      file_sections |> dplyr::select(file, line, content, has_title_el, title_el, title_el_line),
+      by = c("file", "line"),
+      # unmatched = "error",
+      relationship = "one-to-one"
+    )
+}
+
 #' @rdname outline
 #' @export
 proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
@@ -313,15 +401,15 @@ print.outline_report <- function(x, ...) {
   # Make output faster with cli!
   withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
 
-  if (sum(!x$is_function_def) == 0) {
+  if (sum(!x$type == "function_def") == 0) {
     cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
     return(invisible(x))
   }
   file_sections <- dplyr::as_tibble(x)
   recent_only <- x$recent_only[1]
   # add links and truncate elements
-  file_sections$outline_el[!is.na(file_sections$outline_el)] <-
-    escape_markup(file_sections$outline_el[!is.na(file_sections$outline_el)])
+  file_sections$title[!is.na(file_sections$title)] <-
+    escape_markup(file_sections$title[!is.na(file_sections$title)])
   file_sections <- construct_outline_link(file_sections)
 
   custom_styling <- c(
@@ -335,18 +423,40 @@ print.outline_report <- function(x, ...) {
 
   file_sections$link_rs_api <- stringr::str_replace_all(file_sections$link_rs_api, custom_styling)
 
-  if (anyDuplicated(stats::na.omit(file_sections$outline_el)) > 0L) {
+  if (anyDuplicated(stats::na.omit(file_sections$title)) > 0L) {
     # Remove all things that appear more than 4 times in a file.
     # this typically indicates a placeholder
     file_sections <- dplyr::filter(
       file_sections,
       dplyr::n() < 4,
-      .by = c("file", "outline_el")
+      .by = c("file", "title")
     )
   }
 
   summary_links_files <- file_sections |>
-    dplyr::filter(!is_function_def) |>
+    # TODO Revert when applying the tree print method.
+    # TODO remove title_el work eventually
+    add_file_row() |>
+    dplyr::filter(type != "function_def", type != "file") |>
+    # Remove title el from outline (May want to revert later)
+    dplyr::filter(line != title_el_line | dplyr::n() == 1, .by = "file")
+
+  counts <- vctrs::vec_count(summary_links_files$file)
+
+  # Maybe a title
+  if (any(counts$count == 1) && any(summary_links_files$has_title_el)) {
+    # TODO refactor for speed
+    summary_links_files <- dplyr::mutate(
+      summary_links_files,
+      n = dplyr::n(),
+      title = ifelse(n == 1 & has_title_el, NA_character_, title),
+      link = ifelse(n == 1 & has_title_el, NA_character_, link),
+      link_rs_api = ifelse(n == 1 & has_title_el, NA_character_, link_rs_api),
+      n = NULL,
+      .by = "file"
+    )
+  }
+  summary_links_files <- summary_links_files |>
     dplyr::summarise(
       first_line = unique(title_el_line),
       first_line_el = unique(title_el),
@@ -449,18 +559,24 @@ construct_outline_link <- function(.data) {
     dir_common <- "Don't remove anything if not null"
   }
   .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(f = "documentOpen"), ".", "")
-  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
+  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$title, "\\{|\\}"), FALSE)
   .data$is_saved_doc <- is_saved_doc
   # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
   # Using rlang::is_interactive to be able to test it if I ever feel the need.
-  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
+  .data$complete_todo_link <- rlang::is_interactive() & .data$type == "todo_fixme" & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
   .data <- dplyr::mutate(
     .data,
     # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
+    condition_to_truncate = !is.na(title) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
     # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
+    condition_to_truncate2 = !is.na(title) & !has_title_el & (type == "todo_fixme" & !complete_todo_link) & ((!is.na(indent) & indent >= 2) | type == "subtitle") & is_saved_doc & !has_inline_markup
   )
+  if (anyNA(.data$condition_to_truncate) || anyNA(.data$condition_to_truncate2)) {
+    cli::cli_abort(c(
+      "Internal error, should not contain NA.",
+      "Review expressions in `condition_to_truncate` or `condition_to_truncate2"
+    ))
+  }
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
   .data$outline_el2 <- NA_character_
   width <- cli::console_width()
@@ -469,7 +585,7 @@ construct_outline_link <- function(.data) {
   # Not showing up are the longer items.
   # truncating to make sure the hyperlink shows up.
   .data$outline_el2[cn] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
+    as.character(trim_outline(.data$title[cn], width - 8L)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
     .data$line[cn], ", '", .data$file[cn], "', '",
@@ -480,16 +596,16 @@ construct_outline_link <- function(.data) {
   # truncate other elements
   cn2 <- .data$condition_to_truncate2
   .data$outline_el2[cn2] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
+    as.character(trim_outline(.data$title[cn2], width - 1L)),
     # Removed ending dot. (possibly will fail with older versions)
     .data$rs_version[cn2]
   )
   .data <- dplyr::mutate(
     .data,
     outline_el2 = ifelse(
-      is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
+      is.na(outline_el2) & !is.na(title) & !has_title_el & complete_todo_link & is_saved_doc,
       paste0(
-        outline_el,
+        title,
         "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
         # Removed ending dot. (possibly will fail with older versions)
 
@@ -499,7 +615,7 @@ construct_outline_link <- function(.data) {
       ),
       outline_el2
     ),
-    outline_el2 = dplyr::coalesce(outline_el2, outline_el)
+    outline_el2 = dplyr::coalesce(outline_el2, title)
   )
 
   .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
@@ -715,10 +831,11 @@ display_outline_element <- function(.data) {
 }
 
 define_important_element <- function(.data) {
+  # FIXME probably not useful anymore
   dplyr::mutate(
     .data,
     importance = dplyr::case_when(
-      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
+      indent >= 2 | type %in% c("chunk_cap", "cli_info", "todo_fixme", "subtitle", "test_name") ~ "not_important",
       .default = "important"
     )
   )
@@ -737,7 +854,12 @@ remove_outline_columns <- function(.data) {
     # may be useful for debugging
     before_and_after_empty = NULL,
     # may be useful for debugging
-    has_inline_markup = NULL
+    has_inline_markup = NULL,
+    is_md = NULL,
+    is_snap_file = NULL,
+    is_test_file = NULL,
+    is_section_title_source = NULL,
+    is_chunk_cap_next = NULL
   )
 }
 
@@ -748,7 +870,7 @@ trim_outline <- function(x, width) {
 
 arrange_outline <- function(x) {
   # extract first letter after removing inline markup
-  var_to_order_by <- gsub("TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}", "", x$outline_el)
+  var_to_order_by <- gsub("TODO|BOOK|FIXME|\\{.[:alpha:]{2,6}", "", x$title)
 
   # Extract first letters
   var_to_order_by <- stringr::str_extract(
@@ -781,4 +903,22 @@ get_dir_common_outline <- function(path) {
   }
 
   dir_common
+}
+
+# Needed for tree printing. Basically adds a row for each file for base indent.
+add_file_row <- function(x) {
+  x <- dplyr::group_by(x, file)
+  dplyr::group_modify(x, \(data, group) dplyr::add_row(
+    data,
+    .before = 0,
+    indent = -1,
+    title = fs::path_file(group$file),
+    type = "file"
+  ))
+  x <- dplyr::ungroup(x)
+  dplyr::arrange(
+    x,
+    grepl("README|NEWS|vignettes", file),
+    file
+  )
 }
