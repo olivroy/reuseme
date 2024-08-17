@@ -59,6 +59,8 @@ that will passed on to `proj_list()`
 
 * `summarise_with_total()` works with more than 1 group to get the total summary.
 
+* `check_referenced_files()` now checks `_quarto.yml`.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).
