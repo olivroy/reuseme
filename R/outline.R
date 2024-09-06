@@ -314,7 +314,7 @@ print.outline_report <- function(x, ...) {
   withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
 
   if (sum(!x$is_function_def) == 0) {
-    cli::cli_inform("Empty {.help [outline](reuseme::file_outline)}.")
+    cli::cli_inform("Empty {.help [outline](reuseme::file_outline)} in {.file {unique(x$file)}}.")
     return(invisible(x))
   }
   file_sections <- dplyr::as_tibble(x)
