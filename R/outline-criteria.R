@@ -98,7 +98,7 @@ o_is_tab_plot_title <- function(x) {
     sep = "|"
   )
 
-  stringr::str_detect(x, "(?<!(_|:|\"|abbr\\s))title = [\"'](?![\"'])[^\"]{5,}") &
+  stringr::str_detect(x, "(?<!(_|:|\"|abbr\\s))title = (md\\(|html\\()?[\"'](?![\"'])[^\"]{5,}") &
     !grepl("[", x, fixed = TRUE) &
     !grepl(generic_title_regex, x) &
     !stringr::str_ends(x, "\\(|\"\",?|'',?|\\(") &

@@ -23,7 +23,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
     # FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
     path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ya?ml|builignore)$", all = TRUE, type = "file")
     # FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.
-    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|_site|.github|_pkgdown", invert = TRUE) # need to do this in 2 places
+    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|_site|.github|_pkgdown|\\.revealjs\\.md$|\\.html\\.md$", invert = TRUE) # need to do this in 2 places
   } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown", "gitignore", "Rbuildignore")) {
     path <- path
   } else {

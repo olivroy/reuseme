@@ -295,6 +295,11 @@ exclude_example_files <- function(path) {
     "vignettes/.+\\.R$", # generated files
     "vignette-dump|renv/",
     "RcppExports.R",
+    "revealjs.md$",
+    "html.md$",
+    "_book/",
+    "_freeze/",
+    "_site/",
     "malformed", # likely for tests
     "pkgdown/assets",
     sep = "|"

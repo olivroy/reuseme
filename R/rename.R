@@ -134,7 +134,7 @@ rename_files2 <- function(old,
   regex_friendly <- paste0("to {.val ", regex_friendly, "}")
   # avoid searching in generated files and tests/testthat files
   files_to_look_into <- fs::dir_ls(regexp = "ya?ml$|md$|R$|gitignore|Rbuildignore", type = "file", recurse = TRUE, all = TRUE)
-  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_freeze/|renv/|.github/|.git/", invert = TRUE) # need to do elsewhere too
+  files_to_look_into <- fs::path_filter(files_to_look_into, regexp = "_files|tests/testthat|_book/|_site/|_freeze/|renv/|.github/|.git/", invert = TRUE) # need to do elsewhere too
   n_file_names_conflicts <- solve_file_name_conflict(
     files = files_to_look_into,
     regex = regexp_to_search_for_in_files,

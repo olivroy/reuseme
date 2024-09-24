@@ -17,6 +17,7 @@
       
       -- `my-analysis.R`  Analyse my {streets} 
     Output
+      `i` **A table title**
       `i` A section
       `i` TODO Create a new version
       `i` Read my streets (<https://https://en.wikipedia.org/wiki/Street_art>) data
