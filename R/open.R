@@ -41,7 +41,7 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
   utils::file.edit(path)
   if (line != -1L || col != -1L) {
     cli::cli_inform(c(
-      "Jump to {.file {path:{line}:{col}}}"
+      "Jump to {.file {path}:{line}:{col}}"
     ))
   }
   invisible(path)

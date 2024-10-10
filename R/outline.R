@@ -531,7 +531,7 @@ construct_outline_link <- function(.data) {
       !is_saved_doc ~ paste0("line ", line, " -", outline_el2),
       rs_avail_file_link ~ paste0(
         "{cli::style_hyperlink(", style_fun, ', "',
-        paste0("file://", file_path), '", params = list(line = ', line, ", col = 1))} ", outline_el2
+        paste0("file://", file_path), '", params = c(line = ', line, ", col = 1))} ", outline_el2
       ),
       .default = paste0(rs_version, "{.run [i](reuseme::open_rs_doc('", file_path, "', line = ", line, "))} ", outline_el2)
     ),
