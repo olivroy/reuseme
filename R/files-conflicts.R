@@ -76,7 +76,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @param quiet A logical, informs where the occurrences are found. (Default, `FALSE`)
 #'
 #' @return Mostly called for its side-effects, but will return the number of matches
-#' (0 if no referenced files are problmatic)
+#' (0 if no referenced files are problematic)
 #' @export
 #' @keywords internal
 solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL) {

@@ -8,3 +8,7 @@
 #' @importFrom rlang %|%
 ## usethis namespace: end
 NULL
+
+utils::globalVariables(c(
+  "link_doc"
+))

@@ -24,13 +24,15 @@ overcome things I don’t like on Windows.
 
 ## Installation
 
-You can install the development version of reuseme like so:
+You can install reuseme like so:
 
 ``` r
-# R-universe
+# Cran
+install.package("reuseme")
+# R-universe (dev)
 install.packages('reuseme', repos = c('https://olivroy.r-universe.dev', 'https://cloud.r-project.org'))
 
-# From GitHub
+# From GitHub (dev)
 pak::pak("olivroy/reuseme")
 ```
 
@@ -166,7 +168,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    453ms    459ms      2.18    22.5MB     4.36
+#> 1 outline <- proj_outline()    757ms    757ms      1.32    22.1MB     2.64
 ```
 
 <details>
@@ -177,6 +179,8 @@ Example outline
 
 ``` r
 outline
+#> 
+#> ── `cran-comments.md`  R CMD check results
 #> 
 #> ── `inst/example-file/outline-script.R`  Example for `file_outline()`
 #> `i` Load packages
@@ -199,10 +203,12 @@ outline
 #> ── `R/files-conflicts.R`
 #> `i` TODO insert in either proj_outline, or rename_file
 #> `i` FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
+#> `i` FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.
 #> `i` TODO probably needs a `detect_genuine_path()`
 #> `i` Helpers
 #> `i` TODO Add false positive references
 #> `i` TODO fs::path and file.path should be handled differently
+#> `i` TODO refine extraction rules as needed. for now, we are ignoring.
 #> 
 #> ── `R/import-standalone-types-check.R`
 #> `i` Scalars
@@ -275,6 +281,7 @@ outline
 #> `i` Write my streets
 #> `i` TODO Create a new version
 #> `i` 'R/my-file.R'
+#> `i` **A table title**
 #> `i` Section title
 #> `i` A section
 #> `i` The last section
@@ -419,7 +426,6 @@ outline
 #> `i` TODO delete generated files
 #> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
 #> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
-#> `i` TODO exclude _files from `proj_list()`
 #> `i` TODO rename_files should be less noisy about project name file
 #> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)
 #> `i` TODO use vapply() instead of purrr::map

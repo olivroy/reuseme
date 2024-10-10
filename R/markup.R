@@ -5,7 +5,7 @@
 #'
 #' Note: doesn't (yet) support without <OWNER>/<REPO>
 #'
-#' Basically trransform repo/org#xx -> [repo/org#xx](https://github.com/repo/org/issues/xx).
+#' Basically transform repo/org#xx -> `[repo/org#xx](https://github.com/repo/org/issues/xx)`.
 #'
 #' Afterwards, we use [markup_href()] to create a cli link
 #' @param x A string, usually lines of files that contains issue numbers.

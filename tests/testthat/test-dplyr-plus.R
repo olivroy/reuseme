@@ -127,7 +127,7 @@ test_that("summarise_with_total() works", {
 
 test_that("summarise_with_total() works with two groups", {
   gr_s <- summarise_with_total(dplyr::group_by(mtcars, vs, cyl), mpg = sum(mpg))
-  by_s <-   summarise_with_total(mtcars, mpg = sum(mpg), .by = c(vs, cyl))
+  by_s <- summarise_with_total(mtcars, mpg = sum(mpg), .by = c(vs, cyl))
 
   expect_equal(
     dim(gr_s),
@@ -165,7 +165,8 @@ test_that("extract_cell_value() works", {
     ),
     c("row2" = 3)
   )
-  expect_snapshot(error = TRUE,
+  expect_snapshot(
+    error = TRUE,
     extract_cell_value(
       dat,
       x >= 2,
@@ -186,7 +187,8 @@ test_that("slice_min_max() works", {
   )
   expect_equal(
     nrow(slice_min_max(mtcars, mpg, with_ties = FALSE)),
-    2)
+    2
+  )
 })
 
 test_that("na_if2() works with expr and values", {

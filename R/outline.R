@@ -13,8 +13,8 @@
 #' * `TODO` items
 #' * Parse cli hyperlinks
 #' * Plot or table titles
-#' * FIgures caption in Quarto documents (limited support for multiline caption currently)
-#' * test names
+#' * Figures caption in Quarto documents (limited support for multiline caption currently)
+#' * Test names
 #' * Indicator of recent modification
 #' * Colored output for
 #' * URL and gh issue detection and link creation.
@@ -28,7 +28,7 @@
 #' `proj_outline()` and `dir_outline()` are wrapper of `file_outline()`.
 #'
 #' In `proj_outline()`, `path` accepts project names, see [proj_list()] for how to
-#' set up reuseme to regognize your projects' locations.
+#' set up reuseme to recognize your projects' locations.
 #'
 #' The parser is very opinionated and is not very robust as it is based on regexps.
 #' For a better file parser, explore other options, like [lightparser](https://thinkr-open.github.io/lightparser/) for Quarto,  `{roxygen2}`
@@ -140,7 +140,7 @@ file_outline <- function(path = active_rs_doc(),
     # keep files where pattern was detected (not the generic .+)
     file_sections0 <- dplyr::filter(
       file_sections0,
-      any(grepl(pattern, content, ignore.case = TRUE)),
+      any(grepl(pattern, .data$content, ignore.case = TRUE)),
       .by = "file"
     )
   }
@@ -154,7 +154,7 @@ file_outline <- function(path = active_rs_doc(),
         "i" = "Run {.run [{.fn proj_file}](reuseme::proj_file(\"{pattern}\"))} to search in file names too."
       )
     } else {
-      msg <- c("{.path {path}}","Empty outline.")
+      msg <- c("{.path {path}}", "Empty outline.")
     }
     cli::cli_inform(msg)
     return(invisible())
@@ -167,7 +167,7 @@ file_outline <- function(path = active_rs_doc(),
   file_sections1 <- display_outline_element(file_sections0)
 
   if (is.null(pattern)) {
-    #file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
+    # file_sections1 <- file_sections1[!is.na(file_sections1$outline_el), ]
   } else {
     file_sections1 <- file_sections1[is.na(file_sections1$outline_el) | grepl(pattern, file_sections1$outline_el, ignore.case = TRUE), ]
   }
@@ -314,6 +314,7 @@ exclude_example_files <- function(path) {
 # Print method -------------------
 #' @export
 print.outline_report <- function(x, ...) {
+  link_rs_api <- NULL
   # https://github.com/r-lib/cli/issues/607
   # Make output faster with cli!
   withr::local_options(list(cli.num_colors = cli::num_ansi_colors()))
@@ -444,6 +445,11 @@ print.outline_report <- function(x, ...) {
 }
 
 construct_outline_link <- function(.data) {
+  has_title_el <- NULL
+  outline_el <- NULL
+  outline_el2 <- NULL
+  complete_todo_link <- NULL
+
   dir_common <- get_dir_common_outline(path = .data$file)
   is_saved_doc <- !any(.data$file == "unsaved-doc.R")
   is_active_doc <- length(unique(.data$file)) == 1L
@@ -548,6 +554,19 @@ construct_outline_link <- function(.data) {
 }
 # Step: tweak outline look as they show ---------
 keep_outline_element <- function(.data) {
+  is_section_title <- NULL
+  is_chunk_cap <- NULL
+  is_md <- NULL
+  before_and_after_empty <- NULL
+  is_tab_or_plot_title <- NULL
+  is_section_title_source <- NULL
+  is_function_def <- NULL
+  is_doc_title <- NULL
+  is_cross_ref <- NULL
+  is_test_name <- NULL
+  is_todo_fixme <- NULL
+  is_second_level_heading_or_more <- NULL
+  simplify_news <- NULL
   # could use filter_if_any?
   .data$simplify_news <- sum(!is.na(.data$pkg_version)) >= 10
   if (any(.data$simplify_news)) {
@@ -603,11 +622,8 @@ scrub_duplicate_outline <- function(x) {
     factor(res, labels = c(count$key))
     match
   }
-  x <- dplyr::mutate(
-    x,
-    # higher is better
-    points = 1L + !is_test_name + is_section_title
-  )
+  # higher is better
+  x$points <- 1L + !x$is_test_name + x$is_section_title
 
   x <- dplyr::slice_max(
     x,
@@ -629,6 +645,11 @@ scrub_duplicate_outline <- function(x) {
 # Remove title =
 # Removing quotes, etc.
 display_outline_element <- function(.data) {
+  outline_el <- NULL
+  is_md <- NULL
+  is_tab_or_plot_title <- NULL
+  is_doc_title <- NULL
+  
   x <- .data
   org_repo <- find_pkg_org_repo(unique(x$file))
   if (!is.null(org_repo)) {

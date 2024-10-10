@@ -25,14 +25,13 @@ outdated_pkgs <- function(type = c("binary", "source")) {
     if (!grepl("packagemanager", default_repo)) {
       # ppm is not well detected
       access_repo <- tryCatch(curl::nslookup(default_repo),
-                              error = function(e) {
-                                FALSE
-                              }
+        error = function(e) {
+          FALSE
+        }
       )
     } else {
       access_repo <- TRUE
     }
-
   } else {
     access_repo <- TRUE
   }

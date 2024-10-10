@@ -8,7 +8,7 @@
  to get used to the opposite. Naming `pattern`, but not path.
 
 * Removed `work_only` argument from `file_outline()`, use `pattern = "WORK"` to 
-  acheive the same result.
+  achieve the same result.
   
 * In `proj_outline()`, `proj` has been renamed `path`, but still accepts a project name,
 that will passed on to `proj_list()`

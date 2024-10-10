@@ -14,7 +14,7 @@ rename_files2(
 )
 }
 \arguments{
-\item{old, new}{Old and new file names (with or without extensions).}
+\item{old, new}{Old and new file names (with or without \code{.R} extensions).}
 
 \item{warn_conflicts}{One of
 \itemize{

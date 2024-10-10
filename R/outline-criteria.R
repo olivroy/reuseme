@@ -60,12 +60,12 @@ o_is_todo_fixme <- function(x, is_roxygen_comment = FALSE) {
   # Eliminate candidates
   has_todo[p] <-
     !o_is_test_name(candidates) &
-    !stringr::str_starts(candidates, "\\s*\"\\s*") &
-    !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
-    !is_roxygen_comment[p] & # don't put these tags in documentation :)
-    !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
-    !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
-    !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
+      !stringr::str_starts(candidates, "\\s*\"\\s*") &
+      !grepl("extract_tag_in_text", candidates, fixed = TRUE) &
+      !is_roxygen_comment[p] & # don't put these tags in documentation :)
+      !stringr::str_detect(candidates, "grepl?\\(|g?sub\\(|str_detect|str_remove|str_extract|use_todo|,\\stodo\\)|TODO\\.R|TODO file|@param") &
+      !stringr::str_detect(candidates, "[:upper:]\"|[:upper:]{4,10} item") & # eliminate false positives
+      !stringr::str_detect(candidates, "\".{0,100}(TODO|FIXME|WORK)") # remove some true negs for now.
   has_todo
 }
 
@@ -76,7 +76,7 @@ o_is_test_name <- function(x) {
     return(potential_test)
   }
   test_that_name_regex <- "(?<!['\"])test_that\\(\"(?!\")"
-  if (any(grepl('describe(', x, fixed = TRUE))) {
+  if (any(grepl("describe(", x, fixed = TRUE))) {
     potential_test & (grepl(test_that_name_regex, x, perl = TRUE) |
       grepl("(?<!['\"])describe\\(\"(?!\")", x, perl = TRUE))
   } else {
@@ -140,11 +140,11 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 
   has_cli[p_cli] <-
     stringr::str_detect(x[p_cli], "\\([\"']") &
-    !is_snap_file[p_cli] &
-    !grepl("outline.R", file[p_cli], fixed = TRUE) &
-    !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
-    !grepl("paste", x[p_cli], fixed = TRUE) &
-    !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
+      !is_snap_file[p_cli] &
+      !grepl("outline.R", file[p_cli], fixed = TRUE) &
+      !stringr::str_detect(x[p_cli], "(text|inform|bullets|warn|abort|div)|\"cli|c\\(\\s?$") &
+      !grepl("paste", x[p_cli], fixed = TRUE) &
+      !grepl("^", x[p_cli], fixed = TRUE) # Detect UI messages and remove them
   has_cli
 }
 

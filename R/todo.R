@@ -228,7 +228,7 @@ compute_path_todo <- function(todo, proj) {
     if (is.null(proj_path)) {
       cli::cli_abort(c(
         "You must set a global option reuseme.global_todo to write to a global todo.",
-        i ="A good option for cross-platform is `options(reuseme.global_todo = fs::path_home(\"Documents\"))"
+        i = "A good option for cross-platform is `options(reuseme.global_todo = fs::path_home(\"Documents\"))"
       ))
     }
   } else if (!is_active_proj) {

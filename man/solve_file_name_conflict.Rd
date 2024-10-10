@@ -28,7 +28,7 @@ solve_file_name_conflict(
 }
 \value{
 Mostly called for its side-effects, but will return the number of matches
-(0 if no referenced files are problmatic)
+(0 if no referenced files are problematic)
 }
 \description{
 If \code{quiet = FALSE} (default) will give a hint of where the file is referenced.

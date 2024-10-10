@@ -436,7 +436,7 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
     }
     if (is.factor(by_summary[[col_id]])) {
       by_summary[[col_id]] <- factor(by_summary[[col_id]], levels = summary_levels)
-      summary[[col_id]]  <- factor(summary[[col_id]], levels = summary_levels)
+      summary[[col_id]] <- factor(summary[[col_id]], levels = summary_levels)
     } else if (!is.character(by_summary[[col_id]])) {
       by_summary[[col_id]] <- factor(by_summary[[col_id]], levels = summary_levels)
       summary[[col_id]] <- factor(summary[[col_id]], levels = summary_levels)

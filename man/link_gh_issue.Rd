@@ -21,7 +21,7 @@ This function creates intermediate markdown links to entries of the form rstudio
 \details{
 Note: doesn't (yet) support without \if{html}{\out{<OWNER>}}/\if{html}{\out{<REPO>}}
 
-Basically trransform repo/org#xx -> \href{https://github.com/repo/org/issues/xx}{repo/org#xx}.
+Basically transform repo/org#xx -> \verb{[repo/org#xx](https://github.com/repo/org/issues/xx)}.
 
 Afterwards, we use \code{\link[=markup_href]{markup_href()}} to create a cli link
 }

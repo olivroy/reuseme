@@ -196,4 +196,3 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   cli::cli_inform(bullets)
   invisible(img_path_rel_chr)
 }
-
