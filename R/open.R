@@ -72,6 +72,11 @@ active_rs_doc <- function() {
     # Will work for Positron >= 2024.11
     # https://github.com/posit-dev/positron/issues/5112
     path <- rstudioapi::getSourceEditorContext()$path
+
+    # Handle Positron unsaved docs.
+    if (grepl("Untitled", path)) {
+      return(NULL)
+    }
   } else {
     cli::cli_abort("Not in RStudio or Positron. rstudioapi problem.")
   }
