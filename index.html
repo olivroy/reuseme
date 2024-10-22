@@ -55,12 +55,14 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of reuseme like so:</p>
+<p>You can install reuseme like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># R-universe</span></span>
+<code class="sourceCode R"><span><span class="co"># Cran</span></span>
+<span><span class="fu">install.package</span><span class="op">(</span><span class="st">"reuseme"</span><span class="op">)</span></span>
+<span><span class="co"># R-universe (dev)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'reuseme'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://olivroy.r-universe.dev'</span>, <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># From GitHub</span></span>
+<span><span class="co"># From GitHub (dev)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"olivroy/reuseme"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -203,13 +205,15 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    453ms    459ms      2.18    22.5MB     4.36</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    757ms    757ms      1.32    22.1MB     2.64</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
 </p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outline</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `cran-comments.md`  R CMD check results</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `inst/example-file/outline-script.R`  Example for `file_outline()`</span></span>
 <span><span class="co">#&gt; `i` Load packages</span></span>
@@ -232,10 +236,12 @@ Example outline
 <span><span class="co">#&gt; ── `R/files-conflicts.R`</span></span>
 <span><span class="co">#&gt; `i` TODO insert in either proj_outline, or rename_file</span></span>
 <span><span class="co">#&gt; `i` FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works</span></span>
+<span><span class="co">#&gt; `i` FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.</span></span>
 <span><span class="co">#&gt; `i` TODO probably needs a `detect_genuine_path()`</span></span>
 <span><span class="co">#&gt; `i` Helpers</span></span>
 <span><span class="co">#&gt; `i` TODO Add false positive references</span></span>
 <span><span class="co">#&gt; `i` TODO fs::path and file.path should be handled differently</span></span>
+<span><span class="co">#&gt; `i` TODO refine extraction rules as needed. for now, we are ignoring.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/import-standalone-types-check.R`</span></span>
 <span><span class="co">#&gt; `i` Scalars</span></span>
@@ -308,6 +314,7 @@ Example outline
 <span><span class="co">#&gt; `i` Write my streets</span></span>
 <span><span class="co">#&gt; `i` TODO Create a new version</span></span>
 <span><span class="co">#&gt; `i` 'R/my-file.R'</span></span>
+<span><span class="co">#&gt; `i` **A table title**</span></span>
 <span><span class="co">#&gt; `i` Section title</span></span>
 <span><span class="co">#&gt; `i` A section</span></span>
 <span><span class="co">#&gt; `i` The last section</span></span>
@@ -452,7 +459,6 @@ Example outline
 <span><span class="co">#&gt; `i` TODO delete generated files</span></span>
 <span><span class="co">#&gt; `i` TODO [check_referenced_files] doesn't check for 'R/file.R'</span></span>
 <span><span class="co">#&gt; `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.</span></span>
-<span><span class="co">#&gt; `i` TODO exclude _files from `proj_list()`</span></span>
 <span><span class="co">#&gt; `i` TODO rename_files should be less noisy about project name file</span></span>
 <span><span class="co">#&gt; `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)</span></span>
 <span><span class="co">#&gt; `i` TODO use vapply() instead of purrr::map</span></span>
