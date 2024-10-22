@@ -57,9 +57,9 @@ active_rs_doc <- function() {
   if (!interactive() && !is_rstudio()) {
     return("Non-existing doc")
   }
-  if (!is_rstudio(f = "documentPath")) {
-    cli::cli_abort("Not in RStudio.")
-  }
+
+  if (is_rstudio(f = "documentPath")) {
+      # Not yet supported in Positron
   unsaved_doc <- tryCatch(rstudioapi::documentPath(), error = function(e) TRUE)
   if (isTRUE(unsaved_doc)) {
     return(NULL)
@@ -68,6 +68,15 @@ active_rs_doc <- function() {
     cli::cli_abort("Either RStudio is not available or you are trying to map an unsaved file")
   })
   path <- fs::path_expand_r(path)
+  } else if (is_rstudio(f = "getSourceEditorContext")) {
+    # Will work for Positron >= 2024.11
+    # https://github.com/posit-dev/positron/issues/5112
+    path <- rstudioapi::getSourceEditorContext()$path
+  } else {
+    cli::cli_abort("Not in RStudio or Positron. rstudioapi problem.")
+  }
+
+
   active_proj <- proj_get2()
   if (is.null(active_proj)) {
     return(invisible(path))

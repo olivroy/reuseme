@@ -23,7 +23,7 @@ test_that("alpha arguments works", {
     error = FALSE,
     file_outline(my_test_file, pattern = "street", alpha = TRUE),
     transform = ~ sub("_", "", .x, fixed = TRUE)
-  )
+  ) 
 })
 
 test_that("file_outline() is a data frame", {

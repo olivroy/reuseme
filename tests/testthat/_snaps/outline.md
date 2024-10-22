@@ -61,7 +61,7 @@
       `i` Load packages
       `i` Wrangle + visualize data
       `i` A great title
-      `i` TODO improve this Viz!
+      `i` TODO improve this Vizual!
 
 # pattern works as expected
 
@@ -79,7 +79,7 @@
       
       -- `outline-script.R`  Example for `file_outline()` 
     Output
-      `i` TODO improve this Viz!
+      `i` TODO improve this Vizual!
 
 ---
 

@@ -82,7 +82,7 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
       cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
     } else {
       return(proj_outline(
-        path = proj,
+        path = proj_path,
         pattern = pattern
       ))
     }
