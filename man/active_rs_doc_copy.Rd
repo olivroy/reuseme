@@ -8,7 +8,8 @@ active_rs_doc_copy(new = NULL, ..., old = NULL)
 }
 \arguments{
 \item{new}{The new file name, that will be copied in the same
-directory as the \link[=active_rs_doc]{active document}}
+directory as the \link[=active_rs_doc]{active document}
+For \code{active_rs_doc_move()}, a directory.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 

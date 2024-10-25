@@ -21,6 +21,14 @@ that will passed on to `proj_list()`
 
 * `use_todo("global::todo")` no longer works out of the box. You need to set `options(reuseme.global_todo = fs::path("Documents"))` explicitly (in .Rprofile) for example to make sure 
   reuseme can write in a directory.
+  
+* Added `file_move_temp_auto()` to automatically move a Downloads file to your project directory.
+
+* Added `active_rs_doc_move('dir')` as a shortcut for `rename_files2(fs::path('dir', fs::path_file(active_rs_doc()), active_rs_doc())`.
+
+* Added `file_rename_auto()` as a shortcut for `file.rename(fs::path(fs::path_dir(old_file), new_file, ext = fs::path_ext(old_file)), old_file)`
+
+* Added `file_move_auto()` as a shortcut for `file.rename(fs::path(new_dir, fs::path_file(old_file)), old_file)`
 
 ## Fixes
 

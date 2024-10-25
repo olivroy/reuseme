@@ -102,6 +102,7 @@ active_rs_doc <- function() {
 #'
 #' @param new The new file name, that will be copied in the same
 #'   directory as the [active document][active_rs_doc()]
+#'   For `active_rs_doc_move()`, a directory.
 #' @param old The old name, defaults to the active document.
 #' @inheritParams rlang::args_dots_empty
 #' @returns The new file name
@@ -109,6 +110,7 @@ active_rs_doc <- function() {
 #' @seealso [rename_files2()]
 #' @export
 active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
+  rlang::check_dots_empty()
   rlang::check_dots_empty()
   old <- old %||% active_rs_doc()
 
@@ -145,6 +147,31 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
     ))
   }
   invisible(new_path)
+}
+
+#' Move the active document to another directory
+#'
+#' Wrapper around [rename_files2()], but shortcut to allow renaming the active file.
+#'
+#' @param new A new directory
+#' @param old The old file (defaults to the active RStudio document.)
+#' @inheritDotParams rename_files2 -old
+#' @export
+#' @inherit rename_files2 return
+active_rs_doc_move <- function(new = NULL, old = NULL, ...) {
+  if (is.null(new)) {
+    cli::cli_abort("{.arg new} must be supplied and be a new directory")
+  }
+  rlang::check_dots_empty()
+  old <- old %||% active_rs_doc()
+
+  if (is.null(old)) {
+    cli::cli_abort("Unsaved document, focus on the saved doc you want to save.")
+  }
+
+  old_file_name <- fs::path_file(old)
+  new_file <- fs::path(new, old_file_name)
+  rename_files2(new = new_file, old = old, ...)
 }
 
 #' Delete the active RStudio document safely
