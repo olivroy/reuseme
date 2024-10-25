@@ -28,7 +28,7 @@ that will passed on to `proj_list()`
 
 * Added `file_rename_auto()` as a shortcut for `file.rename(fs::path(fs::path_dir(old_file), new_file, ext = fs::path_ext(old_file)), old_file)`
 
-* Added `file_move_auto()` as a shortcut for `file.rename(fs::path(new_dir, fs::path_file(old_file)), old_file)`
+* Added `file_move_dir_auto()` as a shortcut for `file.rename(fs::path(new_dir, fs::path_file(old_file)), old_file)`
 
 ## Fixes
 

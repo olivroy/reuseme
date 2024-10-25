@@ -40,7 +40,7 @@ file_move_temp_auto <- function(destdir) {
 #'
 #' @description
 #' * `file_rename_auto()` automatically renames your file to a better name while keeping the same folder structure
-#'
+#' * `file_move_dir_auto()` automatically moves your file while keeping the same file name
 #'
 #' # Advantages
 #'
@@ -86,8 +86,8 @@ file_rename_auto <- function(new_name, old_file = .Last.value) {
 
 #' @export
 #' @rdname file_rename_auto
-file_move_auto <- function(new_dir, old_file = .Last.value) {
-  if (!fs::file_exists(old_file) || fs::is_dir(old_fil)) {
+file_move_dir_auto <- function(new_dir, old_file = .Last.value) {
+  if (!fs::file_exists(old_file) || fs::is_dir(old_file)) {
     cli::cli_abort("Incorrect usage. {.arg old_file} = {.file {old_file}} doesn't exist.")
   }
 
