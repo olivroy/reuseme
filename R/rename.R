@@ -50,12 +50,12 @@ rename_files2 <- function(old,
   check_bool(overwrite)
 
   if (lifecycle::is_present(force)) {
-    lifecycle::deprecate_warn(
-      when = "0.0.9006",
+    lifecycle::deprecate_stop(
+      when = "0.1.0",
       what = "rename_files2(force)",
       with = "rename_files2(warn_conflicts)",
       details = cli::format_inline(
-        "{.arg overwrite} must be used with caution to allow overwriing {.code new}"
+        "{.arg overwrite} must be used with caution to allow overwriing {.code new}."
       )
     )
     if (isTRUE(force)) {
@@ -141,7 +141,8 @@ rename_files2 <- function(old,
     dir = ".",
     extra_msg = extra_msg_if_file_conflict,
     quiet = FALSE,
-    what = regex_friendly # either full path or basename.
+    what = regex_friendly, # either full path or basename.
+    new_file = new
   )
 
   if (renaming_strategy != "free_for_all" && n_file_names_conflicts > 10) {

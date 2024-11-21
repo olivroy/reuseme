@@ -74,12 +74,12 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @param extra_msg Extra message to pass
 #' @param what Which file conflicts we talking about
 #' @param quiet A logical, informs where the occurrences are found. (Default, `FALSE`)
-#'
+#' @param new_file (Optional) new file name
 #' @return Mostly called for its side-effects, but will return the number of matches
 #' (0 if no referenced files are problematic)
 #' @export
 #' @keywords internal
-solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL) {
+solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL, new_file = NULL) {
   regex <- stringr::str_replace_all(regex, "\\\\|\\)|\\(|\\}\\{\\?|\\$|~", ".")
   # regex <- as.character(regex)
   if (dir != ".") {
@@ -90,6 +90,11 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     purrr::map(\(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
     purrr::map(\(x) tibble::enframe(x, name = "line_number", value = "content")) |>
     dplyr::bind_rows(.id = "file")
+
+  if (!is.null(new_file)) {
+    nchar_new_file <- nchar(new_file)
+    bullets_df$content <- gsub(new_file, paste0("x", nchar_new_file), bullets_df$content, fixed = TRUE)
+  }
 
   bullets_df <- bullets_df[grepl(regex, bullets_df$content), ]
 

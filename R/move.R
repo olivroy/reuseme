@@ -58,15 +58,15 @@ file_move_temp_auto <- function(destdir) {
 #'
 #' @returns The new full path name, invisibly, allowing you to call the functions another time.
 file_rename_auto <- function(new_name, old_file = .Last.value) {
-  if (!fs::is_file(old_name)) {
-    cli::cli_abort("incorrect context for .rename_temp.")
+  if (!fs::is_file(old_file)) {
+    cli::cli_abort("incorrect context for {.fn file_rename_auto}.")
   }
   # path_dir() behaves weirdly if not an fs path
   # fs::path_dir("~/")
   # fs::path_dir(fs::path("~))
   # Workaround r-lib/fs#459
-  old_path <- fs::path_real(old_name)
-  ext <- fs::path_ext(old_name)
+  old_path <- fs::path_real(old_file)
+  ext <- fs::path_ext(old_file)
   # TRICK {{wf}} path_ext_set replaces or appends extension
   new_name <- fs::path_ext_set(new_name, ext)
   new_path <- fs::path(
@@ -75,7 +75,7 @@ file_rename_auto <- function(new_name, old_file = .Last.value) {
   )
   fs::file_move(old_path, new_path)
   cli::cli_inform(c(
-    v = "Successfully moved {.file {old_name}} to {.val {new_name}}.",
+    v = "Successfully moved {.file {old_path}} to {.val {new_name}}.",
     "Open with {.run fs::file_show('{as.character(new_path)}')}",
     "For new name, call `reuseme::file_rename_auto('better-name-sans-ext')` immediately.",
     "For new dir, call `reuseme::file_move_auto('better-name-sans-ext')` immediately."

@@ -26,6 +26,8 @@ reference:
   - use_todo
   - screenshot
   - rename_files2
+  - file_move_temp_auto
+  - file_rename_auto
   - starts_with("active_rs_doc")
 
 - title: Data analysis helpers / EDA

@@ -121,8 +121,9 @@ proj_list <- function(proj = NA, dirs = getOption("reuseme.reposdir")) {
   if (!is.na(proj) && length(proj) == 1) {
     # avoid creating a nested project.
     # known direct
-    if (!proj %in% c("pkgdown", "testthat", "R", "man", "tests", "inst", "src", "vignettes")) {
+    if (!proj %in% c("pkgdown", "testthat", "R", "man", "tests", "inst", "src", "vignettes", "images")) {
       if (fs::dir_exists(proj)) {
+
         return(
           rlang::set_names(
             proj,
