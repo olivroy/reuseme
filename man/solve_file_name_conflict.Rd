@@ -10,7 +10,8 @@ solve_file_name_conflict(
   dir = ".",
   extra_msg = NULL,
   quiet = FALSE,
-  what = NULL
+  what = NULL,
+  new_file = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ solve_file_name_conflict(
 \item{quiet}{A logical, informs where the occurrences are found. (Default, \code{FALSE})}
 
 \item{what}{Which file conflicts we talking about}
+
+\item{new_file}{(Optional) new file name}
 }
 \value{
 Mostly called for its side-effects, but will return the number of matches

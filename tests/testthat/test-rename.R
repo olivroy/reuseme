@@ -126,8 +126,7 @@ test_that("force and action are deprecated", {
   file <- withr::local_tempfile(fileext = ".R", lines = "# x1")
   file2 <- withr::local_tempfile(fileext = ".R")
   unlink(file2)
-  lifecycle::expect_deprecated(
+  lifecycle::expect_defunct(
     rename_files2(file, file2, force = TRUE)
-  ) |>
-    expect_message("Renamed .+ by force")
+  )
 })
