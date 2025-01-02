@@ -66,6 +66,7 @@ test_that("o_is_cli_info() works", {
 })
 
 test_that("No outline criteria are untested", {
+  skip_on_covr()
   skip_on_ci()
   skip_on_cran()
   # using technique in tidyverse/ggplot2#5754

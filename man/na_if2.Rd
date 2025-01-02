@@ -4,10 +4,12 @@
 \alias{na_if2}
 \title{Transform to NA any of the condition}
 \usage{
-na_if2(x, values, expr)
+na_if2(x, ..., values, expr)
 }
 \arguments{
 \item{x}{A vector.}
+
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{values}{A vector of values. If the length of values = 1, it is actually
 the preferable to use \code{dplyr::na_if()} for clarity.}

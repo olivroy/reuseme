@@ -462,6 +462,7 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
 #' values of `y` are never recycled. There are two ways to provide the condition.
 #' As values or as a logical vector.
 #' @param x A vector.
+#' @inheritParams rlang::args_dots_empty
 #' @param values A vector of values. If the length of values = 1, it is actually
 #'   the preferable to use `dplyr::na_if()` for clarity.
 #' @param expr A logical vector same length as x
@@ -477,7 +478,7 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
 #' # NA all 1 and 2
 #' na_if2(vec, c(1, 2))
 #' na_if2(vec, expr = vec2 == "Here")
-na_if2 <- function(x, values, expr) {
+na_if2 <- function(x, ..., values, expr) {
   switch(rlang::check_exclusive(expr, values),
     expr = {
       if (!is.logical(expr)) {

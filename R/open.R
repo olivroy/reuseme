@@ -7,8 +7,8 @@
 #'   unsaved files gracefully
 #' @inheritParams rstudioapi::documentOpen
 #' @param move_cursor Boolean; move the cursor to the requested location after
-#'   opening the document?
-#' @return Invisibly returns the document id
+#'   opening the document? s
+#' @return Invisibly returns the document ids
 #' @export
 #' @examples
 #' if (FALSE) {

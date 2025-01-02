@@ -17,10 +17,10 @@ active_rs_doc()
 \item{col}{The column in the document to navigate to.}
 
 \item{move_cursor}{Boolean; move the cursor to the requested location after
-opening the document?}
+opening the document? s}
 }
 \value{
-Invisibly returns the document id
+Invisibly returns the document ids
 }
 \description{
 Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.

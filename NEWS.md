@@ -2,6 +2,8 @@
 
 ## Breaking change
 
+* `na_if2()` gains `...` to force you to specify `values` or `expr` explicitly.
+
 * To facilitate piping, `path` / `proj` is now the first argument of `proj_outline()`, `file_outline()`, and `dir_outline()`.
 
 * If you previously relied on specifying pattern without naming it, you will have 
