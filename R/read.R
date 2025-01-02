@@ -13,7 +13,7 @@
 #'
 read_clean <- function(file, ...) {
   file_ext <- fs::path_ext(file)
-  rlang::check_installed(c("labelled", "readr", "readxl", "janitor"))
+  rlang::check_installed(c("readr", "readxl"))
   f <- switch(
     file_ext,
     "csv" = readr::read_csv,
@@ -25,9 +25,12 @@ read_clean <- function(file, ...) {
   dat <- f(file, ...)
   labels <- names(dat)
 
+  rlang::check_installed("janitor")
   dat <- janitor::clean_names(dat)
 
   if (!identical(names(dat), labels)) {
+    # TODO inline this..
+    rlang::check_installed("labelled")
     dat <- labelled::set_variable_labels(dat, .labels = labels)
   }
 

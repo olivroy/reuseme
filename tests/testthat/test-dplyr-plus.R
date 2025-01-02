@@ -207,10 +207,10 @@ test_that("na_if2() works with expr and values", {
 
   expect_equal(na_if2(vec, expr = TRUE), rep(NA_real_, 4))
   expect_equal(
-    na_if2(vec, 2),
+    na_if2(vec, values = 2),
     dplyr::na_if(vec, 2)
   )
   # NA all 1 and 2
-  expect_equal(na_if2(vec, c(1, 2)), c(0, rep(NA_real_, 3)))
+  expect_equal(na_if2(vec, values = c(1, 2)), c(0, rep(NA_real_, 3)))
   expect_equal(na_if2(vec, expr = vec2 == "Here"), c(NA_real_, 1, 1, NA))
 })
