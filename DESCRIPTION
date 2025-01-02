@@ -35,6 +35,8 @@ Suggests:
     curl,
     gert,
     gt,
+    janitor,
+    labelled,
     magick,
     pillar,
     readr,

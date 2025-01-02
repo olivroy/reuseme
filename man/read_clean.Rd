@@ -24,7 +24,11 @@ string with a new line.
 Using a value of \code{\link[readr:clipboard]{clipboard()}} will read from the system clipboard.}
 }
 \description{
-Reads data from file, but clean names with \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}}
+Reads data from file, but clean names with \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}}.
+}
+\details{
+It keeps the variable labels attributes to have improved support in the RStudio IDE,
+with gt tables and with ggplots (>= 3.6.0).
 }
 \examples{
 read_clean(system.file("extdata",  "challenge.csv", package = "readr"))
