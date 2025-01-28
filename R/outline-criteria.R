@@ -209,7 +209,8 @@ define_outline_criteria <- function(.data, print_todo) {
     is_second_level_heading_or_more = (is_section_title_source | is_section_title) & n_leading_hash > 1,
     is_cross_ref = stringr::str_detect(content, "docs_(save.+|links|add.+)?\\(.") & !stringr::str_detect(content, "@param|\\{\\.|str_"),
     is_cross_ref = is_cross_ref & stringr::str_detect(content, "\\d"),
-    is_function_def = grepl("<- function(", content, fixed = TRUE) & !stringr::str_starts(content, "\\s*#"),
+    is_function_def = (grepl("<- function(", content, fixed = TRUE) | startsWith(content, ".rs.addFunction(")) &
+      !stringr::str_starts(content, "\\s*#"),
     is_tab_or_plot_title = o_is_tab_plot_title(content) & !is_section_title & !is_function_def,
   )
   x <- dplyr::mutate(

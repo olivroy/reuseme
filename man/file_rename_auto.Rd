@@ -3,11 +3,14 @@
 \name{file_rename_auto}
 \alias{file_rename_auto}
 \alias{file_move_dir_auto}
+\alias{file_copy_auto}
 \title{Move file automatically between folders}
 \usage{
 file_rename_auto(new_name, old_file = .Last.value)
 
 file_move_dir_auto(new_dir, old_file = .Last.value)
+
+file_copy_auto(new_dir, old_file = .Last.value)
 }
 \arguments{
 \item{new_name, new_dir}{New directory or file name (without extension)}
@@ -21,6 +24,7 @@ The new full path name, invisibly, allowing you to call the functions another ti
 \itemize{
 \item \code{file_rename_auto()} automatically renames your file to a better name while keeping the same folder structure
 \item \code{file_move_dir_auto()} automatically moves your file while keeping the same file name
+\item \code{file_copy_auto()} automatically copies your file while keeping the same file name (Useful to copy read-only files).
 }
 }
 \section{Advantages}{

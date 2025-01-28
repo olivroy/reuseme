@@ -55,3 +55,7 @@ reference:
       but are really useful as you can make your data analysis as chatty as you want interactively.
   contents:
   - eda-identity
+
+- subtitle: read data and clean names
+  contents:
+  - read_clean

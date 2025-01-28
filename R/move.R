@@ -41,6 +41,7 @@ file_move_temp_auto <- function(destdir) {
 #' @description
 #' * `file_rename_auto()` automatically renames your file to a better name while keeping the same folder structure
 #' * `file_move_dir_auto()` automatically moves your file while keeping the same file name
+#' * `file_copy_auto()` automatically copies your file while keeping the same file name (Useful to copy read-only files).
 #'
 #' # Advantages
 #'
@@ -99,6 +100,26 @@ file_move_dir_auto <- function(new_dir, old_file = .Last.value) {
   )
   cli::cli_inform(c(
     v = "Successfully moved {.val {old_file_name}} to {.file {new_file_name}}.",
+    "i" = "Call `reuseme::file_rename_auto('new-file-with-no-ext')` to rename"
+  ))
+  invisible(new_file_name)
+}
+
+#' @export
+#' @rdname file_rename_auto
+file_copy_auto <- function(new_dir, old_file = .Last.value) {
+  if (!fs::file_exists(old_file) || fs::is_dir(old_file)) {
+    cli::cli_abort("Incorrect usage. {.arg old_file} = {.file {old_file}} doesn't exist.")
+  }
+
+  old_file_name <- fs::path_file(old_file)
+  new_file_name <- fs::path(new_dir, old_file_name)
+  fs::file_copy(
+    old_file,
+    new_file_name
+  )
+  cli::cli_inform(c(
+    v = "Successfully copied {.val {old_file_name}} to {.file {new_file_name}}.",
     "i" = "Call `reuseme::file_rename_auto('new-file-with-no-ext')` to rename"
   ))
   invisible(new_file_name)

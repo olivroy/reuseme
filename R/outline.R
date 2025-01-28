@@ -649,7 +649,7 @@ display_outline_element <- function(.data) {
   is_md <- NULL
   is_tab_or_plot_title <- NULL
   is_doc_title <- NULL
-  
+
   x <- .data
   org_repo <- find_pkg_org_repo(unique(x$file))
   if (!is.null(org_repo)) {
@@ -672,6 +672,7 @@ display_outline_element <- function(.data) {
       is_doc_title ~ stringr::str_remove_all(outline_el, "subtitle\\:\\s?|title\\:\\s?|\"|\\#\\|\\s?"),
       is_section_title & !is_md ~ stringr::str_remove(outline_el, "^\\s{0,4}\\#+\\s+|^\\#'\\s\\#+\\s+"), # Keep inline markup
       is_section_title & is_md ~ stringr::str_remove_all(outline_el, "^\\#+\\s+|\\{.+\\}|<(a href|img src).+$"), # strip cross-refs.
+      is_function_def & startsWith(outline_el, ".rs.") ~ stringr::str_extract(outline_el, '.rs.addFunction\\("([^,]+)"', group = 1),
       is_function_def ~ stringr::str_extract(outline_el, "(.+)\\<-", group = 1) |> stringr::str_trim(),
       .default = stringr::str_remove_all(outline_el, "^\\s*\\#+\\|?\\s?(label:\\s)?|\\s?[-\\=]{4,}")
     ),
