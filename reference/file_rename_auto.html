@@ -3,11 +3,13 @@
 
 file_rename_auto() automatically renames your file to a better name while keeping the same folder structure
 file_move_dir_auto() automatically moves your file while keeping the same file name
+file_copy_auto() automatically copies your file while keeping the same file name (Useful to copy read-only files).
 
 "><meta property="og:description" content="
 
 file_rename_auto() automatically renames your file to a better name while keeping the same folder structure
 file_move_dir_auto() automatically moves your file while keeping the same file name
+file_copy_auto() automatically copies your file while keeping the same file name (Useful to copy read-only files).
 
 "></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -17,7 +19,7 @@ file_move_dir_auto() automatically moves your file while keeping the same file n
 
     <a class="navbar-brand me-2" href="../index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9009</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,13 +49,16 @@ file_move_dir_auto() automatically moves your file while keeping the same file n
 
 <ul><li><p><code>file_rename_auto()</code> automatically renames your file to a better name while keeping the same folder structure</p></li>
 <li><p><code>file_move_dir_auto()</code> automatically moves your file while keeping the same file name</p></li>
+<li><p><code>file_copy_auto()</code> automatically copies your file while keeping the same file name (Useful to copy read-only files).</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">file_rename_auto</span><span class="op">(</span><span class="va">new_name</span>, old_file <span class="op">=</span> <span class="va">.Last.value</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">file_move_dir_auto</span><span class="op">(</span><span class="va">new_dir</span>, old_file <span class="op">=</span> <span class="va">.Last.value</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">file_move_dir_auto</span><span class="op">(</span><span class="va">new_dir</span>, old_file <span class="op">=</span> <span class="va">.Last.value</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">file_copy_auto</span><span class="op">(</span><span class="va">new_dir</span>, old_file <span class="op">=</span> <span class="va">.Last.value</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
