@@ -97,7 +97,7 @@ test_that("Marking a TODO item as done works", {
 test_that("use_todo() global works", {
   skip_on_cran()
   skip_on_ci()
-  skip_if(is.null(getOption("reuseme.global_todo")))
+  skip_if(is.null(getOption("reuseme.global_todo")), "Option reuseme.global_todo is not set.")
   expect_no_error(
     suppressMessages(path <- use_todo("global::it is time"))
   )

@@ -7,6 +7,8 @@
 #'
 #'
 #' @inheritParams readr::read_csv
+#' @inheritDotParams readr::read_csv
+#' @inheritDotParams readxl::read_excel
 #' @export
 #' @examples
 #' read_clean(system.file("extdata",  "challenge.csv", package = "readr"))

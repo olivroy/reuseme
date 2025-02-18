@@ -57,6 +57,7 @@ link_local_gh_issue <- function(x, repo_home) {
     x
   )
 }
+
 find_pkg_org_repo <- function(file = NULL) {
   rlang::local_interactive(FALSE)
   withr::local_options("usethis.quiet" = TRUE)
@@ -122,6 +123,7 @@ find_pkg_org_repo <- function(file = NULL) {
   }
   org_repo_found
 }
+
 #' Create a cli href with a markdown link
 #'
 #' Transforms `[text](url)` -> `{.href [text](url)}`
@@ -176,6 +178,7 @@ markup_href <- function(x) {
   x[has_md_url] <- x_changed
   x
 }
+
 common_regex <- function(which) {
   x <- c(
     # usage of double negation will make it work

@@ -123,7 +123,6 @@ proj_list <- function(proj = NA, dirs = getOption("reuseme.reposdir")) {
     # known direct
     if (!proj %in% c("pkgdown", "testthat", "R", "man", "tests", "inst", "src", "vignettes", "images")) {
       if (fs::dir_exists(proj)) {
-
         return(
           rlang::set_names(
             proj,

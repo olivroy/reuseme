@@ -107,8 +107,9 @@ file_move_dir_auto <- function(new_dir, old_file = .Last.value) {
 
 #' @export
 #' @rdname file_rename_auto
-file_copy_auto <- function(new_dir, old_file = .Last.value) {
-  if (!fs::file_exists(old_file) || fs::is_dir(old_file)) {
+#' @inheritParams fs::file_copy
+file_copy_auto <- function(new_dir, old_file = .Last.value, overwrite = FALSE) {
+  if (!all(fs::file_exists(old_file)) || any(fs::is_dir(old_file))) {
     cli::cli_abort("Incorrect usage. {.arg old_file} = {.file {old_file}} doesn't exist.")
   }
 
@@ -116,7 +117,8 @@ file_copy_auto <- function(new_dir, old_file = .Last.value) {
   new_file_name <- fs::path(new_dir, old_file_name)
   fs::file_copy(
     old_file,
-    new_file_name
+    new_file_name,
+    overwrite = overwrite
   )
   cli::cli_inform(c(
     v = "Successfully copied {.val {old_file_name}} to {.file {new_file_name}}.",

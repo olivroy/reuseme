@@ -476,7 +476,7 @@ summarise_with_total <- function(.data, ..., .by = NULL, .label = "Total", .firs
 #' # You can actually use dplyr::na_if() in this case
 #' dplyr::na_if(vec, 2)
 #' # NA all 1 and 2
-#' na_if2(vec, c(1, 2))
+#' na_if2(vec, values = c(1, 2))
 #' na_if2(vec, expr = vec2 == "Here")
 na_if2 <- function(x, ..., values, expr) {
   switch(rlang::check_exclusive(expr, values),

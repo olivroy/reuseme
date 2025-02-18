@@ -71,6 +71,8 @@ that will passed on to `proj_list()`
 
 * `check_referenced_files()` now checks `_quarto.yml`.
 
+* `check_referenced_files()` now has less false positives.
+
 # reuseme 0.0.2
 
 * `complete_todo()` no longer deletes the full line. It only deletes what it says it deletes (#27).

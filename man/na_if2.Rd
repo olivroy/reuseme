@@ -31,6 +31,6 @@ vec2 <- c("Here", "not", NA, "Here")
 # You can actually use dplyr::na_if() in this case
 dplyr::na_if(vec, 2)
 # NA all 1 and 2
-na_if2(vec, c(1, 2))
+na_if2(vec, values = c(1, 2))
 na_if2(vec, expr = vec2 == "Here")
 }

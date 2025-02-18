@@ -10,12 +10,15 @@ file_rename_auto(new_name, old_file = .Last.value)
 
 file_move_dir_auto(new_dir, old_file = .Last.value)
 
-file_copy_auto(new_dir, old_file = .Last.value)
+file_copy_auto(new_dir, old_file = .Last.value, overwrite = FALSE)
 }
 \arguments{
 \item{new_name, new_dir}{New directory or file name (without extension)}
 
 \item{old_file}{The old file name}
+
+\item{overwrite}{Overwrite files if they exist. If this is \code{FALSE} and the
+file exists an error will be thrown.}
 }
 \value{
 The new full path name, invisibly, allowing you to call the functions another time.

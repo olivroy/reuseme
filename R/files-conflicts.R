@@ -31,14 +31,17 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   }
 
   # TODO probably needs a `detect_genuine_path()`
+  # Returns
   referenced_files <- get_referenced_files(path)
 
   files_detected <- unique(referenced_files)
   references_a_non_existent_file <- !(fs::file_exists(files_detected) | file.exists(files_detected)) # to avoid burden for now.
+
   if (!any(references_a_non_existent_file)) {
     if (!quiet) cli::cli_inform(c("v" = "All referenced files in current dir exist."))
     return(invisible())
   }
+
   # maybe order (so link to location) isn't quite right when many are found?
   non_existent_files <- files_detected[references_a_non_existent_file]
   if (quiet) {
@@ -48,7 +51,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
         i = "See {.help reuseme::check_referenced_files} for more info.",
         "There are locations in source files (qmd, Rmd, R) where a non-existent file (.csv, .xlsx etc.) is referenced.",
         "Run {.code check_referenced_files(quiet = FALSE)} to see where this file is referenced.",
-        "{non_existent_files_show}"
+        "{.file {non_existent_files}}"
       ),
       call = expr(check_referenced_files())
     )
@@ -80,11 +83,13 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @export
 #' @keywords internal
 solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL, new_file = NULL) {
-  regex <- stringr::str_replace_all(regex, "\\\\|\\)|\\(|\\}\\{\\?|\\$|~", ".")
-  # regex <- as.character(regex)
+  # Remove potential regex conflicts
+  regex <- stringr::str_replace_all(regex, "\\\\|\\)|\\(|\\}|\\{|\\?|\\$|~|\\*|\\^", ".")
+
   if (dir != ".") {
     cli::cli_abort("Don't know how to do this.")
   }
+
   bullets_df <-
     rlang::set_names(files) |>
     purrr::map(\(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
@@ -119,11 +124,13 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
     # Will truncate 20 (revert up if you don't like)
     display_msg <- NULL
     bullets_to_display <- cli::ansi_collapse(bullets)
+
     f_inform <- if (length(bullets) > 20) {
       cli::cli_warn
     } else {
       cli::cli_inform
     }
+
     # Remove duplicated Found x references
     which_bullet_to_replace <- stringr::str_subset(extra_msg, stringr::fixed("Found references to"), negate = TRUE)
     # possibly just move up our
@@ -148,42 +155,37 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
 
 # Helpers ----------------
 
+# Read content of file (with file path)
+
 get_referenced_files <- function(files) {
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
   potential_files_refs <- purrr::map(files, \(x) readLines(x, encoding = "UTF-8", warn = FALSE)) |>
     purrr::list_c(ptype = "character") |>
-    stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt", negate = TRUE) |> # remove false positive from .md files
-    stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(|path_package|system.file", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
-    stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
+    stringr::str_subset(pattern = "\\:\\:dav.+lt|\\:\\:nw_|g.docs_l.n|target-|\\.0pt|https?\\:", negate = TRUE) |> # remove false positive from .md files
+    stringr::str_subset(pattern = "file.path|fs\\:\\:path\\(|path_package|system.file|withr", negate = TRUE) |> # Exclude fs::path() and file.path from search since handled differently.
+    stringr::str_subset(pattern = "file.[(exist)|(delete)]|glue\\:\\:glue|unlink|write_union|open_rs_doc|use_build_ign|use_git", negate = TRUE) |> # don't detect where we test for existence of path or construct a path with glue
     stringr::str_subset(pattern = "[(regexp)|(pattern)]\\s\\=.*\".*[:alpha:]\"", negate = TRUE) |> # remove regexp = a.pdf format
     stringr::str_subset(pattern = "grepl?\\(|stringr|g?sub\\(", negate = TRUE) |> # avoid regexp
     stringr::str_subset(pattern = stringr::fixed("nocheck"), negate = TRUE) |> # nocheck is a way to add
     stringr::str_subset(pattern = "standalone-.+\\.R", negate = TRUE) # Avoid import standalone file ref.
 
-  ref_files_strings <- extract_files_as_strings(potential_files_refs)
+  # Extract file name as string
+  ref_files_strings <- extract_string_file_names(potential_files_refs)
 
-  # the the .file file-ref
-  ref_files_unquoted <- potential_files_refs |>
-    stringr::str_subset("\\.[Rq]md|\\.R|\\.ya?ml|\\.csv|\\.xlsx") |>
-    stringr::str_subset("read_.+\\(|excel_sheets", negate = TRUE) |> # Avoid the read_excel read_ (will be caught in strings)
-    stringr::str_remove("^\\s+\\-\\s+") |> # trim _quarto.yml
-    stringr::str_remove("href:\\s")
+  # Extract file name from line content (to catch cli files)
+  ref_files_unquoted <- extract_plain_file_names(potential_files_refs)
 
-  ref_files_unquoted2 <- dplyr::case_when(
-    stringr::str_detect(ref_files_unquoted, "file/file") ~ NA,
-    # TODO refine extraction rules as needed. for now, we are ignoring.
-    stringr::str_length(ref_files_unquoted) > 100 ~ NA,
-    stringr::str_detect(ref_files_unquoted, "\\{.file") ~ stringr::str_extract(ref_files_unquoted, "\\{.file ([^\\}]+)\\}", group = 1),
-    .default = ref_files_unquoted
-  )
-  ref_files_unquoted2 <- rlang::set_names(ref_files_unquoted2[!is.na(ref_files_unquoted2)])
+  ref_files_strings <- rlang::set_names(ref_files_strings)
+  ref_files_unquoted <- rlang::set_names(ref_files_unquoted[!is.na(ref_files_unquoted)])
 
-  c(ref_files_strings, ref_files_unquoted2)
+  # Returns unquoted and string potential file names
+  c(ref_files_strings, ref_files_unquoted)
 }
 
-extract_files_as_strings <- function(lines) {
+# Extract file name as string (if they are used in R code)
+extract_string_file_names <- function(lines) {
   lines |> # remove nocheck and unlink statements (refers to deleted files anywa)
     stringr::str_subset(stringr::fixed("\"")) |>
     stringr::str_trim() |>
@@ -198,6 +200,45 @@ extract_files_as_strings <- function(lines) {
     stringr::str_subset(pattern = stringr::fixed("_fichiers/"), negate = TRUE) |> # manually remove false positive
     stringr::str_subset(pattern = "\n", negate = TRUE) |> # remove things with line breaks
     stringr::str_subset(pattern = "^\\.[:alpha:]{1,4}$", negate = TRUE) |> # remove reference to only file extensions
-    stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) |> # remove 0.000 type
-    rlang::set_names()
+    stringr::str_subset(pattern = "\\.\\d+$", negate = TRUE) # remove 0.000 type
+}
+
+# For debugging I'd need to have a function that takes the content of a line
+# that returns what file path it returns
+extract_plain_file_names <- function(lines) {
+  # the the .file file-ref
+  ref_files_unquoted <- lines |>
+    stringr::str_subset("[:alnum:](\\.[Rq]md|\\.R|\\.ya?ml|\\.csv|\\.xlsx)") |> # update below too
+    stringr::str_subset("read_.+\\(|excel_sheets|= FALSE|= TRUE", negate = TRUE) |> # Avoid the read_excel read_ (will be caught in strings)
+    stringr::str_remove("^\\s+\\-\\s+") |> # trim _quarto.yml
+    stringr::str_remove("href:\\s") |>
+    # remove pipe
+    stringr::str_remove("\\s*\\||\\>") |>
+    # Remove assignment
+    stringr::str_remove(".+<-\\s")
+
+  # Remove everything after the extension
+
+
+  ref_files_unquoted <- stringr::str_replace(ref_files_unquoted, "\\{\\.path", "{.file")
+  ref_files_unquoted <- stringr::str_replace(ref_files_unquoted, "write\\.csv", "write_csv")
+  ref_files_unquoted <- stringr::str_replace(ref_files_unquoted, "(\\.([Rq]md|R|ya?ml|csv|xlsx)(?!\\})).+", "\\1")
+  # remove leading comment
+  ref_files_unquoted <- stringr::str_remove(ref_files_unquoted, "^[#\\s']+")
+
+  # Remove leading quote
+  ref_files_unquoted <- stringr::str_remove(ref_files_unquoted, "^\"")
+  ref_files_unquoted3 <- dplyr::case_when(
+    stringr::str_detect(ref_files_unquoted, "file/file") ~ NA_character_,
+    grepl("{.file", ref_files_unquoted, fixed = TRUE) ~ stringr::str_extract(ref_files_unquoted, "\\{.file ([^\\}]+)\\}", group = 1),
+    # let's assume that if we don't use the cli file, we don't use space in our file
+    stringr::str_detect(ref_files_unquoted, "`") ~ stringr::str_remove(ref_files_unquoted, "[^`]+`"),
+    # TODO refine extraction rules as needed. for now, we are ignoring.
+    stringr::str_length(ref_files_unquoted) > 100 ~ NA_character_,
+    stringr::str_count(ref_files_unquoted, "\\s") >= 3 ~ stringr::str_remove_all(ref_files_unquoted, ".+\\s"),
+    .default = ref_files_unquoted
+  )
+  # remove false positive that contains a character that makes no sense
+  ref_files_unquoted4 <- ref_files_unquoted3[!grepl("=|\\:\\:", ref_files_unquoted3)]
+  ref_files_unquoted4
 }

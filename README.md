@@ -168,7 +168,7 @@ bench::mark(
 #> # A tibble: 1 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 outline <- proj_outline()    757ms    757ms      1.32    22.1MB     2.64
+#> 1 outline <- proj_outline()    825ms    825ms      1.21      23MB     2.42
 ```
 
 <details>
@@ -186,7 +186,7 @@ outline
 #> `i` Load packages
 #> `i` Wrangle + visualize data
 #> `i` A great title
-#> `i` TODO improve this Viz!
+#> `i` TODO improve this Vizual!
 #> 
 #> ── `R/dplyr-plus.R`  dplyr extra
 #> `i` FIXME Doesn't work, problem with symbols here
@@ -242,6 +242,9 @@ outline
 #> ── `R/proj-list.R`
 #> `i` TODO maybe add a max?
 #> `i` TODO improve on this message
+#> 
+#> ── `R/read.R`
+#> `i` TODO inline this..
 #> 
 #> ── `R/rename.R`
 #> `i` After here, we start doing some renaming real situations
@@ -351,6 +354,9 @@ outline
 #> ── `tests/testthat/_snaps/screenshot.md`
 #> `i` screenshot() does nothing in non-interactive sessions
 #> 
+#> ── `tests/testthat/_snaps/select-check.md`
+#> `i` select_check() works
+#> 
 #> ── `tests/testthat/_snaps/todo.md`
 #> `i` Marking a TODO item as done works
 #> 
@@ -424,7 +430,6 @@ outline
 #> `i` TODO outline todos in qmd file inside html comment
 #> `i` TODO reframe more than one issue. nw drive
 #> `i` TODO delete generated files
-#> `i` TODO [check_referenced_files] doesn't check for 'R/file.R'
 #> `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.
 #> `i` TODO rename_files should be less noisy about project name file
 #> `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)

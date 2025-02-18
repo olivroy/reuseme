@@ -44,6 +44,8 @@ reference:
   - case_if_any
   - filter_if_any
   - filter_detect
+  - select_check
+  - visual_diff_df
   - extract_cell_value
   - slice_group_sample
   - na_if2
