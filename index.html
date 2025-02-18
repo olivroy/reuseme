@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">reuseme</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2.9010</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -205,7 +205,7 @@ Open it
 <span><span class="co">#&gt; # A tibble: 1 × 6</span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   &lt;bch:expr&gt;                &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    757ms    757ms      1.32    22.1MB     2.64</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 outline &lt;- proj_outline()    825ms    825ms      1.21      23MB     2.42</span></span></code></pre></div>
 <details><summary>
 Example outline
 </summary><p>
@@ -219,7 +219,7 @@ Example outline
 <span><span class="co">#&gt; `i` Load packages</span></span>
 <span><span class="co">#&gt; `i` Wrangle + visualize data</span></span>
 <span><span class="co">#&gt; `i` A great title</span></span>
-<span><span class="co">#&gt; `i` TODO improve this Viz!</span></span>
+<span><span class="co">#&gt; `i` TODO improve this Vizual!</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/dplyr-plus.R`  dplyr extra</span></span>
 <span><span class="co">#&gt; `i` FIXME Doesn't work, problem with symbols here</span></span>
@@ -275,6 +275,9 @@ Example outline
 <span><span class="co">#&gt; ── `R/proj-list.R`</span></span>
 <span><span class="co">#&gt; `i` TODO maybe add a max?</span></span>
 <span><span class="co">#&gt; `i` TODO improve on this message</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `R/read.R`</span></span>
+<span><span class="co">#&gt; `i` TODO inline this..</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `R/rename.R`</span></span>
 <span><span class="co">#&gt; `i` After here, we start doing some renaming real situations</span></span>
@@ -384,6 +387,9 @@ Example outline
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/screenshot.md`</span></span>
 <span><span class="co">#&gt; `i` screenshot() does nothing in non-interactive sessions</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── `tests/testthat/_snaps/select-check.md`</span></span>
+<span><span class="co">#&gt; `i` select_check() works</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── `tests/testthat/_snaps/todo.md`</span></span>
 <span><span class="co">#&gt; `i` Marking a TODO item as done works</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -457,7 +463,6 @@ Example outline
 <span><span class="co">#&gt; `i` TODO outline todos in qmd file inside html comment</span></span>
 <span><span class="co">#&gt; `i` TODO reframe more than one issue. nw drive</span></span>
 <span><span class="co">#&gt; `i` TODO delete generated files</span></span>
-<span><span class="co">#&gt; `i` TODO [check_referenced_files] doesn't check for 'R/file.R'</span></span>
 <span><span class="co">#&gt; `i` TODO browse_pkg should open by default if no vignettes are found, because there is not much to do in the R-session.</span></span>
 <span><span class="co">#&gt; `i` TODO rename_files should be less noisy about project name file</span></span>
 <span><span class="co">#&gt; `i` TODO add_to_tricks(). when detecting TRICK like complete todo, but not remove line. requires a scheme. moves the item to tricks.md at the correct place. (copy to clipboard is probably enough)</span></span>
