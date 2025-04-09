@@ -19,16 +19,7 @@
 #' 3. Deleted with `fs::file_delete()`, `unlink()`
 check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
-  if (path == "." || fs::is_dir(path)) {
-    # FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
-    path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ya?ml|builignore)$", all = TRUE, type = "file")
-    # FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.
-    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|_site|.github|_pkgdown|\\.revealjs\\.md$|\\.html\\.md$", invert = TRUE) # need to do this in 2 places
-  } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown", "gitignore", "Rbuildignore")) {
-    path <- path
-  } else {
-    cli::cli_abort("Wrong specification.")
-  }
+  path <- extract_source_files_to_check(path)
 
   # TODO probably needs a `detect_genuine_path()`
   # Returns
@@ -83,6 +74,9 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
 #' @export
 #' @keywords internal
 solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, quiet = FALSE, what = NULL, new_file = NULL) {
+
+  # normalize files.
+  files <- extract_source_files_to_check(files)
   # Remove potential regex conflicts
   regex <- stringr::str_replace_all(regex, "\\\\|\\)|\\(|\\}|\\{|\\?|\\$|~|\\*|\\^", ".")
 
@@ -157,7 +151,9 @@ solve_file_name_conflict <- function(files, regex, dir = ".", extra_msg = NULL, 
 
 # Read content of file (with file path)
 
-get_referenced_files <- function(files) {
+get_referenced_files <- function(path) {
+  # Make it easier to debug by re-extracting paths if needed
+  files <- extract_source_files_to_check(path)
   # Create a list of genuine referenced files
   # TODO Add false positive references
   # TODO fs::path and file.path should be handled differently
@@ -241,4 +237,23 @@ extract_plain_file_names <- function(lines) {
   # remove false positive that contains a character that makes no sense
   ref_files_unquoted4 <- ref_files_unquoted3[!grepl("=|\\:\\:", ref_files_unquoted3)]
   ref_files_unquoted4
+}
+
+extract_source_files_to_check <- function(path) {
+  # if the list is already completed.
+  if (length(path) > 1) {
+    return(path)
+  }
+
+  if (path == "." || fs::is_dir(path)) {
+    # FIXME in Rbuilignore, change `^_pkgdown\.yml$` to `_pkgdown.yml` to make sure it works
+    path <- fs::dir_ls(path = path, recurse = TRUE, regexp = "\\.(R|md|ya?ml|builignore)$", all = TRUE, type = "file")
+    # FIXME Support _pkgdown when you want it. will likely require adjustments, not worth the effort for now.
+    path <- fs::path_filter(path = path, regexp = "_files|tests/testthat|_book|_freeze|_site|.github|_pkgdown|\\.revealjs\\.md$|\\.html\\.md$", invert = TRUE) # need to do this in 2 places
+  } else if (fs::path_ext(path) %in% c("R", "yml", "yaml", "Rmd", "md", "qmd", "Rmarkdown", "gitignore", "Rbuildignore")) {
+    path <- path
+  } else {
+    cli::cli_abort("Wrong specification.")
+  }
+
 }
