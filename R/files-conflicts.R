@@ -17,6 +17,7 @@
 #' 1. Those created with `fs::path()` or `file.path()` or `glue::glue()`
 #' 2. Those that are checked for `fs::file_exists()`, `file.exists()`
 #' 3. Deleted with `fs::file_delete()`, `unlink()`
+#'
 check_referenced_files <- function(path = ".", quiet = FALSE) {
   # TODO insert in either proj_outline, or rename_file
   path <- extract_source_files_to_check(path)
@@ -25,7 +26,7 @@ check_referenced_files <- function(path = ".", quiet = FALSE) {
   # Returns
   referenced_files <- get_referenced_files(path)
 
-  files_detected <- unique(referenced_files)
+  files_detected <- unique_named(referenced_files)
   references_a_non_existent_file <- !(fs::file_exists(files_detected) | file.exists(files_detected)) # to avoid burden for now.
 
   if (!any(references_a_non_existent_file)) {
@@ -177,7 +178,29 @@ get_referenced_files <- function(path) {
   ref_files_unquoted <- rlang::set_names(ref_files_unquoted[!is.na(ref_files_unquoted)])
 
   # Returns unquoted and string potential file names
-  c(ref_files_strings, ref_files_unquoted)
+  ref_files_final <- c(ref_files_strings, ref_files_unquoted)
+
+  #
+  # Since I don't know how to properly solve this at the source,
+  # let's perform a final cleanup
+  #
+
+  # If there are too many spaces, delete.
+  ref_files_final2 <- ref_files_final |>
+    stringr::str_replace_all(
+      c(
+        "^`\'" = "",
+        "^\"" = "",
+        "^\\{" = "",
+        "\\}$" = ""
+      )
+    )
+  # less than 4 spaces
+  ref_files_final3 <- ref_files_final2[stringr::str_count(ref_files_final2, " ") < 4]
+  # Remove functions calls
+  ref_files_final3 <- stringr::str_remove(ref_files_final3, ".+\\(")
+  ref_files_final3 <- ref_files_final3[!ref_files_final3 %in% c("_FR.png", "\\\\.x|\\\\.y", "off.res", "on.res.crown")]
+  ref_files_final3
 }
 
 # Extract file name as string (if they are used in R code)
@@ -236,7 +259,9 @@ extract_plain_file_names <- function(lines) {
   )
   # remove false positive that contains a character that makes no sense
   ref_files_unquoted4 <- ref_files_unquoted3[!grepl("=|\\:\\:", ref_files_unquoted3)]
-  ref_files_unquoted4
+  # remove file names starting with ^
+  ref_files_unquoted5 <- ref_files_unquoted4[!startsWith(ref_files_unquoted4, "^")]
+  ref_files_unquoted5
 }
 
 extract_source_files_to_check <- function(path) {
@@ -255,5 +280,5 @@ extract_source_files_to_check <- function(path) {
   } else {
     cli::cli_abort("Wrong specification.")
   }
-
+  path
 }
