@@ -350,16 +350,16 @@ print.outline_report <- function(x, ...) {
       .by = c("file", "outline_el")
     )
   }
+  file_sections <- vctrs::vec_slice(file_sections, !file_sections$is_function_def)
 
   summary_links_files <- file_sections |>
-    dplyr::filter(!is_function_def) |>
     dplyr::summarise(
-      first_line = unique(title_el_line),
-      first_line_el = unique(title_el),
+      first_line = unique(.data$title_el_line),
+      first_line_el = unique(.data$title_el),
       link = list(rlang::set_names(
-        link_rs_api,
+        .data$link_rs_api,
         purrr::map_chr(
-          paste0("{.file ", file, ":", line, "}"),
+          paste0("{.file ", .data$file, ":", .data$line, "}"),
           cli::format_inline
         )
       )),
@@ -444,59 +444,61 @@ print.outline_report <- function(x, ...) {
   invisible(x)
 }
 
-construct_outline_link <- function(.data) {
+construct_outline_link <- function(x) {
   has_title_el <- NULL
   outline_el <- NULL
   outline_el2 <- NULL
   complete_todo_link <- NULL
 
-  dir_common <- get_dir_common_outline(path = .data$file)
-  is_saved_doc <- !any(.data$file == "unsaved-doc.R")
-  is_active_doc <- length(unique(.data$file)) == 1L
+  dir_common <- get_dir_common_outline(path = x$file)
+  is_saved_doc <- !any(x$file == "unsaved-doc.R")
+  is_active_doc <- length(unique(x$file)) == 1L
   rs_avail_file_link <- is_rstudio("2023.09.0.375") || (cli::ansi_has_hyperlink_support() && !is_rstudio()) # better handling after
-  .data <- define_important_element(.data)
+  x <- define_important_element(x)
 
   if (is.null(dir_common) || !nzchar(dir_common)) {
     dir_common <- "Don't remove anything if not null"
   }
-  .data$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(f = "documentOpen"), ".", "")
-  .data$has_inline_markup <- dplyr::coalesce(stringr::str_detect(.data$outline_el, "\\{|\\}"), FALSE)
-  .data$is_saved_doc <- is_saved_doc
+  x$rs_version <- ifelse(!is_rstudio("2023.12.0.274") && is_rstudio(f = "documentOpen"), ".", "")
+  x$has_inline_markup <- dplyr::coalesce(stringr::str_detect(x$outline_el, "\\{|\\}"), FALSE)
+  x$is_saved_doc <- is_saved_doc
   # Only show `complete_todo()` links for TODO.R files or active file in interactive sessions
   # Using rlang::is_interactive to be able to test it if I ever feel the need.
-  .data$complete_todo_link <- rlang::is_interactive() & .data$is_todo_fixme & (is_active_doc | grepl("TODO.R", .data$file, fixed = TRUE))
-  .data <- dplyr::mutate(
-    .data,
-    # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
-    condition_to_truncate = !is.na(outline_el) & !has_title_el & (complete_todo_link) & is_saved_doc & !has_inline_markup,
-    # Truncate todo items, subtitles
-    condition_to_truncate2 = !is.na(outline_el) & !has_title_el & (is_todo_fixme & !complete_todo_link) & (is_second_level_heading_or_more | is_subtitle) & is_saved_doc & !has_inline_markup
-  )
+  x$complete_todo_link <- rlang::is_interactive() & x$is_todo_fixme & (is_active_doc | grepl("TODO.R", x$file, fixed = TRUE))
+
+  # to create `complete_todo()` links (only with active doc + is_todo_fixme) (and truncate if necessary)
+  x$condition_to_truncate <-
+    !is.na(x$outline_el) & !x$has_title_el & (x$complete_todo_link) & x$is_saved_doc & !x$has_inline_markup
+
+  # Truncate todo items, subtitles
+  x$condition_to_truncate2 <-
+    !is.na(x$outline_el) & !x$has_title_el & (x$is_todo_fixme & !x$complete_todo_link) & (x$is_second_level_heading_or_more | x$is_subtitle) & x$is_saved_doc & !x$has_inline_markup
+
   # r-lib/cli#627, add a dot before and at the end (Only in RStudio before 2023.12)
-  .data$outline_el2 <- NA_character_
+  x$outline_el2 <- NA_character_
   width <- cli::console_width()
 
-  cn <- .data$condition_to_truncate
+  cn <- x$condition_to_truncate
   # Not showing up are the longer items.
   # truncating to make sure the hyperlink shows up.
-  .data$outline_el2[cn] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn], width - 8L)),
+  x$outline_el2[cn] <- paste0(
+    as.character(trim_outline(x$outline_el[cn], width - 8L)),
     "- {.run [Done{cli::symbol$tick}?](reuseme::complete_todo(",
     # Removed ending dot. (possibly will fail with older versions)
-    .data$line[cn], ", '", .data$file[cn], "', '",
+    x$line[cn], ", '", x$file[cn], "', '",
     # modify regex twice if needed (see below)
-    stringr::str_sub(stringr::str_replace_all(.data$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
-    .data$rs_version[cn]
+    stringr::str_sub(stringr::str_replace_all(x$content[cn], "\\^|\\$|'|\\{|\\}|\\)|\\(|\\[\\]|\\+", "."), start = -15L), "'))}",
+    x$rs_version[cn]
   )
   # truncate other elements
-  cn2 <- .data$condition_to_truncate2
-  .data$outline_el2[cn2] <- paste0(
-    as.character(trim_outline(.data$outline_el[cn2], width - 1L)),
+  cn2 <- x$condition_to_truncate2
+  x$outline_el2[cn2] <- paste0(
+    as.character(trim_outline(x$outline_el[cn2], width - 1L)),
     # Removed ending dot. (possibly will fail with older versions)
-    .data$rs_version[cn2]
+    x$rs_version[cn2]
   )
-  .data <- dplyr::mutate(
-    .data,
+  x <- dplyr::mutate(
+    x,
     outline_el2 = ifelse(
       is.na(outline_el2) & !is.na(outline_el) & !has_title_el & complete_todo_link & is_saved_doc,
       paste0(
@@ -513,24 +515,24 @@ construct_outline_link <- function(.data) {
     outline_el2 = dplyr::coalesce(outline_el2, outline_el)
   )
 
-  .data$link <- paste0(.data$outline_el2, " {.path ", .data$file, ":", .data$line, "}")
+  x$link <- paste0(x$outline_el2, " {.path ", x$file, ":", x$line, "}")
   # rstudioapi::documentOpen works in the visual mode!! but not fully.
-  .data$file_path <- .data$file
-  .data$is_saved_doc <- is_saved_doc
+  x$file_path <- x$file
+  x$is_saved_doc <- is_saved_doc
   # May have caused CI failure
-  .data$text_in_link <- sub(as.character(dir_common), "", .data$file_path)
-  .data$text_in_link <- sub("^/", "", .data$text_in_link)
-  .data$style_fun <- dplyr::case_match(.data$importance,
+  x$text_in_link <- sub(as.character(dir_common), "", x$file_path)
+  x$text_in_link <- sub("^/", "", x$text_in_link)
+  x$style_fun <- dplyr::case_match(x$importance,
     "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
     "important" ~ "cli::style_inverse('i')",
     .default = NA_character_
   )
 
-  if (anyNA(.data$style_fun)) {
+  if (anyNA(x$style_fun)) {
     cli::cli_abort("Define this in {.fn define_important_element}", .internal = TRUE)
   }
 
-  dplyr::mutate(.data,
+  dplyr::mutate(x,
     # link_rs_api = paste0("{.run [", outline_el, "](reuseme::open_rs_doc('", file_path, "', line = ", line, "))}"),
     link_rs_api = dplyr::case_when(
       is.na(outline_el2) ~ NA_character_,
@@ -553,7 +555,7 @@ construct_outline_link <- function(.data) {
   )
 }
 # Step: tweak outline look as they show ---------
-keep_outline_element <- function(.data) {
+keep_outline_element <- function(x) {
   is_section_title <- NULL
   is_chunk_cap <- NULL
   is_md <- NULL
@@ -568,10 +570,10 @@ keep_outline_element <- function(.data) {
   is_second_level_heading_or_more <- NULL
   simplify_news <- NULL
   # could use filter_if_any?
-  .data$simplify_news <- sum(!is.na(.data$pkg_version)) >= 10
-  if (any(.data$simplify_news)) {
+  x$simplify_news <- sum(!is.na(x$pkg_version)) >= 10
+  if (any(x$simplify_news)) {
     # only keep dev, latest and major versions of NEWS.md in outline.
-    all_versions <- .data$pkg_version[!is.na(.data$pkg_version)]
+    all_versions <- x$pkg_version[!is.na(x$pkg_version)]
     all_versions_norm <- package_version(all_versions)
     keep <- all_versions_norm == max(all_versions_norm, na.rm = TRUE) |
       endsWith(all_versions, "-0") | endsWith(all_versions, ".0")
@@ -580,7 +582,7 @@ keep_outline_element <- function(.data) {
     versions_to_drop <- character(0L)
   }
   dat <- dplyr::filter(
-    .data,
+    x,
     (is_news & (
       (!simplify_news & is_section_title & before_and_after_empty) |
         (simplify_news & is_section_title & !pkg_version %in% versions_to_drop & !is_second_level_heading_or_more & before_and_after_empty)
@@ -644,13 +646,12 @@ scrub_duplicate_outline <- function(x) {
 # Includes removing headings comments
 # Remove title =
 # Removing quotes, etc.
-display_outline_element <- function(.data) {
+display_outline_element <- function(x) {
   outline_el <- NULL
   is_md <- NULL
   is_tab_or_plot_title <- NULL
   is_doc_title <- NULL
 
-  x <- .data
   org_repo <- find_pkg_org_repo(unique(x$file))
   if (!is.null(org_repo)) {
     x$outline_el <- link_local_gh_issue(x$content, org_repo)
@@ -731,6 +732,8 @@ display_outline_element <- function(.data) {
     x
   }
   if (!all(is.na(y$title_el))) {
+    title_el <- NULL
+    title_el_line <- NULL
     y <- dplyr::mutate(
       y,
       title_el = na_if0(title_el[!is.na(title_el)], "title"),
@@ -741,31 +744,30 @@ display_outline_element <- function(.data) {
   y
 }
 
-define_important_element <- function(.data) {
-  dplyr::mutate(
-    .data,
-    importance = dplyr::case_when(
-      is_second_level_heading_or_more | is_chunk_cap | is_cli_info | is_todo_fixme | is_subtitle | is_test_name ~ "not_important",
-      .default = "important"
-    )
+define_important_element <- function(x) {
+  x$importance <- dplyr::case_when(
+    x$is_second_level_heading_or_more | x$is_chunk_cap |
+      x$is_cli_info | x$is_todo_fixme | x$is_subtitle |
+      x$is_test_name ~ "not_important",
+    .default = "important"
   )
+  x
 }
 
-remove_outline_columns <- function(.data) {
-  dplyr::mutate(.data,
-    style_fun = NULL,
-    is_saved_doc = NULL,
-    is_roxygen_comment = NULL,
-    is_notebook = NULL,
-    complete_todo_link = NULL,
-    is_news = NULL,
-    # I may put it back ...
-    importance = NULL,
-    # may be useful for debugging
-    before_and_after_empty = NULL,
-    # may be useful for debugging
-    has_inline_markup = NULL
-  )
+remove_outline_columns <- function(x) {
+  x$style_fun <- NULL
+  x$is_saved_doc <- NULL
+  x$is_roxygen_comment <- NULL
+  x$is_notebook <- NULL
+  x$complete_todo_link <- NULL
+  x$is_news <- NULL
+  # I may put it back ...
+  x$importance <- NULL
+  # may be useful for debugging
+  x$before_and_after_empty <- NULL
+  # may be useful for debugging
+  x$has_inline_markup <- NULL
+  x
 }
 
 trim_outline <- function(x, width) {

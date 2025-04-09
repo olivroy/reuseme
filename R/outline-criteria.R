@@ -151,6 +151,13 @@ o_is_cli_info <- function(x, is_snap_file = FALSE, file = "file") {
 # Add variable to outline data frame --------------------
 
 define_outline_criteria <- function(.data, print_todo) {
+  # Global variables
+  content <- NULL
+  is_snap_file <- NULL
+  file <- NULL
+  is_chunk_cap <- NULL
+  is_section_title <- NULL
+  # function
   x <- .data
   x$file_ext <- s_file_ext(x$file)
   x$is_md <- x$file_ext %in% c("qmd", "md", "Rmd", "Rmarkdown")
@@ -159,6 +166,7 @@ define_outline_criteria <- function(.data, print_todo) {
   x$is_test_file <- grepl("tests/testthat/test", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
   x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
+
   if (any(x$is_roxygen_comment)) {
     # detect knitr notebooks
     x$is_notebook <- o_is_notebook(x = x$content, x$file, x$file_ext, x$line)

@@ -27,3 +27,4 @@
 # TODO rename_files() should know about .covrignore too
 # TODO withr::local_dir for proj_outline.
 # TODO add warn_conflicts = 'none'
+# TODO make use of greedy regexps [repetition](https://stringr.tidyverse.org/articles/regular-expressions.html?q=greed#repetition)

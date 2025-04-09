@@ -29,19 +29,28 @@ open_rs_doc <- function(path, line = -1L, col = -1L, move_cursor = TRUE) {
     doc_id <- rstudioapi::documentOpen(path = path, line = line, col = col, moveCursor = move_cursor)
     if (is.null(doc_id)) {
       # FIXME why is this code like this?
-      file_pos_string <- path
+      pos_string <- path
       if (line != -1L) pos_string <- paste0(pos_string, ":", line)
       if (col != -1L) pos_string <- paste0(pos_string, ":", col)
       cli::cli_bullets()
     }
     return(invisible(doc_id))
+  } else if (FALSE && is_rstudio() && rstudioapi::hasFun("navigateToFile")) {
+    # FIXME disabled since not helping with line
+    # https://github.com/posit-dev/positron/issues/6995
+    doc_id <- rstudioapi::navigateToFile(file = path, line = line, column = col, moveCursor = move_cursor)
+    return(invisible(path))
   }
 
   # Fallback if rstudioapi not available
+  # Positron potential support https://github.com/posit-dev/positron/issues/2438
   utils::file.edit(path)
   if (line != -1L || col != -1L) {
+    pos_string <- path
+    if (line != -1L) pos_string <- paste0(pos_string, ":", line)
+    if (col != -1L) pos_string <- paste0(pos_string, ":", col)
     cli::cli_inform(c(
-      "Jump to {.file {path}:{line}:{col}}"
+      "Jump to {.file {pos_string}}"
     ))
   }
   invisible(path)
@@ -308,7 +317,7 @@ active_rs_doc_delete <- function() {
   }
 
   # TODO structure and summarise information.
-  file_info <- dplyr::select(file_info, path, size, dplyr::ends_with("time"))
+  file_info <- dplyr::select(file_info, "path", "size", dplyr::ends_with("time"))
   file_info <- dplyr::select(file_info, !dplyr::where(\(x) all(is.na(x))))
   file_info <- dplyr::select(file_info, !dplyr::any_of(rm_duplicate_columns(file_info)))
   if (!is.null(file_info$size) && all(file_info$size == 0)) {
@@ -350,7 +359,7 @@ active_rs_doc_sitrep <- function() {
   # git mod time
   # print ssh short commit id..
   list(
-    staged = NA,
+    staged = NA#,
     # etc.
   )
 }
