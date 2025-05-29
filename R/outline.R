@@ -234,12 +234,12 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FAL
 dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "RProfile", "qmd", "Rmd", "md", "Rmarkdown")
-  file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
-
+  file_exts_regex <- paste0("\\.", file_exts, "$", collapse = "|")
+  file_exts_regex <- paste0(file_exts_regex, "|query-")
   file_list_to_outline <- fs::dir_ls(
     path = dir,
     type = "file",
-    glob = file_exts_regex,
+    regexp = file_exts_regex,
     recurse = recurse
   )
 
