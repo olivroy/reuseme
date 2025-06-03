@@ -127,7 +127,7 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
     cli::cli_abort("Unsaved document, focus on the saved doc you want to save.")
   }
 
-  if (!fs::path_ext(old) %in% c("md", "R", "qmd", "Rmd")) {
+  if (!fs::path_ext(old) %in% c("md", "R", "qmd", "Rmd", "sql")) {
     cli::cli_abort("Only R and md docs for now")
   }
   old_path_file <- fs::path_ext_remove(fs::path_file(old))
@@ -138,7 +138,7 @@ active_rs_doc_copy <- function(new = NULL, ..., old = NULL) {
   if (is.null(new)) {
     new_name <- paste0(old_path_file, "-new")
   } else {
-    new_name <- sub("\\.R|\\.[Rq]?md$", "", new)
+    new_name <- sub("\\.R$|\\.sql$|\\.[Rq]?md$", "", new)
   }
   # Hack to ensure file/file.R will be correctly renamed.
   new_path <- sub(paste0(old_path_file, "\\."), paste0(new_name, "."), old)
