@@ -1,4 +1,4 @@
-# reuseme (development version)
+# reuseme 0.1.0
 
 ## Breaking change
 
