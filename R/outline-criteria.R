@@ -157,6 +157,15 @@ define_outline_criteria <- function(.data, print_todo) {
   file <- NULL
   is_chunk_cap <- NULL
   is_section_title <- NULL
+  n_leading_hash <- NULL
+  is_roxygen_comment <- NULL
+  is_todo_fixme <- NULL
+  is_news <- NULL
+  is_function_def <- NULL
+  is_test_file <- NULL
+  is_section_title_source <- NULL
+  is_cross_ref <- NULL
+  content <- NULL
   # function
   x <- .data
   x$file_ext <- s_file_ext(x$file)
@@ -191,7 +200,7 @@ define_outline_criteria <- function(.data, print_todo) {
     # TODO strip is_cli_info in Package? only valid for EDA
     is_cli_info = o_is_cli_info(content, is_snap_file, file),
     is_doc_title = stringr::str_detect(content, "(?<![-(#\\s?)_[:alpha:]'\"])title\\:.{4,100}") &
-      !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & line < 50 &
+      !stringr::str_detect(content, "No Description|Ttitle|Subtitle|[Tt]est$|\\\\n") & .data$line < 50 &
       !stringr::str_detect(dplyr::lag(content, default = "nothing to detect"), "```yaml"),
     is_chunk_cap = stringr::str_detect(content, "\\#\\|.*(cap|title):"),
     # deal with chunk cap
@@ -224,7 +233,7 @@ define_outline_criteria <- function(.data, print_todo) {
   x <- dplyr::mutate(
     x,
     before_and_after_empty =
-      line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
+      .data$line == 1 | !nzchar(dplyr::lead(content, default = "")) & !nzchar(dplyr::lag(content)),
     .by = "file"
   )
   x

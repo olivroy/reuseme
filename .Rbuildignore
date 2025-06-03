@@ -10,3 +10,4 @@
 ^pkgdown$
 ^TODO\.R$
 ^playground$
+^test\.qmd$
