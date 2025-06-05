@@ -165,6 +165,7 @@ define_outline_criteria <- function(.data, print_todo) {
   is_test_file <- NULL
   is_section_title_source <- NULL
   is_cross_ref <- NULL
+  is_import_standalone_file <- NULL
   content <- NULL
   # function
   x <- .data
@@ -174,6 +175,7 @@ define_outline_criteria <- function(.data, print_todo) {
   x$is_md <- x$is_md & !x$is_news # treating news and other md files differently.
   x$is_test_file <- grepl("tests/testthat/test", x$file, fixed = TRUE)
   x$is_snap_file <- grepl("_snaps", x$file, fixed = TRUE)
+  x$is_import_standalone_file <- grepl("import-standalone", x$file, fixed = TRUE)
   x$is_roxygen_comment <- o_is_roxygen_comment(x$content, x$file_ext)
 
   if (any(x$is_roxygen_comment)) {
@@ -213,7 +215,11 @@ define_outline_criteria <- function(.data, print_todo) {
     ),
     is_chunk_cap_next = is_chunk_cap,
     is_test_name = is_test_file & o_is_test_name(content) & !o_is_generic_test(content),
-    is_todo_fixme = print_todo & o_is_todo_fixme(content, is_roxygen_comment) & !is_snap_file,
+    # is a thing to do in file.
+    is_todo_fixme = print_todo &
+      o_is_todo_fixme(content, is_roxygen_comment) &
+      !is_snap_file & !is_import_standalone_file,
+    is_import_standalone_file = NULL,
     is_section_title = o_is_section_title(content, is_roxygen_comment, is_todo_fixme),
     pkg_version = extract_pkg_version(content, is_news, is_section_title),
     is_section_title_source = is_section_title &

@@ -1,5 +1,7 @@
 # reuseme (development version)
 
+* `file_outline()` ignores todo items in import-standalone files.
+
 # reuseme 0.1.0
 
 ## Breaking change
