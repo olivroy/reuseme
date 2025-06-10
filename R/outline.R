@@ -72,7 +72,7 @@
 #'
 #' file_outline()
 #' proj_outline()
-#' dir_outline()
+#' dir_outline(".")
 #' # Like proj_switch(), proj_outline() accepts a project
 #'
 NULL
@@ -234,7 +234,7 @@ proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FAL
 }
 #' @rdname outline
 #' @export
-dir_outline <- function(path = ".", pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
+dir_outline <- function(path = active_rs_dir(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE, recurse = FALSE) {
   dir <- fs::path_real(path)
   file_exts <- c("R", "RProfile", "qmd", "Rmd", "md", "Rmarkdown", ".sql")
   file_exts_regex <- paste0("\\.", file_exts, "$", collapse = "|")

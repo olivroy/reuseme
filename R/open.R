@@ -5,6 +5,8 @@
 #'
 #' * `active_rs_doc()` is a wrapper around [rstudioapi::documentPath()] that handles
 #'   unsaved files gracefully
+#' * `active_rs_dir()` is a shortcut for `fs::path_dir(active_rs_doc()` and returns the project path
+#'   if error.
 #' @inheritParams rstudioapi::documentOpen
 #' @param move_cursor Boolean; move the cursor to the requested location after
 #'   opening the document? s
@@ -100,6 +102,12 @@ active_rs_doc <- function() {
   }
   path
   # likely not hapenning on RStudio >= 2023.06.2
+}
+
+#' @name open_rs_doc
+#' @export
+active_rs_dir <- function() {
+  tryCatch(fs::path_dir(active_rs_doc()), error = function(e) ".")
 }
 
 #' Copy the active document to the same location

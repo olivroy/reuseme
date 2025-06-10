@@ -1,6 +1,7 @@
 # reuseme (development version)
 
 * `file_outline()` ignores todo items in import-standalone files.
+* `dir_outline()` now defaults to `active_rs_dir()`.
 
 # reuseme 0.1.0
 

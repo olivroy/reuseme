@@ -28,3 +28,4 @@
 # TODO withr::local_dir for proj_outline.
 # TODO add warn_conflicts = 'none'
 # TODO make use of greedy regexps [repetition](https://stringr.tidyverse.org/articles/regular-expressions.html?q=greed#repetition)
+# TODO add kansas to ignored folder for proj_outline()
