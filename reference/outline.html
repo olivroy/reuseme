@@ -113,7 +113,7 @@ in RStudio (or if your terminal supports it). It works with both (qR)md and R fi
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dir_outline</span><span class="op">(</span></span>
-<span>  path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="open_rs_doc.html">active_rs_dir</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  pattern <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dir_tree <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -127,7 +127,7 @@ in RStudio (or if your terminal supports it). It works with both (qR)md and R fi
 
 
 <dl><dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
-<dd><p>A character vector of file paths, a <a href="proj_list.html">project</a>.
+<dd><p>A character vector of file paths, a <a href="proj_path.html">project</a>.
 Defaults to the <a href="open_rs_doc.html">active file</a>, project or directory.</p></dd>
 
 
@@ -169,7 +169,7 @@ to recurse.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>proj_outline()</code> and <code>dir_outline()</code> are wrapper of <code>file_outline()</code>.</p>
-<p>In <code>proj_outline()</code>, <code>path</code> accepts project names, see <code><a href="proj_list.html">proj_list()</a></code> for how to
+<p>In <code>proj_outline()</code>, <code>path</code> accepts project names, see <code><a href="proj_path.html">proj_list()</a></code> for how to
 set up reuseme to recognize your projects' locations.</p>
 <p>The parser is very opinionated and is not very robust as it is based on regexps.
 For a better file parser, explore other options, like <a href="https://thinkr-open.github.io/lightparser/" class="external-link">lightparser</a> for Quarto,  <code>{roxygen2}</code></p>
@@ -223,7 +223,7 @@ Use <code>dir_outline(recurse = TRUE)</code> to make sure these are included in 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">file_outline</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">proj_outline</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">dir_outline</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">dir_outline</span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Like proj_switch(), proj_outline() accepts a project</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>

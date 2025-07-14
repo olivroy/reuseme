@@ -44,7 +44,9 @@ If the file could not be opened, a clickable hyperlink is displayed.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">open_rs_doc</span><span class="op">(</span><span class="va">path</span>, line <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span>, col <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span>, move_cursor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">active_rs_doc</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">active_rs_doc</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">active_rs_dir</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,6 +79,8 @@ opening the document? s</p></dd>
 
 <ul><li><p><code>active_rs_doc()</code> is a wrapper around <code><a href="https://rstudio.github.io/rstudioapi/reference/rstudio-documents.html" class="external-link">rstudioapi::documentPath()</a></code> that handles
 unsaved files gracefully</p></li>
+<li><p><code>active_rs_dir()</code> is a shortcut for <code>fs::path_dir(active_rs_doc()</code> and returns the project path
+if error.</p></li>
 </ul></div>
 
     <div class="section level2">

@@ -36,6 +36,10 @@
 <h2 class="pkg-version" data-toc-text="development version" id="reuseme-development-version">reuseme (development version)<a class="anchor" aria-label="anchor" href="#reuseme-development-version"></a></h2>
 <ul><li>
 <code><a href="../reference/outline.html">file_outline()</a></code> ignores todo items in import-standalone files.</li>
+<li>
+<code><a href="../reference/outline.html">dir_outline()</a></code> now defaults to <code><a href="../reference/open_rs_doc.html">active_rs_dir()</a></code>.</li>
+<li>New <code>proj_path(proj, "dir")</code> as a shortcut to <code>fs::path(proj_list(proj), "dir")</code>
+</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="reuseme-010">reuseme 0.1.0<a class="anchor" aria-label="anchor" href="#reuseme-010"></a></h2>
@@ -45,7 +49,7 @@
 <li><p>To facilitate piping, <code>path</code> / <code>proj</code> is now the first argument of <code><a href="../reference/outline.html">proj_outline()</a></code>, <code><a href="../reference/outline.html">file_outline()</a></code>, and <code><a href="../reference/outline.html">dir_outline()</a></code>.</p></li>
 <li><p>If you previously relied on specifying pattern without naming it, you will have to get used to the opposite. Naming <code>pattern</code>, but not path.</p></li>
 <li><p>Removed <code>work_only</code> argument from <code><a href="../reference/outline.html">file_outline()</a></code>, use <code>pattern = "WORK"</code> to achieve the same result.</p></li>
-<li><p>In <code><a href="../reference/outline.html">proj_outline()</a></code>, <code>proj</code> has been renamed <code>path</code>, but still accepts a project name, that will passed on to <code><a href="../reference/proj_list.html">proj_list()</a></code></p></li>
+<li><p>In <code><a href="../reference/outline.html">proj_outline()</a></code>, <code>proj</code> has been renamed <code>path</code>, but still accepts a project name, that will passed on to <code><a href="../reference/proj_path.html">proj_list()</a></code></p></li>
 <li><p>Removed <code>dir_common</code> from <code><a href="../reference/outline.html">file_outline()</a></code> (<a href="https://github.com/olivroy/reuseme/issues/35" class="external-link">#35</a>)</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> result is now a simpler data frame. The cli links are now created in the print method. (which makes more sense for truncation)</p></li>
 <li><p>More safety around rstudioapi. (make <code><a href="../reference/open_rs_doc.html">open_rs_doc()</a></code> work in Positron.)</p></li>
@@ -64,7 +68,7 @@
 <li><p>Outline elements present more than four times in a file will not be printed as they are considered placeholders. (like generic test name)</p></li>
 <li><p><code><a href="../reference/outline.html">proj_outline()</a></code> now detects <a href="https://rmarkdown.rstudio.com/articles_report_from_r_script.html" class="external-link">knitr notebooks</a> that use the default options. Internally, the file is transformed into a md file by stripping roxygen comments, and is processed as such. (<a href="https://github.com/olivroy/reuseme/issues/30" class="external-link">#30</a>)</p></li>
 <li><p><code><a href="../reference/outline.html">proj_outline()</a></code> no longer shows <code><a href="../reference/complete_todo.html">complete_todo()</a></code> links for items in non-interactive sessions. <code><a href="../reference/complete_todo.html">complete_todo()</a></code> links are now only shown when calling <code><a href="../reference/outline.html">file_outline()</a></code> on the active file.</p></li>
-<li><p><code><a href="../reference/proj_list.html">proj_list()</a></code> / <code><a href="../reference/proj_switch.html">proj_switch()</a></code> no longer opens a nested project if looking for <code>"pkgdown"</code>, <code>"testthat"</code>, etc.</p></li>
+<li><p><code><a href="../reference/proj_path.html">proj_list()</a></code> / <code><a href="../reference/proj_switch.html">proj_switch()</a></code> no longer opens a nested project if looking for <code>"pkgdown"</code>, <code>"testthat"</code>, etc.</p></li>
 <li><p><code><a href="../reference/active_rs_doc_nav.html">active_rs_doc_nav()</a></code> is a new function to navigate to files pane location.</p></li>
 <li><p><code><a href="../reference/active_rs_doc_copy.html">active_rs_doc_copy()</a></code> now accepts copying md and qmd files too and no longer allows renaming Rprofile.</p></li>
 <li><p><code><a href="../reference/proj_file.html">proj_file()</a></code> is better.</p></li>
@@ -85,7 +89,7 @@
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> gives a better error for empty paths.</p></li>
 <li><p><code><a href="../reference/outline.html">dir_outline()</a></code> no longer excludes files by default.</p></li>
 <li><p><code><a href="../reference/browse_pkg.html">browse_pkg()</a></code> no longer opens by default and also accepts <code>&lt;org&gt;/&lt;repo&gt;</code> shortcode to open GitHub repo.</p></li>
-<li><p><code><a href="../reference/proj_list.html">proj_list()</a></code> now takes care of matching project to project list.</p></li>
+<li><p><code><a href="../reference/proj_path.html">proj_list()</a></code> now takes care of matching project to project list.</p></li>
 <li><p><code><a href="../reference/link_gh_issue.html">link_gh_issue()</a></code> and <code><a href="../reference/markup_href.html">markup_href()</a></code> are better.</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> now simplifies the outline of NEWS.md. Only major versions are listed now.</p></li>
 <li><p><code><a href="../reference/proj_file.html">proj_file()</a></code> is less noisy and is a shortcut for <code><a href="../reference/outline.html">file_outline()</a></code> with <code>proj</code>.</p></li>
