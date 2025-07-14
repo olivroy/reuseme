@@ -24,7 +24,7 @@ proj_outline(
 )
 
 dir_outline(
-  path = ".",
+  path = active_rs_dir(),
   pattern = NULL,
   dir_tree = FALSE,
   alpha = FALSE,
@@ -116,7 +116,7 @@ file_outline(file) |> dplyr::as_tibble()
 
 file_outline()
 proj_outline()
-dir_outline()
+dir_outline(".")
 # Like proj_switch(), proj_outline() accepts a project
 \dontshow{\}) # examplesIf}
 }

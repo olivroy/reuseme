@@ -23,7 +23,13 @@ gt_help <- quarto_help() |>
   gt::gt() |>
   gt::fmt_url(value)
 \dontshow{\}) # examplesIf}
-\dontshow{if (rlang::is_installed("pkgdown (>= 2.0.9.900)")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("pkgdown (>= 2.1.0)")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 gt_help
 \dontshow{\}) # examplesIf}
+}
+\seealso{
+\itemize{
+\item \href{https://github.com/lkwhite/Quoncierge}{Quoncierge} for an automated Quarto initialization
+\item \href{https://github.com/kyleGrealis/froggeR}{froggeR} to automate Quarto
+}
 }

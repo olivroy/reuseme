@@ -204,7 +204,7 @@ file_outline <- function(path = active_rs_doc(),
 #' @export
 proj_outline <- function(path = active_rs_proj(), pattern = NULL, dir_tree = FALSE, alpha = FALSE, recent_only = FALSE) {
   check_proj(path, allow_null = TRUE)
-  path_proj <- proj_list(path)
+  path_proj <- proj_path(path)
 
   if (!rlang::has_length(path_proj, 1)) {
     cli::cli_abort("Cannot process more than one project/directory at once.")

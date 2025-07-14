@@ -3,11 +3,14 @@
 \name{open_rs_doc}
 \alias{open_rs_doc}
 \alias{active_rs_doc}
+\alias{active_rs_dir}
 \title{Open a Document in RStudio}
 \usage{
 open_rs_doc(path, line = -1L, col = -1L, move_cursor = TRUE)
 
 active_rs_doc()
+
+active_rs_dir()
 }
 \arguments{
 \item{path}{The path to the document.}
@@ -30,6 +33,8 @@ If the file could not be opened, a clickable hyperlink is displayed.
 \itemize{
 \item \code{active_rs_doc()} is a wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentPath()}} that handles
 unsaved files gracefully
+\item \code{active_rs_dir()} is a shortcut for \verb{fs::path_dir(active_rs_doc()} and returns the project path
+if error.
 }
 }
 \examples{

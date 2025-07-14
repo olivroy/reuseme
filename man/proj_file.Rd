@@ -9,7 +9,7 @@ proj_file(file = NULL, path = active_rs_proj(), pattern = NULL)
 \arguments{
 \item{file}{A filename or regexp to a file inside \code{proj}}
 
-\item{path}{a project path  \code{\link[=proj_list]{proj_list()}}. If \code{NULL},
+\item{path}{a project path  \code{\link[=proj_path]{proj_path()}}. If \code{NULL},
 will return active project.}
 
 \item{pattern}{A regular expression to look for}
@@ -26,7 +26,7 @@ try(proj_file("A non-existent file"))
 \seealso{
 Other project management helpers: 
 \code{\link{proj-reuseme}},
-\code{\link{proj_list}()},
+\code{\link{proj_path}()},
 \code{\link{proj_switch}()}
 }
 \concept{project management helpers}

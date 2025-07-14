@@ -46,7 +46,7 @@ screenshot <- function(file = NULL, proj = proj_get(), dir = NULL) {
   check_string(file, allow_null = TRUE)
   is_active_proj <- identical(proj, proj_get2())
 
-  proj_path <- proj_list(proj)
+  proj_path <- proj_path(proj)
 
 
   if (!is_rstudio()) {

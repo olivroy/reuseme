@@ -233,7 +233,7 @@ compute_path_todo <- function(todo, proj) {
     }
   } else if (!is_active_proj) {
     # in interactive session with options set
-    proj_path <- proj_list(proj)
+    proj_path <- proj_path(proj)
   }
 
   if (!is_active_proj && !fs::dir_exists(proj_path)) {

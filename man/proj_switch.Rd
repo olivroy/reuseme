@@ -24,6 +24,6 @@ If not specified, will generate hyperlinks that call \code{\link[usethis:proj_ac
 Other project management helpers: 
 \code{\link{proj-reuseme}},
 \code{\link{proj_file}()},
-\code{\link{proj_list}()}
+\code{\link{proj_path}()}
 }
 \concept{project management helpers}

@@ -76,12 +76,14 @@ rename_files2 <- function(old,
 
   is_git <- !isFALSE(tryCatch(rprojroot::find_root_file(criterion = rprojroot::criteria$is_vcs_root), error = function(e) FALSE))
   proj_name <- proj_get2()
+
   if (interactive() && !is_git && !identical(Sys.getenv("TESTTHAT"), "true")) {
     cli::cli_warn(c(
       "It is better to use this function in a version-controlled repository.",
       i = "See {.fn usethis::use_git} for help."
     ), .frequency = "regularly", .frequency_id = "gitproject")
   }
+
   # After here, we start doing some renaming real situations---
   renaming_strategy <- scope_rename(old, new, warn_conflicts)
 
@@ -149,7 +151,6 @@ rename_files2 <- function(old,
     cli::cli_bullets("You can use {.code warn_conflicts = 'exact'} to see only exact references of {.val {old}}.")
   }
 
-
   if (n_file_names_conflicts == 0 || renaming_strategy == "free_for_all") {
     rename_file_action(new, old, strategy = renaming_strategy, action, verbose)
     # Can't remember why I put this here?
@@ -170,6 +171,7 @@ rename_files2 <- function(old,
     rlang::check_installed("clipr")
     if (clipr::clipr_available()) clipr::write_clip(new)
   }
+
   new
 }
 # Helpers -------
@@ -181,6 +183,7 @@ rename_file_action <- function(new, old, strategy, action, verbose) {
     # usethis::rename_files(old_name, new_name)
     cli::cli_inform("See if need for tests change snapshots")
   }
+
   if (tools::file_ext(new) %in% c("png")) {
     cli::cli_inform(
       c(

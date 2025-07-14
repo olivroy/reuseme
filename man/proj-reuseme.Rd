@@ -53,7 +53,7 @@ Passing the full project name to \code{usethis::proj_activate()} was too long.
 \seealso{
 Other project management helpers: 
 \code{\link{proj_file}()},
-\code{\link{proj_list}()},
+\code{\link{proj_path}()},
 \code{\link{proj_switch}()}
 }
 \concept{project management helpers}

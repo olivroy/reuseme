@@ -13,8 +13,11 @@
 #'   tibble::enframe() |>
 #'   gt::gt() |>
 #'   gt::fmt_url(value)
-#' @examplesIf rlang::is_installed("pkgdown (>= 2.0.9.900)")
+#' @examplesIf rlang::is_installed("pkgdown (>= 2.1.0)")
 #' gt_help
+#' @seealso
+#' * [Quoncierge](https://github.com/lkwhite/Quoncierge) for an automated Quarto initialization
+#' * [froggeR](https://github.com/kyleGrealis/froggeR) to automate Quarto
 quarto_help <- function(subject = NULL) {
   # need to update snapshot as we enhance this!
   links_help <- c(

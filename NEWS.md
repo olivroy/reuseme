@@ -2,6 +2,7 @@
 
 * `file_outline()` ignores todo items in import-standalone files.
 * `dir_outline()` now defaults to `active_rs_dir()`.
+* New `proj_path(proj, "dir")` as a shortcut to `fs::path(proj_list(proj), "dir")`
 
 # reuseme 0.1.0
 
