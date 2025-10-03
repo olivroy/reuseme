@@ -4,7 +4,7 @@
 * `dir_outline()` now defaults to `active_rs_dir()`.
 * New `proj_path(proj, "dir")` as a shortcut to `fs::path(proj_list(proj), "dir")`
 * New `write_temp_excel()` to help with writing a quick nicely formatted Excel file to Downloads folder.
-
+* `case_if_any()` strips more `.sep`.
 # reuseme 0.1.0
 
 ## Breaking change

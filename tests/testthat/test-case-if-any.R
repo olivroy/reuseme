@@ -32,3 +32,14 @@ test_that("case_if_any() can use a newly created variable (#8)", {
       )
   })
 })
+
+test_that("categorize() works as expected", {
+  expect_equal(
+     categorize(
+     c("banana apple", "apple orange pear", "apple", "cucumber"),
+      "yellow fruits" = c("banana", "pear"),
+      "bad fruits" = c("orange")
+     ),
+     c("yellow fruits", "yellow fruits;bad fruits", "", "")
+  )
+})

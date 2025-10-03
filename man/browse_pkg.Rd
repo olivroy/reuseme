@@ -33,7 +33,7 @@ A wrapper around \code{\link[usethis:browse-this]{usethis::browse_package()}} th
 package website. It looks up for a link in DESCRIPTION.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 browse_pkg("reuseme")
 browse_pkg()
 \dontshow{\}) # examplesIf}

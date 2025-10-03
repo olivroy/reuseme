@@ -82,11 +82,74 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
       result <- gsub(pattern = paste0("^(", .default, ")?", .sep, "(", .default, ")?$"), replacement = .default, x = result)
     }
 
-    result <- gsub(pattern = paste0("^", .sep, "|", .sep, "$"), replacement = "", x = result)
+    result <- gsub(pattern = paste0("^", .sep, "+|", .sep, "+$"), replacement = "", x = result)
     result <- dplyr::na_if(result, "")
   } else {
     cli::cli_abort("Not supported yet.")
   }
 
   dplyr::coalesce(result, .default)
+}
+
+
+#' Categorize a vector of free text
+#'
+#' Related to [case_if_any()] but simpler!
+#'
+#' It works with the same syntax as [forcats::fct_collapse()]
+#' @param variable a character vectpr
+#' @param ... dynamic dots, list of recoding
+#'
+#' @returns A named character vector
+#' @export
+#'
+#' @examples
+#' categorize(
+#' c("banana apple", "apple orange pear", "apple", "cucumber"),
+#'  "yellow fruits" = c("banana", "pear"),
+#'  "bad fruits" = c("orange")
+#' )
+categorize <- function(variable, ..., sep = ";", ignore_case = TRUE) {
+  check_character(variable)
+  categories <- rlang::list2(...)
+
+  category_names <- names(categories)
+  # will be a list
+  match <- list()
+  for (i in seq_along(categories)) {
+    category <- category_names[i]
+    regex <- paste0(categories[[i]], collapse = "|")
+
+    match[[i]] <- grepl(regex, x = variable, ignore.case = ignore_case)
+  }
+  names(match) <- category_names
+  create_label_column(match, sep = sep)
+}
+
+#' @noRd
+#' @examples
+#' create_label_column(list(
+#' "yellow fruits" = c(T, T, F, F),
+#' "bad fruits" = c(F, T, T, F)
+#' )
+#' )
+#'
+create_label_column <- function(list, sep = ";") {
+  cats <- names(list)
+  res <- list
+  for (i in seq_along(list)) {
+    res[[i]] <- ifelse(list[[i]], cats[i], "")
+  }
+  res
+
+  res2 <- purrr::map_chr(
+    purrr::list_transpose(res),
+    \(x) paste0(x, collapse = sep)
+  )
+  # remove extra seps
+  gsub(
+    paste0("^",sep, "+|", sep, "+$"),
+    "",
+    res2
+  )
 }

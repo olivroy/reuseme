@@ -111,7 +111,7 @@ file_outline(file, print_todo = FALSE, alpha = TRUE)
 # interact with data frame
 file_outline(file) |> dplyr::as_tibble()
 
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 # These all work on the active file / project or directory.
 
 file_outline()

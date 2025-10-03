@@ -17,7 +17,7 @@ Gathers informative summary about the document you are about to delete.
 Will delete more easily if file name starts with \verb{temp-}, if file is untracked and recent.
 }
 \examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (FALSE) withAutoprint(\{ # examplesIf}
 active_rs_doc_delete()
 \dontshow{\}) # examplesIf}
 }

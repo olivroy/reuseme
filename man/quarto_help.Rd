@@ -17,13 +17,13 @@ Very opinionated of links I need to access periodically. Easily
 accessible from R console.
 }
 \examples{
-\dontshow{if (rlang::is_installed("gt")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("gt")) withAutoprint(\{ # examplesIf}
 gt_help <- quarto_help() |>
   tibble::enframe() |>
   gt::gt() |>
   gt::fmt_url(value)
 \dontshow{\}) # examplesIf}
-\dontshow{if (rlang::is_installed("pkgdown (>= 2.1.0)")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (rlang::is_installed("pkgdown (>= 2.1.0)")) withAutoprint(\{ # examplesIf}
 gt_help
 \dontshow{\}) # examplesIf}
 }
