@@ -97,7 +97,7 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
 #' Related to [case_if_any()] but simpler!
 #'
 #' It works with the same syntax as [forcats::fct_collapse()]
-#' @param variable a character vectpr
+#' @param variable a character vector
 #' @param ... dynamic dots, list of recoding
 #'
 #' @returns A named character vector

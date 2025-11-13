@@ -205,7 +205,7 @@ slice_group_sample <- function(data, group_var = NULL, n_groups = 1) {
 #'
 #' Caution: still doesn't work with [dplyr::across()], use the regular
 #' `filter(if_any())` syntax.
-#'
+#' May be superseded by the new `when_any()` helper.
 #' @param .data A data frame
 #' @param ... <[`data-masking`][rlang::args_data_masking]> Name-value pairs.
 #'   The name gives the name of the column in the output.

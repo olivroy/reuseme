@@ -41,6 +41,7 @@ reference:
   - named-base
   - slice_min_max
   - count_pct
+  - categorize
   - case_if_any
   - filter_if_any
   - filter_detect
@@ -61,3 +62,4 @@ reference:
 - subtitle: read data and clean names
   contents:
   - read_clean
+  - write_temp_excel

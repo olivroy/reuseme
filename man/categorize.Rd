@@ -4,20 +4,26 @@
 \alias{categorize}
 \title{Categorize a vector of free text}
 \usage{
-categorize(variable, categories, sep = ";", ignore_case = TRUE)
+categorize(variable, ..., sep = ";", ignore_case = TRUE)
 }
 \arguments{
-\item{categories}{a list}
+\item{variable}{a character vector}
+
+\item{...}{dynamic dots, list of recoding}
+}
+\value{
+A named character vector
 }
 \description{
-Categorize a vector of free text
+Related to \code{\link[=case_if_any]{case_if_any()}} but simpler!
+}
+\details{
+It works with the same syntax as \code{\link[forcats:fct_collapse]{forcats::fct_collapse()}}
 }
 \examples{
 categorize(
 c("banana apple", "apple orange pear", "apple", "cucumber"),
-list(
-  "yellow fruits" = c("banana", "pear"),
-  "bad fruits" = c("orange")
-)
+ "yellow fruits" = c("banana", "pear"),
+ "bad fruits" = c("orange")
 )
 }

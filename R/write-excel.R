@@ -23,8 +23,9 @@ write_temp_excel <- function(dat, name, font = "Arial") {
       "percentage", class(dat[[pct_cols[i]]])
     )
   }
-
-  dat <- dplyr::rename(dat, dplyr::all_of(label_column(dat)))
+  renamed_var <- label_column(dat)
+  renamed_var <- renamed_var[!is.na(names(renamed_var))]
+  dat <- dplyr::rename(dat, dplyr::any_of(renamed_var))
   wb$add_data(x = dat, na.strings = "")
   wb$set_base_font(font_name = "Arial")
   wb$add_cell_style(dims = openxlsx2::wb_dims(x = dat, select = "col_names"), wrap_text = TRUE)

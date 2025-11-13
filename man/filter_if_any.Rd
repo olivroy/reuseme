@@ -52,6 +52,7 @@ It allows mutate_like syntax in \code{filter(if_any(...))}.
 
 Caution: still doesn't work with \code{\link[dplyr:across]{dplyr::across()}}, use the regular
 \code{filter(if_any())} syntax.
+May be superseded by the new \code{when_any()} helper.
 }
 \examples{
 mtcars |> dplyr::filter(cyl > 5 | mpg == 2)

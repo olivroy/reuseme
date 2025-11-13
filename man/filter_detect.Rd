@@ -23,7 +23,7 @@ more details.}
 You can't select grouping columns because they are already automatically
 handled by the verb (i.e. \code{\link[dplyr:summarise]{summarise()}} or \code{\link[dplyr:mutate]{mutate()}}).}
 
-\item{ignore.case}{if \code{FALSE}, the pattern matching is \emph{case
+\item{ignore.case}{logical. if \code{FALSE}, the pattern matching is \emph{case
       sensitive} and if \code{TRUE}, case is ignored during matching.}
 }
 \value{
