@@ -98,7 +98,8 @@ The output has the following properties:</p><ul><li><p>Rows are a subset of the 
 <code>mutate(.data, new_lgl_vars)</code> + <code>filter(if_any(new_lgl_vars))</code> + <code>select(-new_lgl_vars)</code>.
 It allows mutate_like syntax in <code>filter(if_any(...))</code>.</p>
 <p>Caution: still doesn't work with <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">dplyr::across()</a></code>, use the regular
-<code>filter(if_any())</code> syntax.</p>
+<code>filter(if_any())</code> syntax.
+May be superseded by the new <code>when_any()</code> helper.</p>
     </div>
 
     <div class="section level2">
@@ -184,7 +185,7 @@ It allows mutate_like syntax in <code>filter(if_any(...))</code>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

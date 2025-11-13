@@ -40,11 +40,11 @@
 <code><a href="../reference/outline.html">dir_outline()</a></code> now defaults to <code><a href="../reference/open_rs_doc.html">active_rs_dir()</a></code>.</li>
 <li>New <code>proj_path(proj, "dir")</code> as a shortcut to <code>fs::path(proj_list(proj), "dir")</code>
 </li>
-</ul></div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="reuseme-010">reuseme 0.1.0<a class="anchor" aria-label="anchor" href="#reuseme-010"></a></h2>
-<div class="section level3">
-<h3 id="breaking-change-0-1-0">Breaking change<a class="anchor" aria-label="anchor" href="#breaking-change-0-1-0"></a></h3>
+<li>New <code><a href="../reference/write_temp_excel.html">write_temp_excel()</a></code> to help with writing a quick nicely formatted Excel file to Downloads folder.</li>
+<li>
+<code><a href="../reference/case_if_any.html">case_if_any()</a></code> strips more <code>.sep</code>. # reuseme 0.1.0</li>
+</ul><div class="section level3">
+<h3 id="breaking-change-development-version">Breaking change<a class="anchor" aria-label="anchor" href="#breaking-change-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/na_if2.html">na_if2()</a></code> gains <code>...</code> to force you to specify <code>values</code> or <code>expr</code> explicitly.</p></li>
 <li><p>To facilitate piping, <code>path</code> / <code>proj</code> is now the first argument of <code><a href="../reference/outline.html">proj_outline()</a></code>, <code><a href="../reference/outline.html">file_outline()</a></code>, and <code><a href="../reference/outline.html">dir_outline()</a></code>.</p></li>
 <li><p>If you previously relied on specifying pattern without naming it, you will have to get used to the opposite. Naming <code>pattern</code>, but not path.</p></li>
@@ -61,7 +61,7 @@
 <li><p>Added <code><a href="../reference/file_rename_auto.html">file_copy_auto()</a></code> as a shortcut for <code>file.copy(fs::path(new_dir), fs::path_file(old_file), old_file)</code></p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="fixes-0-1-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-0-1-0"></a></h3>
+<h3 id="fixes-development-version">Fixes<a class="anchor" aria-label="anchor" href="#fixes-development-version"></a></h3>
 <ul><li><p><code><a href="../reference/rename_files2.html">rename_files2()</a></code> now looks in <code>.Rbuildignore</code> to see if some files should be replaced.</p></li>
 <li><p>Improved regex in <code><a href="../reference/link_gh_issue.html">link_gh_issue()</a></code>.</p></li>
 <li><p><code><a href="../reference/outline.html">file_outline()</a></code> now recognize <code>describe()</code> test calls. (probably many false positive for now) (<a href="https://github.com/olivroy/reuseme/issues/31" class="external-link">#31</a>)</p></li>
@@ -157,7 +157,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
