@@ -20,6 +20,14 @@ categorize(variable, ..., sep = ";", ignore_case = TRUE)
 
   dynamic dots, list of recoding
 
+- sep:
+
+  Separator between the results
+
+- ignore_case:
+
+  should match be case-sensitive or not.
+
 ## Value
 
 A named character vector
