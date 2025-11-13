@@ -99,6 +99,8 @@ case_if_any <- function(..., .default = "", .sep = ";", .drop_empty = TRUE) {
 #' It works with the same syntax as [forcats::fct_collapse()]
 #' @param variable a character vector
 #' @param ... dynamic dots, list of recoding
+#' @param sep Separator between the results
+#' @param ignore_case should match be case-sensitive or not.
 #'
 #' @returns A named character vector
 #' @export

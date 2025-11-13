@@ -10,6 +10,10 @@ categorize(variable, ..., sep = ";", ignore_case = TRUE)
 \item{variable}{a character vector}
 
 \item{...}{dynamic dots, list of recoding}
+
+\item{sep}{Separator between the results}
+
+\item{ignore_case}{should match be case-sensitive or not.}
 }
 \value{
 A named character vector
