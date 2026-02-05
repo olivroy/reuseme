@@ -30,8 +30,6 @@ site.
 ``` r
 # \donttest{
 outdated_pkgs()
-#> digest (0.6.37 → 0.6.38) news, `install`, `cran`
-#> Update all with
-#> pak::pak("digest")
+#> ✔ All packages are up to date.
 # }
 ```

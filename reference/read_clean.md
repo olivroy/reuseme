@@ -247,7 +247,7 @@ read_clean(file, ...)
       Learn more in
       [`should_read_lazy()`](https://readr.tidyverse.org/reference/should_read_lazy.html)
       and in the documentation for the `altrep` argument of
-      [`vroom::vroom()`](https://vroom.r-lib.org/reference/vroom.html).
+      [`vroom::vroom()`](https://vroom.tidyverse.org/reference/vroom.html).
 
   `path`
 

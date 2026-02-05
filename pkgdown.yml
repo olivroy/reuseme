@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-11-13T15:25Z
+last_built: 2026-02-05T18:35Z
 urls:
   reference: https://olivroy.github.io/reuseme/reference
   article: https://olivroy.github.io/reuseme/articles

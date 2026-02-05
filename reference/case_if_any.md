@@ -21,14 +21,28 @@ case_if_any(..., .default = "", .sep = ";", .drop_empty = TRUE)
   which values match this case. The right hand side (RHS) provides the
   replacement value.
 
-  The LHS inputs must evaluate to logical vectors.
+  For `case_when()`:
 
-  The RHS inputs will be coerced to their common type.
+  - The LHS inputs must be logical vectors. For backwards compatibility,
+    scalars are
+    [recycled](https://vctrs.r-lib.org/reference/theory-faq-recycling.html),
+    but we no longer recommend supplying scalars.
 
-  All inputs will be recycled to their common size. That said, we
-  encourage all LHS inputs to be the same size. Recycling is mainly
-  useful for RHS inputs, where you might supply a size 1 input that will
-  be recycled to the size of the LHS inputs.
+  - The RHS inputs will be
+    [cast](https://vctrs.r-lib.org/reference/theory-faq-coercion.html)
+    to their common type, and will be
+    [recycled](https://vctrs.r-lib.org/reference/theory-faq-recycling.html)
+    to the common size of the LHS inputs.
+
+  For `replace_when()`:
+
+  - The LHS inputs must be logical vectors the same size as `x`.
+
+  - The RHS inputs will be
+    [cast](https://vctrs.r-lib.org/reference/theory-faq-coercion.html)
+    to the type of `x` and
+    [recycled](https://vctrs.r-lib.org/reference/theory-faq-recycling.html)
+    to the size of `x`.
 
   `NULL` inputs are ignored.
 
@@ -37,11 +51,10 @@ case_if_any(..., .default = "", .sep = ";", .drop_empty = TRUE)
   The value used when all of the LHS inputs return either `FALSE` or
   `NA`.
 
-  `.default` must be size 1 or the same size as the common size computed
-  from `...`.
+  - If `NULL`, the default, a missing value will be used.
 
-  `.default` participates in the computation of the common type with the
-  RHS inputs.
+  - If provided, `.default` will follow the same type and size rules as
+    the RHS inputs.
 
   `NA` values in the LHS conditions are treated like `FALSE`, meaning
   that the result at those locations will be assigned the `.default`
@@ -49,8 +62,6 @@ case_if_any(..., .default = "", .sep = ";", .drop_empty = TRUE)
   must explicitly catch them with another condition before they fall
   through to the `.default`. This typically involves some variation of
   `is.na(x) ~ value` tailored to your usage of `case_when()`.
-
-  If `NULL`, the default, a missing value will be used.
 
 - .sep, :
 
@@ -65,9 +76,12 @@ case_if_any(..., .default = "", .sep = ";", .drop_empty = TRUE)
 
 ## Value
 
-A vector with the same size as the common size computed from the inputs
-in `...` and the same type as the common type of the RHS inputs in
-`...`.
+For `case_when()`, a new vector where the size is the common size of the
+LHS inputs, the type is the common type of the RHS inputs, and the names
+correspond to the names of the RHS elements used in the result.
+
+For `replace_when()`, an updated version of `x`, with the same size,
+type, and names as `x`.
 
 ## Examples
 
