@@ -149,9 +149,11 @@ create_label_column <- function(list, sep = ";") {
     \(x) paste0(x, collapse = sep)
   )
   # remove extra seps
-  gsub(
+  res2 <- gsub(
     paste0("^",sep, "+|", sep, "+$"),
     "",
     res2
   )
+  # Remove extra seps
+  gsub(paste0(sep, "{2,}"), sep, res2)
 }

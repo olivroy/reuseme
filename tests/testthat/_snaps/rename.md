@@ -1,4 +1,4 @@
-# rename_files2(): prevents file renaming if conflicts
+# rename_files2() / prevents file renaming if conflicts
 
     Code
       rename_files2("data/my-streets.csv", "data/my-roads.csv")
@@ -11,7 +11,7 @@
     Output
       [1] "data/my-roads.csv"
 
-# rename_files2(): is easier to test messages with no action
+# rename_files2() / is easier to test messages with no action
 
     Code
       rename_files2("data/my-streets.csv", "data/my-roads.csv", overwrite = TRUE,
@@ -25,7 +25,7 @@
     Output
       [1] "data/my-roads.csv"
 
-# rename_files2(): renames files if forced to do so
+# rename_files2() / renames files if forced to do so
 
     Code
       rename_files2("data/my-streets.csv", "data/my-roads.csv", warn_conflicts = "none",
@@ -33,14 +33,14 @@
     Message
       x Renamed file to 'data/my-roads.csv' by force. Be careful.
 
-# rename_files2(): doesn't check for references if file name is short
+# rename_files2() / doesn't check for references if file name is short
 
     Code
       rename_files2("R/a.R", "R/b.R")
     Message
       v Renamed file to 'R/b.R' without issue.
 
-# rename_files2(): priorizes references if name is generic or widely used in files
+# rename_files2() / priorizes references if name is generic or widely used in files
 
     Code
       rename_files2("data/my-streets.csv", "data-raw/my-streets.csv")
@@ -52,7 +52,7 @@
     Output
       [1] "data-raw/my-streets.csv"
 
-# rename_files2(): can accept overridden preferences
+# rename_files2() / can accept overridden preferences
 
     Code
       rename_files2("data/my-streets.csv", "data-raw/my-streets.csv", warn_conflicts = "all")
@@ -64,7 +64,7 @@
     Output
       [1] "data-raw/my-streets.csv"
 
-# rename_files2(): relaxes its conditions for figures
+# rename_files2() / relaxes its conditions for figures
 
     Code
       rename_files2("data/my-king.png", "data/my-king2.png")
@@ -73,7 +73,7 @@
       ![](data/my-king2.png){fig-alt="" width="70%"}
       v Renamed file to 'data/my-king2.png' without issue.
 
-# rename_files2(): calls check_referenced_files()
+# rename_files2() / calls check_referenced_files()
 
     Code
       check_referenced_files(path = tmp_dir)

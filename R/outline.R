@@ -524,10 +524,10 @@ construct_outline_link <- function(x) {
   # May have caused CI failure
   x$text_in_link <- sub(as.character(dir_common), "", x$file_path)
   x$text_in_link <- sub("^/", "", x$text_in_link)
-  x$style_fun <- dplyr::case_match(x$importance,
+  x$style_fun <- dplyr::recode_values(x$importance,
     "not_important" ~ "cli::style_italic('i')", # cli::style_inverse for bullets
     "important" ~ "cli::style_inverse('i')",
-    .default = NA_character_
+    default = NA_character_
   )
 
   if (anyNA(x$style_fun)) {

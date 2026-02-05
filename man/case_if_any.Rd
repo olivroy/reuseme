@@ -11,34 +11,39 @@ case_if_any(..., .default = "", .sep = ";", .drop_empty = TRUE)
 formulas. The left hand side (LHS) determines which values match this case.
 The right hand side (RHS) provides the replacement value.
 
-The LHS inputs must evaluate to logical vectors.
-
-The RHS inputs will be coerced to their common type.
-
-All inputs will be recycled to their common size. That said, we encourage
-all LHS inputs to be the same size. Recycling is mainly useful for RHS
-inputs, where you might supply a size 1 input that will be recycled to the
+For \code{case_when()}:
+\itemize{
+\item The LHS inputs must be logical vectors. For backwards compatibility,
+scalars are \link[vctrs:theory-faq-recycling]{recycled}, but we no longer
+recommend supplying scalars.
+\item The RHS inputs will be \link[vctrs:theory-faq-coercion]{cast} to their common
+type, and will be \link[vctrs:theory-faq-recycling]{recycled} to the common
 size of the LHS inputs.
+}
+
+For \code{replace_when()}:
+\itemize{
+\item The LHS inputs must be logical vectors the same size as \code{x}.
+\item The RHS inputs will be \link[vctrs:theory-faq-coercion]{cast} to the type of
+\code{x} and \link[vctrs:theory-faq-recycling]{recycled} to the size of \code{x}.
+}
 
 \code{NULL} inputs are ignored.}
 
 \item{.default}{The value used when all of the LHS inputs return either
 \code{FALSE} or \code{NA}.
-
-\code{.default} must be size 1 or the same size as the common size computed
-from \code{...}.
-
-\code{.default} participates in the computation of the common type with the RHS
-inputs.
+\itemize{
+\item If \code{NULL}, the default, a missing value will be used.
+\item If provided, \code{.default} will follow the same type and size rules as the
+RHS inputs.
+}
 
 \code{NA} values in the LHS conditions are treated like \code{FALSE}, meaning that
 the result at those locations will be assigned the \code{.default} value. To
 handle missing values in the conditions differently, you must explicitly
 catch them with another condition before they fall through to the
 \code{.default}. This typically involves some variation of \code{is.na(x) ~ value}
-tailored to your usage of \code{case_when()}.
-
-If \code{NULL}, the default, a missing value will be used.}
+tailored to your usage of \code{case_when()}.}
 
 \item{.sep, }{the separator between answers. (default is \verb{;}), can't be a
 substring of any of the text}
@@ -48,9 +53,12 @@ substring of any of the text}
 can be used more easily with \code{tidyr::separate_wider/longer_delim()}}
 }
 \value{
-A vector with the same size as the common size computed from the
-inputs in \code{...} and the same type as the common type of the RHS inputs
-in \code{...}.
+For \code{case_when()}, a new vector where the size is the common size of the LHS
+inputs, the type is the common type of the RHS inputs, and the names
+correspond to the names of the RHS elements used in the result.
+
+For \code{replace_when()}, an updated version of \code{x}, with the same size, type,
+and names as \code{x}.
 }
 \description{
 Each case is evaluated for \strong{all} cases and a character vector match
