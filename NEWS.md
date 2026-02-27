@@ -5,6 +5,8 @@
 * New `proj_path(proj, "dir")` as a shortcut to `fs::path(proj_list(proj), "dir")`
 * New `write_temp_excel()` to help with writing a quick nicely formatted Excel file to Downloads folder.
 * `case_if_any()` strips more `.sep`.
+* `write_temp_excel()` gains `na` to control how NAs show in the resulting file. (also adapt to openxlsx2 >= 1.23)
+
 # reuseme 0.1.0
 
 ## Breaking change

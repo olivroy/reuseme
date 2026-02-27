@@ -39,7 +39,7 @@ Suggests:
     janitor,
     labelled,
     magick,
-    openxlsx2,
+    openxlsx2 (>= 1.23),
     pillar,
     readr,
     readxl,

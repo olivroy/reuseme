@@ -3,12 +3,12 @@
 #' @param dat data frame
 #' @param name name of file
 #' @param font font name
-#'
+#' @param na passed to [openxslx2::wb_add_data()]
 #' @returns A new Excel file
 #' @export
 #'
-write_temp_excel <- function(dat, name, font = "Arial") {
-  rlang::check_installed("openxlsx2")
+write_temp_excel <- function(dat, name, font = "Arial", na = "") {
+  rlang::check_installed("openxlsx2 (>= 1.23)")
   rlang::check_required(name)
   if (is.null(getOption("reuseme.temp_dir"))) {
     cli::cli_abort(c("Set reuseme.temp_dir option in Rprofile to continue."))
@@ -26,7 +26,7 @@ write_temp_excel <- function(dat, name, font = "Arial") {
   renamed_var <- label_column(dat)
   renamed_var <- renamed_var[!is.na(names(renamed_var))]
   dat <- dplyr::rename(dat, dplyr::any_of(renamed_var))
-  wb$add_data(x = dat, na.strings = "")
+  wb$add_data(x = dat, na = na)
   wb$set_base_font(font_name = "Arial")
   wb$add_cell_style(dims = openxlsx2::wb_dims(x = dat, select = "col_names"), wrap_text = TRUE)
   wb$set_col_widths(widths = "auto", cols = seq_along(names(dat)))
