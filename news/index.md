@@ -14,7 +14,12 @@
   to help with writing a quick nicely formatted Excel file to Downloads
   folder.
 - [`case_if_any()`](https://olivroy.github.io/reuseme/reference/case_if_any.md)
-  strips more `.sep`. \# reuseme 0.1.0
+  strips more `.sep`.
+- [`write_temp_excel()`](https://olivroy.github.io/reuseme/reference/write_temp_excel.md)
+  gains `na` to control how NAs show in the resulting file. (also adapt
+  to openxlsx2 \>= 1.23)
+
+## reuseme 0.1.0
 
 ### Breaking change
 
