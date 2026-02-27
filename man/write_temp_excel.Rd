@@ -4,7 +4,7 @@
 \alias{write_temp_excel}
 \title{Write temporary Excel to Downloads}
 \usage{
-write_temp_excel(dat, name, font = "Arial")
+write_temp_excel(dat, name, font = "Arial", na = "")
 }
 \arguments{
 \item{dat}{data frame}
@@ -12,6 +12,8 @@ write_temp_excel(dat, name, font = "Arial")
 \item{name}{name of file}
 
 \item{font}{font name}
+
+\item{na}{passed to \code{\link[openxslx2:wb_add_data]{openxslx2::wb_add_data()}}}
 }
 \value{
 A new Excel file
