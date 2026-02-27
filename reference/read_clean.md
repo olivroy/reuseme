@@ -14,22 +14,19 @@ read_clean(file, ...)
 - file:
 
   Either a path to a file, a connection, or literal data (either a
-  single string or a raw vector).
+  single string or a raw vector). `file` can also be a character vector
+  containing multiple filepaths or a list containing multiple
+  connections.
 
   Files ending in `.gz`, `.bz2`, `.xz`, or `.zip` will be automatically
-  uncompressed. Files starting with `http://`, `https://`, `ftp://`, or
-  `ftps://` will be automatically downloaded. Remote gz files can also
-  be automatically downloaded and decompressed.
+  decompressed. Files starting with `http://`, `https://`, `ftp://`, or
+  `ftps://` will be automatically downloaded. Remote compressed files
+  (`.gz`, `.bz2`, `.xz`, `.zip`) will be automatically downloaded and
+  decompressed.
 
   Literal data is most useful for examples and tests. To be recognised
-  as literal data, the input must be either wrapped with
-  [`I()`](https://rdrr.io/r/base/AsIs.html), be a string containing at
-  least one new line, or be a vector containing at least one string with
-  a new line.
-
-  Using a value of
-  [`clipboard()`](https://readr.tidyverse.org/reference/clipboard.html)
-  will read from the system clipboard.
+  as literal data, wrap the input with
+  [`I()`](https://rdrr.io/r/base/AsIs.html).
 
 - ...:
 
@@ -144,8 +141,11 @@ read_clean(file, ...)
   `quoted_na`
 
   :   **\[deprecated\]** Should missing values inside quotes be treated
-      as missing values (the default) or strings. This parameter is soft
-      deprecated as of readr 2.0.0.
+      as missing values (the default) or strings. This argument is
+      deprecated and only works when using the legacy first edition
+      parser. See
+      [`with_edition()`](https://readr.tidyverse.org/reference/with_edition.html)
+      for more.
 
   `comment`
 

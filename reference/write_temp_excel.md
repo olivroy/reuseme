@@ -5,7 +5,7 @@ Write temporary Excel to Downloads
 ## Usage
 
 ``` r
-write_temp_excel(dat, name, font = "Arial")
+write_temp_excel(dat, name, font = "Arial", na = "")
 ```
 
 ## Arguments
@@ -21,6 +21,10 @@ write_temp_excel(dat, name, font = "Arial")
 - font:
 
   font name
+
+- na:
+
+  passed to `openxslx2::wb_add_data()`
 
 ## Value
 
