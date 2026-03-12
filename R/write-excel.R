@@ -3,7 +3,7 @@
 #' @param dat data frame
 #' @param name name of file
 #' @param font font name
-#' @param na passed to [openxslx2::wb_add_data()]
+#' @param na passed to [openxlsx2::wb_add_data()]
 #' @returns A new Excel file
 #' @export
 #'

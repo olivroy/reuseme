@@ -13,7 +13,7 @@ write_temp_excel(dat, name, font = "Arial", na = "")
 
 \item{font}{font name}
 
-\item{na}{passed to \code{\link[openxslx2:wb_add_data]{openxslx2::wb_add_data()}}}
+\item{na}{passed to \code{\link[openxlsx2:wb_add_data]{openxlsx2::wb_add_data()}}}
 }
 \value{
 A new Excel file
