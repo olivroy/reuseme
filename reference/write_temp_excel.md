@@ -24,7 +24,8 @@ write_temp_excel(dat, name, font = "Arial", na = "")
 
 - na:
 
-  passed to `openxslx2::wb_add_data()`
+  passed to
+  [`openxlsx2::wb_add_data()`](https://janmarvin.github.io/openxlsx2/reference/wb_add_data.html)
 
 ## Value
 
