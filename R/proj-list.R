@@ -72,11 +72,14 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
     file_outline(path = file_path)
     open_rs_doc(file_path)
     return(invisible(file_path))
+  } else {
+    # file was not a file
+    file_path <- proj_path(path)
   }
 
   file_exts <- c("R", "qmd", "Rmd", "md", "Rmarkdown")
   file_exts_regex <- paste0("*.", file_exts, "$", collapse = "|")
-  possible_files <- fs::dir_ls(proj_path, regexp = file_exts_regex, recurse = TRUE, type = "file")
+  possible_files <- fs::dir_ls(file_path, regexp = file_exts_regex, recurse = TRUE, type = "file")
   possible_files <- fs::path_filter(possible_files, regexp = file)
 
   if (length(possible_files) > 1L) {
