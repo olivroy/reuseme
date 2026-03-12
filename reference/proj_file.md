@@ -41,6 +41,6 @@ Other project management helpers:
 
 ``` r
 try(proj_file("A non-existent file"))
-#> Warning: is.na() applied to non-(list or vector) of type 'closure'
-#> Error in enc2utf8(path) : argument is not a character vector
+#> Error in as.character(x) : 
+#>   cannot coerce type 'closure' to vector of type 'character'
 ```
