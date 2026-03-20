@@ -4,19 +4,23 @@
 #' @param name name of file
 #' @param font font name
 #' @param na passed to [openxlsx2::wb_add_data()]
+#' @param dir A directory to override.
+#' @param mip privacy string
 #' @returns A new Excel file
 #' @export
 #'
-write_temp_excel <- function(dat, name, font = "Arial", na = "") {
+write_temp_excel <- function(dat, name, font = "Arial", na = "", dir = NULL, mip = NULL) {
   rlang::check_installed("openxlsx2 (>= 1.23)")
   rlang::check_required(name)
-  if (is.null(getOption("reuseme.temp_dir"))) {
-    cli::cli_abort(c("Set reuseme.temp_dir option in Rprofile to continue."))
+  if (is.null(getOption("reuseme.temp_dir")) && is.null(dir)) {
+    cli::cli_abort(c("Set reuseme.temp_dir option in Rprofile to continue or dir."))
   }
   # janmarvin/openxlsx2#1365
   withr::local_options(openxlsx2.percentageFormat = "#,#%", openxlsx2.minWidth = 5, openxlsx2.maxWidth = 12)
   wb <- openxlsx2::wb_workbook()$add_worksheet()
-
+  if (!is.null(mip) || !is.null(getOption("openxlsx2.mips_xml_string"))) {
+    wb$add_mips(mip)
+  }
   pct_cols <- stringr::str_which(names(dat), "caf")
   for (i in seq_along(pct_cols)) {
     class(dat[[pct_cols[i]]]) <- c(
@@ -35,7 +39,7 @@ write_temp_excel <- function(dat, name, font = "Arial", na = "") {
   #   dims = openxlsx2::wb_dims(x = dat),
   #   vertical = "center"
   # )
-  filename <- fs::path_expand(fs::path(getOption("reuseme.temp_dir"), sub("\\.xlsx$", "", name), ext = "xlsx"))
+  filename <- fs::path_expand(fs::path(dir %||% getOption("reuseme.temp_dir"), sub("\\.xlsx$", "", name), ext = "xlsx"))
   wb$save(filename)
   openxlsx2::xl_open(filename)
 }

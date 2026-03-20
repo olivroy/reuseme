@@ -4,7 +4,7 @@
 \alias{write_temp_excel}
 \title{Write temporary Excel to Downloads}
 \usage{
-write_temp_excel(dat, name, font = "Arial", na = "")
+write_temp_excel(dat, name, font = "Arial", na = "", dir = NULL, mip = NULL)
 }
 \arguments{
 \item{dat}{data frame}
@@ -14,6 +14,10 @@ write_temp_excel(dat, name, font = "Arial", na = "")
 \item{font}{font name}
 
 \item{na}{passed to \code{\link[openxlsx2:wb_add_data]{openxlsx2::wb_add_data()}}}
+
+\item{dir}{A directory to override.}
+
+\item{mip}{privacy string}
 }
 \value{
 A new Excel file
