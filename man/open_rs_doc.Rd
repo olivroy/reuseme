@@ -26,12 +26,12 @@ opening the document? s}
 Invisibly returns the document ids
 }
 \description{
-Wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
+Wrapper around \code{\link[rstudioapi:documentOpen]{rstudioapi::documentOpen()}}, but with \verb{fs paths}, for consistency.
 If the file could not be opened, a clickable hyperlink is displayed.
 }
 \details{
 \itemize{
-\item \code{active_rs_doc()} is a wrapper around \code{\link[rstudioapi:rstudio-documents]{rstudioapi::documentPath()}} that handles
+\item \code{active_rs_doc()} is a wrapper around \code{\link[rstudioapi:documentPath]{rstudioapi::documentPath()}} that handles
 unsaved files gracefully
 \item \code{active_rs_dir()} is a shortcut for \verb{fs::path_dir(active_rs_doc()} and returns the project path
 if error.

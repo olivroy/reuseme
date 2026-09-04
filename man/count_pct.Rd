@@ -64,7 +64,7 @@ mtcars |>
   count_pct(cyl, label = TRUE, accuracy = 0.1)
 }
 \seealso{
-Other dplyr extensions: 
-\code{\link{slice_min_max}()}
+Other dplyr extensions:
+\code{\link[=slice_min_max]{slice_min_max()}}
 }
 \concept{dplyr extensions}

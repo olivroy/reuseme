@@ -28,7 +28,7 @@ to do so via the RStudio IDE.
 \seealso{
 \code{\link[=rename_files2]{rename_files2()}}
 
-Other document manipulation helpers: 
-\code{\link{active_rs_doc_delete}()}
+Other document manipulation helpers:
+\code{\link[=active_rs_doc_delete]{active_rs_doc_delete()}}
 }
 \concept{document manipulation helpers}

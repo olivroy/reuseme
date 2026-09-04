@@ -17,5 +17,5 @@ Easily navigate to active file document.
 }
 \details{
 Wrapper around \link[rstudioapi:executeCommand]{executeCommand("activateFiles")} +
-\code{\link[rstudioapi:filesPaneNavigate]{rstudioapi::filesPaneNavigate()}} + \code{\link[rstudioapi:rstudio-editors]{rstudioapi::getActiveDocumentContext()}}
+\code{\link[rstudioapi:filesPaneNavigate]{rstudioapi::filesPaneNavigate()}} + \code{\link[rstudioapi:getActiveDocumentContext]{rstudioapi::getActiveDocumentContext()}}
 }

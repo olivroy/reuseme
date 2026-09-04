@@ -33,9 +33,9 @@ vector of paths to your projects. (i.e. \verb{~/rrr} that contains all your proj
 }
 }
 \seealso{
-Other project management helpers: 
+Other project management helpers:
 \code{\link{proj-reuseme}},
-\code{\link{proj_file}()},
-\code{\link{proj_switch}()}
+\code{\link[=proj_file]{proj_file()}},
+\code{\link[=proj_switch]{proj_switch()}}
 }
 \concept{project management helpers}

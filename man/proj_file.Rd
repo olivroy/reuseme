@@ -24,9 +24,9 @@ It can be used as \code{\link[=file_outline]{file_outline()}} + \code{proj}.
 try(proj_file("A non-existent file"))
 }
 \seealso{
-Other project management helpers: 
+Other project management helpers:
 \code{\link{proj-reuseme}},
-\code{\link{proj_path}()},
-\code{\link{proj_switch}()}
+\code{\link[=proj_path]{proj_path()}},
+\code{\link[=proj_switch]{proj_switch()}}
 }
 \concept{project management helpers}

@@ -29,7 +29,7 @@ supplied, will jump to GitHub homepage.}
 The package website URL, invisibly. (If \code{ref_only}, or \code{news_only}, the reference index URL or Changelog URL).
 }
 \description{
-A wrapper around \code{\link[usethis:browse-this]{usethis::browse_package()}} that aims at identifying the
+A wrapper around \code{\link[usethis:browse_package]{usethis::browse_package()}} that aims at identifying the
 package website. It looks up for a link in DESCRIPTION.
 }
 \examples{

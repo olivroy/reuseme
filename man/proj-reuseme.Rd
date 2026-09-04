@@ -8,7 +8,7 @@ The package offers many ways to interact with different local RStudio projects.
 }
 \section{Setup}{
 To take advantage of this functionality, you first have to set \code{options(reuseme.reposdir)} in
-your .Rprofile file. Access it with \code{\link[usethis:edit]{usethis::edit_r_profile()}}.
+your .Rprofile file. Access it with \code{\link[usethis:edit_r_profile]{usethis::edit_r_profile()}}.
 
 I would recommend you add the following. It works better if you store your RStudio
 projects in common directories.
@@ -51,9 +51,9 @@ Passing the full project name to \code{usethis::proj_activate()} was too long.
 }
 
 \seealso{
-Other project management helpers: 
-\code{\link{proj_file}()},
-\code{\link{proj_path}()},
-\code{\link{proj_switch}()}
+Other project management helpers:
+\code{\link[=proj_file]{proj_file()}},
+\code{\link[=proj_path]{proj_path()}},
+\code{\link[=proj_switch]{proj_switch()}}
 }
 \concept{project management helpers}

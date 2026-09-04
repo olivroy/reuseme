@@ -82,7 +82,7 @@ Outline elements include
 By default
 \itemize{
 \item \code{file_outline()} prints the outline the \link[=active_rs_doc]{active document} if in RStudio
-\item \code{proj_outline()} prints the outline of the \link[usethis:proj_utils]{active project} if in RStudio
+\item \code{proj_outline()} prints the outline of the \link[usethis:proj_get]{active project} if in RStudio
 \item \code{dir_outline()} prints the outline of the \link[=getwd]{active working directory} by default or
 }
 }

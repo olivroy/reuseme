@@ -21,9 +21,9 @@ If not specified, will generate hyperlinks that call \code{\link[usethis:proj_ac
 \seealso{
 \code{\link[usethis:proj_activate]{usethis::proj_activate()}}
 
-Other project management helpers: 
+Other project management helpers:
 \code{\link{proj-reuseme}},
-\code{\link{proj_file}()},
-\code{\link{proj_path}()}
+\code{\link[=proj_file]{proj_file()}},
+\code{\link[=proj_path]{proj_path()}}
 }
 \concept{project management helpers}

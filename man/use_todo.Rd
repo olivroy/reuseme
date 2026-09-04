@@ -47,5 +47,5 @@ if (FALSE) {
 }
 }
 \seealso{
-\code{\link[usethis:write-this]{usethis::write_union()}}
+\code{\link[usethis:write_union]{usethis::write_union()}}
 }

@@ -20,8 +20,8 @@ markup_href(c("[link](https://google.com)", "{.href [link](https://google.com)}"
 
 }
 \seealso{
-Other inline markup internal helpers: 
-\code{\link{link_gh_issue}()}
+Other inline markup internal helpers:
+\code{\link[=link_gh_issue]{link_gh_issue()}}
 }
 \concept{inline markup internal helpers}
 \keyword{internal}

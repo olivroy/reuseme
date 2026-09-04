@@ -12,7 +12,7 @@ active_rs_doc_move(new = NULL, old = NULL, ...)
 \item{old}{The old file (defaults to the active RStudio document.)}
 
 \item{...}{
-  Arguments passed on to \code{\link[=rename_files2]{rename_files2}}
+  Arguments passed on to \code{\link{rename_files2}}
   \describe{
     \item{\code{overwrite}}{whether to overwrite \code{new} if it already exists. Be careful.}
     \item{\code{force}}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}  Use \code{warn_conflicts} instead of \code{force = TRUE}}

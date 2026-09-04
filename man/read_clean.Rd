@@ -21,9 +21,17 @@ Literal data is most useful for examples and tests. To be recognised as
 literal data, wrap the input with \code{I()}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[readr:read_delim]{readr::read_csv}}, \code{\link[readxl:read_excel]{readxl::read_excel}}
+  Arguments passed on to \code{\link[readr:read_csv]{readr::read_csv}}, \code{\link[readxl:read_excel]{readxl::read_excel}}
   \describe{
+    \item{\code{delim}}{Single character used to separate fields within a record.}
     \item{\code{quote}}{Single character used to quote strings.}
+    \item{\code{escape_backslash}}{Does the file use backslashes to escape special
+characters? This is more general than \code{escape_double} as backslashes
+can be used to escape the delimiter character, the quote character, or
+to add special characters like \verb{\\\\n}.}
+    \item{\code{escape_double}}{Does the file escape quotes by doubling them?
+i.e. If this option is \code{TRUE}, the value \verb{""""} represents
+a single quote, \verb{\\"}.}
     \item{\code{col_names}}{Either \code{TRUE}, \code{FALSE} or a character vector
 of column names.
 

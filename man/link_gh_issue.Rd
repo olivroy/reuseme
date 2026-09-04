@@ -29,8 +29,8 @@ Afterwards, we use \code{\link[=markup_href]{markup_href()}} to create a cli lin
 link_gh_issue(c("We really need rstudio/gt#1469 to be fixed."))
 }
 \seealso{
-Other inline markup internal helpers: 
-\code{\link{markup_href}()}
+Other inline markup internal helpers:
+\code{\link[=markup_href]{markup_href()}}
 }
 \concept{inline markup internal helpers}
 \keyword{internal}

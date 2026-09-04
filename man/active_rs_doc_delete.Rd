@@ -22,7 +22,7 @@ active_rs_doc_delete()
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-Other document manipulation helpers: 
-\code{\link{active_rs_doc_copy}()}
+Other document manipulation helpers:
+\code{\link[=active_rs_doc_copy]{active_rs_doc_copy()}}
 }
 \concept{document manipulation helpers}
