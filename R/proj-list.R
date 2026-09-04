@@ -89,7 +89,7 @@ proj_file <- function(file = NULL, path = active_rs_proj(), pattern = NULL) {
 
   if (length(possible_files) == 0L) {
     if (is.null(pattern)) {
-      cli::cli_abort("No match found for {.val {file}} in {.file {proj_path}}")
+      cli::cli_abort("No match found for {.val {file}} in {.file {path}}")
     } else if (fs::is_dir(file_path)) {
       return(dir_outline(path = file_path, pattern = pattern))
     } else {

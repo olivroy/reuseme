@@ -31,7 +31,7 @@ write_temp_excel <- function(dat, name, font = "Arial", na = "", dir = NULL, mip
   renamed_var <- renamed_var[!is.na(names(renamed_var))]
   dat <- dplyr::rename(dat, dplyr::any_of(renamed_var))
   wb$add_data(x = dat, na = na)
-  wb$set_base_font(font_name = "Arial")
+  wb$set_base_font(font_name = font)
   wb$add_cell_style(dims = openxlsx2::wb_dims(x = dat, select = "col_names"), wrap_text = TRUE)
   wb$set_col_widths(widths = "auto", cols = seq_along(names(dat)))
 
