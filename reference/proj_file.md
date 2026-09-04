@@ -41,6 +41,6 @@ Other project management helpers:
 
 ``` r
 try(proj_file("A non-existent file"))
-#> Error in as.character(x) : 
-#>   cannot coerce type 'closure' to vector of type 'character'
+#> Error in proj_file("A non-existent file") : 
+#>   No match found for "A non-existent file" in
 ```

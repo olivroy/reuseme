@@ -223,6 +223,7 @@
   markdown URLs.
 
 ``` r
+
 str <- "rstudio/gt#120 and [md link](https://github.com)"
 # before
 
@@ -264,6 +265,7 @@ link_gh_issue(str) |> markup_href()
 To investigate what’s gone wrong, use
 
 ``` r
+
 f <- proj_outline()
 f |> as_tibble()
 ```

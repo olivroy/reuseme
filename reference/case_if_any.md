@@ -86,6 +86,7 @@ type, and names as `x`.
 ## Examples
 
 ``` r
+
 case_if_any(
   mtcars$vs == 1 ~ "vs = 1",
   mtcars$mpg > 150 ~ "I have mpg > 150"

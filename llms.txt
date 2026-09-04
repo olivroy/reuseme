@@ -13,6 +13,7 @@ overcome things I don’t like on Windows.
 You can install reuseme like so:
 
 ``` r
+
 # Cran
 install.package("reuseme")
 # R-universe (dev)
@@ -43,6 +44,7 @@ To take advantage of reuseme, it is highly recommended to set the
 following option in your `.Rprofile`
 
 ``` r
+
 options(reuseme.reposdir = c("~/rrr", "any-other-directories-that-contain-rstudio-projects"))
 ```
 
@@ -60,6 +62,7 @@ hyperlinks](https://cli.r-lib.org/reference/links.html) to improve
 productivity.
 
 ``` r
+
 library(reuseme)
 ## basic example code
 ```
@@ -100,7 +103,7 @@ project name!
 
 [TABLE]
 
-usethis vs reuseme
+usethis vs reuseme {.table style="width:99%;"}
 
 usethis vs reuseme
 
@@ -113,6 +116,7 @@ Due to the growing number of criteria, regex,
 is slowing down a bit. I will address that.
 
 ``` r
+
 bench::mark(
   outline <- proj_outline()
 )
@@ -125,6 +129,7 @@ bench::mark(
 Example outline
 
 ``` r
+
 outline
 #> 
 #> ── `cran-comments.md`  R CMD check results

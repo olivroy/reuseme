@@ -76,7 +76,7 @@ advice.
 
 - `keep_outline_element()`: if an element is **missing** from outline.
 
-- `define_important_element()` if an element is important [¹](#fn1)
+- `define_important_element()` if an element is important [^1]
 
 &nbsp;
 
@@ -96,6 +96,7 @@ Example with [ggtitle](https://olivroy.github.io/reuseme/link)
     `define_outline_criteria()`)
 
 ``` r
+
 # Detects ggtitle(')
 o_is_ggtitle <- function(x) {
   stringr::str_detect(x, "ggtitle\\(['\"]")
@@ -105,6 +106,7 @@ o_is_ggtitle <- function(x) {
 2.  Add test for function
 
 ``` r
+
 # Run
 use_test("outline-criteria")
 
@@ -135,6 +137,7 @@ same)
     `display_outline_element()`
 
 ``` r
+
    is_ggtitle = stringr::str_remove_all(content, "(ggplot2\\:\\:)?ggtitle\\([\"']|[\"']$")
 ```
 
@@ -145,7 +148,5 @@ same)
 
 NEWS.md is handled differently than other files.
 
-------------------------------------------------------------------------
-
-1.  Importance definition is in `define_important_element()`, while
+[^1]: Importance definition is in `define_important_element()`, while
     styling is in `construct_outline_link()`
