@@ -60,8 +60,22 @@ literal data, wrap the input with <code><a href="https://rdrr.io/r/base/AsIs.htm
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Arguments passed on to <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv</a></code>, <code><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">readxl::read_excel</a></code></p><dl><dt><code>quote</code></dt>
+<dd><p>Arguments passed on to <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv</a></code>, <code><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">readxl::read_excel</a></code></p><dl><dt><code>delim</code></dt>
+<dd><p>Single character used to separate fields within a record.</p></dd>
+
+    <dt><code>quote</code></dt>
 <dd><p>Single character used to quote strings.</p></dd>
+
+    <dt><code>escape_backslash</code></dt>
+<dd><p>Does the file use backslashes to escape special
+characters? This is more general than <code>escape_double</code> as backslashes
+can be used to escape the delimiter character, the quote character, or
+to add special characters like <code>\\n</code>.</p></dd>
+
+    <dt><code>escape_double</code></dt>
+<dd><p>Does the file escape quotes by doubling them?
+i.e. If this option is <code>TRUE</code>, the value <code>""""</code> represents
+a single quote, <code>\"</code>.</p></dd>
 
     <dt><code>col_names</code></dt>
 <dd><p>Either <code>TRUE</code>, <code>FALSE</code> or a character vector

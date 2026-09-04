@@ -34,9 +34,25 @@ read_clean(file, ...)
   [`readr::read_csv`](https://readr.tidyverse.org/reference/read_delim.html),
   [`readxl::read_excel`](https://readxl.tidyverse.org/reference/read_excel.html)
 
+  `delim`
+
+  :   Single character used to separate fields within a record.
+
   `quote`
 
   :   Single character used to quote strings.
+
+  `escape_backslash`
+
+  :   Does the file use backslashes to escape special characters? This
+      is more general than `escape_double` as backslashes can be used to
+      escape the delimiter character, the quote character, or to add
+      special characters like `\\n`.
+
+  `escape_double`
+
+  :   Does the file escape quotes by doubling them? i.e. If this option
+      is `TRUE`, the value `""""` represents a single quote, `\"`.
 
   `col_names`
 

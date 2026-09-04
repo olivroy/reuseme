@@ -19,3 +19,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Olivier Roy <olivierroy71@hotmail.com>
+
+Authors:
+
+- Olivier Roy <olivierroy71@hotmail.com>
